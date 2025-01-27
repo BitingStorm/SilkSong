@@ -216,6 +216,9 @@
     <ClInclude Include="Source\Project\DieParticle.h">
       <Filter>Project\Player</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Project\Chair.h">
+      <Filter>Project\Item</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Components\ActorComponent.cpp">
@@ -367,6 +370,9 @@
     </ClCompile>
     <ClCompile Include="Source\Project\DieParticle.cpp">
       <Filter>Project\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\Chair.cpp">
+      <Filter>Project\Item</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -38,6 +38,14 @@ MenuUI::MenuUI()
 	Icon->LoadSprite("menu_icon");
 	Icon->SetLayer(10);
 
+	Black = AddWidget<Image>();
+	Black->AttachTo(rootCanvas);
+	Black->SetLayoutPattern(LayoutPattern::Center);
+	Black->SetSize(Vector2D(WIN_WIDTH, WIN_HEIGHT));
+	Black->LoadSprite("black");
+	Black->SetLayer(12);
+	Black->SetTransparency(0);
+
 	float delta[5] = {115,90,130,80,110};
 
 	for (int i = 0; i < 5; i++)
@@ -85,11 +93,31 @@ MenuUI::MenuUI()
 	Options[4]->SetText("$0QUIT GAME", 5, "Trajan Pro");
 
 	
-	Buttons[0]->OnMousePressedBegin.AddLambda([]() {GameplayStatics::OpenLevel("TearCity");});
-	Buttons[4]->OnMousePressedBegin.AddLambda([]() { GameplayStatics::QuitGame(); });
+	Buttons[0]->OnMousePressedBegin.AddLambda([this]() { startFlag = 1; });
+	Buttons[4]->OnMousePressedBegin.AddLambda([this]() { startFlag = 5; });
 }
 
 void MenuUI::Update(float deltaTime)
 {
 	UserInterface::Update(deltaTime);
+
+	if (startFlag)
+	{
+		BYTE trans = Black->GetTransparency();
+		Black->SetTransparency(trans + 2);
+		if (trans < 250)
+		{
+			return;
+		}
+
+		switch (startFlag)
+		{
+		case 1:GameplayStatics::OpenLevel("TearCity");
+			break;
+		case 5:GameplayStatics::QuitGame();
+			break;
+		default:
+			break;
+		}
+	}
 }

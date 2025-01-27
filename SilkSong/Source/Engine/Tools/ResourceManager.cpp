@@ -30,7 +30,7 @@ void ResourceManager::Initialize()
 	Load("player_evade", "Asset/Animations/Player/Evade/", { {141,166},{141,166},{141,166},{148,160},{148,160},{148,160},{152,166} });
 	Load("player_dash", "Asset/Animations/Player/Dash/", { {210,147},{210,148},{192,131},{192,131},{182,131},{182,131},{184,131},{225,160},{225,160} });
 	Load("player_airdash", "Asset/Animations/Player/AirDash/", { {182,112},{148,140},{148,146},{178,113},{139,145},{176,138},{185,131},{172,113} });
-	Load("player_heal", "Asset/Animations/Player/Heal/", { {343,252},{565,570},{580,490},{450,495},{451,495},{451,216},{155,250},{114,225},
+	Load("player_cure", "Asset/Animations/Player/Cure/", { {343,252},{565,570},{580,490},{450,495},{451,495},{451,216},{155,250},{114,225},
 		{433,360},{444,368},{963,660},{1040,600},{1035,600},{1025,520} });
 	Load("player_hurt", "Asset/Animations/Player/Hurt/", 228, 172, 6);
 	Load("player_throw", "Asset/Animations/Player/Throw/", { {127,170}, {127,170}, {127,170}, {127,170}, {104,142}, {104,142}, {104,142}, {104,142}, {177,163},{177,163},{177,163},{177,163} });
@@ -40,6 +40,8 @@ void ResourceManager::Initialize()
 	Load("player_remoteskill", "Asset/Animations/Player/RemoteDisSkill/", { {215,162},{215,162},{215,162},{215,162},{215,162},{215,162},{215,162},{215,162},
 		{118,141},{118,141},{118,141},{118,141},{118,141},{118,141},{185,142},{185,142},{185,142},{185,142},{185,142},{185,142} });
 	Load("player_die", "Asset/Animations/Player/Die/", 146, 119, 4);
+	Load("player_sitdown", "Asset/Animations/Player/SitDown.png", 170, 159, 1, 1, 1);
+	Load("player_standup", "Asset/Animations/Player/StandUp.png", 177, 186, 1, 1, 1);
 
 
 	Load("effect_dash", "Asset/Animations/Player/DashEffect/", 342, 433, 5);
@@ -53,7 +55,7 @@ void ResourceManager::Initialize()
 	Load("effect_closeskill", "Asset/Animations/Player/CloseSkillEffect/", 350, 370, 9);
 	Load("effect_throw", "Asset/Animations/Player/ThrowEffect/", 278, 133, 3);
 	Load("effect_remoteskill", "Asset/Animations/Player/RemoteSkillEffect/", 900, 40, 6);
-
+	Load("effect_geo", "Asset/Animations/Player/GeoEffect/", { {50,24},{39,32},{81,26},{100,30}});
 
 	//Enemy
 	Load("bug_walk", "Asset/Animations/Enemy/Bug/Walk/", 90, 84, 4);
@@ -127,7 +129,7 @@ void ResourceManager::Initialize()
 
 	Load("chest", "Asset/Images/Chest - atlas0 #087042(1).png", 125, 144);
 	Load("chest_", "Asset/Images/Chest - atlas0 #087042(2).png", 125, 118);
-
+	Load("chair", "Asset/Images/chair.png", 184, 111);
 
 	//Others
 	Load("player_light", "Asset/Images/grimm_fader.png", 600, 500);
@@ -142,10 +144,10 @@ void ResourceManager::Initialize()
 	//UI
 	Load("inventory_soul", "Asset/Images/UI/select_game_HUD_0002_health_frame.png", 172, 106);
 	Load("inventory_soul_", "Asset/Images/UI/Inv_0032_inv_soul_backboard.png", 106, 106);
-	Load("inventory_health", "Asset/Images/UI/select_game_HUD_0001_health.png", 33, 41);
-	Load("inventory_health_", "Asset/Images/UI/HUD main - atlas0 #00000400.png", 54, 68);
+	Load("inventory_health", "Asset/Images/UI/blood_load_h_3.png", 43, 62);
+	Load("inventory_health_", "Asset/Images/UI/blood_load_h_0.png", 43, 62);
 	Load("inventory_coin", "Asset/Images/UI/InventoryCoin.png", 47, 48);
-
+	Load("black", "Asset/Images/UI/black.png", 1200, 800);
 
 
 
@@ -173,6 +175,7 @@ void ResourceManager::Initialize()
 	Load("voice_jump_0", "Asset/Sounds/Player/voice_jump_0.mp3");
 	Load("voice_jump_1", "Asset/Sounds/Player/voice_jump_1.mp3");
 	Load("voice_jump_2", "Asset/Sounds/Player/voice_jump_2.mp3");
+	Load("sound_heal", "Asset/Sounds/Player/heal.mp3");
 	Load("sound_cure", "Asset/Sounds/Player/sound_cure.mp3");
 	Load("voice_cure", "Asset/Sounds/Player/voice_cure.mp3");
 	Load("sound_closeskill", "Asset/Sounds/Player/sound_closeskill.mp3");

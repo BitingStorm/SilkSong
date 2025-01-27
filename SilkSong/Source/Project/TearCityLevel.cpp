@@ -7,6 +7,7 @@
 #include "RainProducer.h"
 #include "Animated.h"
 #include "Chest.h"
+#include "Chair.h"
 #include "Tools/Math.h"
 
 
@@ -16,6 +17,8 @@ void TearCityLevel::BeginPlay()
 
 	mainController = GameplayStatics::CreateObject<Player>({-800,800});
 	
+	Chair* chair = GameplayStatics::CreateObject<Chair>({-835,930});
+
 	Bg* bg0 = GameplayStatics::CreateObject<Bg>();bg0->Init("tearcity_0", -30);
 	Bg* bg1 = GameplayStatics::CreateObject<Bg>({2500,350});bg1->Init("tearcity_1", -20);
 	Bg* bg2 = GameplayStatics::CreateObject<Bg>({-1200,300 });bg2->Init("tearcity_2", -15);

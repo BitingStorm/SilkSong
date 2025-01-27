@@ -26,7 +26,7 @@ CloseSkillBox::CloseSkillBox()
 
 
 	DestroyTimerHandle.Bind(1.25f, [this]() {Destroy(); }, false);
-	AttackTimerHandle.Bind(0.3f, [this]() {
+	AttackTimerHandle.Bind(0.2f, [this]() {
 		std::vector<Actor*> enemies = circle->GetCollisions(CollisionType::Enemy);
 		for (auto& obj : enemies)
 		{

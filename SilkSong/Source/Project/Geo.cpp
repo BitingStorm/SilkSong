@@ -26,8 +26,8 @@ Geo::Geo()
 	box->AttachTo(root);
 
 	rigid = ConstructComponent<RigidBody>();
-	rigid->SetAngularDrag(0.75f);
-	rigid->SetAngularVelocity(Math::RandReal(-400,400));
+	/*rigid->SetAngularDrag(0.75f);
+	rigid->SetAngularVelocity(Math::RandReal(-400,400));*/
 
 	box->OnComponentHit.AddDynamic(this,&Geo::OnHit);
 	box->OnComponentBeginOverlap.AddDynamic(this, &Geo::OnOverlap);
@@ -67,9 +67,9 @@ void Geo::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherActor)
 		Destroy();
 		Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
 		if (!effect)return;
-		effect->Init("effect_attack", -0.05f);
-		effect->SetLocalScale(Vector2D(1,0.25)*Math::RandReal(0.75,1.05));
-		effect->SetLocalRotation(Math::RandReal(-10,10));
+		effect->Init("effect_geo", -0.05f);
+		effect->SetLocalScale(Vector2D(1,1)*Math::RandReal(1,1.25));
+		effect->SetLocalRotation(Math::RandReal(-20,20));
 		GameplayStatics::PlaySound2D("sound_geo");
 	}
 }

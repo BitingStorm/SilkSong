@@ -39,7 +39,7 @@ private:
 	Animation evade;
 	Animation dash;
 	Animation airdash;
-	Animation heal;
+	Animation cure;
 	Animation hurt;
 	Animation throw_;
 	Animation grab;
@@ -47,6 +47,8 @@ private:
 	Animation closeskill;
 	Animation remoteskill;
 	Animation die;
+	Animation sitdown;
+	Animation standup;
 
 	AnimEdge idle_to_walkstart;
 	AnimEdge walkstart_to_walk;
@@ -72,11 +74,12 @@ private:
 	AnimEdge evade_to_idle;
 	AnimEdge dash_to_idle;
 	AnimEdge airdash_to_fall;
-	AnimEdge heal_to_idle;
+	AnimEdge cure_to_idle;
 	AnimEdge hurt_to_idle;
 	AnimEdge throw_to_idle;
 	AnimEdge grab_to_idle;
 	AnimEdge _closeskill_to_closeskill;
 	AnimEdge closeskill_to_idle;
 	AnimEdge remoteskill_to_idle;
+	AnimEdge standup_to_idle;
 };

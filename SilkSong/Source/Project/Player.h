@@ -52,6 +52,10 @@ public:
 
 	void Recover();
 
+	void SitDown();
+
+	void StandUp();
+
 protected:
 	virtual void SetupInputComponent(InputComponent* inputComponent)override;
 
@@ -78,6 +82,7 @@ private:
 	bool bFloating;
 	bool bRushing;
 	bool bRushFlag;
+	bool bSitting;
 
 	float lastJumpTime;
 	float lastAttackTime;

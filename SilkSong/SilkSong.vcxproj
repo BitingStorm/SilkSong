@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\Core\Interfaces.h" />
+    <ClInclude Include="Source\Project\Chair.h" />
     <ClInclude Include="Source\Project\DieParticle.h" />
     <ClInclude Include="Source\Project\MenuController.h" />
     <ClInclude Include="Source\Project\MenuLevel.h" />
@@ -76,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Core\Interfaces.cpp" />
+    <ClCompile Include="Source\Project\Chair.cpp" />
     <ClCompile Include="Source\Project\DieParticle.cpp" />
     <ClCompile Include="Source\Project\MenuController.cpp" />
     <ClCompile Include="Source\Project\MenuLevel.cpp" />

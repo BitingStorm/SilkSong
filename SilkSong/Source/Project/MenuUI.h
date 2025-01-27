@@ -8,6 +8,7 @@ class MenuUI :public UserInterface
 	Image* Title;
 	Image* Logo;
 	Image* Icon;
+	Image* Black;
 
 	Text* Edition;
 	Text* Options[5];
@@ -16,6 +17,7 @@ class MenuUI :public UserInterface
 	class Pointer* a;
 	Pointer* b;
 
+	int32 startFlag = 0;
 public:
 	MenuUI();
 

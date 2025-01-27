@@ -59,8 +59,8 @@ GameUI::GameUI()
 		Health[i] = AddWidget<Image>();
 		Health[i]->AttachTo(SoulContainer);
 		Health[i]->SetLayoutPattern(LayoutPattern::RightMiddle);
-		Health[i]->SetRelativePosition(Vector2D(45*i - 45, -20));
-		Health[i]->SetSize(Vector2D(33, 41));
+		Health[i]->SetRelativePosition(Vector2D(45 * i - 45, -20));
+		Health[i]->SetSize(Vector2D(34, 50));
 		Health[i]->LoadSprite("inventory_health");
 		Health[i]->SetLayer(12);
 	}
@@ -71,7 +71,7 @@ GameUI::GameUI()
 		Health_[i]->AttachTo(SoulContainer);
 		Health_[i]->SetLayoutPattern(LayoutPattern::RightMiddle);
 		Health_[i]->SetRelativePosition(Vector2D(45 * i - 45, -20));
-		Health_[i]->SetSize(Vector2D(33, 41));
+		Health_[i]->SetSize(Vector2D(34, 50));
 		Health_[i]->LoadSprite("inventory_health_");
 		Health_[i]->SetLayer(11);
 	}
