@@ -119,18 +119,16 @@ void ParticleSystem::Render()
 	HDC dstDC = GetImageHDC();
 	int w = images[0]->getwidth();
 	int h = images[0]->getheight();
-	float dw = std::abs(float(w * GetWorldScale().x * 20.f / mainWorld.mainCamera->springArmLength_virtual));
-	float dh = std::abs(float(h * GetWorldScale().y * 20.f / mainWorld.mainCamera->springArmLength_virtual));
+	float dw = std::abs(float(w * GetWorldScale().x * 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength()));
+	float dh = std::abs(float(h * GetWorldScale().y * 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength()));
 
 	for (auto& each : particles)
 	{
 		float alpha = Math::Clamp(each.alpha, 0.f, 255.f);
 		BLENDFUNCTION bf = { AC_SRC_OVER,0,(BYTE)alpha,AC_SRC_ALPHA };
-		Vector2D pos = (each.position - mainWorld.mainCamera->GetVirtualPosition()) * 20.f / mainWorld.mainCamera->springArmLength_virtual
+		Vector2D pos = (each.position - mainWorld.mainCamera->GetVirtualPosition()) * 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength()
 			+ Vector2D(WIN_WIDTH, WIN_HEIGHT) * 0.5f - Vector2D(dw, dh) * each.size * 0.5f;
 		HDC srcDC = GetImageHDC(images[each.index]);
 		AlphaBlend(dstDC, (int)pos.x, (int)pos.y, (int)(dw * each.size), (int)(dh * each.size), srcDC, 0, 0, w, h, bf);
 	}
 }
-
-

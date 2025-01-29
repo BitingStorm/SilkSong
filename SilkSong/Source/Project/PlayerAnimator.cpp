@@ -65,7 +65,8 @@ PlayerAnimator::PlayerAnimator()
 	sitdown.SetInterval(0.1f);
 	standup.Load("player_standup");
 	standup.SetInterval(0.15f);
-
+	leave.Load("player_leave");
+	leave.SetInterval(0.08f);
 
 	Insert("idle", idle);
 	Insert("walk", walk);
@@ -96,6 +97,7 @@ PlayerAnimator::PlayerAnimator()
 	Insert("die", die);
 	Insert("sitdown", sitdown);
 	Insert("standup", standup);
+	Insert("leave", leave);
 	SetNode("idle");
 
 
@@ -168,6 +170,8 @@ void PlayerAnimator::BeginPlay()
 	fall_to_idle.AddCondition(TransitionCondition::Float{ "fallingSpeed",0.f,TransitionComparison::LessEqual });
 	fall_to_idle.AddCondition(TransitionCondition::Bool{ "flying",false });
 
+	leave_to_fall.Init(leave, fall);
+
 	if (Player* player = Cast<Player>(pOwner))
 	{
 		hardland.OnAnimEnter.Bind([=]() {player->EnableInput(false); GameplayStatics::PlayCameraShake(3, 5);});
@@ -182,7 +186,7 @@ void PlayerAnimator::BeginPlay()
 		airdash.AddNotification(1, dashEffect);
 		cure.OnAnimEnter.Bind([=]() {player->EnableInput(false); });
 		cure.OnAnimExit.Bind([=]() {player->EnableInput(true); player->SetFloating(false); player->GetComponentByClass<Camera>()->SetSpringArmLength(20); });
-		cure.AddNotification(5, healEffect);
+		cure.AddNotification(5, cureEffect);
 		hurt.OnAnimEnter.Bind([=]() {player->EnableInput(false); });
 		hurt.OnAnimExit.Bind([=]() {player->EnableInput(true); });
 		hurtPause.Bind([]() {GameplayStatics::Pause(0.1f); GameplayStatics::PlayCameraShake(5, 5); });
@@ -203,6 +207,10 @@ void PlayerAnimator::BeginPlay()
 		remoteskill.OnAnimExit.Bind([=]() {player->EnableInput(true); });
 		attackdown.AddNotification(2, downAttackSpawn);
 		standup.OnAnimExit.Bind([=]() {player->StandUp(); });
+		dieShake.Bind([]() {GameplayStatics::PlayCameraShake(5, 2); });
+		die.AddNotification(1, dieShake);
+		leave.OnAnimExit.Bind([=]() {player->LeaveUp(); });
+		leave.AddNotification(3, leaveStart);
 	}
 }
 

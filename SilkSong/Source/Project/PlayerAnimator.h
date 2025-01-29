@@ -12,12 +12,14 @@ public:
 
 	AnimationDelegate wetWalkEffect;
 	AnimationDelegate dashEffect;
-	AnimationDelegate healEffect;
+	AnimationDelegate cureEffect;
 	AnimationDelegate hurtPause;
 	AnimationDelegate dartSpawn;
 	AnimationDelegate needleSpawn;
 	AnimationDelegate grabFinished;
 	AnimationDelegate downAttackSpawn;
+	AnimationDelegate dieShake;
+	AnimationDelegate leaveStart;
 
 private:
 	Animation idle;
@@ -49,6 +51,7 @@ private:
 	Animation die;
 	Animation sitdown;
 	Animation standup;
+	Animation leave;
 
 	AnimEdge idle_to_walkstart;
 	AnimEdge walkstart_to_walk;
@@ -82,4 +85,5 @@ private:
 	AnimEdge closeskill_to_idle;
 	AnimEdge remoteskill_to_idle;
 	AnimEdge standup_to_idle;
+	AnimEdge leave_to_fall;
 };

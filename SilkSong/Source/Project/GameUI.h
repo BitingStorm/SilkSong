@@ -5,6 +5,8 @@
 
 class GameUI :public UserInterface
 {
+	Image* White;
+
 	Image* SoulContainer;
 
 	Image* SoulContainer_;
@@ -25,4 +27,6 @@ public:
 	GameUI();
 
 	virtual void Update(float deltaTime)override;
+
+	void WhiteBlink();
 };

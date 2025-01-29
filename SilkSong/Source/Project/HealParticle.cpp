@@ -7,7 +7,7 @@ HealParticle::HealParticle()
 	particle = ConstructComponent<ParticleSystem>();
 	SetRootComponent(particle);
 	particle->SetCapacity(25);
-	particle->SetInterval(0.02f);
+	particle->SetInterval(0.01f);
 	particle->Load("particle_heal");
 	particle->SetMaxSpeed(275);
 	particle->SetMinSpeed(175);

@@ -367,14 +367,14 @@ void Image::Update()
 	if (GetScreenRotation() != angle)
 	{
 		angle = GetScreenRotation();
-		RotateImage(PI * angle / 180);
+		RotateImage(PI * Math::NormalizeDegree(angle) / 180);
 		if (filterLayers.size() > 0)FilterImage();
 	}
 }
 
 void Image::Render()
 {
-	if (uiPattern == UIPattern::None)return;
+	if (uiPattern == UIPattern::None || alpha == 0)return;
 	if (!sprite)return;
 
 	Vector2D pos = GetScreenPosition();

@@ -35,4 +35,10 @@ public:
 	{
 		return MIN(MAX(value, MIN(lower, upper)), MAX(lower, upper));
 	}
+
+	//将弧度转换为角度
+	static float RadianToDegree(float radian);
+
+	//将角度规范化(0~360区间)
+	static float NormalizeDegree(float angle);
 };

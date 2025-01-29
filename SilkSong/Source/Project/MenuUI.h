@@ -1,7 +1,7 @@
 #pragma once
 #include "UI/UserInterface.h"
 
-
+class Pointer;
 
 class MenuUI :public UserInterface
 {
@@ -14,7 +14,7 @@ class MenuUI :public UserInterface
 	Text* Options[5];
 	Button* Buttons[5];
 
-	class Pointer* a;
+	Pointer* a;
 	Pointer* b;
 
 	int32 startFlag = 0;

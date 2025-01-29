@@ -13,7 +13,7 @@ void SpriteRenderer::DealImage()
 {
 	if (GetWorldRotation() != 0)
 	{
-		RotateImage(PI * angle / 180);
+		RotateImage(PI * Math::NormalizeDegree(angle) / 180);
 	}
 	if (filterLayers.size() > 0)
 	{
@@ -29,18 +29,18 @@ SpriteRenderer::~SpriteRenderer()
 
 void SpriteRenderer::Render()
 {
-	if (!sprite || !bIsEnabled)return;
+	if (!sprite || !bIsEnabled || alpha == 0)return;
 
 	Vector2D pos = (GetWorldPosition() - mainWorld.mainCamera->GetVirtualPosition() + spriteInfo.offset)
-		* 20.f / mainWorld.mainCamera->springArmLength_virtual + Vector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2);
+		* 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength() + Vector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2);
 	HDC dstDC = GetImageHDC();
 
 
 	int w = spriteInfo.endLoc.x - spriteInfo.startLoc.x;
 	int h = spriteInfo.endLoc.y - spriteInfo.startLoc.y;
 
-	float multi_w = std::abs(GetWorldScale().x) * 20.f / mainWorld.mainCamera->springArmLength_virtual;
-	float multi_h = std::abs(GetWorldScale().y) * 20.f / mainWorld.mainCamera->springArmLength_virtual;
+	float multi_w = std::abs(GetWorldScale().x) * 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength();
+	float multi_h = std::abs(GetWorldScale().y) * 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength();
 
 	IMAGE* img = copy ? copy : sprite;
 	if (filterLayers.size() > 0 && filter)img = filter;

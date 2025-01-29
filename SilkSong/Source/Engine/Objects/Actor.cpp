@@ -165,6 +165,6 @@ void Actor::DrawDebugPosition() const
 	settextstyle(25, 10, "Arial");
 	settextcolor(WHITE);
 	Vector2D pos = (GetWorldPosition() - mainWorld.mainCamera->GetVirtualPosition())
-		* 20.f / mainWorld.mainCamera->springArmLength_virtual + Vector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2);
+		* 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength() + Vector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2);
 	outtextxy((int)pos.x, (int)pos.y, GetWorldPosition().ToString().c_str());
 }

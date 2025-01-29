@@ -1,5 +1,5 @@
 #include "Math.h"
-
+#include "Core/Struct.h"
 
 
 std::random_device Math::rd;
@@ -32,4 +32,15 @@ double Math::RandReal(double lower, double upper)
 double Math::RandPerc()
 {
     return std::generate_canonical<double, 10>(gen);
+}
+
+float Math::RadianToDegree(float radian)
+{
+    return radian * 180 / PI;
+}
+
+float Math::NormalizeDegree(float angle)
+{
+    float ang = std::fmod(angle, 360.0f);
+    return ang >= 0 ? ang : ang + 360;
 }

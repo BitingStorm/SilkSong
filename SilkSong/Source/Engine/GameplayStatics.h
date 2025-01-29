@@ -25,7 +25,7 @@ public:
 
 	//创建游戏对象
 	template<typename T>
-	static T* CreateObject(Vector2D pos = Vector2D(0, 0));
+	static T* CreateObject(Vector2D pos = Vector2D(0, 0), float angle = 0, Vector2D scale = Vector2D(1, 1));
 
 	//通过类查找游戏对象
 	template<typename T>
@@ -73,20 +73,29 @@ public:
 
 	//全局化对象，该对象场景切换后不会被删除
 	static void DontDestroyOnLoad(class UserInterface* obj);
+
+	//将屏幕坐标投射到世界
+	static Vector2D ProjectScreenToWorld(Vector2D pos);
+
+	//将世界坐标投射到屏幕
+	static Vector2D ProjectWorldToScreen(Vector2D pos);
 };
 
 
 
 
 
+
 template<typename T>
-inline T* GameplayStatics::CreateObject(Vector2D pos)
+inline T* GameplayStatics::CreateObject(Vector2D pos, float angle, Vector2D scale)
 {
 	T* pObj = new T;
-	if (pObj && static_cast<Actor*>(pObj)) 
+	if (pObj && static_cast<Actor*>(pObj))
 	{
 		mainWorld.GameActors_to_add.push_back(pObj);
-		if(pos != Vector2D())pObj->SetLocalPosition(pos);
+		pObj->SetLocalPosition(pos);
+		pObj->SetLocalRotation(angle);
+		pObj->SetLocalScale(scale);
 		return pObj;
 	}
 	delete pObj;

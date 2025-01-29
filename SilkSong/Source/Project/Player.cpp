@@ -12,6 +12,7 @@
 #include "AttackBox.h"
 #include "HealParticle.h"
 #include "DieParticle.h"
+#include "SitParticle.h"
 #include "GameUI.h"
 #include "CloseSkillBox.h"
 #include "Dart.h"
@@ -74,14 +75,16 @@ Player::Player()
 	lastFloatTime = 0.f;
 	lastThrowTime = 0.f;
 	
+	
 	attackFlag = 0;
 	lookFlag = 0;
 	direction = ECharacterDirection::LookForward;
 
 	ani->dashEffect.Bind(this, &Player::SpawnDashEffect);
-	ani->healEffect.Bind([this]()
+	ani->cureEffect.Bind([this]()
 		{
 			AddHealth(3); GameplayStatics::CreateObject<HealParticle>()->AttachTo(this);
+			ui->WhiteBlink();
 		});
 	ani->wetWalkEffect.Bind(this, &Player::SpawnWetWalkEffect);
 	ani->dartSpawn.Bind([this]()
@@ -111,6 +114,10 @@ Player::Player()
 			attackBox->AttachTo(this);
 			attackBox->SetLocalPosition(Vector2D(70 * GetWorldScale().x, 35));
 		});
+	ani->leaveStart.Bind([this]()
+		{
+			rigid->SetVelocity({ GetWorldScale().x * 840, -630 });
+		});
 
 	blinkTimes = 0;
 	health = 5;
@@ -127,14 +134,16 @@ void Player::BeginPlay()
 		{
 			if (blinkTimes > 0)
 			{
-				render->Blink(0.1f, bSitting ? WHITE : BLACK); if (--blinkTimes == 0)hurtBox->SetCollisonMode(CollisionMode::Trigger);
+				if (bSitting)render->Blink(0.5f, WHITE, 90);
+				else render->Blink(0.1f, BLACK);
+				if (--blinkTimes == 0)hurtBox->SetCollisonMode(CollisionMode::Trigger);
 			}
 		}, true);
 
 	box->OnComponentHit.AddDynamic(this, &Player::OnEnter);
 	box->OnComponentStay.AddDynamic(this, &Player::OnStay);
 
-	GameUI* ui = GameplayStatics::CreateUI<GameUI>();
+	ui = GameplayStatics::CreateUI<GameUI>();
 	ui->AddToViewport();
 }
 
@@ -223,6 +232,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 	inputComponent->SetMapping("Dash", KeyCode::VK_F);
 	inputComponent->SetMapping("Cure", KeyCode::VK_E);
 	inputComponent->SetMapping("Throw", KeyCode::VK_Q);
+	inputComponent->SetMapping("Leave", KeyCode::VK_O);
 	inputComponent->SetMapping("CloseSkill", KeyCode::VK_I);
 	inputComponent->SetMapping("RemoteSkill", KeyCode::VK_O);
 
@@ -258,13 +268,11 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		bRushing = false; bRushFlag = false;
 		});
 	inputComponent->BindAction("LookUp", InputType::Holding, [this]() {
-		if (bSitting) return;
-		if (GetMovementState() == CharacterMovementState::Standing)SitDown();
 		if(direction == ECharacterDirection::LookForward)direction = ECharacterDirection::LookUp;
 		if (GetMovementState() == CharacterMovementState::Standing && lookFlag <= 1.5f)lookFlag += 0.0015f;
 		});
 	inputComponent->BindAction("Sit", InputType::Pressed, [this]() {
-		if (GetMovementState() == CharacterMovementState::Standing && bSitting)SitDown();
+		if (GetMovementState() == CharacterMovementState::Standing && !bSitting)SitDown();
 		});
 	inputComponent->BindAction("LookUpEnd", InputType::Released, [this]() {
 		if (direction != ECharacterDirection::LookUp)return;
@@ -369,6 +377,15 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		ani->PlayMontage("throw"); audio->Play("sound_throw");
 		if (Math::RandInt(0, 10) > 5)audio->Play("voice_throw");
 		});
+	inputComponent->BindAction("Leave", InputType::Pressed, [this]() {
+		if (bSitting) return;
+		if (soul < 3 || bGround)return; AddSoul(-3); EnableInput(false);
+		lastThrowTime = GameplayStatics::GetTimeSeconds();
+		ani->PlayMontage("leave"); audio->Play("sound_leave");
+		rigid->SetGravityEnabled(false);rigid->SetVelocity({});
+		GameplayStatics::CreateObject<Effect>(GetWorldPosition() + Vector2D(GetLocalScale().x > 0 ? 200 : -200, -150),
+			(GetLocalScale().x > 0 ? -150 : -30))->Init("effect_leave", -0.02f);
+		});
 	inputComponent->BindAction("CloseSkill", InputType::Pressed, [this]() {
 		if (bSitting) return;
 		if (soul < 3) return; AddSoul(-3);
@@ -414,7 +431,7 @@ void Player::OnEnter(Collider* hitComp, Collider* otherComp, Actor* otherActor, 
 			{
 				rigid->SetGravityEnabled(false);
 				box->SetPhysicsMaterial({});
-				rigid->SetVelocity({ 0,3.75f * (delta_y > 0 ? 0 : delta_y) - 30.f });
+				rigid->SetVelocity({ 0,3.75f * (delta_y > 0 ? 0 : delta_y) - 100.f });
 				ani->PlayMontage("grab");
 				GameplayStatics::PlaySound2D("sound_claw");
 				EnableInput(false);
@@ -544,9 +561,15 @@ void Player::SitDown()
 		{
 			return;
 		}
+		chair->DisablePointer();
 		SetLocalPosition(chair->GetWorldPosition() - Vector2D{ 0,30 });
-		bSitting = true; ani->SetNode("sitdown"); health = 5; blinkTimes = 2;
-		audio->Play("sound_heal");
+		bSitting = true; ani->SetNode("sitdown"); health = 5; blinkTimes = 1;
+		audio->Play("sound_heal");ui->WhiteBlink();
+		GameplayStatics::CreateObject<SitParticle>(GetWorldPosition() + Vector2D(0, 45));
+		Effect* effect = GameplayStatics::CreateObject<Effect>(Vector2D(-20, 0));
+		effect->Init("effect_sit", -0.02f);
+		effect->AttachTo(this);
+		effect->SetLocalScale(GetWorldScale() * 0.5f);
 	}
 }
 
@@ -554,6 +577,13 @@ void Player::SitDown()
 void Player::StandUp()
 {
 	bSitting = false;
+}
+
+void Player::LeaveUp()
+{
+	EnableInput(true);
+	rigid->SetGravityEnabled(true);
+	rigid->SetVelocity({});
 }
 
 
@@ -585,5 +615,5 @@ void Player::SpawnWetWalkEffect()
 	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + Vector2D(0, 60));
 	if (!effect)return;
 	effect->Init("effect_wetwalk");
-	effect->SetLocalScale(GetWorldScale()*Math::RandReal(0.8f,1.1f));
+	effect->SetLocalScale(GetWorldScale() * Math::RandReal(0.8f, 1.1f));
 }

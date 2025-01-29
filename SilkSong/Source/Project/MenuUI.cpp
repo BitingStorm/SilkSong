@@ -2,6 +2,7 @@
 #include "GameplayStatics.h"
 #include "Pointer.h"
 #include "Effect.h"
+#include "MenuController.h"
 
 
 MenuUI::MenuUI()
@@ -10,8 +11,8 @@ MenuUI::MenuUI()
 	Title->AttachTo(rootCanvas);
 	Title->SetLayoutPattern(LayoutPattern::Center);
 	Title->SetRelativePosition(Vector2D(0, -175));
-	Title->SetSize(Vector2D(700, 275));
-	Title->LoadSprite("menu_title");
+	Title->SetSize(Vector2D(500, 275));
+	Title->LoadSprite("menu_title_");
 	Title->SetLayer(10);
 
 	Logo = AddWidget<Image>();
@@ -41,12 +42,12 @@ MenuUI::MenuUI()
 	Black = AddWidget<Image>();
 	Black->AttachTo(rootCanvas);
 	Black->SetLayoutPattern(LayoutPattern::Center);
-	Black->SetSize(Vector2D(WIN_WIDTH, WIN_HEIGHT));
+	Black->SetSize(Vector2D(WIN_WIDTH + 20, WIN_HEIGHT + 10));
 	Black->LoadSprite("black");
 	Black->SetLayer(12);
 	Black->SetTransparency(0);
 
-	float delta[5] = {115,90,130,80,110};
+	float delta[5] = {115,90,130,135,110};
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -84,16 +85,19 @@ MenuUI::MenuUI()
 		Options[i]->SetPattern(CharactersPattern::Middle);
 		Options[i]->SetRelativePosition(Vector2D(-4, 2));
 	}
+	Options[2]->SetRelativePosition(Vector2D(-8, 2));
+	Options[3]->SetRelativePosition(Vector2D(-12, 2));
 
 
 	Options[0]->SetText("$0START GAME", 5, "Trajan Pro");
 	Options[1]->SetText("$0OPTIONS", 5, "Trajan Pro");
 	Options[2]->SetText("$0ACHIEVEMENTS", 5, "Trajan Pro");
-	Options[3]->SetText("$0EXTRAS", 5, "Trajan Pro");
+	Options[3]->SetText("$0CHANGE THEME", 5, "Trajan Pro");
 	Options[4]->SetText("$0QUIT GAME", 5, "Trajan Pro");
 
 	
 	Buttons[0]->OnMousePressedBegin.AddLambda([this]() { startFlag = 1; });
+	Buttons[3]->OnMousePressedBegin.AddLambda([this]() { startFlag = 4; });
 	Buttons[4]->OnMousePressedBegin.AddLambda([this]() { startFlag = 5; });
 }
 
@@ -103,16 +107,22 @@ void MenuUI::Update(float deltaTime)
 
 	if (startFlag)
 	{
-		BYTE trans = Black->GetTransparency();
-		Black->SetTransparency(trans + 2);
-		if (trans < 250)
+		if (startFlag == 1 || startFlag == 5)
 		{
-			return;
+			BYTE trans = Black->GetTransparency();
+			Black->SetTransparency(trans + 2);
+			if (trans < 250)
+			{
+				return;
+			}
 		}
 
 		switch (startFlag)
 		{
 		case 1:GameplayStatics::OpenLevel("TearCity");
+			break;
+		case 4:Cast<MenuController>(GameplayStatics::GetController())->ChangeTheme();
+			startFlag = 0;
 			break;
 		case 5:GameplayStatics::QuitGame();
 			break;

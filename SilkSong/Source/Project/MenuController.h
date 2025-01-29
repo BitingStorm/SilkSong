@@ -2,18 +2,17 @@
 #include "Objects/Character.h"
 
 
-class ParticleSystem;
+
 
 class MenuController :public Controller
 {
 	DEFINE_SUPER(Controller)
 
-
-	ParticleSystem* blackRadiantFar;
-	ParticleSystem* blackRadiantClose;
-	ParticleSystem* whiteRadiant;
-	ParticleSystem* smoke;
+	class ParticleSystem* whiteRadiant;
 	class AudioPlayer* audio;
+	class OldTheme* oldTheme;
+	class NewTheme* newTheme;
+
 
 public:
 	MenuController();
@@ -21,4 +20,6 @@ public:
 	virtual void BeginPlay()override;
 
 	virtual void Update(float deltaTime)override;
+
+	void ChangeTheme();
 };

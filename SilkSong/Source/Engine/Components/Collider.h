@@ -103,6 +103,7 @@ public:
 	/** Åö×²ÊÂ¼þ **/
 	CollisionOverlapDelegate OnComponentBeginOverlap;
 	CollisionOverlapDelegate OnComponentEndOverlap;
+	CollisionOverlapDelegate OnComponentOverlap;
 	CollisionHitDelegate OnComponentHit;
 	CollisionHitDelegate OnComponentStay;
 

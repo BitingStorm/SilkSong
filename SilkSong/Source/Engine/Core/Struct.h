@@ -68,13 +68,23 @@ struct Vector2D
 		return Vector2D(another.x * fcos - another.y * fsin, another.x * fsin + another.y * fcos);
 	}
 
-	// 将向量 u 投影到向量 v 所在的直线上
+	//将向量 u 投影到向量 v 所在的直线上
 	static Vector2D ProjectVector(const Vector2D& u, const Vector2D& v)
 	{
 		float scalar = DotProduct(u, v) / v.Size();  // 计算投影向量的缩放因子
 		return v.Normalize() * scalar;
 	}
 
+	//将向量转换为角度
+	static float VectorToDegree(const Vector2D& v)
+	{
+		if (v == Vector2D())
+		{
+			return 0.0f; 
+		}
+		float radian = atan2(-v.y, v.x);
+		return radian * 180.0f / PI;
+	}
 
 	Vector2D operator+(const Vector2D& another)const
 	{

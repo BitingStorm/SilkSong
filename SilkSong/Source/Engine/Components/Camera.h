@@ -14,12 +14,7 @@
   ----------------------------------*/
 class Camera final:public SceneComponent
 {
-	friend class SpriteRenderer;
-	friend class ParticleSystem;
-	friend class CircleCollider;
-	friend class BoxCollider;
 	friend class World;
-	friend void Actor::DrawDebugPosition()const;
 
 public:
 	virtual void BeginPlay()override;
@@ -48,6 +43,9 @@ public:
 	//获取虚拟相机位置
 	Vector2D GetVirtualPosition()const;
 
+	//获取虚拟相机弹簧长度
+	float GetVirtualSpringArmLength()const;
+
 private:
 	Transform transform_virtual;//虚拟相机场景属性
 
@@ -73,5 +71,6 @@ private:
 	//平滑处理
 	float SmoothStep(float x);
 
+	//数值计算
 	void Calculate();
 };

@@ -56,6 +56,8 @@ public:
 
 	void StandUp();
 
+	void LeaveUp();
+
 protected:
 	virtual void SetupInputComponent(InputComponent* inputComponent)override;
 
@@ -71,6 +73,7 @@ private:
 	class RigidBody* rigid;
 	class Camera* camera;
 	class AudioPlayer* audio;
+	class GameUI* ui;
 
 	Timer BlinkTimer;
 	Timer RecoverTimer;
@@ -99,7 +102,6 @@ private:
 	float soul;
 	int32 geo;
 	int32 dartNum;
-	
 
 	void SpawnDashEffect();
 

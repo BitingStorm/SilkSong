@@ -219,6 +219,15 @@
     <ClInclude Include="Source\Project\Chair.h">
       <Filter>Project\Item</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Project\NewTheme.h">
+      <Filter>Project\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\OldTheme.h">
+      <Filter>Project\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\SitParticle.h">
+      <Filter>Project\Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Components\ActorComponent.cpp">
@@ -373,6 +382,15 @@
     </ClCompile>
     <ClCompile Include="Source\Project\Chair.cpp">
       <Filter>Project\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\OldTheme.cpp">
+      <Filter>Project\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\NewTheme.cpp">
+      <Filter>Project\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\SitParticle.cpp">
+      <Filter>Project\Player</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

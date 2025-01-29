@@ -5,6 +5,14 @@
 
 GameUI::GameUI()
 {
+	White = AddWidget<Image>();
+	White->AttachTo(rootCanvas);
+	White->SetLayoutPattern(LayoutPattern::Center);
+	White->SetSize(Vector2D(WIN_WIDTH, WIN_HEIGHT));
+	White->LoadSprite("white");
+	White->SetLayer(9);
+	White->SetTransparency(0);
+
 	SoulContainer = AddWidget<Image>();
 	SoulContainer->AttachTo(rootCanvas);
 	SoulContainer->SetLayoutPattern(LayoutPattern::LeftTop);
@@ -21,8 +29,6 @@ GameUI::GameUI()
 	SoulContainer_->LoadSprite("inventory_soul_");
 	SoulContainer_->SetLayer(11);
 
-
-	
 	Coin = AddWidget<Image>();
 	Coin->AttachTo(SoulContainer);
 	Coin->SetLayoutPattern(LayoutPattern::RightMiddle);
@@ -30,7 +36,6 @@ GameUI::GameUI()
 	Coin->SetSize(Vector2D(47, 48));
 	Coin->LoadSprite("inventory_coin");
 	Coin->SetLayer(12);
-
 
 	CoinNum = AddWidget<Text>();
 	CoinNum->AttachTo(Coin);
@@ -81,6 +86,11 @@ void GameUI::Update(float deltaTime)
 {
 	UserInterface::Update(deltaTime);
 
+	if (BYTE trans = White->GetTransparency())
+	{
+		White->SetTransparency(trans - 3);
+	}
+	
 	Player* player = Cast<Player>(GameplayStatics::GetController());
 	for (int i = 0; i < player->GetHealth(); i++)
 	{
@@ -96,6 +106,11 @@ void GameUI::Update(float deltaTime)
 	CoinNum->SetText("$0" + std::to_string(player->GetGeo()), 5, "Trajan Pro");
 
 	DartNum->SetText("$0" + std::to_string(player->GetDart()), 5, "Trajan Pro");
+}
+
+void GameUI::WhiteBlink()
+{
+	White->SetTransparency(240);
 }
 
 

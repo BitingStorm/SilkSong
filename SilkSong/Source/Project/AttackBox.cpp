@@ -3,6 +3,7 @@
 #include "Enemy.h"
 #include "GameplayStatics.h"
 #include "Effect.h"
+#include "Dart.h"
 #include "Tools/Math.h"
 
 
@@ -38,23 +39,33 @@ void AttackBox::Init(ECharacterDirection direction)
 
 void AttackBox::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherActor)
 {
-	if (Enemy *enemy = Cast<Enemy>(otherActor))
+	Vector2D normal = (-GetOwner()->GetWorldPosition() + otherActor->GetWorldPosition()).Normalize();
+	if (Enemy* enemy = Cast<Enemy>(otherActor))
 	{
 		if (!GetOwner())return;
-		Vector2D normal = (-GetOwner()->GetWorldPosition() + enemy->GetWorldPosition()).Normalize();
-		enemy->TakeDamage(normal); 
+		enemy->TakeDamage(normal);
 		this->enemy = enemy;
-		if(direction == ECharacterDirection::LookDown)Cast<Player>(GetOwner())->Bounce();
+		if (direction == ECharacterDirection::LookDown)Cast<Player>(GetOwner())->Bounce();
 		if (Math::RandInt(0, 10) > 5)GameplayStatics::PlaySound2D("sound_damage_0");
 		else GameplayStatics::PlaySound2D("sound_damage_1");
+	}
+	else if (Cast<Dart>(otherActor))
+	{
+		if (direction == ECharacterDirection::LookDown)Cast<Player>(GetOwner())->Bounce();
+		GameplayStatics::PlaySound2D("sound_swordhit");
+		GameplayStatics::PlayCameraShake(3);
+		Effect* effect = GameplayStatics::CreateObject<Effect>(otherActor->GetWorldPosition());
+		if (!effect)return;
+		effect->Init("effect_nailhit");
+		effect->SetLocalRotation(Vector2D::VectorToDegree(normal) + 10);
 	}
 }
 
 void AttackBox::OnEndOverlap(Collider* hitComp, Collider* otherComp, Actor* otherActor)
 {
-	if (hitComp->GetType() == CollisionType::Enemy)
+	if (hitComp->GetType() == CollisionType::Enemy || hitComp->GetType() == CollisionType::Dart)
 	{
-		box->OnComponentBeginOverlap.RemoveDynamic(this, &AttackBox::OnOverlap);
+		box->SetCollisonMode(CollisionMode::None);
 	}
 }
 

@@ -28,6 +28,8 @@
     <ClInclude Include="Source\Project\Needle.h" />
     <ClInclude Include="Source\Project\CloseSkillBox.h" />
     <ClInclude Include="Source\Project\Dart.h" />
+    <ClInclude Include="Source\Project\NewTheme.h" />
+    <ClInclude Include="Source\Project\OldTheme.h" />
     <ClInclude Include="Source\Project\Pointer.h" />
     <ClInclude Include="Source\Project\RockParticle.h" />
     <ClInclude Include="Source\Project\Chest.h" />
@@ -45,6 +47,7 @@
     <ClInclude Include="Source\Project\Effect.h" />
     <ClInclude Include="Source\Project\PlatForm.h" />
     <ClInclude Include="Source\Project\Player.h" />
+    <ClInclude Include="Source\Project\SitParticle.h" />
     <ClInclude Include="Source\Project\TearCityLevel.h" />
     <ClInclude Include="Source\Engine\Components\ActorComponent.h" />
     <ClInclude Include="Source\Engine\Components\Animator.h" />
@@ -85,6 +88,8 @@
     <ClCompile Include="Source\Project\Dart.cpp" />
     <ClCompile Include="Source\Project\MenuUI.cpp" />
     <ClCompile Include="Source\Project\Needle.cpp" />
+    <ClCompile Include="Source\Project\NewTheme.cpp" />
+    <ClCompile Include="Source\Project\OldTheme.cpp" />
     <ClCompile Include="Source\Project\Pointer.cpp" />
     <ClCompile Include="Source\Project\RockParticle.cpp" />
     <ClCompile Include="Source\Project\Chest.cpp" />
@@ -124,6 +129,7 @@
     <ClCompile Include="Source\Engine\Tools\VisualInterface.cpp" />
     <ClCompile Include="Source\Engine\UI\UserInterface.cpp" />
     <ClCompile Include="Source\Engine\UI\Widgets.cpp" />
+    <ClCompile Include="Source\Project\SitParticle.cpp" />
     <ClCompile Include="Source\Project\TearCityLevel.cpp" />
     <ClCompile Include="Source\Project\PlayerAnimator.cpp" />
     <ClCompile Include="Source\Project\RainProducer.cpp" />

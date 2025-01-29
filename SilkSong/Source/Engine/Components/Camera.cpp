@@ -79,6 +79,11 @@ Vector2D Camera::GetVirtualPosition() const
 	return transform_virtual.position;
 }
 
+float Camera::GetVirtualSpringArmLength() const
+{
+	return springArmLength_virtual;
+}
+
 void Camera::Calculate()
 {
 	if (!bIsEnabled)return;

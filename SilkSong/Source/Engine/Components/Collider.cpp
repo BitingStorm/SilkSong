@@ -43,6 +43,10 @@ void Collider::Update(float deltaTime)
             OnComponentStay.BroadCast(this, another, another->pOwner, -hitResult.ImpactNormal, hitResult);
             another->OnComponentStay.BroadCast(another, this, pOwner, hitResult.ImpactNormal, { hitResult.ImpactPoint,-hitResult.ImpactNormal,pOwner,this });
         }
+        else
+        {
+            OnComponentOverlap.BroadCast(this, another, another->pOwner);  another->OnComponentOverlap.BroadCast(another, this, pOwner);
+        }
     }
 
     Vector2D half = GetRect().GetSize()*0.5f;
@@ -305,8 +309,8 @@ void CircleCollider::DrawDebugLine()
     if (GetCollisonMode() == CollisionMode::None)return;
     setlinecolor(GREEN);
     Vector2D pos = (GetWorldPosition() - mainWorld.mainCamera->GetVirtualPosition())
-        * 20.f / mainWorld.mainCamera->springArmLength_virtual + Vector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2);
-    circle((int)pos.x,(int)pos.y,int(radius * 20.f / mainWorld.mainCamera->springArmLength_virtual));
+        * 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength() + Vector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2);
+    circle((int)pos.x,(int)pos.y,int(radius * 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength()));
 }
 
 bool CircleCollider::IsMouseOver()
@@ -335,8 +339,8 @@ void BoxCollider::DrawDebugLine()
     if (GetCollisonMode() == CollisionMode::None)return;
     setlinecolor(GREEN);
     Vector2D pos = (GetWorldPosition() - mainWorld.mainCamera->GetVirtualPosition())
-        * 20.f / mainWorld.mainCamera->springArmLength_virtual + Vector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2);
-    Vector2D si = this->size * 20.f / mainWorld.mainCamera->springArmLength_virtual;
+        * 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength() + Vector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2);
+    Vector2D si = this->size * 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength();
     float left = pos.x - si.x / 2, right = pos.x + si.x / 2,top = pos.y + si.y / 2, bottom = pos.y - si.y / 2;
     rectangle((int)left,(int)top,(int)right,(int)bottom);
 }
