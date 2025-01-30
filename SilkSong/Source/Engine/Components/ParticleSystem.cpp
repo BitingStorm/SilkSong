@@ -114,7 +114,7 @@ void ParticleSystem::Update(float deltaTime)
 
 void ParticleSystem::Render()
 {
-	if (!bIsEnabled||!images)return;
+	if (!bIsEnabled || !images || alpha == 0)return;
 
 	HDC dstDC = GetImageHDC();
 	int w = images[0]->getwidth();

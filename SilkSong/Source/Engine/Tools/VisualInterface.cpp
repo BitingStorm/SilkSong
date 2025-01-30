@@ -296,9 +296,58 @@ void ImageToolkit::FlipImage(IMAGE* srcImg, IMAGE* dstImg, bool bIsHorizontal)
 	int width = srcImg->getwidth(), height = srcImg->getheight();
 
 	for (int i = 0; i < height; ++i)
+	{
 		for (int j = 0; j < width; ++j)
+		{
 			pNewBuf[bIsHorizontal ? ((i + 1) * width - j - 1) : ((height - i - 1) * width + j)] = pBuf[i * width + j];
+		}
+	}
 }
+
+void ImageToolkit::GetSectorImage(IMAGE* srcImg, IMAGE* dstImg, float start, float end)
+{
+	if (!srcImg || !dstImg)return;
+	float a = MIN(start, end), b = MAX(start, end);
+
+	const DWORD* pBuf = GetImageBuffer(srcImg);
+	DWORD* pNewBuf = GetImageBuffer(dstImg);
+	int width = srcImg->getwidth(), height = srcImg->getheight();
+
+	// 假设图像中心为旋转中心
+	int centerX = width / 2;
+	int centerY = height / 2;
+
+	// 遍历原图像的每个像素
+	for (int i = 0; i < height; ++i)
+	{
+		for (int j = 0; j < width; ++j)
+		{
+			// 计算当前像素相对于中心的极坐标
+			float x = j - centerX;
+			float y = i - centerY;
+			float radius = sqrt(x * x + y * y);
+			float theta = atan2(y, x) * 180.0f / PI;  // 将弧度转换为角度
+
+			// 确保角度为正数(0°到360°)
+			if (theta < 0) theta += 360.0f;
+			// 检查角度是否在指定范围内
+			if (theta >= a && theta <= b)
+			{
+				// 计算在目标图像中的位置
+				int dstX = static_cast<int>(radius * cos(theta * PI / 180.0f)) + dstImg->getwidth() / 2;
+				int dstY = static_cast<int>(radius * sin(theta * PI / 180.0f)) + dstImg->getheight() / 2;
+
+				// 确保目标图像的像素位置在有效范围内
+				if (dstX >= 0 && dstX < dstImg->getwidth() && dstY >= 0 && dstY < dstImg->getheight())
+				{
+					pNewBuf[dstY * dstImg->getwidth() + dstX] = pBuf[i * width + j];
+				}
+			}
+		}
+	}
+}
+
+
 
 void ImageToolkit::MeanFilter(IMAGE* srcImg, IMAGE* dstImg, int radius)
 {
@@ -315,7 +364,8 @@ void ImageToolkit::MeanFilter(IMAGE* srcImg, IMAGE* dstImg, int radius)
 			return i * width + j;
 		};
 
-	struct rgb {
+	struct rgb 
+	{
 		int r, g, b;
 		rgb operator+(const rgb& another) { return { r + another.r,g + another.g,b + another.b }; }
 		rgb operator-(const rgb& another) { return { r - another.r,g - another.g,b - another.b }; }
@@ -326,8 +376,10 @@ void ImageToolkit::MeanFilter(IMAGE* srcImg, IMAGE* dstImg, int radius)
 
 	integralImage.resize(height + 1, std::vector<rgb>(width + 1));
 
-	for (int i = 1; i <= height; i++) {
-		for (int j = 1; j <= width; j++) {
+	for (int i = 1; i <= height; i++) 
+	{
+		for (int j = 1; j <= width; j++) 
+		{
 			int color = pBuf[GetIndex(i - 1, j - 1)];
 			integralImage[i][j] = integralImage[i - 1][j] + integralImage[i][j - 1] - integralImage[i - 1][j - 1]
 				+ rgb{ (color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF };
@@ -337,8 +389,10 @@ void ImageToolkit::MeanFilter(IMAGE* srcImg, IMAGE* dstImg, int radius)
 	/* 均值滤波 */
 	int w = radius;
 
-	for (int i = 0; i < height; ++i) {
-		for (int j = 0; j < width; ++j) {
+	for (int i = 0; i < height; ++i) 
+	{
+		for (int j = 0; j < width; ++j) 
+		{
 			int x = i + 1, y = j + 1;
 			int x1 = max(x - w, 1), y1 = max(y - w, 1);
 			int x2 = min(x + w, height), y2 = min(y + w, width);
@@ -364,7 +418,8 @@ void ImageToolkit::GaussianFilter(IMAGE* srcImg, IMAGE* dstImg, int radius)
 	float* kernel = new float[size];
 	float sigma = float(radius) / 3.0f;
 	float sum = 0.0f;
-	for (int i = 0; i < size; i++) {
+	for (int i = 0; i < size; i++)
+	{
 		float x = float(i) - radius;
 		kernel[i] = exp(-x * x / (2 * sigma * sigma)) / (sqrt(2 * PI) * sigma);
 		sum += kernel[i];
@@ -374,10 +429,13 @@ void ImageToolkit::GaussianFilter(IMAGE* srcImg, IMAGE* dstImg, int radius)
 
 	// 水平模糊
 	DWORD* temp = new DWORD[width * height];
-	for (int y = 0; y < height; y++) {
-		for (int x = 0; x < width; x++) {
+	for (int y = 0; y < height; y++) 
+	{
+		for (int x = 0; x < width; x++) 
+		{
 			float r = 0, g = 0, b = 0;
-			for (int i = -radius; i <= radius; i++) {
+			for (int i = -radius; i <= radius; i++) 
+			{
 				int xx = x + i;
 				if (xx < 0) xx = 0;
 				if (xx >= width) xx = width - 1;
@@ -391,10 +449,13 @@ void ImageToolkit::GaussianFilter(IMAGE* srcImg, IMAGE* dstImg, int radius)
 	}
 
 	// 垂直模糊
-	for (int y = 0; y < height; y++) {
-		for (int x = 0; x < width; x++) {
+	for (int y = 0; y < height; y++) 
+	{
+		for (int x = 0; x < width; x++) 
+		{
 			float r = 0, g = 0, b = 0;
-			for (int i = -radius; i <= radius; i++) {
+			for (int i = -radius; i <= radius; i++)
+			{
 				int yy = y + i;
 				if (yy < 0) yy = 0;
 				if (yy >= height) yy = height - 1;

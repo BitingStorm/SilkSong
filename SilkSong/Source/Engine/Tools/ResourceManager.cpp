@@ -306,7 +306,3 @@ void ResourceManager::Load(std::string name, std::string path)
 	std::string file = std::string("open ") + path + std::string(" alias ") + name;
 	mciSendString(file.c_str(), NULL, 0, NULL);
 }
-
-
-
-

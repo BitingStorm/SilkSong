@@ -8,12 +8,10 @@ class Chair :public Actor
 public:
 	Chair();
 	
-	void DisablePointer();
-
 protected:
 	class SpriteRenderer* render;
-	class SpriteRenderer* pointer;
 	class CircleCollider* circle;
+	class WidgetComponent* widget;
 	int32 dir = -1;
 	int32 num;
 

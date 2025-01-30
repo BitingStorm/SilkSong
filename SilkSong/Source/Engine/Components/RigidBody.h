@@ -12,7 +12,7 @@
 /*----------------------------------
 			  ¸ÕÌå×é¼þ
   ----------------------------------*/
-class RigidBody final:public ActorComponent
+class RigidBody final :public ActorComponent
 {
 	friend class Collider;
 public:

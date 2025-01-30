@@ -84,7 +84,6 @@ void Characters::PrintCharacters(Vector2D pos, CharactersPattern pattern)
 
 
 
-
 Vector2D Widget::GetLayoutOffset() const
 {
 	switch (layoutPattern)
@@ -230,7 +229,6 @@ void Widget::DetachFrom(Widget* par)
 
 
 
-
 Panel::~Panel()
 {
 	if(members_ui.empty())return;
@@ -346,10 +344,9 @@ void Text::Update()
 
 void Text::Render()
 {
+	if (uiPattern == UIPattern::None)return;
 	texts.PrintCharacters(GetScreenPosition()-size*0.5f, textPattern);
 }
-
-
 
 
 
@@ -403,8 +400,6 @@ bool Image::IsMouseOn()
 
 
 
-
-
 void Button::Update()
 {
 	Image::Update();
@@ -448,7 +443,6 @@ bool Button::IsMousePressed()
 {
 	return IsMouseOn() && GameplayStatics::GetController()->IsMouseClicked();
 }
-
 
 
 
@@ -518,4 +512,52 @@ void Bar::LoadBarButtonPicture(std::string path)
 {
 	barButton = mainWorld.resourcePool->Fetch(path);
 	SetButtonSize(Pair(barButton->getwidth(), barButton->getheight()));
+}
+
+
+
+
+
+
+void Sector::Update()
+{
+	Widget::Update();
+}
+
+void Sector::Render()
+{
+	if (uiPattern == UIPattern::None)return;
+	Vector2D pos = GetScreenPosition();
+	HDC dstDC = GetImageHDC();
+	BLENDFUNCTION bf = { AC_SRC_OVER,0,255,AC_SRC_ALPHA };
+
+	if (sectorBack)
+	{
+		HDC srcDC = GetImageHDC(sectorBack);
+		int w = sectorBack->getwidth();
+		int h = sectorBack->getheight();
+		AlphaBlend(dstDC, (int)pos.x - sizeBack.x / 2, (int)pos.y - sizeBack.y / 2, sizeBack.x, sizeBack.y, srcDC, 0, 0, w, h, bf);
+	}
+
+	if (sectorFront)
+	{
+		HDC srcDC = GetImageHDC(sectorFront);
+		Pair startPosition, endPosition;
+
+		int w = endPosition.x - startPosition.x;
+		int h = endPosition.y - startPosition.y;
+		AlphaBlend(dstDC, (int)pos.x - sizeFront.x / 2, (int)pos.y - sizeFront.y / 2, sizeFront.x, sizeFront.y, srcDC, 0, 0, w, h, bf);
+	}
+}
+
+void Sector::LoadSectorFrontPicture(std::string path)
+{
+	sectorFront = mainWorld.resourcePool->Fetch(path);
+	SetFrontSize(Pair(sectorFront->getwidth(), sectorFront->getheight()));
+}
+
+void Sector::LoadSectorBackPicture(std::string path)
+{
+	sectorBack = mainWorld.resourcePool->Fetch(path);
+	SetBackSize(Pair(sectorBack->getwidth(), sectorBack->getheight()));
 }

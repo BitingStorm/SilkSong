@@ -14,8 +14,8 @@ NewTheme::NewTheme()
 		particles[i]->SetCapacity(27 - i * 2);
 		particles[i]->SetInterval(0.12f - i * 0.008f);
 		particles[i]->Load("menu_ss_particle");
-		particles[i]->SetMaxSpeed(300 + i * 65);
-		particles[i]->SetMinSpeed(200 + i * 65);
+		particles[i]->SetMaxSpeed(275 + i * 70);
+		particles[i]->SetMinSpeed(150 + i * 70);
 		particles[i]->SetPattern(ParticlePattern::Line);
 		particles[i]->SetLine(800, 80 - 25 * (i % 2));
 		particles[i]->SetLayer(i);
@@ -26,9 +26,11 @@ NewTheme::NewTheme()
 		particles[i]->SetGravity(0);
 		particles[i]->SetSizeRange(0.15 + i * 0.1, 0.2 + i * 0.1);
 	}
+	particles[2]->SetLine(800, 95);
+	particles[2]->SetLocalPosition({ 0,500 });
 	particles[3]->SetCapacity(10);
 	particles[3]->SetInterval(0.15);
-	particles[3]->SetSizeRange(0.7, 0.9);
+	particles[3]->SetSizeRange(0.6, 0.9);
 	particles[3]->SetMaxSpeed(650);
 	particles[3]->SetMinSpeed(550);
 	particles[3]->SetLayer(7);

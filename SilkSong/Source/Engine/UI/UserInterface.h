@@ -10,11 +10,13 @@
 
 
 /*----------------------------------
-			   UI¿‡ 
+			    UI¿‡ 
   ----------------------------------*/
 class UserInterface : public Object
 {
 	friend Panel;
+	friend class WidgetComponent;
+
 	std::unordered_set<Widget*>widgets;
 
 	void BeginPlay()override {}

@@ -1,6 +1,9 @@
 #include "Chair.h"
 #include "Components/Collider.h"
 #include "Components/SpriteRenderer.h"
+#include "SceneUI.h"
+#include "GameplayStatics.h"
+#include "Components/WidgetComponent.h"
 
 
 Chair::Chair()
@@ -10,24 +13,20 @@ Chair::Chair()
 	render->LoadSprite("chair");
 	render->SetLayer(0);
 
-	pointer = ConstructComponent<SpriteRenderer>();
-	pointer->AttachTo(root);
-	pointer->LoadSprite("pointer_sit");
-	pointer->SetLayer(8);
-	pointer->SetLocalPosition({0,-150});
-
 	circle = ConstructComponent<CircleCollider>();
-	circle->SetCollisonMode(CollisionMode::Trigger);
 	circle->SetType(CollisionType::Item);
 	circle->AttachTo(root);
 	circle->SetRadius(75);
 	circle->OnComponentBeginOverlap.AddDynamic(this, &Chair::OnBeginOverlap);
 	circle->OnComponentEndOverlap.AddDynamic(this, &Chair::OnEndOverlap);
-}
 
-void Chair::DisablePointer()
-{
-	pointer->Deactivate();
+
+	widget = ConstructComponent<WidgetComponent>();
+	widget->AttachTo(root);
+	widget->AddPosition({0,-150});
+	widget->SetUI(GameplayStatics::CreateUI<SceneUI>());
+	widget->SetSize({100,100});
+	widget->Activate();
 }
 
 
@@ -35,7 +34,7 @@ void Chair::OnBeginOverlap(Collider* hitComp, Collider* otherComp, Actor* otherA
 {
 	if (otherComp->GetType() == CollisionType::HurtBox)
 	{
-		pointer->Activate();
+		widget->Activate();
 	}
 }
 
@@ -43,7 +42,7 @@ void Chair::OnEndOverlap(Collider* hitComp, Collider* otherComp, Actor* otherAct
 {
 	if (otherComp->GetType() == CollisionType::HurtBox)
 	{
-		pointer->Deactivate();
+		widget->Deactivate();
 	}
 }
 
@@ -51,11 +50,11 @@ void Chair::Update(float deltaTime)
 {
 	Actor::Update(deltaTime);
 
-	pointer->AddPosition({ 0,deltaTime * dir * 50 });
+	widget->AddPosition({ 0,deltaTime * dir * 50 });
 
-	if (std::abs(pointer->GetLocalPosition().y + 150) >= 10)
+	if (std::abs(widget->GetLocalPosition().y + 150) >= 8)
 	{
 		dir = -dir;
-		pointer->AddPosition({ 0,2 * deltaTime * dir * 100 });
+		widget->AddPosition({ 0,2 * deltaTime * dir * 100 });
 	}
 }

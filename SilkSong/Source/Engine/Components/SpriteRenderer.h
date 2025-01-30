@@ -13,7 +13,7 @@ class Animator;
 
 
 /*----------------------------------
-			 äÖÈ¾Æ÷£¨2D£©
+			  äÖÈ¾Æ÷£¨2D£©
   ----------------------------------*/
 class SpriteRenderer final: public SceneComponent,public LayerInterface,public ImageInterface
 {

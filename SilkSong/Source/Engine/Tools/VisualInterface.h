@@ -127,7 +127,7 @@ public:
 
 
 /*----------------------------------
-			   图像处理器
+			  图像处理器
   ----------------------------------*/
 class ImageToolkit
 {
@@ -147,6 +147,8 @@ public:
 	//镜像翻转变换
 	static void FlipImage(IMAGE* srcImg, IMAGE* dstImg, bool bIsHorizontal = true);
 
+	//截取夹角部分的图像
+	static void GetSectorImage(IMAGE* srcImg, IMAGE* dstImg, float start, float end);
 
 	/** 滤波 **/
 

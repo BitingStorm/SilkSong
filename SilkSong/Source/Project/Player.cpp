@@ -136,7 +136,7 @@ void Player::BeginPlay()
 			{
 				if (bSitting)render->Blink(0.5f, WHITE, 90);
 				else render->Blink(0.1f, BLACK);
-				if (--blinkTimes == 0)hurtBox->SetCollisonMode(CollisionMode::Trigger);
+				if (--blinkTimes == 0 && !bSitting)hurtBox->SetCollisonMode(CollisionMode::Trigger);
 			}
 		}, true);
 
@@ -539,17 +539,17 @@ void Player::Die()
 	RecoverTimer.Bind(3,this,&Player::Recover);
 	audio->Play("sound_die");
 	audio->Play("voice_die");
+	hurtBox->SetCollisonMode(CollisionMode::None);
 }
 
 void Player::Recover()
 {
 	EnableInput(true);
-	rigid->SetGravityEnabled(true);
-
 	if (Chair* chair = GameplayStatics::FindObjectOfClass<Chair>())
 	{
 		SetLocalPosition(chair->GetWorldPosition() - Vector2D{ 0,30 });
 		bSitting = true; ani->SetNode("sitdown"); health = 5;
+		rigid->SetVelocity({});
 	}
 }
 
@@ -561,15 +561,17 @@ void Player::SitDown()
 		{
 			return;
 		}
-		chair->DisablePointer();
 		SetLocalPosition(chair->GetWorldPosition() - Vector2D{ 0,30 });
 		bSitting = true; ani->SetNode("sitdown"); health = 5; blinkTimes = 1;
-		audio->Play("sound_heal");ui->WhiteBlink();
+		audio->Play("sound_heal"); ui->WhiteBlink();
 		GameplayStatics::CreateObject<SitParticle>(GetWorldPosition() + Vector2D(0, 45));
 		Effect* effect = GameplayStatics::CreateObject<Effect>(Vector2D(-20, 0));
 		effect->Init("effect_sit", -0.02f);
 		effect->AttachTo(this);
 		effect->SetLocalScale(GetWorldScale() * 0.5f);
+		hurtBox->SetCollisonMode(CollisionMode::None);
+		rigid->SetGravityEnabled(false);
+		rigid->SetVelocity({});
 	}
 }
 
@@ -577,6 +579,8 @@ void Player::SitDown()
 void Player::StandUp()
 {
 	bSitting = false;
+	hurtBox->SetCollisonMode(CollisionMode::Trigger);
+	rigid->SetGravityEnabled(true);
 }
 
 void Player::LeaveUp()

@@ -24,6 +24,7 @@ class UserInterface;
 class Widget;
 class Button;
 class Bar;
+class Sector;
 class Camera;
 class SpriteRenderer;
 class Animation;
@@ -74,6 +75,7 @@ class World final
 	friend Widget;
 	friend Button;
 	friend Bar;
+	friend Sector;
 	friend LevelManager;
 	friend AudioPlayer;
 	friend ITimerHandler;

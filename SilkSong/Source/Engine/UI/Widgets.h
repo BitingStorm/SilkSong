@@ -20,7 +20,6 @@ enum class CharactersPattern:uint8
 	Right
 };
 
-
 /* 文字 */
 class Characters
 {
@@ -39,7 +38,6 @@ public:
 	void SetCharacters(std::string text, int size = 3, LPCTSTR type = "楷体");
 	void PrintCharacters(Vector2D pos, CharactersPattern pattern = CharactersPattern::Middle);
 };
-
 
 
 
@@ -66,7 +64,6 @@ enum class UIPattern :uint8
 	VisibleOnly,
 	VisibleAndInteractive
 };
-
 
 /*----------------------------------
 			 基础小部件
@@ -285,9 +282,6 @@ public:
 
 
 
-
-
-
 /* 滑动条部件方向 */
 enum class BarDirection :uint8
 {
@@ -298,7 +292,7 @@ enum class BarDirection :uint8
 };
 
 /*----------------------------------
-			 滑动条部件
+			  滑动条部件
   ----------------------------------*/
 class Bar : public Widget
 {
@@ -323,6 +317,31 @@ public:
 	void SetBackSize(Pair size) { sizeBack = size; }
 	void SetButtonSize(Pair size) { sizeButton = size; }
 
+	void SetPercentage(float per) { percentage = per; }
+	float GetPercentage() const { return percentage; }
+};
+
+
+/*----------------------------------
+			  扇形部件
+  ----------------------------------*/
+class Sector : public Widget
+{
+	float percentage = 0;
+	IMAGE* sectorFront;
+	IMAGE* sectorBack;
+	Pair sizeFront = Pair(0, 0);
+	Pair sizeBack = Pair(0, 0);
+public:
+	virtual void Update()override;
+	virtual void Render()override;
+
+	void LoadSectorFrontPicture(std::string path);
+	void LoadSectorBackPicture(std::string path);
+	
+	void SetFrontSize(Pair size) { sizeFront = size; }
+	void SetBackSize(Pair size) { sizeBack = size; }
+	
 	void SetPercentage(float per) { percentage = per; }
 	float GetPercentage() const { return percentage; }
 };

@@ -64,6 +64,7 @@ void SpriteRenderer::Render()
 void SpriteRenderer::Update(float deltaTime)
 {
 	SceneComponent::Update(deltaTime);
+
 	if (!sprite || !bIsEnabled)return;
 
 	/**

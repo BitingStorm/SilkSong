@@ -33,7 +33,7 @@ void Collider::Update(float deltaTime)
 {
     Super::Update(deltaTime);
 
-    if (mode == CollisionMode::None||!bIsEnabled)return;
+    if (mode == CollisionMode::None || !bIsEnabled)return;
 
     for (auto& another : collisions)
     {
@@ -123,7 +123,7 @@ void Collider::Insert(Collider* another)
                 rigidAttached->RestrictVelocity(-hitResult.ImpactNormal, PhysicsMaterial::Combine(this->material, another->material), another->rigidAttached);
             }
         }
-        else
+        else 
         {
             OnComponentBeginOverlap.BroadCast(this, another, another->pOwner); another->OnComponentBeginOverlap.BroadCast(another, this, pOwner);
         }

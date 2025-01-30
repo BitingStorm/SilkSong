@@ -228,6 +228,12 @@
     <ClInclude Include="Source\Project\SitParticle.h">
       <Filter>Project\Player</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Engine\Components\WidgetComponent.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\SceneUI.h">
+      <Filter>Project</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Components\ActorComponent.cpp">
@@ -391,6 +397,12 @@
     </ClCompile>
     <ClCompile Include="Source\Project\SitParticle.cpp">
       <Filter>Project\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Components\WidgetComponent.cpp">
+      <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\SceneUI.cpp">
+      <Filter>Project</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

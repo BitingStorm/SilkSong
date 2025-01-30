@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Project\SceneUI.h" />
+    <ClInclude Include="Source\Engine\Components\WidgetComponent.h" />
     <ClInclude Include="Source\Engine\Core\Interfaces.h" />
     <ClInclude Include="Source\Project\Chair.h" />
     <ClInclude Include="Source\Project\DieParticle.h" />
@@ -79,6 +81,7 @@
     <ClInclude Include="Source\Project\RainProducer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\Components\WidgetComponent.cpp" />
     <ClCompile Include="Source\Engine\Core\Interfaces.cpp" />
     <ClCompile Include="Source\Project\Chair.cpp" />
     <ClCompile Include="Source\Project\DieParticle.cpp" />
@@ -129,6 +132,7 @@
     <ClCompile Include="Source\Engine\Tools\VisualInterface.cpp" />
     <ClCompile Include="Source\Engine\UI\UserInterface.cpp" />
     <ClCompile Include="Source\Engine\UI\Widgets.cpp" />
+    <ClCompile Include="Source\Project\SceneUI.cpp" />
     <ClCompile Include="Source\Project\SitParticle.cpp" />
     <ClCompile Include="Source\Project\TearCityLevel.cpp" />
     <ClCompile Include="Source\Project\PlayerAnimator.cpp" />
