@@ -317,7 +317,7 @@ public:
 	void SetBackSize(Pair size) { sizeBack = size; }
 	void SetButtonSize(Pair size) { sizeButton = size; }
 
-	void SetPercentage(float per) { percentage = per; }
+	void SetPercentage(float per);
 	float GetPercentage() const { return percentage; }
 };
 
@@ -332,16 +332,19 @@ class Sector : public Widget
 	IMAGE* sectorBack;
 	Pair sizeFront = Pair(0, 0);
 	Pair sizeBack = Pair(0, 0);
+	float startDegree = 90;
 public:
 	virtual void Update()override;
 	virtual void Render()override;
 
 	void LoadSectorFrontPicture(std::string path);
 	void LoadSectorBackPicture(std::string path);
-	
+
 	void SetFrontSize(Pair size) { sizeFront = size; }
 	void SetBackSize(Pair size) { sizeBack = size; }
-	
-	void SetPercentage(float per) { percentage = per; }
+
+	void SetPercentage(float per);
 	float GetPercentage() const { return percentage; }
+
+	void SetStartDegree(float start);
 };

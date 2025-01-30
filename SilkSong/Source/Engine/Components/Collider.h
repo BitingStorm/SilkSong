@@ -52,7 +52,7 @@ DECLARE_MULTI_PARAM_MULTICAST_DELEGATE_CLASS(CollisionHitDelegate, Collider* ,Co
 
 
 /*----------------------------------
-			  Åö×²Æ÷
+			    Åö×²Æ÷
   ----------------------------------*/
 class Collider :public SceneComponent
 {

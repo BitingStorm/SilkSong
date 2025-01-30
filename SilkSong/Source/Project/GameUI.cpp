@@ -59,6 +59,15 @@ GameUI::GameUI()
 	DartNum->SetLayer(12);
 	DartNum->SetPattern(CharactersPattern::Left);
 
+	/*ItemNum = AddWidget<Sector>();
+	ItemNum->AttachTo(rootCanvas);
+	ItemNum->SetRelativePosition(Vector2D(250, 200));
+	ItemNum->SetSize(Vector2D(200, 200));
+	ItemNum->SetLayer(12);
+	ItemNum->LoadSectorFrontPicture("inventory_item");
+	ItemNum->LoadSectorBackPicture("inventory_item_");*/
+
+
 	for (int i = 0; i < 5; i++)
 	{
 		Health[i] = AddWidget<Image>();
@@ -106,6 +115,8 @@ void GameUI::Update(float deltaTime)
 	CoinNum->SetText("$0" + std::to_string(player->GetGeo()), 5, "Trajan Pro");
 
 	DartNum->SetText("$0" + std::to_string(player->GetDart()), 5, "Trajan Pro");
+
+	//ItemNum->SetPercentage(float(player->GetDart())/15);
 }
 
 void GameUI::WhiteBlink()

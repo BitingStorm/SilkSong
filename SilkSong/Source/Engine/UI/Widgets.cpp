@@ -514,6 +514,11 @@ void Bar::LoadBarButtonPicture(std::string path)
 	SetButtonSize(Pair(barButton->getwidth(), barButton->getheight()));
 }
 
+void Bar::SetPercentage(float per)
+{ 
+	percentage = Math::Clamp(per, 0.f, 1.f);
+}
+
 
 
 
@@ -541,12 +546,14 @@ void Sector::Render()
 
 	if (sectorFront)
 	{
-		HDC srcDC = GetImageHDC(sectorFront);
-		Pair startPosition, endPosition;
-
-		int w = endPosition.x - startPosition.x;
-		int h = endPosition.y - startPosition.y;
+		IMAGE* dest{};
+		dest = new IMAGE(sectorFront->getwidth(), sectorFront->getheight());
+		ImageToolkit::GetSectorImage(sectorFront, dest, startDegree, startDegree + 360 * percentage);
+		int w = sectorFront->getwidth();
+		int h = sectorFront->getheight();
+		HDC srcDC = GetImageHDC(dest);
 		AlphaBlend(dstDC, (int)pos.x - sizeFront.x / 2, (int)pos.y - sizeFront.y / 2, sizeFront.x, sizeFront.y, srcDC, 0, 0, w, h, bf);
+		delete dest;
 	}
 }
 
@@ -560,4 +567,14 @@ void Sector::LoadSectorBackPicture(std::string path)
 {
 	sectorBack = mainWorld.resourcePool->Fetch(path);
 	SetBackSize(Pair(sectorBack->getwidth(), sectorBack->getheight()));
+}
+
+void Sector::SetPercentage(float per)
+{
+	percentage = Math::Clamp(per, 0.f, 1.f);
+}
+
+void Sector::SetStartDegree(float start)
+{
+	startDegree = Math::Clamp(start, 0.f, 360.f);
 }

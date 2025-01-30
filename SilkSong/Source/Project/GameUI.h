@@ -23,6 +23,7 @@ class GameUI :public UserInterface
 
 	Text* DartNum;
 
+	Sector* ItemNum;
 public:
 	GameUI();
 

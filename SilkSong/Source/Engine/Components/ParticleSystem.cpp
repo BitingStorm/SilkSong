@@ -65,7 +65,6 @@ void ParticleSystem::Update(float deltaTime)
 		if (!isLoop && particles.size() >= capacity) capacity = -1;  
 	}//生产管理
 
-
 	if (particles.size()) 
 	{
 		if (interval == 0) 

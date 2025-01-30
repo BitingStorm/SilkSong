@@ -5,7 +5,12 @@
 void SceneComponent::process_Destruct()
 {
 	if (!children.empty())
-		for (auto& child : children)child->process_Destruct();
+	{
+		for (auto& child : children)
+		{
+			child->process_Destruct();
+		}
+	}
 	ActorComponent::Destruct();
 }
 
@@ -41,7 +46,9 @@ void SceneComponent::Destruct()
 Vector2D SceneComponent::GetWorldPosition() const
 {
 	if (parent)
+	{
 		return parent->GetWorldPosition() + GetLocalPosition();
+	}
 	else
 	{
 		if (pOwner)return pOwner->GetWorldPosition();
@@ -52,7 +59,9 @@ Vector2D SceneComponent::GetWorldPosition() const
 float SceneComponent::GetWorldRotation() const
 {
 	if (parent)
+	{
 		return parent->GetWorldRotation() + GetLocalRotation();
+	}
 	else
 	{
 		if (pOwner)return pOwner->GetWorldRotation();
@@ -64,7 +73,9 @@ float SceneComponent::GetWorldRotation() const
 Vector2D SceneComponent::GetWorldScale() const
 {
 	if (parent)
+	{
 		return parent->GetWorldScale() * GetLocalScale();
+	}
 	else
 	{
 		if (pOwner)return pOwner->GetWorldScale();

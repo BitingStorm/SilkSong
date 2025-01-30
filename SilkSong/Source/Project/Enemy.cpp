@@ -72,24 +72,24 @@ void Enemy::TakeDamage(Vector2D normal, bool gain)
 {
 	rigid->AddImpulse({ normal.x * 600,-200 });
 	GameplayStatics::PlayCameraShake(4);
-	render->Blink(0.3f,WHITE,100);
+	render->Blink(0.3f, WHITE, 100);
 	blood -= 3;
 
 	if (!player)return;
 	float delta_x = player->GetWorldPosition().x - GetWorldPosition().x;
-	if(gain)player->AddSoul(1.f);
+	if (gain)player->AddSoul(1.f);
 
 
 	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
-	if (effect) 
+	if (effect)
 	{
 		effect->SetLocalRotation(Math::RandInt(-90, -60)); effect->Init("effect_attack", -0.03f);
-		effect->SetLocalScale(Vector2D{ delta_x < 0 ? 1.f:-1.f ,1.f }*Math::RandReal(1, 1.5));
+		effect->SetLocalScale(Vector2D{ delta_x < 0 ? 1.f : -1.f ,1.f }*Math::RandReal(1, 1.5));
 	}
 
 	if (blood <= 0 && !bIsDead)
 	{
-		Die(); 
+		Die();
 		rigid->SetAngularVelocity(100 * (delta_x > 0 ? 1.f : -1.f) * Math::RandPerc());
 		SpawnGeos();
 	}
@@ -98,7 +98,7 @@ void Enemy::TakeDamage(Vector2D normal, bool gain)
 		Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + Vector2D((delta_x < 0?1.f:-1.f)*300,0));
 		if (!effect)return;
 		effect->Init("effect_attack_", 0.02f);
-		effect->SetLocalScale(Vector2D{ delta_x < 0 ? 1.f : -1.f ,1.f }*Math::RandReal(0.9, 1.3)); 
+		effect->SetLocalScale(Vector2D{ delta_x < 0 ? 1.f : -1.f ,1.f }*Math::RandReal(0.9, 1.3));
 		effect->SetLocalRotation(Math::RandInt(10,-10));
 	}
 }

@@ -78,4 +78,10 @@ private:
 
 	//加载音频媒体资源
 	void Load(std::string name, std::string path);
+
+	//加载字体资源
+	void LoadText(std::string path);
+
+	//加载鼠标样式资源
+	void LoadCustomCursor(std::string path);
 };

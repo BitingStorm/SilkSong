@@ -307,44 +307,34 @@ void ImageToolkit::FlipImage(IMAGE* srcImg, IMAGE* dstImg, bool bIsHorizontal)
 void ImageToolkit::GetSectorImage(IMAGE* srcImg, IMAGE* dstImg, float start, float end)
 {
 	if (!srcImg || !dstImg)return;
-	float a = MIN(start, end), b = MAX(start, end);
 
 	const DWORD* pBuf = GetImageBuffer(srcImg);
 	DWORD* pNewBuf = GetImageBuffer(dstImg);
 	int width = srcImg->getwidth(), height = srcImg->getheight();
 
-	// 假设图像中心为旋转中心
 	int centerX = width / 2;
 	int centerY = height / 2;
 
-	// 遍历原图像的每个像素
+	start = Math::NormalizeDegree(start);
+	end = Math::NormalizeDegree(end);
+	if (end <= start)end += 360;
 	for (int i = 0; i < height; ++i)
 	{
 		for (int j = 0; j < width; ++j)
 		{
-			// 计算当前像素相对于中心的极坐标
 			float x = j - centerX;
 			float y = i - centerY;
 			float radius = sqrt(x * x + y * y);
-			float theta = atan2(y, x) * 180.0f / PI;  // 将弧度转换为角度
+			float theta = atan2(-y, x) * 180.0f / PI;  
+			theta = Math::NormalizeDegree(theta);
 
-			// 确保角度为正数(0°到360°)
-			if (theta < 0) theta += 360.0f;
-			// 检查角度是否在指定范围内
-			if (theta >= a && theta <= b)
+			if (theta >= start && theta < end)
 			{
-				// 计算在目标图像中的位置
-				int dstX = static_cast<int>(radius * cos(theta * PI / 180.0f)) + dstImg->getwidth() / 2;
-				int dstY = static_cast<int>(radius * sin(theta * PI / 180.0f)) + dstImg->getheight() / 2;
-
-				// 确保目标图像的像素位置在有效范围内
-				if (dstX >= 0 && dstX < dstImg->getwidth() && dstY >= 0 && dstY < dstImg->getheight())
-				{
-					pNewBuf[dstY * dstImg->getwidth() + dstX] = pBuf[i * width + j];
-				}
+				pNewBuf[i * width + j] = pBuf[i * width + j];
 			}
 		}
 	}
+	ImageToolkit::GaussianFilter(dstImg, dstImg, 1);
 }
 
 

@@ -1,5 +1,7 @@
 #include "ResourceManager.h"
 #include <easyx.h>
+#include <gdiplus.h>
+#pragma comment (lib,"Gdiplus.lib")
 
 
 void ResourceManager::Initialize()
@@ -92,7 +94,7 @@ void ResourceManager::Initialize()
 	/** 图像 **/
 
 	//Environment
-	Load("menu_0", "Asset/Images/Menu/Voidheart_menu_BG.png", 1250, 875);
+	Load("menu_0", "Asset/Images/Menu/Voidheart_menu_BG.jpg", 1250, 875);
 	Load("menu_1", "Asset/Images/Menu/title-bg.png", 1400, 800);
 	Load("menu_2", "Asset/Images/Menu/title-f.png", 475, 750);
 	Load("menu_title", "Asset/Images/Menu/title.png", 1274, 521);
@@ -154,6 +156,8 @@ void ResourceManager::Initialize()
 	Load("inventory_soul_", "Asset/Images/UI/Inv_0032_inv_soul_backboard.png", 106, 106);
 	Load("inventory_health", "Asset/Images/UI/blood_load_h_3.png", 43, 62);
 	Load("inventory_health_", "Asset/Images/UI/blood_load_h_0.png", 43, 62);
+	Load("inventory_item", "Asset/Images/UI/ins_item.png", 75, 75);
+	Load("inventory_item_", "Asset/Images/UI/ins_item_bk.png", 75, 75);
 	Load("inventory_coin", "Asset/Images/UI/InventoryCoin.png", 47, 48);
 	Load("black", "Asset/Images/UI/mask_black.png", 1200, 800);
 	Load("white", "Asset/Images/UI/mask_white.png", 1200, 800);
@@ -219,6 +223,17 @@ void ResourceManager::Initialize()
 	Load("sound_bug_appear", "Asset/Sounds/Bug/appear.mp3");
 	Load("sound_bug_appear_", "Asset/Sounds/Bug/appear_.mp3");
 	Load("sound_bug_die", "Asset/Sounds/Bug/die.mp3");
+
+
+	/*************
+	 * 字体资源加载
+	 *************/
+	LoadText("Asset/TrajanPro.ttf");
+
+	/*************
+	 * 鼠标样式资源加载
+	 *************/
+	LoadCustomCursor("Asset/cursor.cur");
 }
 
 
@@ -305,4 +320,58 @@ void ResourceManager::Load(std::string name, std::string path)
 {
 	std::string file = std::string("open ") + path + std::string(" alias ") + name;
 	mciSendString(file.c_str(), NULL, 0, NULL);
+}
+
+void ResourceManager::LoadText(std::string path)
+{
+	AddFontResourceEx(path.c_str(), FR_PRIVATE, NULL);
+}
+
+void ResourceManager::LoadCustomCursor(std::string path)
+{
+	// 加载光标文件
+	HCURSOR hcur = (HCURSOR)LoadImage(NULL, path.c_str(), IMAGE_CURSOR, 0, 0, LR_LOADFROMFILE);
+	if (hcur == NULL)
+	{
+		MessageBox(NULL, "Failed to load cursor", "Error", MB_OK | MB_ICONERROR);
+		return;
+	}
+
+	// 获取光标的 ICONINFO
+	ICONINFO iconInfo;
+	if (GetIconInfo(hcur, &iconInfo))
+	{
+		// 获取光标图像的宽度和高度
+		BITMAP bm;
+		GetObject(iconInfo.hbmColor, sizeof(BITMAP), &bm);
+		int cursorWidth = bm.bmWidth;
+		int cursorHeight = bm.bmHeight;
+
+		// 设置新的热点位置
+		ICONINFO newIconInfo = iconInfo;
+		newIconInfo.xHotspot = cursorWidth / 2; 
+		newIconInfo.yHotspot = cursorHeight / 2; 
+
+		// 创建新的光标
+		HCURSOR newHcur = CreateIconIndirect(&newIconInfo);
+		if (newHcur == NULL)
+		{
+			MessageBox(NULL, "Failed to create new cursor", "Error", MB_OK | MB_ICONERROR);
+			DeleteObject(iconInfo.hbmColor);
+			DeleteObject(iconInfo.hbmMask);
+			return;
+		}
+
+		// 释放旧的光标资源
+		DeleteObject(iconInfo.hbmColor);
+		DeleteObject(iconInfo.hbmMask);
+
+		// 设置新的光标
+		SetClassLongPtr(GetHWnd(), GCLP_HCURSOR, (LONG_PTR)newHcur);
+	}
+	else
+	{
+		DeleteObject(hcur);
+		MessageBox(NULL, "Failed to get icon info", "Error", MB_OK | MB_ICONERROR);
+	}
 }

@@ -76,8 +76,11 @@ void SpriteRenderer::Update(float deltaTime)
 	if (GetWorldRotation() != angle)
 	{
 		angle = GetWorldRotation();
-		RotateImage(PI * angle / 180);
-		if (filterLayers.size() > 0)FilterImage();
+		RotateImage(PI * Math::NormalizeDegree(angle) / 180);
+		if (filterLayers.size() > 0)
+		{
+			FilterImage();
+		}
 	}
 
 
