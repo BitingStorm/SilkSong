@@ -333,7 +333,7 @@ void ResourceManager::LoadCustomCursor(std::string path)
 	HCURSOR hcur = (HCURSOR)LoadImage(NULL, path.c_str(), IMAGE_CURSOR, 0, 0, LR_LOADFROMFILE);
 	if (hcur == NULL)
 	{
-		MessageBox(NULL, "Failed to load cursor", "Error", MB_OK | MB_ICONERROR);
+		/*MessageBox(NULL, "Failed to load cursor", "Error", MB_OK | MB_ICONERROR);*/
 		return;
 	}
 
@@ -356,7 +356,7 @@ void ResourceManager::LoadCustomCursor(std::string path)
 		HCURSOR newHcur = CreateIconIndirect(&newIconInfo);
 		if (newHcur == NULL)
 		{
-			MessageBox(NULL, "Failed to create new cursor", "Error", MB_OK | MB_ICONERROR);
+			/*MessageBox(NULL, "Failed to create new cursor", "Error", MB_OK | MB_ICONERROR);*/
 			DeleteObject(iconInfo.hbmColor);
 			DeleteObject(iconInfo.hbmMask);
 			return;
@@ -372,6 +372,6 @@ void ResourceManager::LoadCustomCursor(std::string path)
 	else
 	{
 		DeleteObject(hcur);
-		MessageBox(NULL, "Failed to get icon info", "Error", MB_OK | MB_ICONERROR);
+		/*MessageBox(NULL, "Failed to get icon info", "Error", MB_OK | MB_ICONERROR);*/
 	}
 }

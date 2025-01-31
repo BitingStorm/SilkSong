@@ -306,7 +306,7 @@ void ImageToolkit::FlipImage(IMAGE* srcImg, IMAGE* dstImg, bool bIsHorizontal)
 
 void ImageToolkit::GetSectorImage(IMAGE* srcImg, IMAGE* dstImg, float start, float end)
 {
-	if (!srcImg || !dstImg)return;
+	if (!srcImg || !dstImg || start == end)return;
 
 	const DWORD* pBuf = GetImageBuffer(srcImg);
 	DWORD* pNewBuf = GetImageBuffer(dstImg);
@@ -317,24 +317,31 @@ void ImageToolkit::GetSectorImage(IMAGE* srcImg, IMAGE* dstImg, float start, flo
 
 	start = Math::NormalizeDegree(start);
 	end = Math::NormalizeDegree(end);
-	if (end <= start)end += 360;
+	
+
 	for (int i = 0; i < height; ++i)
 	{
 		for (int j = 0; j < width; ++j)
 		{
 			float x = j - centerX;
 			float y = i - centerY;
-			float radius = sqrt(x * x + y * y);
 			float theta = atan2(-y, x) * 180.0f / PI;  
 			theta = Math::NormalizeDegree(theta);
 
-			if (theta >= start && theta < end)
+			if (end <= start)
 			{
-				pNewBuf[i * width + j] = pBuf[i * width + j];
+				if (theta >= end && theta < start)
+				{
+					continue;
+				}
 			}
+			else if(theta <= start || theta > end)
+			{
+				continue;
+			}
+			pNewBuf[i * width + j] = pBuf[i * width + j];
 		}
 	}
-	ImageToolkit::GaussianFilter(dstImg, dstImg, 1);
 }
 
 

@@ -77,9 +77,9 @@ void RigidBody::RestrictVelocity(Vector2D impactNormal,const PhysicsMaterial& ma
 	 **/
 	if (!another)
 	{
-		if (Vector2D::DotProduct(velocity, impactNormal) < 0) 
+		if (Vector2D::DotProduct(velocity, impactNormal) < 0)
 		{
-			float multiplier = (tangentVelocity.Size() - normalVelocity.Size()*friction) / tangentVelocity.Size();
+			float multiplier = (tangentVelocity.Size() - normalVelocity.Size() * friction) / tangentVelocity.Size();
 			multiplier = Math::Clamp(multiplier, 0.0f, 1.0f);
 			velocity = tangentVelocity * multiplier - bounciness * normalVelocity;
 		}
@@ -88,17 +88,17 @@ void RigidBody::RestrictVelocity(Vector2D impactNormal,const PhysicsMaterial& ma
 
 
 	/**
-     * 双刚体弹性碰撞处理逻辑（忽略摩擦）
-     **/
+	 * 双刚体弹性碰撞处理逻辑（忽略摩擦）
+	 **/
 	Vector2D anotherNormalVelocity = Vector2D::ProjectVector(another->velocity, impactNormal);
 	Vector2D anotherTangentVelocity = Vector2D::ProjectVector(another->velocity, tangentVector);
 
-	if(Vector2D::DotProduct(normalVelocity - anotherNormalVelocity, impactNormal) >= 0)return;//确保有相碰的趋势
+	if (Vector2D::DotProduct(normalVelocity - anotherNormalVelocity, impactNormal) >= 0)return;//确保有相碰的趋势
 
 	Vector2D normalVelocity_ = normalVelocity;
 	normalVelocity = ((mass - bounciness * another->mass) * normalVelocity + (1 + bounciness) * another->mass * anotherNormalVelocity) / (mass + another->mass);
 	anotherNormalVelocity = ((another->mass - bounciness * mass) * anotherNormalVelocity + (1 + bounciness) * mass * normalVelocity_) / (mass + another->mass);
-	
+
 	velocity = normalVelocity + tangentVelocity;
 	another->velocity = anotherNormalVelocity + anotherTangentVelocity;
 }

@@ -47,10 +47,10 @@ struct Vector2D
 		return v1.x * v2.x + v1.y * v2.y;
 	}
 
-	//向量叉积
-	static Vector2D CrossProduct(const Vector2D& v1, const Vector2D& v2)
+	//向量叉积（以z轴值为结果）
+	static float CrossProduct(const Vector2D& v1, const Vector2D& v2)
 	{
-		return { v1.y * v2.x - v1.x * v2.y, v1.x * v2.y - v1.y * v2.x };
+		return v1.x * v2.y - v2.x * v1.y;
 	}
 
 	//获取两个坐标之间的距离

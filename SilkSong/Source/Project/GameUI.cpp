@@ -47,25 +47,26 @@ GameUI::GameUI()
 	Dart = AddWidget<Image>();
 	Dart->AttachTo(SoulContainer);
 	Dart->SetLayoutPattern(LayoutPattern::RightMiddle);
-	Dart->SetRelativePosition(Vector2D(-40, 75));
+	Dart->SetRelativePosition(Vector2D(-50, 100));
 	Dart->SetSize(Vector2D(47, 48));
 	Dart->LoadSprite("dart");
 	Dart->SetLayer(12);
 
 	DartNum = AddWidget<Text>();
 	DartNum->AttachTo(Dart);
-	DartNum->SetRelativePosition(Vector2D(65, 25));
+	DartNum->SetRelativePosition(Vector2D(75, 25));
 	DartNum->SetSize(Vector2D(100, 50));
 	DartNum->SetLayer(12);
 	DartNum->SetPattern(CharactersPattern::Left);
 
-	/*ItemNum = AddWidget<Sector>();
-	ItemNum->AttachTo(rootCanvas);
-	ItemNum->SetRelativePosition(Vector2D(250, 200));
+	ItemNum = AddWidget<Sector>();
+	ItemNum->AttachTo(Dart);
+	ItemNum->SetRelativePosition(Vector2D(-5, 0));
 	ItemNum->SetSize(Vector2D(200, 200));
 	ItemNum->SetLayer(12);
+	ItemNum->SetLayoutPattern(LayoutPattern::Center);
 	ItemNum->LoadSectorFrontPicture("inventory_item");
-	ItemNum->LoadSectorBackPicture("inventory_item_");*/
+	ItemNum->LoadSectorBackPicture("inventory_item_");
 
 
 	for (int i = 0; i < 5; i++)
@@ -116,7 +117,7 @@ void GameUI::Update(float deltaTime)
 
 	DartNum->SetText("$0" + std::to_string(player->GetDart()), 5, "Trajan Pro");
 
-	//ItemNum->SetPercentage(float(player->GetDart())/15);
+	ItemNum->SetPercentage(float(player->GetDart())/15);
 }
 
 void GameUI::WhiteBlink()
