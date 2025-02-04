@@ -28,5 +28,10 @@ VS2022 + EasyX_20240601 
 
 ### 游戏执行效果
 
+![输入图片说明](QQ20250131-002024.png)
+![输入图片说明](QQ20250130-105855.png)
+![输入图片说明](QQ20250130-105947.png)
 
 演示视频：[【Easyx】空洞骑士，但是Easyx](https://www.bilibili.com/video/BV1U8fSYkEsC/?share_source=copy_web&vd_source=a59fee9f89e8975f2e92a9b950cce6c5)
+
+>>>>>>> gitee/main
