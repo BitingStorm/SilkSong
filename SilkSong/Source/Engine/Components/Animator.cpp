@@ -1,7 +1,7 @@
 #include"Animator.h"
 #include"Core/World.h"
 #include"Tools/ResourceManager.h"
-#include"SpriteRenderer.h"
+#include"Tools/VisualInterface.h"
 
 
 void Animation::Tick()
@@ -12,9 +12,16 @@ void Animation::Tick()
 	}
 
 	//如果不可循环则会静止在最后一帧
-	if (index == num - 1 && !bLooping && !bMontage)
+	if (!bMontage && !bLooping)
 	{
-		return;
+		if (index == num - 1 && !animController->IsReverse())
+		{
+			return;
+		}
+		if (index == 0 && animController->IsReverse())
+		{
+			return;
+		}
 	}
 
 	//更新动画帧
@@ -58,7 +65,7 @@ void Animation::Tick()
 	}
 }
 
-void Animation::Load(std::string name, Vector2D delta)
+void Animation::Load(std::string name, FVector2D delta)
 {
 	AnimationResource aniRes = mainWorld.resourcePool->FetchAnimation(name);
 	num = aniRes.num;
@@ -83,7 +90,7 @@ void Animator::BeginPlay()
 		return;
 	}
 
-	rendererAttached = pOwner->GetComponentByClass<SpriteRenderer>();
+	rendererAttached = pOwner->GetComponentByClass<ImageInterface>();
 	if (rendererAttached)
 	{
 		rendererAttached->animatorAttached = this;
@@ -170,7 +177,7 @@ void Animator::SetNode(Animation* node)
 }
 
 
-void Animator::SetupAttachment(SpriteRenderer* renderer)
+void Animator::SetupAttachment(ImageInterface* renderer)
 {
 	rendererAttached = renderer;
 	renderer->animatorAttached = this;

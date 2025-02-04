@@ -14,7 +14,7 @@ public:
 
 	virtual void Update(float deltaTime)override;
 
-	void TakeDamage(Vector2D normal, bool gain = true);
+	void TakeDamage(FVector2D normal, bool gain = true);
 
 	bool IsDead()const {return bIsDead;}
 

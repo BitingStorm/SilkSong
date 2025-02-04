@@ -31,7 +31,7 @@ public:
 
 	UserInterface* GetUI() { return userInterface; }
 
-	void SetSize(Vector2D size);
+	void SetSize(FVector2D size);
 
 private:
 	UserInterface* userInterface;

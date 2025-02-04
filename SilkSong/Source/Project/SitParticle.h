@@ -5,8 +5,6 @@
 
 class SitParticle :public Actor
 {
-	DEFINE_SUPER(Actor)
-
 public:
 	SitParticle();
 

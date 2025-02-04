@@ -42,7 +42,7 @@ public:
 	void MouseTick();
 
 	//获取鼠标世界坐标系位置
-	Vector2D GetCursorPosition() const;
+	FVector2D GetCursorPosition() const;
 
 	//获取鼠标是否按下
 	bool IsMouseClicked() const;

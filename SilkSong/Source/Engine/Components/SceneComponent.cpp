@@ -43,7 +43,7 @@ void SceneComponent::Destruct()
 
 
 
-Vector2D SceneComponent::GetWorldPosition() const
+FVector2D SceneComponent::GetWorldPosition() const
 {
 	if (parent)
 	{
@@ -70,7 +70,7 @@ float SceneComponent::GetWorldRotation() const
 
 }
 
-Vector2D SceneComponent::GetWorldScale() const
+FVector2D SceneComponent::GetWorldScale() const
 {
 	if (parent)
 	{

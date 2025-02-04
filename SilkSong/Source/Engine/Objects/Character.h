@@ -11,7 +11,7 @@
 
 
  /* 角色状态 */
-enum class CharacterMovementState : uint8
+enum class ECharacterMovementState : uint8
 {
 	Standing,
 	Running,
@@ -42,21 +42,22 @@ public:
 	void AddInputX(float inputValue,bool bControlScale = true);
 
 	//获取角色状态
-	CharacterMovementState GetMovementState()const { return movementState; }
+	ECharacterMovementState GetMovementState()const { return movementState; }
 
 	//设置最大移动速度
 	void SetMaxWalkingSpeed(float maxSpeed) { maxWalkingSpeed = (maxSpeed > 0 ? maxSpeed : 0); }
 
 protected:
-	void OnTouching(Collider* hitComp, Collider* otherComp, Actor* otherActor, Vector2D normalImpulse, const HitResult& hitResult);
+	void OnTouching(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const HitResult& hitResult);
 
 private:
 	class SpriteRenderer* render;
 	class BoxCollider* box;
 	class RigidBody* rigid;
 	
-	CharacterMovementState movementState;
+	ECharacterMovementState movementState;
 	float maxWalkingSpeed;//最大移动速度
 	bool bAddMoving;//是否正在输入移动命令
 	int MoveFlag;//输入标记
+	float lastX;
 };

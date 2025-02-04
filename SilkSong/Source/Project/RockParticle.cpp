@@ -11,7 +11,7 @@ RockParticle::RockParticle()
 	particle->Load("particle_rock");
 	particle->SetMaxSpeed(500);
 	particle->SetMinSpeed(300);
-	particle->SetPattern(ParticlePattern::Center);
+	particle->SetPattern(EParticlePattern::Center);
 	particle->SetCenter({ 30,150 }, {30,150});
 	particle->SetFadingOutTime(0.5f);
 	particle->SetGravity(980.f);

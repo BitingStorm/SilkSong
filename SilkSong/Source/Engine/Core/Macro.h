@@ -22,3 +22,7 @@ typedef char int8;
 
 #define DEFINE_SUPER(SuperClass) typedef SuperClass Super;
 #define To_String(x) #x;
+#define GetAValue(rgba)					(BYTE)( ((rgba)>>24) & 0xFF )
+#define SET_ALPHA(rgb, a)				(COLORREF)( ((rgb) & 0xFFFFFF) | ((a)<<24) )
+#define MIN(a,b) ((a)<(b)?(a):(b))
+#define MAX(a,b) ((a)>(b)?(a):(b))

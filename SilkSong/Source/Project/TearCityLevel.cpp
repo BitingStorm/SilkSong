@@ -52,7 +52,7 @@ void TearCityLevel::BeginPlay()
 	for (int i = 0; i < 10; i++) {
 		Animated* rainland = GameplayStatics::CreateObject<Animated>({ -1500 + float(i) * Math::RandInt(100,500),-75 });
 		rainland->Init("rain_land", 0.08f, 4); rainland->AttachTo(ev4);
-		rainland->SetLocalScale(Vector2D(1.25, 1.25) * Math::RandReal(0.8f, 1.2f));
+		rainland->SetLocalScale(FVector2D(1.25, 1.25) * Math::RandReal(0.8f, 1.2f));
 	}
 
 
@@ -80,7 +80,7 @@ void TearCityLevel::BeginPlay()
 	for (int i = 0; i < 5; i++) { 
 		Animated* rainland = GameplayStatics::CreateObject<Animated>({ -500 + float(i) * Math::RandInt(150,250),-100 });
 		rainland->Init("rain_land", 0.08f, 4);
-		rainland->SetLocalScale(Vector2D(1,1)* Math::RandReal(0.75f,1.25f));
+		rainland->SetLocalScale(FVector2D(1,1)* Math::RandReal(0.75f,1.25f));
 		rainland->AttachTo(plat);
 	}
 
@@ -88,7 +88,7 @@ void TearCityLevel::BeginPlay()
 	GameplayStatics::CreateObject<PlatForm>({ 1500,1075 })->Init("tearcity_floor", { 1125,210 }, {});
 
 	GameplayStatics::CreateObject<PlatForm>({ -1000,250 })->Init("", { 100,1300 }, {});
-	GameplayStatics::CreateObject<PlatForm>({ 1800,250 })->Init("", { 100,1300 }, {});
+	GameplayStatics::CreateObject<PlatForm>({ 1750,250 })->Init("", { 100,1300 }, {});
 
 	GameplayStatics::CreateObject<PlatForm>({ -650,1175 })->Init("", { 200,100 }, {});
 	GameplayStatics::CreateObject<PlatForm>({ 775,1175 })->Init("", { 450,100 }, {});

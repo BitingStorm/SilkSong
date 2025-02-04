@@ -44,7 +44,7 @@ void WidgetComponent::SetUI(UserInterface* ui)
 	userInterface->rootCanvas->SetRelativePosition(GameplayStatics::ProjectWorldToScreen(GetWorldPosition()));
 }
 
-void WidgetComponent::SetSize(Vector2D size)
+void WidgetComponent::SetSize(FVector2D size)
 {
 	if (!userInterface)return;
 	

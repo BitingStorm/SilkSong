@@ -5,12 +5,12 @@
 
 class DieParticle :public Actor
 {
-	DEFINE_SUPER(Actor)
-
 public:
 	DieParticle();
 
 private:
 	class ParticleSystem* particle;
+	class ParticleSystem* silk;
+	Timer ChangeTimerHandle;
 	Timer DestroyTimerHandle;
 };

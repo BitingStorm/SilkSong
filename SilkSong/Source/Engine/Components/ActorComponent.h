@@ -13,7 +13,7 @@ class Actor;
 /*----------------------------------
 			  组件基类
   ----------------------------------*/
-class ActorComponent : public Object
+class ActorComponent : public Object, public ITimerHandler
 {
 public:
 	//获取绑定游戏对象

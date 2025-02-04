@@ -9,20 +9,17 @@
 #include"Tools/VisualInterface.h"
 
 
-class Animator;
 
 
 /*----------------------------------
 			  äÖÈ¾Æ÷£¨2D£©
   ----------------------------------*/
-class SpriteRenderer final: public SceneComponent,public LayerInterface,public ImageInterface
+class SpriteRenderer final: public SceneComponent, public LayerInterface, public ImageInterface
 {
 	DEFINE_SUPER(SceneComponent)
-	friend Animator;
 
-	Animator* animatorAttached = nullptr;//¸½×ÅµÄ¶¯»­²¥·ÅÆ÷
+	void DealImage()override;
 
-	void DealImage();
 public:
 	virtual ~SpriteRenderer();
 	virtual void Render()override;

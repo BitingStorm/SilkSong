@@ -12,7 +12,7 @@
  /*----------------------------------
 			  Ã½Ìå²¥·ÅÆ÷
    ----------------------------------*/
-class AudioPlayer :public SceneComponent
+class AudioPlayer final:public SceneComponent
 {
 	DEFINE_SUPER(SceneComponent)
 

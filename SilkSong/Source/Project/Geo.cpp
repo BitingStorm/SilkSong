@@ -22,7 +22,7 @@ Geo::Geo()
 	box = ConstructComponent<BoxCollider>();
 	box->SetCollisonMode(CollisionMode::Collision);
 	box->SetType(CollisionType::Item);
-	box->SetPhysicsMaterial(PhysicsMaterial(0.5f, 0.75f));
+	box->SetPhysicsMaterial(FPhysicsMaterial(0.5f, 0.75f));
 	box->AttachTo(root);
 
 	rigid = ConstructComponent<RigidBody>();
@@ -35,13 +35,13 @@ Geo::Geo()
 	rotateDelta = 0.005f;
 }
 
-void Geo::Init(std::string name)
+void Geo::Init(std::string name, int price)
 {
-	price = name[0] - '0';
+	this->price = price;
 	float half = price == 1 ? 15 : 20;
 	box->SetSize({half,half});
 	render->LoadSprite(name);
-	rigid->AddImpulse(Vector2D(Math::RandInt(-250,250),Math::RandInt(-300,-450)));
+	rigid->AddImpulse(FVector2D(Math::RandInt(-250,250),Math::RandInt(-300,-450)));
 	rotateDelta = Math::RandReal(0.002, 0.008) * (rigid->GetVelocity().x > 0 ? 1:-1);
 }
 
@@ -51,10 +51,10 @@ void Geo::Update(float deltaTime)
 
 	if (std::abs(GetLocalScale().x) < 0.2)SetLocalScale({ -GetLocalScale().x,1});
 	if (std::abs(GetLocalScale().x) > 1)rotateDelta = -rotateDelta;
-	SetLocalScale(GetLocalScale() + Vector2D(rotateDelta,0));
+	SetLocalScale(GetLocalScale() + FVector2D(rotateDelta,0));
 }
 
-void Geo::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor, Vector2D normalImpulse, const HitResult& hitResult)
+void Geo::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const HitResult& hitResult)
 {
 	rigid->SetRotatable(false);
 }
@@ -68,8 +68,8 @@ void Geo::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherActor)
 		Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
 		if (!effect)return;
 		effect->Init("effect_geo", -0.05f);
-		effect->SetLocalScale(Vector2D(1,1)*Math::RandReal(1,1.25));
-		effect->SetLocalRotation(Math::RandReal(-20,20));
+		effect->SetLocalScale(FVector2D(1, 1) * Math::RandReal(0.9f + std::sqrtf(float(price)) * 0.1f, 1.15f + std::sqrtf(float(price)) * 0.1f));
+		effect->SetLocalRotation(Math::RandReal(-20, 20));
 		GameplayStatics::PlaySound2D("sound_geo");
 	}
 }

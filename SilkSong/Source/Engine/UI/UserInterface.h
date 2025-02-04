@@ -12,7 +12,7 @@
 /*----------------------------------
 			    UI¿‡ 
   ----------------------------------*/
-class UserInterface : public Object
+class UserInterface : public Object, public ITimerHandler
 {
 	friend Panel;
 	friend class WidgetComponent;

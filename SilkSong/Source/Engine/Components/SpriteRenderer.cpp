@@ -13,7 +13,7 @@ void SpriteRenderer::DealImage()
 {
 	if (GetWorldRotation() != 0)
 	{
-		RotateImage(PI * Math::NormalizeDegree(angle) / 180);
+		RotateImage(angle);
 	}
 	if (filterLayers.size() > 0)
 	{
@@ -23,16 +23,15 @@ void SpriteRenderer::DealImage()
 
 SpriteRenderer::~SpriteRenderer()
 {
-	if (animatorAttached)animatorAttached->rendererAttached = nullptr;
-	if (recoverTimerHandle)delete recoverTimerHandle;
+	if (recoverTimerHandle)delete recoverTimerHandle; 
 }
 
 void SpriteRenderer::Render()
 {
 	if (!sprite || !bIsEnabled || alpha == 0)return;
 
-	Vector2D pos = (GetWorldPosition() - mainWorld.mainCamera->GetVirtualPosition() + spriteInfo.offset)
-		* 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength() + Vector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2);
+	FVector2D pos = (GetWorldPosition() - mainWorld.mainCamera->GetVirtualPosition() + spriteInfo.offset * GetWorldScale())
+		* 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength() + FVector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2);
 	HDC dstDC = GetImageHDC();
 
 
@@ -55,8 +54,10 @@ void SpriteRenderer::Render()
 	}
 
 	HDC srcDC = GetImageHDC(img);
-	AlphaBlend(dstDC, (int)pos.x - int(multi_w * img->getwidth() / 2), (int)pos.y - int(multi_h * img->getheight() / 2),
-		int(w * multi_w), int(h * multi_h),srcDC,(int)spriteInfo.startLoc.x, (int)spriteInfo.startLoc.y, w, h, { AC_SRC_OVER,0,alpha,AC_SRC_ALPHA });
+	AlphaBlend(dstDC, int(pos.x - multi_w * img->getwidth() * 0.5f), int(pos.y - multi_h * img->getheight() * 0.5f),
+		int(w * multi_w), int(h * multi_h),
+		srcDC, spriteInfo.startLoc.x, spriteInfo.startLoc.y,
+		w, h, { AC_SRC_OVER,0,alpha,AC_SRC_ALPHA });
 
 	if (mirImg)delete mirImg;
 }
@@ -71,12 +72,12 @@ void SpriteRenderer::Update(float deltaTime)
 	 * Í¼Ïñ±ä»»´¦ÀíÂß¼­
 	 **/
 	IMAGE* img = copy ? copy : sprite;
-	spriteInfo.size = Pair(img->getwidth(), img->getheight());
+	spriteInfo.size = FPair(img->getwidth(), img->getheight());
 	
 	if (GetWorldRotation() != angle)
 	{
 		angle = GetWorldRotation();
-		RotateImage(PI * Math::NormalizeDegree(angle) / 180);
+		RotateImage(angle);
 		if (filterLayers.size() > 0)
 		{
 			FilterImage();
@@ -120,8 +121,3 @@ void SpriteRenderer::SaveImage()
 
 	saveimage(path.c_str(), sprite);
 }
-
-
-
-
-

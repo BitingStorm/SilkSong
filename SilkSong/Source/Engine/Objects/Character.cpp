@@ -8,7 +8,7 @@
 
 Character::Character()
 {
-	movementState = CharacterMovementState::Standing;
+	movementState = ECharacterMovementState::Standing;
 	bAddMoving = false;
 	MoveFlag = 0;
 
@@ -20,6 +20,8 @@ Character::Character()
 	Camera* camera = GetComponentByClass<Camera>();
 	camera->AttachTo(root);
 	box->AttachTo(root);
+
+	lastX = GetWorldPosition().x;
 }
 
 void Character::BeginPlay()
@@ -35,7 +37,7 @@ void Character::Update(float deltaTime)
 
 	if (box->IsCollisionsEmpty())
 	{
-		movementState = CharacterMovementState::Flying;
+		movementState = ECharacterMovementState::Flying;
 	}
 
 	if (MoveFlag > -1)
@@ -45,7 +47,7 @@ void Character::Update(float deltaTime)
 
 	if (MoveFlag == 0)
 	{
-		Vector2D vel = rigid->GetVelocity(); vel.x = 0;
+		FVector2D vel = rigid->GetVelocity(); vel.x = 0;
 		rigid->SetVelocity(vel);
 	}
 }
@@ -61,11 +63,12 @@ void Character::AddInputX(float inputValue, bool bControlScale)
 	rigid->AddImpulse({ inputValue,0 });
 }
 
-void Character::OnTouching(Collider* hitComp, Collider* otherComp, Actor* otherActor, Vector2D normalImpulse, const HitResult& hitResult)
+void Character::OnTouching(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const HitResult& hitResult)
 {
 	if (normalImpulse.y < 0)
 	{
-		movementState = (rigid->GetVelocity().x == 0 ? CharacterMovementState::Standing : CharacterMovementState::Running);
+		movementState = (lastX == GetWorldPosition().x ? ECharacterMovementState::Standing : ECharacterMovementState::Running);
+		lastX = GetWorldPosition().x;
 	}
 }
 

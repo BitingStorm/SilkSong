@@ -39,7 +39,7 @@ void AttackBox::Init(ECharacterDirection direction)
 
 void AttackBox::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherActor)
 {
-	Vector2D normal = (-GetOwner()->GetWorldPosition() + otherActor->GetWorldPosition()).Normalize();
+	FVector2D normal = (-GetOwner()->GetWorldPosition() + otherActor->GetWorldPosition()).Normalize();
 	if (Enemy* enemy = Cast<Enemy>(otherActor))
 	{
 		if (!GetOwner())return;
@@ -56,8 +56,8 @@ void AttackBox::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherAc
 		GameplayStatics::PlayCameraShake(3);
 		Effect* effect = GameplayStatics::CreateObject<Effect>(otherActor->GetWorldPosition());
 		if (!effect)return;
-		effect->Init("effect_nailhit");
-		effect->SetLocalRotation(Vector2D::VectorToDegree(normal) + 10);
+		effect->Init("effect_nail", -0.02f);
+		effect->SetLocalRotation(FVector2D::VectorToDegree(normal) + 100);
 	}
 }
 

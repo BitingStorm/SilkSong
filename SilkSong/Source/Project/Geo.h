@@ -8,12 +8,12 @@ class Geo :public Actor
 public:
 	Geo();
 
-	void Init(std::string name);
+	void Init(std::string name, int price);
 
 	virtual void Update(float deltaTime)override;
 
 protected:
-	void OnHit(class Collider* hitComp, Collider* otherComp, Actor* otherActor, Vector2D normalImpulse, const struct HitResult& hitResult);
+	void OnHit(class Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const struct HitResult& hitResult);
 
 	void OnOverlap(class Collider* hitComp, Collider* otherComp, Actor* otherActor);
 

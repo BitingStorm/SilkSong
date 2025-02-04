@@ -8,6 +8,8 @@
 #include "Effect.h"
 #include "Tools/Math.h"
 #include "Components/AudioPlayer.h"
+#include "Components/ParticleSystem.h"
+#include "SilkParticle.h"
 
 
 Enemy::Enemy()
@@ -18,7 +20,6 @@ Enemy::Enemy()
 	rigid = ConstructComponent<RigidBody>();
 	ani = ConstructComponent<Animator>();
 	ani->SetupAttachment(render);
-
 
 	audio = ConstructComponent<AudioPlayer>();
 	audio->AttachTo(root);
@@ -68,23 +69,26 @@ void Enemy::Update(float deltaTime)
 	if (!bIsDead && GetWorldPosition().y > 1080) { blood -= 50; TakeDamage({ 0,0 },false); rigid->AddImpulse({0,-500}); }
 }
 
-void Enemy::TakeDamage(Vector2D normal, bool gain)
+void Enemy::TakeDamage(FVector2D normal, bool gain)
 {
 	rigid->AddImpulse({ normal.x * 600,-200 });
 	GameplayStatics::PlayCameraShake(4);
 	render->Blink(0.3f, WHITE, 100);
 	blood -= 3;
+	SilkParticle* silk = GameplayStatics::CreateObject<SilkParticle>();
+	silk->AttachTo(this);
+	silk->Init(normal, blood <= 0);
 
 	if (!player)return;
 	float delta_x = player->GetWorldPosition().x - GetWorldPosition().x;
-	if (gain)player->AddSoul(1.f);
+	if (gain)player->AddSilk(1);
 
 
 	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
 	if (effect)
 	{
-		effect->SetLocalRotation(Math::RandInt(-90, -60)); effect->Init("effect_attack", -0.03f);
-		effect->SetLocalScale(Vector2D{ delta_x < 0 ? 1.f : -1.f ,1.f }*Math::RandReal(1, 1.5));
+		effect->SetLocalRotation(Math::RandInt(-15, 15) + FVector2D::VectorToDegree(normal)); effect->Init("effect_attack", -0.03f);
+		effect->SetLocalScale(FVector2D{ delta_x < 0 ? 1.f : -1.f ,1.f }*Math::RandReal(1, 1.5));
 	}
 
 	if (blood <= 0 && !bIsDead)
@@ -95,11 +99,11 @@ void Enemy::TakeDamage(Vector2D normal, bool gain)
 	}
 	else
 	{
-		Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + Vector2D((delta_x < 0?1.f:-1.f)*300,0));
+		Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D((delta_x < 0 ? 1.f : -1.f) * 300, 0));
 		if (!effect)return;
 		effect->Init("effect_attack_", 0.02f);
-		effect->SetLocalScale(Vector2D{ delta_x < 0 ? 1.f : -1.f ,1.f }*Math::RandReal(0.9, 1.3));
-		effect->SetLocalRotation(Math::RandInt(10,-10));
+		effect->SetLocalScale(FVector2D{ delta_x < 0 ? 1.f : -1.f ,1.f }*Math::RandReal(0.9, 1.3));
+		effect->SetLocalRotation(Math::RandInt(10, -10));
 	}
 }
 
@@ -107,7 +111,7 @@ void Enemy::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherActor)
 {
 	if (Player* player = Cast<Player>(otherActor))
 	{
-		Vector2D normal = (-GetWorldPosition() + player->GetWorldPosition()).Normalize();
+		FVector2D normal = (-GetWorldPosition() + player->GetWorldPosition()).Normalize();
 		player->TakeDamage(normal);
 	}
 }
@@ -124,5 +128,5 @@ void Enemy::Die()
 	render_death->SetOwner(nullptr);//开发者偷懒而使用的危险代码，请勿模仿
 	
 	circle->OnComponentBeginOverlap.RemoveDynamic(this, &Enemy::OnOverlap);
-	circle->SetPhysicsMaterial(PhysicsMaterial(0.6f,0.6f));
+	circle->SetPhysicsMaterial(FPhysicsMaterial(0.6f,0.6f));
 }

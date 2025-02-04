@@ -11,7 +11,7 @@ HealParticle::HealParticle()
 	particle->Load("particle_heal");
 	particle->SetMaxSpeed(275);
 	particle->SetMinSpeed(175);
-	particle->SetPattern(ParticlePattern::Center);
+	particle->SetPattern(EParticlePattern::Center);
 	particle->SetCenter({ 30,75 });
 	particle->SetFadingOutTime(0.5f);
 	particle->SetGravity(-9.8f);

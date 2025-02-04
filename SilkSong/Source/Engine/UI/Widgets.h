@@ -13,7 +13,7 @@
 
 
 /* 文字对齐格式 */
-enum class CharactersPattern:uint8
+enum class CharactersPattern :uint8
 {
 	Left,
 	Middle,
@@ -36,7 +36,7 @@ public:
 	int GetHeight() const { return row * size * 6; }
 	
 	void SetCharacters(std::string text, int size = 3, LPCTSTR type = "楷体");
-	void PrintCharacters(Vector2D pos, CharactersPattern pattern = CharactersPattern::Middle);
+	void PrintCharacters(FVector2D pos, CharactersPattern pattern = CharactersPattern::Middle);
 };
 
 
@@ -66,23 +66,23 @@ enum class UIPattern :uint8
 };
 
 /*----------------------------------
-			 基础小部件
+			  基础小部件
   ----------------------------------*/
-class Widget: public Object, public LayerInterface
+class Widget :public Object, public LayerInterface
 {
 	friend class Panel;
-	Pair point{ -1, -1 }, point_1{ -1, -1 };
+	FPair point{ -1, -1 }, point_1{ -1, -1 };
 
 	void BeginPlay()override {}
 	void EndPlay()override {}
-	Vector2D GetLayoutOffset()const;//布局偏移
+	FVector2D GetLayoutOffset()const;//布局偏移
 protected:
-	Transform transform;
+	FTransform transform;
 	Widget* parent = nullptr;
 	std::unordered_set<Widget*>children;
 	Panel* attachedPanel = nullptr;
 
-	Vector2D size;
+	FVector2D size;
 
 	LayoutPattern layoutPattern;
 	UIPattern uiPattern;
@@ -106,23 +106,23 @@ public:
 	void EnableInfoBox(bool showInfo) { bInfoBox = showInfo; }
 	void SetInfoText(std::string text) { InfoText.SetCharacters(text); }
 
-	virtual Vector2D GetSize() const;
-	void SetSize(Vector2D size) {this->size = size; }
+	virtual FVector2D GetSize() const;
+	void SetSize(FVector2D size) {this->size = size; }
 
 	void AttachTo(Widget* par);
 	void DetachFrom(Widget* par);
 
-	Vector2D GetScreenPosition() const;
+	FVector2D GetScreenPosition() const;
 	float GetScreenRotation() const;
-	Vector2D GetScreenScale() const;
+	FVector2D GetScreenScale() const;
 
-	Vector2D GetRelativePosition() const { return transform.position;}
+	FVector2D GetRelativePosition() const { return transform.position;}
 	float GetRelativeRotation() const { return transform.rotation; }
-	Vector2D GetRelativeScale() const { return transform.scale; }
+	FVector2D GetRelativeScale() const { return transform.scale; }
 
-	void SetRelativePosition(Vector2D pos) { transform.position = pos; }
+	void SetRelativePosition(FVector2D pos) { transform.position = pos; }
 	void SetRelativeRotation(float angle) { transform.rotation = angle; }
-	void SetRelativeScale(Vector2D scale) { transform.scale = scale; }
+	void SetRelativeScale(FVector2D scale) { transform.scale = scale; }
 };
 
 
@@ -134,21 +134,21 @@ public:
 
   > 容纳小部件或UserInterface；当容纳UserInterface时,本质是容纳画布根部件 <
   --------------------------------------------------------------------*/
-class Panel : public Widget
+class Panel :public Widget
 {
-	void SetSize(Vector2D size) { this->size = size; }//不允许手动设置Panel的大小
+	void SetSize(FVector2D size) { this->size = size; }//不允许手动设置Panel的大小
 protected:
 	std::vector<class Widget*>members;
 	std::vector<class UserInterface*>members_ui;
 
-	Vector2D unitSize;
+	FVector2D unitSize;
 	virtual void AdjustMemberPosition(Widget* member,int32 index) = 0;
 public:
 	virtual ~Panel();
 
 	virtual void Update()override;
 
-	void SetUnitSize(Vector2D size);
+	void SetUnitSize(FVector2D size);
 
 	void AddMember(Widget* member, int32 index = -1);
 	void RemoveMember(Widget* member);
@@ -161,33 +161,33 @@ private:
 };
 
 /*----------------------------------
-			 水平面板
+			  水平面板
   ----------------------------------*/
-class HorizontalPanel final: public Panel
+class HorizontalPanel final :public Panel
 {
 	float spacing = 0;
 	void AdjustMemberPosition(Widget* member, int32 index)override;
 public:
 	void SetSpacing(float space) { spacing = space; }
-	Vector2D GetSize() const override;
+	FVector2D GetSize() const override;
 };
 
 /*----------------------------------
-			 垂直面板
+			  垂直面板
   ----------------------------------*/
-class VerticalPanel final: public Panel
+class VerticalPanel final :public Panel
 {
 	float spacing = 0;
 	void AdjustMemberPosition(Widget* member, int32 index)override;
 public:
 	void SetSpacing(float space) { spacing = space; }
-	Vector2D GetSize() const override;
+	FVector2D GetSize() const override;
 };
 
 /*----------------------------------
-			 网格面板
+			  网格面板
   ----------------------------------*/
-class GridPanel final: public Panel
+class GridPanel final :public Panel
 {
 	int32 row = 1;
 	int32 column = 1;
@@ -199,7 +199,7 @@ public:
 	void SetColumn(int32 num) { column = num; }
 	void SetSpacingX(float space) { spacingX = space; }
 	void SetSpacingY(float space) { spacingY = space; }
-	Vector2D GetSize() const override;
+	FVector2D GetSize() const override;
 };
 
 
@@ -207,7 +207,7 @@ public:
 
 
 /*----------------------------------
-			 文本部件
+			  文本部件
   ----------------------------------*/
 class Text :public Widget
 {
@@ -216,7 +216,7 @@ protected:
 	CharactersPattern textPattern;
 	std::string* bindedText = nullptr;
 public:
-	Text():textPattern(CharactersPattern::Middle) {}
+	Text() :textPattern(CharactersPattern::Middle) {}
 
 	virtual void Update();
 
@@ -231,17 +231,32 @@ public:
 
 
 
+class Animator;
 
 /*----------------------------------
-			 图像部件
+			  图像部件
   ----------------------------------*/
-class Image: public Widget, public ImageInterface
+class Image :public Widget, public ImageInterface
 {
+	void DealImage()override;
+
 public:
+	virtual ~Image() { if (ani)delete ani; }
 	virtual void Update()override;
 	virtual void Render()override;
 
 	bool IsMouseOn();
+
+	IMAGE* LoadSprite(std::string name);
+
+	//启动动画控制
+	void EnableAnimControl();
+
+	//获取动画控制器
+	Animator* GetAnimator() { return ani; }
+
+private:
+	Animator* ani;
 };
 
 
@@ -252,9 +267,9 @@ public:
 DECLARE_NO_PARAM_MULTICAST_DELEGATE_CLASS(ButtonDelegate)
 
 /*----------------------------------
-			 按钮部件
+			  按钮部件
   ----------------------------------*/
-class Button :public Image
+class Button final :public Image
 {
 	IMAGE* normal;
 	IMAGE* hover;
@@ -294,15 +309,15 @@ enum class BarDirection :uint8
 /*----------------------------------
 			  滑动条部件
   ----------------------------------*/
-class Bar : public Widget
+class Bar final :public Widget
 {
 	float percentage = 0;
 	IMAGE* barFront;
 	IMAGE* barBack;
 	IMAGE* barButton;
-	Pair sizeFront = Pair(0, 0);
-	Pair sizeBack = Pair(0, 0);
-	Pair sizeButton = Pair(0, 0);
+	FPair sizeFront = FPair(0, 0);
+	FPair sizeBack = FPair(0, 0);
+	FPair sizeButton = FPair(0, 0);
 	BarDirection direction;
 public:
 	virtual void Update()override;
@@ -313,9 +328,9 @@ public:
 	void LoadBarButtonPicture(std::string path);
 
 	void SetDirection(BarDirection dir) { direction = dir; }
-	void SetFrontSize(Pair size) { sizeFront = size; }
-	void SetBackSize(Pair size) { sizeBack = size; }
-	void SetButtonSize(Pair size) { sizeButton = size; }
+	void SetFrontSize(FPair size) { sizeFront = size; }
+	void SetBackSize(FPair size) { sizeBack = size; }
+	void SetButtonSize(FPair size) { sizeButton = size; }
 
 	void SetPercentage(float per);
 	float GetPercentage() const { return percentage; }
@@ -325,13 +340,13 @@ public:
 /*----------------------------------
 			  扇形部件
   ----------------------------------*/
-class Sector : public Widget
+class Sector final :public Widget
 {
 	float percentage = 0;
 	IMAGE* sectorFront;
 	IMAGE* sectorBack;
-	Pair sizeFront = Pair(0, 0);
-	Pair sizeBack = Pair(0, 0);
+	FPair sizeFront = FPair(0, 0);
+	FPair sizeBack = FPair(0, 0);
 	float startDegree = 90;
 public:
 	virtual void Update()override;
@@ -340,8 +355,8 @@ public:
 	void LoadSectorFrontPicture(std::string path);
 	void LoadSectorBackPicture(std::string path);
 
-	void SetFrontSize(Pair size) { sizeFront = size; }
-	void SetBackSize(Pair size) { sizeBack = size; }
+	void SetFrontSize(FPair size) { sizeFront = size; }
+	void SetBackSize(FPair size) { sizeBack = size; }
 
 	void SetPercentage(float per);
 	float GetPercentage() const { return percentage; }

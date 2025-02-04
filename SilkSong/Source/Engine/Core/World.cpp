@@ -183,7 +183,7 @@ void World::Debug()
 	number++;
 
 	settextstyle(25, 10, "Arial");
-	settextcolor(RGB(255,200,15));
+	settextcolor(RGB(255, 200, 15));
 	outtextxy(0, 0, (std::string("FPS: ") + std::to_string(FPS)).c_str());
 	if (FPSClock->GetDelay() >= 1.0)
 	{

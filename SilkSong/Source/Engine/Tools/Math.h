@@ -6,16 +6,13 @@
 
 #pragma once
 #include <random>
-
-
-#define MIN(a,b) ((a)<(b)?(a):(b))
-#define MAX(a,b) ((a)>(b)?(a):(b))
+#include "Core/Macro.h"
 
 
 /*----------------------------------
 			   数学工具 
   ----------------------------------*/
-class Math
+class Math final
 {
 	static std::random_device rd;
 	static std::mt19937 gen;
@@ -38,6 +35,9 @@ public:
 
 	//将弧度转换为角度
 	static float RadianToDegree(float radian);
+
+	//将弧度转换为角度
+	static float DegreeToRadian(float degree);
 
 	//将角度规范化(0~360区间)
 	static float NormalizeDegree(float angle);

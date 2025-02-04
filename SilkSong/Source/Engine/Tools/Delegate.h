@@ -10,7 +10,7 @@
 
 
 /*----------------------------------
-             单播委托
+              单播委托
   ----------------------------------*/
 template<typename R = void,typename... Args>
 class UnicastDelegate

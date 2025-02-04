@@ -16,21 +16,21 @@ NewTheme::NewTheme()
 		particles[i]->Load("menu_ss_particle");
 		particles[i]->SetMaxSpeed(275 + i * 70);
 		particles[i]->SetMinSpeed(150 + i * 70);
-		particles[i]->SetPattern(ParticlePattern::Line);
+		particles[i]->SetPattern(EParticlePattern::Line);
 		particles[i]->SetLine(800, 80 - 25 * (i % 2));
 		particles[i]->SetLayer(i);
 		particles[i]->SetLifeCycle(3.3f - i * 0.45);
 		particles[i]->SetFadingOutTime(0.5f);
 		particles[i]->SetFadingInTime(0.25f);
-		particles[i]->SetFadingType(ParticleFadingType::FadeInAndOut);
+		particles[i]->SetFadingType(EParticleFadingType::FadeInAndOut);
 		particles[i]->SetGravity(0);
-		particles[i]->SetSizeRange(0.15 + i * 0.1, 0.2 + i * 0.1);
+		particles[i]->SetSizeRange(0.15 + i * 0.08, 0.2 + i * 0.08);
 	}
 	particles[2]->SetLine(800, 95);
 	particles[2]->SetLocalPosition({ 0,500 });
 	particles[3]->SetCapacity(10);
 	particles[3]->SetInterval(0.15);
-	particles[3]->SetSizeRange(0.6, 0.9);
+	particles[3]->SetSizeRange(0.5, 0.8);
 	particles[3]->SetMaxSpeed(650);
 	particles[3]->SetMinSpeed(550);
 	particles[3]->SetLayer(7);

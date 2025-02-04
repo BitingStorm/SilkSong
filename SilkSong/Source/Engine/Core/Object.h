@@ -7,13 +7,13 @@
 #pragma once
 #include<iostream>
 #include<string>
-#include"Interfaces.h"
+
 
 
 /*----------------------------------
 			 基础对象类
   ----------------------------------*/
-class Object : public ITimerHandler
+class Object 
 {
 	static int tag;
 

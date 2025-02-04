@@ -2,7 +2,7 @@
 #include "Player.h"
 #include "GameplayStatics.h"
 #include "Components/AudioPlayer.h"
-#include "Components/Camera.h"
+
 
 
 PlayerAnimator::PlayerAnimator()
@@ -30,11 +30,11 @@ PlayerAnimator::PlayerAnimator()
 	softland.Load("player_softland");
 	softland.SetInterval(0.12f);
 	attack_0.Load("player_attack_0", { 0,10 });
-	attack_0.SetInterval(0.07f);
+	attack_0.SetInterval(0.06f);
 	attack_1.Load("player_attack_1", { 0,10 });
-	attack_1.SetInterval(0.07f);
+	attack_1.SetInterval(0.06f);
 	attackup.Load("player_attackup");
-	attackup.SetInterval(0.07f);
+	attackup.SetInterval(0.06f);
 	attackdown.Load("player_attackdown");
 	attackdown.SetInterval(0.06f);
 	attackbounce.Load("player_attackbounce");
@@ -67,6 +67,12 @@ PlayerAnimator::PlayerAnimator()
 	standup.SetInterval(0.15f);
 	leave.Load("player_leave");
 	leave.SetInterval(0.08f);
+	wall.Load("player_wall", {20,0});
+	wall.SetInterval(0.1f);
+	defend.Load("player_defend");
+	defend.SetInterval(0.1f);
+	defendattack.Load("player_defendattack");
+	defendattack.SetInterval(0.1f);
 
 	Insert("idle", idle);
 	Insert("walk", walk);
@@ -98,6 +104,7 @@ PlayerAnimator::PlayerAnimator()
 	Insert("sitdown", sitdown);
 	Insert("standup", standup);
 	Insert("leave", leave);
+	Insert("wall", wall);
 	SetNode("idle");
 
 
@@ -107,6 +114,7 @@ PlayerAnimator::PlayerAnimator()
 	AddParamater("fallingSpeed", ParamType::Float);
 	AddParamater("floatingEnd", ParamType::Trigger);
 	AddParamater("validDownAttack", ParamType::Bool);
+	AddParamater("leaveWall", ParamType::Trigger);
 }
 
 void PlayerAnimator::BeginPlay()
@@ -150,6 +158,8 @@ void PlayerAnimator::BeginPlay()
 	closeskill_to_idle.Init(closeskill, idle);
 	closeskill_to_idle.AddCondition(TransitionCondition::Trigger{ "floatingEnd" });
 	standup_to_idle.Init(standup, idle);
+	wall_to_idle.Init(wall, idle);
+	wall_to_idle.AddCondition(TransitionCondition::Trigger{ "leaveWall" });
 
 	idle_to_fall.Init(idle, fall);
 	idle_to_fall.AddCondition(TransitionCondition::Bool{ "flying",true });
@@ -171,6 +181,8 @@ void PlayerAnimator::BeginPlay()
 	fall_to_idle.AddCondition(TransitionCondition::Bool{ "flying",false });
 
 	leave_to_fall.Init(leave, fall);
+	defend_to_idle.Init(defend, idle);
+	defendattack_to_idle.Init(defendattack, idle);
 
 	if (Player* player = Cast<Player>(pOwner))
 	{
@@ -185,7 +197,7 @@ void PlayerAnimator::BeginPlay()
 		airdash.OnAnimExit.Bind([=]() {player->EnableInput(true); });
 		airdash.AddNotification(1, dashEffect);
 		cure.OnAnimEnter.Bind([=]() {player->EnableInput(false); });
-		cure.OnAnimExit.Bind([=]() {player->EnableInput(true); player->SetFloating(false); player->GetComponentByClass<Camera>()->SetSpringArmLength(20); });
+		cure.OnAnimExit.Bind([=]() {player->EnableInput(true); player->SetFloating(false); });
 		cure.AddNotification(5, cureEffect);
 		hurt.OnAnimEnter.Bind([=]() {player->EnableInput(false); });
 		hurt.OnAnimExit.Bind([=]() {player->EnableInput(true); });
@@ -211,6 +223,7 @@ void PlayerAnimator::BeginPlay()
 		die.AddNotification(1, dieShake);
 		leave.OnAnimExit.Bind([=]() {player->LeaveUp(); });
 		leave.AddNotification(3, leaveStart);
+		wall.OnAnimExit.Bind([=]() {player->LeaveWall(); });
 	}
 }
 

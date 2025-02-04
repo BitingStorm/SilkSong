@@ -14,13 +14,13 @@ OldTheme::OldTheme()
 	blackRadiantFar->Load("menu_radiant_bottom");
 	blackRadiantFar->SetMaxSpeed(30);
 	blackRadiantFar->SetMinSpeed(10);
-	blackRadiantFar->SetPattern(ParticlePattern::Line);
+	blackRadiantFar->SetPattern(EParticlePattern::Line);
 	blackRadiantFar->SetLine(1000, 90);
 	blackRadiantFar->SetLayer(1);
 	blackRadiantFar->SetLifeCycle(7.5f);
 	blackRadiantFar->SetFadingOutTime(1.f);
 	blackRadiantFar->SetFadingInTime(1.f);
-	blackRadiantFar->SetFadingType(ParticleFadingType::ExpandAndShrink);
+	blackRadiantFar->SetFadingType(EParticleFadingType::ExpandAndShrink);
 	blackRadiantFar->SetGravity(0);
 	blackRadiantFar->SetSizeRange(0.35, 0.75);
 
@@ -32,13 +32,13 @@ OldTheme::OldTheme()
 	blackRadiantClose->Load("menu_radiant_bottom");
 	blackRadiantClose->SetMaxSpeed(80);
 	blackRadiantClose->SetMinSpeed(30);
-	blackRadiantClose->SetPattern(ParticlePattern::Line);
+	blackRadiantClose->SetPattern(EParticlePattern::Line);
 	blackRadiantClose->SetLine(800, 90);
 	blackRadiantClose->SetLayer(1);
 	blackRadiantClose->SetLifeCycle(6.5f);
 	blackRadiantClose->SetFadingOutTime(0.5f);
 	blackRadiantClose->SetFadingInTime(0.5f);
-	blackRadiantClose->SetFadingType(ParticleFadingType::ExpandAndShrink);
+	blackRadiantClose->SetFadingType(EParticleFadingType::ExpandAndShrink);
 	blackRadiantClose->SetGravity(0);
 	blackRadiantClose->SetSizeRange(0.75, 1.2);
 
@@ -50,7 +50,7 @@ OldTheme::OldTheme()
 	smoke->Load("menu_smoke");
 	smoke->SetMaxSpeed(50);
 	smoke->SetMinSpeed(20);
-	smoke->SetPattern(ParticlePattern::Line);
+	smoke->SetPattern(EParticlePattern::Line);
 	smoke->SetLine(1000, 90);
 	smoke->SetLayer(2);
 	smoke->SetLifeCycle(4.f);

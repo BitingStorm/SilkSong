@@ -4,6 +4,7 @@
 #include "Components/RigidBody.h"
 #include "Components/Camera.h"
 #include "Components/AudioPlayer.h"
+#include "Components/ParticleSystem.h"
 #include "GameplayStatics.h"
 #include "Tools/Math.h"
 
@@ -38,7 +39,7 @@ Player::Player()
 	box->SetLocalPosition({-5,10});
 	box->SetCollisonMode(CollisionMode::Collision);
 	box->SetType(CollisionType::Player);
-	box->SetPhysicsMaterial(PhysicsMaterial(0.1f,0));
+	box->SetPhysicsMaterial(FPhysicsMaterial(0.1f,0));
 
 	hurtBox = ConstructComponent<BoxCollider>();
 	hurtBox->AttachTo(root);
@@ -49,7 +50,7 @@ Player::Player()
 
 	rigid = GetComponentByClass<RigidBody>();
 	rigid->SetLinearDrag(0.07f);
-	rigid->SetGraivty(1960);
+	rigid->SetGravity(1960);
 
 	camera = GetComponentByClass<Camera>();
 	camera->SetDistanceThreshold(100);
@@ -59,6 +60,22 @@ Player::Player()
 	audio = ConstructComponent<AudioPlayer>();
 	audio->AttachTo(root);
 
+	particle = ConstructComponent<ParticleSystem>();
+	particle->AttachTo(root);
+	particle->SetLocalPosition({ 0,50 });
+	particle->SetCapacity(15);
+	particle->SetInterval(0.1f);
+	particle->Load("particle_heal");
+	particle->SetMaxSpeed(100);
+	particle->SetMinSpeed(50);
+	particle->SetPattern(EParticlePattern::Line);
+	particle->SetLine(150, 90);
+	particle->SetFadingType(EParticleFadingType::ExpandAndShrink);
+	particle->SetFadingInTime(0.5f);
+	particle->SetFadingOutTime(0.5f);
+	particle->SetGravity(-9.8f);
+	particle->SetLifeCycle(1.5f);
+	
 
 	bGround = false;
 	bDashing = false;
@@ -67,6 +84,7 @@ Player::Player()
 	bRushing = false;
 	bRushFlag = false;
 	bSitting = false;
+	bWall = false;
 
 	lastJumpTime = 0.f;
 	lastAttackTime = 0.f;
@@ -78,13 +96,19 @@ Player::Player()
 	
 	attackFlag = 0;
 	lookFlag = 0;
+	jumpFlag = 1;
+	walkLock = 0;
 	direction = ECharacterDirection::LookForward;
+
+
+	ui = GameplayStatics::CreateUI<GameUI>();
+	ui->AddToViewport();
 
 	ani->dashEffect.Bind(this, &Player::SpawnDashEffect);
 	ani->cureEffect.Bind([this]()
 		{
-			AddHealth(3); GameplayStatics::CreateObject<HealParticle>()->AttachTo(this);
-			ui->WhiteBlink();
+			GameplayStatics::CreateObject<HealParticle>()->AttachTo(this);
+			ui->WhiteBlink(6); camera->SetSpringArmLength(20);
 		});
 	ani->wetWalkEffect.Bind(this, &Player::SpawnWetWalkEffect);
 	ani->dartSpawn.Bind([this]()
@@ -112,7 +136,7 @@ Player::Player()
 		{
 			AttackBox* attackBox = GameplayStatics::CreateObject<AttackBox>();
 			attackBox->AttachTo(this);
-			attackBox->SetLocalPosition(Vector2D(70 * GetWorldScale().x, 35));
+			attackBox->SetLocalPosition(FVector2D(70 * GetWorldScale().x, 35));
 		});
 	ani->leaveStart.Bind([this]()
 		{
@@ -121,7 +145,7 @@ Player::Player()
 
 	blinkTimes = 0;
 	health = 5;
-	soul = 9;
+	silk = 9;
 	geo = 0;
 	dartNum = 15;
 }
@@ -136,24 +160,30 @@ void Player::BeginPlay()
 			{
 				if (bSitting)render->Blink(0.5f, WHITE, 90);
 				else render->Blink(0.1f, BLACK);
-				if (--blinkTimes == 0 && !bSitting)hurtBox->SetCollisonMode(CollisionMode::Trigger);
+				if (--blinkTimes == 0 && !bSitting)
+				{
+					hurtBox->SetCollisonMode(CollisionMode::Trigger);
+					if (health != 1)
+					{
+						particle->SetIsLoop(false);
+					}
+				}
 			}
 		}, true);
 
 	box->OnComponentHit.AddDynamic(this, &Player::OnEnter);
 	box->OnComponentStay.AddDynamic(this, &Player::OnStay);
 
-	ui = GameplayStatics::CreateUI<GameUI>();
-	ui->AddToViewport();
+	particle->Deactivate();
 }
 
 void Player::Update(float deltaTime)
 {
 	Super::Update(deltaTime);
 	
-	Vector2D cameraOffset;
+	FVector2D cameraOffset;
 	cameraOffset.x = (GetWorldScale().x == 1.f ? 50.f : -50.f);
-	if (GetMovementState() == CharacterMovementState::Standing)
+	if (GetMovementState() == ECharacterMovementState::Standing)
 	{
 		if (direction == ECharacterDirection::LookDown && lookFlag > 1)cameraOffset.y = 200;
 		else if (direction == ECharacterDirection::LookUp && lookFlag > 1)cameraOffset.y = -200;
@@ -169,11 +199,20 @@ void Player::Update(float deltaTime)
 	{
 		bGround = false; ani->SetBool("flying", true);
 	}
-	
-	if (GetMovementState() != CharacterMovementState::Running)
+
+	if (bWall)
 	{
-		if (GetWorldPosition().y > 1000)audio->Stop("sound_swim");
-		else audio->Stop("sound_waterwalk");
+		if (bGround || box->IsCollisionsEmpty())
+		{
+			ani->SetTrigger("leaveWall");
+		}
+	}
+
+	
+	if (GetMovementState() != ECharacterMovementState::Running)
+	{
+		audio->Stop("sound_swim");
+		audio->Stop("sound_waterwalk");
 	}
 
 	ani->SetFloat("walkingSpeed", std::abs(rigid->GetVelocity().x));
@@ -202,117 +241,130 @@ void Player::Update(float deltaTime)
 		}
 	}
 
-	if (bFloating)
+	if (bFloating && GameplayStatics::GetTimeSeconds() - lastFloatTime > 1.5f)
 	{
-		if (GameplayStatics::GetTimeSeconds() - lastFloatTime > 1.5f)
-		{
-			ani->SetTrigger("floatingEnd");
-		}
+		ani->SetTrigger("floatingEnd");
 	}
 }
 
 void Player::SetupInputComponent(InputComponent* inputComponent)
 {
+	inputComponent->SetMapping("WalkLeft", EKeyCode::VK_A);
+	inputComponent->SetMapping("WalkRight", EKeyCode::VK_D);
+	inputComponent->SetMapping("WalkLeftEnd", EKeyCode::VK_A);
+	inputComponent->SetMapping("WalkRightEnd", EKeyCode::VK_D);
+	inputComponent->SetMapping("Rush", EKeyCode::VK_Space);
+	inputComponent->SetMapping("RushEnd", EKeyCode::VK_Space);
+	inputComponent->SetMapping("LookUp", EKeyCode::VK_W);
+	inputComponent->SetMapping("Sit", EKeyCode::VK_W);
+	inputComponent->SetMapping("LookDownEnd", EKeyCode::VK_S);
+	inputComponent->SetMapping("LookUpEnd", EKeyCode::VK_W);
+	inputComponent->SetMapping("LookDown", EKeyCode::VK_S);
+	inputComponent->SetMapping("JumpStart", EKeyCode::VK_K);
+	inputComponent->SetMapping("Jumping", EKeyCode::VK_K);
+	inputComponent->SetMapping("Attack", EKeyCode::VK_J);
+	inputComponent->SetMapping("Evade", EKeyCode::VK_L);
+	inputComponent->SetMapping("Dash", EKeyCode::VK_F);
+	inputComponent->SetMapping("Cure", EKeyCode::VK_E);
+	inputComponent->SetMapping("Throw", EKeyCode::VK_Q);
+	inputComponent->SetMapping("Leave", EKeyCode::VK_O);
+	inputComponent->SetMapping("CloseSkill", EKeyCode::VK_I);
+	inputComponent->SetMapping("RemoteSkill", EKeyCode::VK_O);
 
-	inputComponent->SetMapping("WalkLeft", KeyCode::VK_A);
-	inputComponent->SetMapping("WalkRight", KeyCode::VK_D);
-	inputComponent->SetMapping("WalkLeftEnd", KeyCode::VK_A);
-	inputComponent->SetMapping("WalkRightEnd", KeyCode::VK_D);
-	inputComponent->SetMapping("Rush", KeyCode::VK_Space);
-	inputComponent->SetMapping("RushEnd", KeyCode::VK_Space);
-	inputComponent->SetMapping("LookUp", KeyCode::VK_W);
-	inputComponent->SetMapping("Sit", KeyCode::VK_W);
-	inputComponent->SetMapping("LookDownEnd", KeyCode::VK_S);
-	inputComponent->SetMapping("LookUpEnd", KeyCode::VK_W);
-	inputComponent->SetMapping("LookDown", KeyCode::VK_S);
-	inputComponent->SetMapping("JumpStart", KeyCode::VK_K);
-	inputComponent->SetMapping("Jumping", KeyCode::VK_K);
-	inputComponent->SetMapping("Attack", KeyCode::VK_J);
-	inputComponent->SetMapping("Evade", KeyCode::VK_L);
-	inputComponent->SetMapping("Dash", KeyCode::VK_F);
-	inputComponent->SetMapping("Cure", KeyCode::VK_E);
-	inputComponent->SetMapping("Throw", KeyCode::VK_Q);
-	inputComponent->SetMapping("Leave", KeyCode::VK_O);
-	inputComponent->SetMapping("CloseSkill", KeyCode::VK_I);
-	inputComponent->SetMapping("RemoteSkill", KeyCode::VK_O);
 
-
-	inputComponent->BindAction("WalkLeft", InputType::Holding, [this]() {
+	inputComponent->BindAction("WalkLeft", EInputType::Holding, [this]() {
 		if (walkLock == 2 || bSitting) return; 
 		walkLock = 1;
+		if (bWall)return;
 		if (GetWorldScale().x > 0 && bGround)ani->PlayMontage("turn");
 		if (!bDashing && !bEvading)
 		{
 			SetMaxWalkingSpeed(bRushing ? 700.f : 400.f);
-		}
-		AddInputX(-2.5);
+		}		
+		AddInputX(-2.5, !bWall);
 		});
-	inputComponent->BindAction("WalkLeftEnd", InputType::Released, [this]() {walkLock = 0; });
-	inputComponent->BindAction("WalkRight", InputType::Holding, [this]() {
+	inputComponent->BindAction("WalkLeftEnd", EInputType::Released, [this]() {
+		if (walkLock == 1)ani->SetTrigger("leaveWall"); walkLock = 0; });
+	inputComponent->BindAction("WalkRight", EInputType::Holding, [this]() {
 		if (walkLock == 1 || bSitting) return;
 		walkLock = 2;
+		if (bWall)return;
 		if (GetWorldScale().x < 0 && bGround)ani->PlayMontage("turn");
 		if (!bDashing && !bEvading)
 		{
 			SetMaxWalkingSpeed(bRushing ? 700.f : 400.f);
 		}
-		AddInputX(2.5);
+		AddInputX(2.5, !bWall);
 		});
-	inputComponent->BindAction("WalkRightEnd", InputType::Released, [this]() {walkLock = 0; });
-	inputComponent->BindAction("Rush", InputType::Holding, [this]() {
+	inputComponent->BindAction("WalkRightEnd", EInputType::Released, [this]() {
+		if (walkLock == 2)ani->SetTrigger("leaveWall"); walkLock = 0; });
+	inputComponent->BindAction("Rush", EInputType::Holding, [this]() {
 		if (bSitting) return;
-		if (GetMovementState() == CharacterMovementState::Running)bRushFlag = true;
+		if (GetMovementState() == ECharacterMovementState::Running)bRushFlag = true;
 		if (bRushFlag || bGround)bRushing = true; 
 		}); 
-	inputComponent->BindAction("RushEnd", InputType::Released, [this]() {
+	inputComponent->BindAction("RushEnd", EInputType::Released, [this]() {
 		bRushing = false; bRushFlag = false;
 		});
-	inputComponent->BindAction("LookUp", InputType::Holding, [this]() {
+	inputComponent->BindAction("LookUp", EInputType::Holding, [this]() {
 		if(direction == ECharacterDirection::LookForward)direction = ECharacterDirection::LookUp;
-		if (GetMovementState() == CharacterMovementState::Standing && lookFlag <= 1.5f)lookFlag += 0.0015f;
+		if (GetMovementState() == ECharacterMovementState::Standing && lookFlag <= 1.5f)lookFlag += 0.0015f;
 		});
-	inputComponent->BindAction("Sit", InputType::Pressed, [this]() {
-		if (GetMovementState() == CharacterMovementState::Standing && !bSitting)SitDown();
+	inputComponent->BindAction("Sit", EInputType::Pressed, [this]() {
+		if (GetMovementState() == ECharacterMovementState::Standing && !bSitting)SitDown();
 		});
-	inputComponent->BindAction("LookUpEnd", InputType::Released, [this]() {
+	inputComponent->BindAction("LookUpEnd", EInputType::Released, [this]() {
 		if (direction != ECharacterDirection::LookUp)return;
 		direction = ECharacterDirection::LookForward; lookFlag = 0;
 		});
-	inputComponent->BindAction("LookDown", InputType::Holding, [this]() {
+	inputComponent->BindAction("LookDown", EInputType::Holding, [this]() {
 		if (bSitting)ani->PlayMontage("standup");
 		if (direction == ECharacterDirection::LookForward)direction = ECharacterDirection::LookDown;
-		if (GetMovementState() == CharacterMovementState::Standing && lookFlag <= 1.5f)lookFlag += 0.0015f;
+		if (GetMovementState() == ECharacterMovementState::Standing && lookFlag <= 1.5f)lookFlag += 0.0015f;
 		});
-	inputComponent->BindAction("LookDownEnd", InputType::Released, [this]() {
+	inputComponent->BindAction("LookDownEnd", EInputType::Released, [this]() {
 		if (direction != ECharacterDirection::LookDown)return;
 		direction = ECharacterDirection::LookForward; lookFlag = 0;
 		});
-	inputComponent->BindAction("JumpStart", InputType::Pressed, [this]() {
+	inputComponent->BindAction("JumpStart", EInputType::Pressed, [this]() {
 		if (bSitting) return;
 		if (bGround)
 		{
-			bGround = false; SpawnWetLandEffect(); 
+			bGround = false; SpawnWetLandEffect();
 			rigid->AddImpulse({ 0,-400 });
 			if (bRushing)ani->PlayMontage("rushjump");
-			else ani->PlayMontage("jump"); 
+			else ani->PlayMontage("jump");
 			lastJumpTime = GameplayStatics::GetTimeSeconds();
 			int32 jumpNum = Math::RandInt(0, 10);
-			if(jumpNum < 3)audio->Play("voice_jump_0");
-			else if(jumpNum < 5)audio->Play("voice_jump_1");
+			if (jumpNum < 3)audio->Play("voice_jump_0");
+			else if (jumpNum < 5)audio->Play("voice_jump_1");
 			else if (jumpNum < 7)audio->Play("voice_jump_2");
 			audio->Play("sound_jump");
+			jumpFlag = 1;
 		}
-		});
-	inputComponent->BindAction("Jumping", InputType::Holding, [this]() {
-		if (bSitting) return;
-		if (rigid->GetVelocity().y <= 0 && GameplayStatics::GetTimeSeconds() - lastJumpTime < 0.25f)
+		else if (bWall)
 		{
-			bGround = false; ani->SetBool("flying", true);
-			rigid->AddImpulse({ 0,-4.f }); 
+			AddPosition({ GetWorldScale().x * 10,-10 });
+			rigid->AddImpulse({ GetWorldScale().x * 500,-500 });
+			ani->PlayMontage("jump");
+			lastJumpTime = GameplayStatics::GetTimeSeconds();
+			int32 jumpNum = Math::RandInt(0, 12);
+			if (jumpNum < 2)audio->Play("voice_jump_0");
+			else if (jumpNum < 4)audio->Play("voice_jump_1");
+			else if (jumpNum < 6)audio->Play("voice_jump_2");
+			audio->Play("sound_walljump");
+			jumpFlag = 2;
 		}
 		});
-	inputComponent->BindAction("Attack", InputType::Pressed, [this]() {
-		if (bSitting) return;
+	inputComponent->BindAction("Jumping", EInputType::Holding, [this]() {
+		if (bSitting || bWall) return;
+		if (rigid->GetVelocity().y < 0 && GameplayStatics::GetTimeSeconds() - lastJumpTime < 0.19f)
+		{
+			bGround = false; ani->SetBool("flying", true); rigid->AddImpulse({ 0,-5.f / jumpFlag });
+		}
+		});
+	inputComponent->BindAction("Attack", EInputType::Pressed, [this]() {
+		if (bSitting || bWall) return;
 		if (GameplayStatics::GetTimeSeconds() - lastAttackTime > 0.45f)
 		{
 			attackFlag = (attackFlag + 1) % 2;
@@ -325,10 +377,10 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 				case ECharacterDirection::LookForward:
 					if (attackFlag == 0)ani->PlayMontage("attack_0");
 					else ani->PlayMontage("attack_1");
-					attackBox->SetLocalPosition(Vector2D(70 * GetWorldScale().x, 0));
+					attackBox->SetLocalPosition(FVector2D(70 * GetWorldScale().x, 0));
 					break;
 				case ECharacterDirection::LookUp:
-					ani->PlayMontage("attackup"); attackBox->SetLocalPosition(Vector2D(20 * GetWorldScale().x, 0));
+					ani->PlayMontage("attackup"); attackBox->SetLocalPosition(FVector2D(20 * GetWorldScale().x, 0));
 					break;
 				case ECharacterDirection::LookDown:
 					ani->PlayMontage("attackdown");
@@ -339,8 +391,8 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 			attackBox->Init(direction);
 		}
 		});
-	inputComponent->BindAction("Evade", InputType::Pressed, [this]() {
-		if (bSitting) return;
+	inputComponent->BindAction("Evade", EInputType::Pressed, [this]() {
+		if (bSitting || bWall) return;
 		if (bGround) 
 		{ 
 			ani->PlayMontage("evade"); bEvading = true; lastEvadeTime = GameplayStatics::GetTimeSeconds(); 
@@ -350,45 +402,51 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 			else if (jumpNum < 5)audio->Play("sound_evade_1");
 		}
 		});
-	inputComponent->BindAction("Dash", InputType::Pressed, [this]() {
-		if (bSitting) return;
+	inputComponent->BindAction("Dash", EInputType::Pressed, [this]() {
+		if (bSitting || bWall) return;
 		if (bGround)ani->PlayMontage("dash");
 		else ani->PlayMontage("airdash");
+		if (bWall)
+		{
+			AddPosition({ GetWorldScale().x * 25,-10 });
+		}
 		lastDashTime = GameplayStatics::GetTimeSeconds(); rigid->SetVelocity({ rigid->GetVelocity().x,0 });
 		rigid->SetGravityEnabled(false); audio->Play("sound_dash");
 		});
-	inputComponent->BindAction("Cure", InputType::Pressed, [this]() {
-		if (bSitting) return;
-		if (soul >= 9 && health < 5) 
+	inputComponent->BindAction("Cure", EInputType::Pressed, [this]() {
+		if (bSitting || bWall) return;
+		if (silk >= 9 && health < 5) 
 		{
-			AddSoul(-9);
+			AddSilk(-9);
 			ani->PlayMontage("cure");   
 			camera->SetSpringArmLength(19); camera->ShakeCamera(5, 2);
 			audio->Play("voice_cure");
 			audio->Play("sound_cure");
 			lastFloatTime = GameplayStatics::GetTimeSeconds() + 1.f; 
 			SetFloating(true);
+			particle->SetIsLoop(false);
+			AddHealth(3);
 		}
 		});
-	inputComponent->BindAction("Throw", InputType::Pressed, [this]() {
-		if (bSitting) return;
+	inputComponent->BindAction("Throw", EInputType::Pressed, [this]() {
+		if (bSitting || bWall) return;
 		if (dartNum <= 0 || GameplayStatics::GetTimeSeconds() - lastThrowTime < 0.5f)return;
 		lastThrowTime = GameplayStatics::GetTimeSeconds();
 		ani->PlayMontage("throw"); audio->Play("sound_throw");
 		if (Math::RandInt(0, 10) > 5)audio->Play("voice_throw");
 		});
-	inputComponent->BindAction("Leave", InputType::Pressed, [this]() {
-		if (bSitting) return;
-		if (soul < 3 || bGround)return; AddSoul(-3); EnableInput(false);
+	inputComponent->BindAction("Leave", EInputType::Pressed, [this]() {
+		if (bSitting || bWall) return;
+		if (silk < 3 || bGround)return; AddSilk(-3); EnableInput(false);
 		lastThrowTime = GameplayStatics::GetTimeSeconds();
 		ani->PlayMontage("leave"); audio->Play("sound_leave");
 		rigid->SetGravityEnabled(false);rigid->SetVelocity({});
-		GameplayStatics::CreateObject<Effect>(GetWorldPosition() + Vector2D(GetLocalScale().x > 0 ? 200 : -200, -150),
+		GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(GetLocalScale().x > 0 ? 200 : -200, -150),
 			(GetLocalScale().x > 0 ? -150 : -30))->Init("effect_leave", -0.02f);
 		});
-	inputComponent->BindAction("CloseSkill", InputType::Pressed, [this]() {
-		if (bSitting) return;
-		if (soul < 3) return; AddSoul(-3);
+	inputComponent->BindAction("CloseSkill", EInputType::Pressed, [this]() {
+		if (bSitting || bWall) return;
+		if (silk < 3) return; AddSilk(-3);
 		ani->PlayMontage("_closeskill");
 		GameplayStatics::CreateObject<CloseSkillBox>(GetWorldPosition());
 		lastFloatTime = GameplayStatics::GetTimeSeconds(); SetFloating(true);
@@ -396,9 +454,9 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		if (Math::RandInt(0, 10) > 5)audio->Play("voice_closeskill_0");
 		else audio->Play("voice_closeskill_1");
 		});
-	inputComponent->BindAction("RemoteSkill", InputType::Pressed, [this]() {
-		if (bSitting) return;
-		if (soul < 3 || !bGround)return; AddSoul(-3); EnableInput(false);
+	inputComponent->BindAction("RemoteSkill", EInputType::Pressed, [this]() {
+		if (bSitting || bWall) return;
+		if (silk < 3 || !bGround)return; AddSilk(-3); EnableInput(false);
 		ani->PlayMontage("remoteskill");
 		if (Math::RandInt(0, 10) > 5)audio->Play("voice_remoteskill_0");
 		else audio->Play("voice_remoteskill_1");
@@ -406,7 +464,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 }
 
 
-void Player::OnEnter(Collider* hitComp, Collider* otherComp, Actor* otherActor, Vector2D normalImpulse, const HitResult& hitResult)
+void Player::OnEnter(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const HitResult& hitResult)
 {
 	if (normalImpulse.y < 0)
 	{
@@ -420,10 +478,6 @@ void Player::OnEnter(Collider* hitComp, Collider* otherComp, Actor* otherActor, 
 	}
 	else if (normalImpulse.x != 0 && GetWorldScale().x == -normalImpulse.x)
 	{
-		if (bDashing)
-		{
-			return;
-		}
 		if (BoxCollider* platform = Cast<BoxCollider>(otherComp))
 		{
 			float delta_y = platform->GetWorldPosition().y - platform->GetSize().y * 0.5f - (GetWorldPosition().y + box->GetSize().y * 0.5f);
@@ -440,15 +494,32 @@ void Player::OnEnter(Collider* hitComp, Collider* otherComp, Actor* otherActor, 
 	}
 }
 
-void Player::OnStay(Collider* hitComp, Collider* otherComp, Actor* otherActor, Vector2D normalImpulse, const HitResult& hitResult)
+void Player::OnStay(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const HitResult& hitResult)
 {
 	if (normalImpulse.y < 0)
 	{
 		bGround = true; ani->SetBool("flying", false);
 	}
+	else if (normalImpulse.x != 0 && !bWall && !bGround && !bDashing &&
+		((walkLock == 1 && normalImpulse.x == 1) || (walkLock == 2 && normalImpulse.x == -1)) && rigid->GetVelocity().y >= 0)
+	{
+		if (BoxCollider* platform = Cast<BoxCollider>(otherComp))
+		{
+			if (platform->GetWorldPosition().y - platform->GetSize().y * 0.5f < GetWorldPosition().y - box->GetSize().y * 0.5f
+				&& platform->GetWorldPosition().y + platform->GetSize().y * 0.5f > GetWorldPosition().y + box->GetSize().y * 0.5f)
+			{
+				bWall = true;
+				ani->SetNode("wall");
+				rigid->SetVelocity({});
+				rigid->SetGravityEnabled(false);
+				SetLocalScale(FVector2D(normalImpulse.x, GetWorldScale().y));
+				audio->Play("sound_claw");
+			}
+		}
+	}
 }
 
-void Player::TakeDamage(Vector2D normal)
+void Player::TakeDamage(FVector2D normal)
 {
 	if (blinkTimes > 0 || health == 0)
 	{
@@ -457,9 +528,11 @@ void Player::TakeDamage(Vector2D normal)
 	AddHealth(-1);
 	if (health == 0)
 	{
-		Die(); return;
+		DieStart(); return;
 	}
 	blinkTimes = 10;
+	particle->Activate();
+	particle->SetIsLoop(true);
 
 	ani->PlayMontage("hurt");
 	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
@@ -481,22 +554,54 @@ void Player::TakeDamage(Vector2D normal)
 	else if (stunNum < 6)audio->Play("sound_stun_");
 }
 
-Vector2D Player::GetCameraPos()
+FVector2D Player::GetCameraPos()
 {
 	if (camera)return camera->GetVirtualPosition();
-	return Vector2D();
+	return FVector2D();
 }
 
 void Player::AddHealth(int32 delta)
 {
-	health += delta;
-	health = Math::Clamp(health, 0, 5);
+	if (delta > 0)
+	{
+		for (int i = 0; i < delta; i++)
+		{
+			if (health >= 5)break;
+			ui->BloodLoad(health);
+			health++;
+		}
+	}
+	else
+	{
+		for (int i = 0; i < -delta; i++)
+		{
+			if (health <= 0)break;
+			health--;
+			ui->BloodMinus(health);
+		}
+	}
 }
 
-void Player::AddSoul(float delta)
+void Player::AddSilk(int delta)
 {
-	soul += delta;
-	soul = Math::Clamp(soul, 0.f, 9.f);
+	if (delta > 0)
+	{
+		for (int i = 0; i < delta; i++)
+		{
+			if (silk >= 9)break;
+			ui->SilkLoad(silk);
+			silk++;
+		}
+	}
+	else
+	{
+		for (int i = 0; i < -delta; i++)
+		{
+			if (silk <= 0)break;
+			silk--;
+			ui->SilkMinus(silk);
+		}
+	}
 }
 
 void Player::AddDart(int32 delta)
@@ -526,20 +631,26 @@ void Player::Grab()
 	EnableInput(true);
 	rigid->SetGravityEnabled(true);
 	rigid->SetVelocity({ GetWorldScale().x * 75,0 });
-	box->SetPhysicsMaterial(PhysicsMaterial(0.1f, 0));
+	box->SetPhysicsMaterial(FPhysicsMaterial(0.1f, 0));
 }
 
-void Player::Die()
+void Player::DieStart()
 {
 	EnableInput(false);
+	particle->SetIsLoop(false);
 	ani->SetNode("die");
 	rigid->SetVelocity({ 0,-20 });
 	rigid->SetGravityEnabled(false);
 	GameplayStatics::CreateObject<DieParticle>()->AttachTo(this);
-	RecoverTimer.Bind(3,this,&Player::Recover);
-	audio->Play("sound_die");
+	DieTimer.Bind(3.f, this, &Player::DieEnd);
 	audio->Play("voice_die");
 	hurtBox->SetCollisonMode(CollisionMode::None);
+}
+
+void Player::DieEnd()
+{
+	ui->BlackInterval(true);
+	RecoverTimer.Bind(2.f, this, &Player::Recover);
 }
 
 void Player::Recover()
@@ -547,9 +658,11 @@ void Player::Recover()
 	EnableInput(true);
 	if (Chair* chair = GameplayStatics::FindObjectOfClass<Chair>())
 	{
-		SetLocalPosition(chair->GetWorldPosition() - Vector2D{ 0,30 });
-		bSitting = true; ani->SetNode("sitdown"); health = 5;
+		SetLocalPosition(chair->GetWorldPosition() - FVector2D{ 0,30 });
+		bSitting = true; ani->SetNode("sitdown"); 
 		rigid->SetVelocity({});
+		ui->BlackInterval(false);
+		AddHealth(5);
 	}
 }
 
@@ -557,21 +670,23 @@ void Player::SitDown()
 {
 	if (Chair* chair = GameplayStatics::FindObjectOfClass<Chair>())
 	{
-		if (Vector2D::Distance(chair->GetWorldPosition(), GetWorldPosition()) >= 75)
+		if (FVector2D::Distance(chair->GetWorldPosition(), GetWorldPosition()) >= 75)
 		{
 			return;
 		}
-		SetLocalPosition(chair->GetWorldPosition() - Vector2D{ 0,30 });
-		bSitting = true; ani->SetNode("sitdown"); health = 5; blinkTimes = 1;
-		audio->Play("sound_heal"); ui->WhiteBlink();
-		GameplayStatics::CreateObject<SitParticle>(GetWorldPosition() + Vector2D(0, 45));
-		Effect* effect = GameplayStatics::CreateObject<Effect>(Vector2D(-20, 0));
+		particle->SetIsLoop(false);
+		SetLocalPosition(chair->GetWorldPosition() - FVector2D{ 0,30 });
+		bSitting = true; ani->SetNode("sitdown"); blinkTimes = 1;
+		audio->Play("sound_heal"); ui->WhiteBlink(3);
+		GameplayStatics::CreateObject<SitParticle>(GetWorldPosition() + FVector2D(0, 45));
+		Effect* effect = GameplayStatics::CreateObject<Effect>(FVector2D(-20, 0));
 		effect->Init("effect_sit", -0.02f);
 		effect->AttachTo(this);
 		effect->SetLocalScale(GetWorldScale() * 0.5f);
 		hurtBox->SetCollisonMode(CollisionMode::None);
 		rigid->SetGravityEnabled(false);
 		rigid->SetVelocity({});
+		AddHealth(5);
 	}
 }
 
@@ -581,6 +696,7 @@ void Player::StandUp()
 	bSitting = false;
 	hurtBox->SetCollisonMode(CollisionMode::Trigger);
 	rigid->SetGravityEnabled(true);
+	audio->Play("sound_land");
 }
 
 void Player::LeaveUp()
@@ -590,10 +706,16 @@ void Player::LeaveUp()
 	rigid->SetVelocity({});
 }
 
+void Player::LeaveWall()
+{
+	rigid->SetGravityEnabled(true);
+	bWall = false;
+}
+
 
 void Player::SpawnDashEffect()
 {
-	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() - Vector2D(GetWorldScale().x * 150, 0));
+	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() - FVector2D(GetWorldScale().x * 150, 0));
 	if (!effect)return;
 	if (bGround)
 	{
@@ -608,7 +730,7 @@ void Player::SpawnDashEffect()
 
 void Player::SpawnWetLandEffect()
 {
-	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + Vector2D(0, 55));
+	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(0, 55));
 	if (!effect)return;
 	effect->Init("effect_wetland");
 	effect->SetLocalScale(GetWorldScale());
@@ -616,7 +738,7 @@ void Player::SpawnWetLandEffect()
 
 void Player::SpawnWetWalkEffect()
 {
-	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + Vector2D(0, 60));
+	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(0, 60));
 	if (!effect)return;
 	effect->Init("effect_wetwalk");
 	effect->SetLocalScale(GetWorldScale() * Math::RandReal(0.8f, 1.1f));

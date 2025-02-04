@@ -10,6 +10,8 @@ enum class ECharacterDirection : uint8
 	LookDown,
 };
 
+DECLARE_NO_PARAM_MULTICAST_DELEGATE_CLASS(OnHurtEvent)
+DECLARE_NO_PARAM_MULTICAST_DELEGATE_CLASS(OnCureEvent)
 
 class Player :public Character
 {
@@ -22,17 +24,17 @@ public:
 
 	virtual void Update(float deltaTime)override;
 
-	void TakeDamage(Vector2D normal);
+	void TakeDamage(FVector2D normal);
 
-	Vector2D GetCameraPos();
+	FVector2D GetCameraPos();
 
 	int32 GetHealth()const { return health; }
 
 	void AddHealth(int32 delta);
 
-	float GetSoul()const { return soul; }
+	float GetSilk()const { return silk; }
 
-	void AddSoul(float delta);
+	void AddSilk(int delta);
 
 	int32 GetGeo()const { return geo; }
 
@@ -48,7 +50,9 @@ public:
 
 	void Grab();
 
-	void Die();
+	void DieStart();
+
+	void DieEnd();
 
 	void Recover();
 
@@ -58,11 +62,16 @@ public:
 
 	void LeaveUp();
 
+	void LeaveWall();
+
+	OnCureEvent cureEvent;
+	OnHurtEvent hurtEvent;
+
 protected:
 	virtual void SetupInputComponent(InputComponent* inputComponent)override;
 
-	void OnEnter(Collider* hitComp, Collider* otherComp, Actor* otherActor, Vector2D normalImpulse, const HitResult& hitResult);
-	void OnStay(Collider* hitComp, Collider* otherComp, Actor* otherActor, Vector2D normalImpulse, const HitResult& hitResult);
+	void OnEnter(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const HitResult& hitResult);
+	void OnStay(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const HitResult& hitResult);
 
 private:
 	class SpriteRenderer* render;
@@ -73,9 +82,11 @@ private:
 	class RigidBody* rigid;
 	class Camera* camera;
 	class AudioPlayer* audio;
+	class ParticleSystem* particle;
 	class GameUI* ui;
 
 	Timer BlinkTimer;
+	Timer DieTimer;
 	Timer RecoverTimer;
 	int blinkTimes;
 
@@ -86,6 +97,7 @@ private:
 	bool bRushing;
 	bool bRushFlag;
 	bool bSitting;
+	bool bWall;
 
 	float lastJumpTime;
 	float lastAttackTime;
@@ -96,10 +108,11 @@ private:
 	int32 attackFlag;
 	float lookFlag;
 	int32 walkLock;
+	int32 jumpFlag;
 	ECharacterDirection direction;
 
 	int32 health;
-	float soul;
+	int32 silk;
 	int32 geo;
 	int32 dartNum;
 

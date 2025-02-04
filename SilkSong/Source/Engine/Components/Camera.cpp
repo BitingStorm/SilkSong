@@ -4,7 +4,7 @@
 #include "easyx.h"
 
 
-Vector2D Camera::Lerp(Vector2D start, Vector2D end, float t)
+FVector2D Camera::Lerp(FVector2D start, FVector2D end, float t)
 {
 	t = Math::Clamp(t, 0.001f, 0.1f);
 	return start + (end - start) * t;
@@ -69,12 +69,12 @@ void Camera::ShakeCamera(int intensity,int decay)
 	shakeFlag = true;
 }
 
-void Camera::SetRectFrame(const Rect& frame)
+void Camera::SetRectFrame(const FRect& frame)
 {
 	this->frame = frame;
 }
 
-Vector2D Camera::GetVirtualPosition() const
+FVector2D Camera::GetVirtualPosition() const
 {
 	return transform_virtual.position;
 }
@@ -91,13 +91,13 @@ void Camera::Calculate()
 	/**
 	 * Æ½»¬Î»ÒÆ
 	 **/
-	Vector2D pos = GetWorldPosition();
+	FVector2D pos = GetWorldPosition();
 	if (frame.left != 0 && frame.right != 0 && frame.bottom != 0 && frame.top != 0)
 		pos = { Math::Clamp(pos.x,frame.left,frame.right),Math::Clamp(pos.y, frame.bottom, frame.top) };
 	if (smoothness)
 	{
 		transform_virtual.position = Lerp(transform_virtual.position, pos,
-			0.1f / smoothness * SmoothStep(Vector2D::Distance(transform_virtual.position, pos) / distanceThreshold));
+			0.1f / smoothness * SmoothStep(FVector2D::Distance(transform_virtual.position, pos) / distanceThreshold));
 	}
 	else transform_virtual.position = pos;
 	
@@ -116,7 +116,7 @@ void Camera::Calculate()
 		if (shakeIntensity <= 0) { shakeFlag = false; return; }
 		double radian = Math::RandReal(0, 360) * PI / 180;
 		transform_virtual.position -= lastShakeVector;
-		transform_virtual.position += (lastShakeVector = shakeIntensity * Vector2D((float)cos(radian), (float)sin(radian)));
+		transform_virtual.position += (lastShakeVector = shakeIntensity * FVector2D((float)cos(radian), (float)sin(radian)));
 		shakeIntensity -= float(shakeDecay) * 0.005f;
 	}
 }

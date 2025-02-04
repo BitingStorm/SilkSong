@@ -17,7 +17,7 @@ class SceneComponent;
 /*----------------------------------
 			 场景对象基类
   ----------------------------------*/
-class Actor :public Object
+class Actor :public Object, public ITimerHandler
 {
 	friend class RigidBody;
 
@@ -43,7 +43,7 @@ public:
 
 	virtual void EndPlay()override;
 
-	//设置场景根组件(如果不清楚底层关系,不建议使用，否则容易出错)
+	//设置场景根组件(如果不清楚底层关系，不建议使用，否则容易出错)
 	void SetRootComponent(SceneComponent* newRoot);
 
 	//设置所属对象
@@ -63,22 +63,22 @@ public:
 	void Destroy();
 
 	/** 获取场景属性（相对父对象坐标系）**/
-	const Vector2D& GetLocalPosition() const;
+	const FVector2D& GetLocalPosition() const;
 	float GetLocalRotation() const;
-	const Vector2D& GetLocalScale() const;
+	const FVector2D& GetLocalScale() const;
 
 	/** 获取场景属性（世界绝对坐标系）**/
-	Vector2D GetWorldPosition()const;
+	FVector2D GetWorldPosition()const;
 	float GetWorldRotation()const;
-	Vector2D GetWorldScale()const;
+	FVector2D GetWorldScale()const;
 
 	/** 设置场景属性（相对父对象坐标系）**/
-	void SetLocalPosition(const Vector2D& pos);
+	void SetLocalPosition(const FVector2D& pos);
 	void SetLocalRotation(float angle);
-	void SetLocalScale(const Vector2D& scale);
+	void SetLocalScale(const FVector2D& scale);
 
 	/** 增加场景属性偏移量 **/
-	void AddPosition(Vector2D pos);
+	void AddPosition(FVector2D pos);
 	void AddRotation(float rot);
 
 	//绘制位置信息

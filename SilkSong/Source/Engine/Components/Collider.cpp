@@ -49,16 +49,16 @@ void Collider::Update(float deltaTime)
         }
     }
 
-    Vector2D half = GetRect().GetSize()*0.5f;
+    FVector2D half = GetRect().GetSize()*0.5f;
 
-    Vector2D pos = GetWorldPosition() - half;
-    Pair newPoint(Math::Clamp(int(pos.x + 2000) / 400, 0, 9), Math::Clamp(int(pos.y) / 200, 0, 5));
+    FVector2D pos = GetWorldPosition() - half;
+    FPair newPoint(Math::Clamp(int(pos.x + 2000) / 400, 0, 9), Math::Clamp(int(pos.y) / 200, 0, 5));
     pos += half * 2;
-    Pair newPoint_1(Math::Clamp(int(pos.x + 2000) / 400, 0, 9), Math::Clamp(int(pos.y) / 200, 0, 5));
+    FPair newPoint_1(Math::Clamp(int(pos.x + 2000) / 400, 0, 9), Math::Clamp(int(pos.y) / 200, 0, 5));
     if (newPoint == point && newPoint_1 == point_1)return;
 
     //碰撞区块信息更新
-    if (point != Pair(-1, -1))for (int i = point.x; i <= point_1.x; ++i)for (int j = point.y; j <= point_1.y; ++j)mainWorld.ColliderZones[i][j].erase(this);
+    if (point != FPair(-1, -1))for (int i = point.x; i <= point_1.x; ++i)for (int j = point.y; j <= point_1.y; ++j)mainWorld.ColliderZones[i][j].erase(this);
     point = newPoint, point_1 = newPoint_1;
     for (int i = point.x; i <= point_1.x; ++i)for (int j = point.y; j <= point_1.y; ++j)mainWorld.ColliderZones[i][j].insert(this);
 }
@@ -97,10 +97,10 @@ void Collider::Clear()
     for (auto& another : collisions) 
     {
         another->collisions.erase(this);
-        OnComponentEndOverlap.BroadCast(this,another,another->pOwner);  another->OnComponentEndOverlap.BroadCast(another,this,pOwner);
+        OnComponentEndOverlap.BroadCast(this, another, another->pOwner);  another->OnComponentEndOverlap.BroadCast(another, this, pOwner);
     }
     collisions.clear();
-    if (point != Pair(-1, -1))
+    if (point != FPair(-1, -1))
     {
         for (int i = point.x; i <= point_1.x; ++i)for (int j = point.y; j <= point_1.y; ++j)mainWorld.ColliderZones[i][j].erase(this);
     }
@@ -120,7 +120,7 @@ void Collider::Insert(Collider* another)
             another->OnComponentHit.BroadCast(another, this, pOwner, hitResult.ImpactNormal, {hitResult.ImpactPoint,-hitResult.ImpactNormal,pOwner,this});
             if (rigidAttached)
             {
-                rigidAttached->RestrictVelocity(-hitResult.ImpactNormal, PhysicsMaterial::Combine(this->material, another->material), another->rigidAttached);
+                rigidAttached->RestrictVelocity(-hitResult.ImpactNormal, FPhysicsMaterial::Combine(this->material, another->material), another->rigidAttached);
             }
         }
         else 
@@ -138,7 +138,7 @@ void Collider::Erase()
         if (!CollisionJudge(another)) 
         {
             another->collisions.erase(this); collisions_to_erase.push_back(another);
-            OnComponentEndOverlap.BroadCast(this,another,another->pOwner); another->OnComponentEndOverlap.BroadCast(another,this,pOwner);
+            OnComponentEndOverlap.BroadCast(this, another, another->pOwner);  another->OnComponentEndOverlap.BroadCast(another, this, pOwner);
         }
     }
     for (auto& another : collisions_to_erase) collisions.erase(another);
@@ -155,7 +155,7 @@ bool Collider::collisionJudgeCircleToCircle(Collider* c1, Collider* c2)
 {
     CircleCollider* circle1 = Cast<CircleCollider>(c1);
     CircleCollider* circle2 = Cast<CircleCollider>(c2);
-    return Vector2D::Distance(circle1->GetWorldPosition(), circle2->GetWorldPosition()) <= circle1->GetRadius() + circle2->GetRadius();
+    return FVector2D::Distance(circle1->GetWorldPosition(), circle2->GetWorldPosition()) <= circle1->GetRadius() + circle2->GetRadius();
 }
 
 bool Collider::collisionJudgeCircleToBox(Collider* c1, Collider* c2)
@@ -169,8 +169,8 @@ bool Collider::collisionJudgeCircleToBox(Collider* c1, Collider* c2)
     {
         circle = Cast<CircleCollider>(c2),box = Cast<BoxCollider>(c1);
     }
-    float radius = circle->GetRadius();Vector2D pos = circle->GetWorldPosition();
-    Rect rect = box->GetRect();
+    float radius = circle->GetRadius();FVector2D pos = circle->GetWorldPosition();
+    FRect rect = box->GetRect();
 
     if (pos.x <= rect.right && pos.x >= rect.left && pos.y <= rect.top && pos.y >= rect.bottom)
         return true;
@@ -178,14 +178,14 @@ bool Collider::collisionJudgeCircleToBox(Collider* c1, Collider* c2)
     {
         if (pos.x < rect.left)
         {
-            if (pos.y > rect.top)return Vector2D::Distance(pos, { rect.left,rect.top }) <= radius;
-            else if (pos.y < rect.bottom)return Vector2D::Distance(pos, { rect.left,rect.bottom }) <= radius;
+            if (pos.y > rect.top)return FVector2D::Distance(pos, { rect.left,rect.top }) <= radius;
+            else if (pos.y < rect.bottom)return FVector2D::Distance(pos, { rect.left,rect.bottom }) <= radius;
             else return rect.left - pos.x <= radius;
         }
         else if (pos.x > rect.right)
         {
-            if (pos.y > rect.top)return Vector2D::Distance(pos, { rect.right,rect.top }) <= radius;
-            else if (pos.y < rect.bottom)return Vector2D::Distance(pos, { rect.right,rect.bottom }) <= radius;
+            if (pos.y > rect.top)return FVector2D::Distance(pos, { rect.right,rect.top }) <= radius;
+            else if (pos.y < rect.bottom)return FVector2D::Distance(pos, { rect.right,rect.bottom }) <= radius;
             else return pos.x - rect.right <= radius;
         }
         else
@@ -200,8 +200,8 @@ bool Collider::collisionJudgeBoxToBox(Collider* c1, Collider* c2)
 {
     BoxCollider* box1 = Cast<BoxCollider>(c1);
     BoxCollider* box2 = Cast<BoxCollider>(c2);
-    Vector2D pos1 = box1->GetWorldPosition() - box1->GetSize() / 2;
-    Vector2D pos2 = box2->GetWorldPosition() - box2->GetSize() / 2;
+    FVector2D pos1 = box1->GetWorldPosition() - box1->GetSize() / 2;
+    FVector2D pos2 = box2->GetWorldPosition() - box2->GetSize() / 2;
     return (pos1.x < pos2.x + box2->GetSize().x && pos1.x + box1->GetSize().x > pos2.x &&
         pos1.y < pos2.y + box2->GetSize().y && pos1.y + box1->GetSize().y > pos2.y);
 }
@@ -216,8 +216,8 @@ HitResult Collider::collisionHitCircleToCircle(Collider* c1, Collider* c2)
 {
     CircleCollider* circle1 = Cast<CircleCollider>(c1);
     CircleCollider* circle2 = Cast<CircleCollider>(c2);
-    Vector2D impactNormal = (circle2->GetWorldPosition()-circle1->GetWorldPosition()).Normalize();
-    Vector2D impactPoint = circle1->GetWorldPosition() + impactNormal * circle1->GetRadius();
+    FVector2D impactNormal = (circle2->GetWorldPosition()-circle1->GetWorldPosition()).Normalize();
+    FVector2D impactPoint = circle1->GetWorldPosition() + impactNormal * circle1->GetRadius();
     return HitResult(impactPoint, impactNormal,circle2->pOwner,circle2);
 }
 
@@ -232,11 +232,11 @@ HitResult Collider::collisionHitCircleToBox(Collider* c1, Collider* c2)
     {
         circle = Cast<CircleCollider>(c2), box = Cast<BoxCollider>(c1);
     }
-    float radius = circle->GetRadius(); Vector2D pos = circle->GetWorldPosition();
-    Rect rect = box->GetRect();
+    float radius = circle->GetRadius(); FVector2D pos = circle->GetWorldPosition();
+    FRect rect = box->GetRect();
 
-    Vector2D impactNormal;
-    Vector2D impactPoint;
+    FVector2D impactNormal;
+    FVector2D impactPoint;
 
     if (pos.x <= rect.right && pos.x >= rect.left && pos.y <= rect.top && pos.y >= rect.bottom)
     {
@@ -270,9 +270,9 @@ HitResult Collider::collisionHitBoxToBox(Collider* c1, Collider* c2)
 {
     BoxCollider* box1 = Cast<BoxCollider>(c1);
     BoxCollider* box2 = Cast<BoxCollider>(c2);
-    Rect r1 = box1->GetRect(), r2 = box2->GetRect();
-    Vector2D overlapRect = BoxCollider::GetOverlapRect(r1, r2);
-    Vector2D impactNormal;
+    FRect r1 = box1->GetRect(), r2 = box2->GetRect();
+    FVector2D overlapRect = BoxCollider::GetOverlapRect(r1, r2);
+    FVector2D impactNormal;
     if (overlapRect.x >= overlapRect.y)
     {
         box1->GetWorldPosition().y - box2->GetWorldPosition().y > 0 ? impactNormal = { 0,-1 } : impactNormal = { 0,1 };
@@ -300,7 +300,7 @@ void CircleCollider::Update(float deltaTime)
     Collider::Update(deltaTime);
 
     radius = radius_ini * sqrtf(std::abs(GetWorldScale().x * GetWorldScale().y));
-    Vector2D pos = GetWorldPosition();
+    FVector2D pos = GetWorldPosition();
     rect = { pos.x - radius, pos.y + radius, pos.x + radius, pos.y - radius };
 }
 
@@ -308,14 +308,14 @@ void CircleCollider::DrawDebugLine()
 {
     if (GetCollisonMode() == CollisionMode::None)return;
     setlinecolor(GREEN);
-    Vector2D pos = (GetWorldPosition() - mainWorld.mainCamera->GetVirtualPosition())
-        * 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength() + Vector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2);
+    FVector2D pos = (GetWorldPosition() - mainWorld.mainCamera->GetVirtualPosition())
+        * 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength() + FVector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2);
     circle((int)pos.x,(int)pos.y,int(radius * 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength()));
 }
 
 bool CircleCollider::IsMouseOver()
 {
-    return Vector2D::Distance(GetWorldPosition(), GameplayStatics::GetController()->GetCursorPosition()) <= radius;
+    return FVector2D::Distance(GetWorldPosition(), GameplayStatics::GetController()->GetCursorPosition()) <= radius;
 }
 
 
@@ -330,7 +330,7 @@ void BoxCollider::Update(float deltaTime)
     Collider::Update(deltaTime);
 
     size = size_ini * GetWorldScale(); size.x = std::abs(size.x); size.y = std::abs(size.y);
-    Vector2D pos = GetWorldPosition();
+    FVector2D pos = GetWorldPosition();
     rect = { pos.x - size.x / 2 ,pos.y + size.y / 2 ,pos.x + size.x / 2 ,pos.y - size.y / 2 };
 }
 
@@ -338,21 +338,21 @@ void BoxCollider::DrawDebugLine()
 {
     if (GetCollisonMode() == CollisionMode::None)return;
     setlinecolor(GREEN);
-    Vector2D pos = (GetWorldPosition() - mainWorld.mainCamera->GetVirtualPosition())
-        * 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength() + Vector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2);
-    Vector2D si = this->size * 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength();
+    FVector2D pos = (GetWorldPosition() - mainWorld.mainCamera->GetVirtualPosition())
+        * 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength() + FVector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2);
+    FVector2D si = this->size * 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength();
     float left = pos.x - si.x / 2, right = pos.x + si.x / 2,top = pos.y + si.y / 2, bottom = pos.y - si.y / 2;
     rectangle((int)left,(int)top,(int)right,(int)bottom);
 }
 
 bool BoxCollider::IsMouseOver()
 {
-    Vector2D pos = GetWorldPosition(),pos_m = GameplayStatics::GetController()->GetCursorPosition();
+    FVector2D pos = GetWorldPosition(),pos_m = GameplayStatics::GetController()->GetCursorPosition();
     return pos_m.x <= pos.x + size.x / 2 && pos_m.x >= pos.x - size.x / 2
         && pos_m.y <= pos.y + size.y / 2 && pos_m.y >= pos.y - size.y / 2;
 }
 
-Vector2D BoxCollider::GetOverlapRect(const Rect& r1, const Rect& r2)
+FVector2D BoxCollider::GetOverlapRect(const FRect& r1, const FRect& r2)
 {
     return { min(r1.right, r2.right) - max(r1.left, r2.left), min(r1.top, r2.top) - max(r1.bottom, r2.bottom) };
 }

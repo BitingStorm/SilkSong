@@ -49,6 +49,7 @@
     <ClInclude Include="Source\Project\Effect.h" />
     <ClInclude Include="Source\Project\PlatForm.h" />
     <ClInclude Include="Source\Project\Player.h" />
+    <ClInclude Include="Source\Project\SilkParticle.h" />
     <ClInclude Include="Source\Project\SitParticle.h" />
     <ClInclude Include="Source\Project\TearCityLevel.h" />
     <ClInclude Include="Source\Engine\Components\ActorComponent.h" />
@@ -133,6 +134,7 @@
     <ClCompile Include="Source\Engine\UI\UserInterface.cpp" />
     <ClCompile Include="Source\Engine\UI\Widgets.cpp" />
     <ClCompile Include="Source\Project\SceneUI.cpp" />
+    <ClCompile Include="Source\Project\SilkParticle.cpp" />
     <ClCompile Include="Source\Project\SitParticle.cpp" />
     <ClCompile Include="Source\Project\TearCityLevel.cpp" />
     <ClCompile Include="Source\Project\PlayerAnimator.cpp" />

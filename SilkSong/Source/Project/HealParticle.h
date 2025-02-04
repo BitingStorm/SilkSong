@@ -5,8 +5,6 @@
 
 class HealParticle :public Actor
 {
-	DEFINE_SUPER(Actor)
-
 public:
 	HealParticle();
 

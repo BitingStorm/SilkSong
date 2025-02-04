@@ -52,6 +52,9 @@ private:
 	Animation sitdown;
 	Animation standup;
 	Animation leave;
+	Animation wall;
+	Animation defend;
+	Animation defendattack;
 
 	AnimEdge idle_to_walkstart;
 	AnimEdge walkstart_to_walk;
@@ -86,4 +89,7 @@ private:
 	AnimEdge remoteskill_to_idle;
 	AnimEdge standup_to_idle;
 	AnimEdge leave_to_fall;
+	AnimEdge wall_to_idle;
+	AnimEdge defend_to_idle;
+	AnimEdge defendattack_to_idle;
 };

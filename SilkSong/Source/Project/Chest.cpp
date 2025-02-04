@@ -46,9 +46,9 @@ void Chest::TakeDamage()
 	for (int i = 0; i < num; i++)
 	{
 		Geo* geo = GameplayStatics::CreateObject<Geo>(GetWorldPosition());
-		if (Math::RandInt(0, 10) > 2)geo->Init("1geo");
-		else if (Math::RandInt(0, 10) > 2)geo->Init("5geo");
-		else geo->Init("8geo");
+		if (Math::RandInt(0, 10) > 2)geo->Init("1geo",1);
+		else if (Math::RandInt(0, 10) > 2)geo->Init("5geo",5);
+		else geo->Init("25geo",25);
 	}
 	GameplayStatics::PlayCameraShake(5);
 	GameplayStatics::PlaySound2D("sound_blockhit");

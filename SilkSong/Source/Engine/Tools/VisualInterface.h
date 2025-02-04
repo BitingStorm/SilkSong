@@ -32,12 +32,12 @@ public:
 
 
 /* 渲染补充信息 */
-struct SpriteInfo
+struct FSpriteInfo
 {
-	Vector2D offset = Vector2D(0, 0);
-	Pair size = Pair(0, 0);
-	Pair startLoc = Pair(0, 0);
-	Pair endLoc = Pair(0, 0);
+	FVector2D offset = FVector2D(0, 0);
+	FPair size = FPair(0, 0);
+	FPair startLoc = FPair(0, 0);
+	FPair endLoc = FPair(0, 0);
 };
 
 
@@ -51,7 +51,7 @@ struct FilterInfo
 
 
 /* 滤镜图层排序规则 */
-struct FilterSort
+struct FFilterSort
 {
 	bool operator()(const FilterInfo& a, const FilterInfo& b) const
 	{
@@ -59,35 +59,40 @@ struct FilterSort
 	}
 };
 
-
+class Animator;
 
 /*----------------------------------
 			   图像接口
   ----------------------------------*/
 class ImageInterface
 {
+	friend Animator;
+
 protected:
 	IMAGE* sprite{};
-	SpriteInfo spriteInfo;
+	FSpriteInfo spriteInfo;
 	BYTE alpha = 255;
 
 	IMAGE* copy{};
 	float angle = 0;
-	void RotateImage(double radian);
+	void RotateImage(float degree);
 
 	IMAGE* filter{};
-	std::set<FilterInfo, FilterSort>filterLayers;
+	std::set<FilterInfo, FFilterSort>filterLayers;
 	void FilterImage();
 	void AddFilter(FilterInfo filterInfo);
 	void RemoveFilter();
 
 	IMAGE* blur{};
 
+	Animator* animatorAttached = nullptr;//附着的动画播放器
+	virtual void DealImage() = 0;
+
 public:
-	virtual ~ImageInterface() { if (copy)delete copy; if (filter)delete filter; if (blur)delete blur; }
+	virtual ~ImageInterface();
 
 	BYTE GetTransparency()const { return alpha; }
-	void SetTransparency(BYTE tranparency) {alpha = tranparency; }
+	void SetTransparency(BYTE tranparency) { alpha = tranparency; }
 
 
 	/**
@@ -111,17 +116,14 @@ public:
 	void GaussianBlur(unsigned level);
 
 	//加载非动画资源 
-	void LoadSprite(std::string name);
+	IMAGE* LoadSprite(std::string name);
 
 	/**
 	 * @brief 截取非动画资源指定部分 
 	 * @param[in] start			    截取图像起始位置坐标
 	 * @param[in] end               截取图像结尾位置坐标
 	 **/
-	void SetStartAndEndLoc(Pair start, Pair end);
-
-	////抗锯齿(快速傅里叶变换版)
-	//static void Convolve(IMAGE* img,int radius);
+	void SetStartAndEndLoc(FPair start, FPair end);
 };
 
 
@@ -129,7 +131,7 @@ public:
 /*----------------------------------
 			  图像处理器
   ----------------------------------*/
-class ImageToolkit
+class ImageToolkit final
 {
 	friend class World;
 	friend class GameplayStatics;
@@ -149,6 +151,9 @@ public:
 
 	//截取夹角部分的图像
 	static void GetSectorImage(IMAGE* srcImg, IMAGE* dstImg, float start, float end);
+
+	//旋转图像
+	static FPair RotateImage(IMAGE* srcImg, IMAGE* dstImg, float degree);
 
 	/** 滤波 **/
 

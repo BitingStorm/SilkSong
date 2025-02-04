@@ -45,15 +45,19 @@ void ResourceManager::Initialize()
 	Load("player_sitdown", "Asset/Animations/Player/SitDown.png", 170, 159, 1, 1, 1);
 	Load("player_standup", "Asset/Animations/Player/StandUp.png", 177, 186, 1, 1, 1);
 	Load("player_leave", "Asset/Animations/Player/Leave/", 304, 199, 8);
+	Load("player_wall", "Asset/Animations/Player/Wall.png", 100, 175, 1, 1, 1);
+	/*Load("player_defend", "Asset/Animations/Player/Defend", 117, 175, 1, 1, 1);
+	Load("player_defendattack", "Asset/Animations/Player/DefendAttack", 117, 175, 1, 1, 1);*/
 
-
+	//Effect
 	Load("effect_dash", "Asset/Animations/Player/DashEffect/", 342, 433, 5);
 	Load("effect_dash_", "Asset/Animations/Player/DashEffect_.png", 1280, 856, 6, 3, 2);
 	Load("effect_hurt", "Asset/Animations/Player/HurtEffect/", 1400, 470, 4);
 	Load("effect_hurt_", "Asset/Animations/Player/HurtEffect_/", 308, 270, 7);
 	Load("effect_wetland", "Asset/Animations/Player/WetLandEffect/", 115, 34, 5);
 	Load("effect_wetwalk", "Asset/Animations/Player/WetWalkEffect/whitesplash.png", 250, 50, 5, 1, 5);
-	Load("effect_attack", "Asset/Animations/Player/NailEffect.png", 150, 500, 4, 1, 4);
+	Load("effect_nail", "Asset/Animations/Player/NailEffect.png", 348, 215, 4, 1, 4);
+	Load("effect_attack", "Asset/Animations/Player/AttackEffect/", { {630,52},{532,55},{338,34},{138,17} });
 	Load("effect_attack_", "Asset/Animations/Player/AttackEffect_/", 375, 160, 3);
 	Load("effect_nailhit", "Asset/Animations/Player/NailHitEffect/", { {107,73},{241,153},{243,155} });
 	Load("effect_closeskill", "Asset/Animations/Player/CloseSkillEffect/", 350, 370, 9);
@@ -62,6 +66,13 @@ void ResourceManager::Initialize()
 	Load("effect_geo", "Asset/Animations/Player/GeoEffect/", { {50,24},{39,32},{81,26},{100,30} });
 	Load("effect_sit", "Asset/Animations/Player/SitEffect/", 1059, 500, 4);
 	Load("effect_leave", "Asset/Animations/Player/LeaveEffect/", 440, 115, 7);
+	Load("effect_death", "Asset/Animations/Enemy/DeathHurtEffect/", { {300,250},{450, 375},{450,375} });
+
+	//UI
+	Load("inventory_bloodidle", "Asset/Animations/UI/BloodIdle/", 33, 49, 6);
+	Load("inventory_bloodload", "Asset/Animations/UI/BloodLoad/", 33, 49, 4);
+	Load("inventory_bloodminus", "Asset/Animations/UI/BloodMinus/", { {68,136}, {65,140}, {67,131}, {114,128}, {108,128}, {118,112}, {33,47} });
+	Load("inventory_silk", "Asset/Animations/UI/Silk/", { {19,75}, {19,75}, {23,71}, {21,68}, {28,91}, {25,47}, {16,39} });
 
 	//Enemy
 	Load("bug_walk", "Asset/Animations/Enemy/Bug/Walk/", 90, 84, 4);
@@ -70,8 +81,6 @@ void ResourceManager::Initialize()
 	Load("bug_bury", "Asset/Animations/Enemy/Bug/Bury/", 106, 98, 5);
 	Load("bug_die", "Asset/Animations/Enemy/Bug/Death/", 86, 84, 6);
 
-	Load("effect_death", "Asset/Animations/Enemy/DeathHurtEffect/", { {300,250},{450, 375},{450, 375} });
-	
 	//Water
 	Load("water_fountain", "Asset/Animations/WaterFalls/", 31, 188, 10);
 	Load("water_top", "Asset/Animations/WaterTop/", 343, 48, 9);
@@ -79,7 +88,8 @@ void ResourceManager::Initialize()
 
 	//Others
 	Load("pointer", "Asset/Animations/Pointer/", 43, 31, 11);
-	Load("menuhit", "Asset/Animations/MenuHit/", { { 250,52 }, { 167,30 }, { 348,35 }, { 348,40 }, { 348,38 }, { 348,28} });
+	Load("menuhit", "Asset/Animations/MenuHit/", { {250,52}, {167,30}, {348,35}, {348,40}, {348,38}, {348,28} });
+	Load("dart", "Asset/Animations/Dart/", 71, 74, 5);
 
 	/** 粒子 **/
 	Load("rain_bg", "Asset/Particles/rain_particle.png", 10, 1000, 3, 3, 1);
@@ -90,7 +100,8 @@ void ResourceManager::Initialize()
 	Load("menu_radiant_top", "Asset/Particles/gg_menu_radiant_0000_2.png", 15, 15, 1, 1, 1);
 	Load("menu_smoke", "Asset/Particles/wispy_smoke_particle_abyss.png", 306, 1536, 5, 5, 1);
 	Load("menu_ss_particle", "Asset/Particles/ss_menu_particle.png", 65, 100, 1, 1, 1);
-	
+	Load("particle_silk", "Asset/Particles/web_particle.png", 46, 183, 4, 4, 1);
+
 	/** 图像 **/
 
 	//Environment
@@ -146,23 +157,21 @@ void ResourceManager::Initialize()
 	Load("death_light", "Asset/Images/dead_light_fader.png", 600, 600);
 	Load("1geo", "Asset/Images/1Geo.png", 32, 31);
 	Load("5geo", "Asset/Images/5Geo.png", 33, 44);
-	Load("8geo", "Asset/Images/25Geo.png", 40, 44);
+	Load("25geo", "Asset/Images/25Geo.png", 40, 44);
 	Load("dart", "Asset/Images/dart.png", 73, 74);
 	Load("needle", "Asset/Images/needle.png", 211, 16);
 	Load("pointer_sit", "Asset/Images/prompt_idle0000.png", 170, 141);
 
 	//UI
-	Load("inventory_soul", "Asset/Images/UI/select_game_HUD_0002_health_frame.png", 172, 106);
-	Load("inventory_soul_", "Asset/Images/UI/Inv_0032_inv_soul_backboard.png", 106, 106);
-	Load("inventory_health", "Asset/Images/UI/blood_load_h_3.png", 43, 62);
-	Load("inventory_health_", "Asset/Images/UI/blood_load_h_0.png", 43, 62);
-	Load("inventory_item", "Asset/Images/UI/ins_item.png", 75, 75);
-	Load("inventory_item_", "Asset/Images/UI/ins_item_bk.png", 75, 75);
+	Load("inventory_item", "Asset/Images/UI/ins_item.png", 60, 60);
+	Load("inventory_item_", "Asset/Images/UI/ins_item_bk.png", 60, 60);
 	Load("inventory_coin", "Asset/Images/UI/InventoryCoin.png", 47, 48);
-	Load("black", "Asset/Images/UI/mask_black.png", 1200, 800);
+	Load("black", "Asset/Images/UI/mask_black.png", 1212, 808);
 	Load("white", "Asset/Images/UI/mask_white.png", 1200, 800);
-
-
+	Load("low_health", "Asset/Images/UI/vignette_low_health.png", 1200, 800);
+	Load("inventory_ins1", "Asset/Images/UI/ins_1.png", 72, 72);
+	Load("inventory_ins2", "Asset/Images/UI/ins_2.png", 173, 49);
+	Load("inventory_ins3", "Asset/Images/UI/ins_3.png", 104, 44);
 
 	/*************
 	 * 媒体资源加载
@@ -186,6 +195,7 @@ void ResourceManager::Initialize()
 	Load("sound_darthit", "Asset/Sounds/Player/sound_darthit.mp3");
 	Load("voice_throw", "Asset/Sounds/Player/voice_throw.mp3");
 	Load("sound_jump", "Asset/Sounds/Player/sound_jump.mp3");
+	Load("sound_walljump", "Asset/Sounds/Player/walljump.mp3");
 	Load("voice_jump_0", "Asset/Sounds/Player/voice_jump_0.mp3");
 	Load("voice_jump_1", "Asset/Sounds/Player/voice_jump_1.mp3");
 	Load("voice_jump_2", "Asset/Sounds/Player/voice_jump_2.mp3");
@@ -212,6 +222,7 @@ void ResourceManager::Initialize()
 	Load("voice_die", "Asset/Sounds/Player/voice_die.mp3");
 	Load("sound_die", "Asset/Sounds/Player/sound_die.mp3");
 	Load("sound_swordhit", "Asset/Sounds/Player/sound_swordhit.mp3");
+	Load("sound_leave", "Asset/Sounds/Player/sound_leave.mp3");
 	Load("sound_leave", "Asset/Sounds/Player/sound_leave.mp3");
 
 	//UI
@@ -270,7 +281,7 @@ void ResourceManager::Load(std::string name, std::string path, int wid, int hei,
 	animationPool.insert({ name, {images,num } });
 }
 
-void ResourceManager::Load(std::string name, std::string path, const std::vector<Pair>& arr)
+void ResourceManager::Load(std::string name, std::string path, const std::vector<FPair>& arr)
 {
 	int num = int(arr.size());
 	IMAGE** images = new IMAGE * [num];

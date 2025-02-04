@@ -18,7 +18,7 @@ MenuController::MenuController()
 	whiteRadiant->Load("menu_radiant_top");
 	whiteRadiant->SetMaxSpeed(10);
 	whiteRadiant->SetMinSpeed(0);
-	whiteRadiant->SetPattern(ParticlePattern::Center);
+	whiteRadiant->SetPattern(EParticlePattern::Center);
 	whiteRadiant->SetCenter({ 100,200 });
 	whiteRadiant->SetLayer(1);
 	whiteRadiant->SetLifeCycle(4.f);

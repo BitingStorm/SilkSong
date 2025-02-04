@@ -23,7 +23,7 @@ struct AnimationResource
 
 
 /*----------------------------------
-			资源管理器
+			 资源管理器
   ----------------------------------*/
 class ResourceManager
 {
@@ -63,7 +63,7 @@ private:
 	 * @param[in] path              资源路径
 	 * @param[in] arr			    传入一个Pair数组，用于指定每一帧动画的宽度与高度
 	 **/
-	void Load(std::string name, std::string path, const std::vector<Pair>& arr);
+	void Load(std::string name, std::string path, const std::vector<FPair>& arr);
 
 	/**
 	 * @brief 加载SpriteSheet动画图像资源

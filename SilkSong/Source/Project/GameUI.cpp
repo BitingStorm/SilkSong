@@ -1,95 +1,135 @@
 #include "GameUI.h"
 #include "Player.h"
 #include "GameplayStatics.h"
-
+#
 
 GameUI::GameUI()
 {
 	White = AddWidget<Image>();
 	White->AttachTo(rootCanvas);
 	White->SetLayoutPattern(LayoutPattern::Center);
-	White->SetSize(Vector2D(WIN_WIDTH, WIN_HEIGHT));
 	White->LoadSprite("white");
 	White->SetLayer(9);
 	White->SetTransparency(0);
 
+	LowHealth = AddWidget<Image>();
+	LowHealth->AttachTo(rootCanvas);
+	LowHealth->SetLayoutPattern(LayoutPattern::Center);
+	LowHealth->LoadSprite("low_health");
+	LowHealth->SetLayer(9);
+	LowHealth->SetTransparency(0);
+
+	Black = AddWidget<Image>();
+	Black->AttachTo(rootCanvas);
+	Black->SetLayoutPattern(LayoutPattern::Center);
+	Black->LoadSprite("black");
+	Black->SetLayer(20);
+	Black->SetTransparency(0);
+
 	SoulContainer = AddWidget<Image>();
 	SoulContainer->AttachTo(rootCanvas);
-	SoulContainer->SetLayoutPattern(LayoutPattern::LeftTop);
-	SoulContainer->SetRelativePosition(Vector2D(150, 75));
-	SoulContainer->SetSize(Vector2D(172, 106));
-	SoulContainer->LoadSprite("inventory_soul");
-	SoulContainer->SetLayer(10);
+	SoulContainer->SetRelativePosition(FVector2D(100, 75));
+	SoulContainer->LoadSprite("inventory_ins1");
+	SoulContainer->SetLayer(11);
 
 	SoulContainer_ = AddWidget<Image>();
 	SoulContainer_->AttachTo(SoulContainer);
-	SoulContainer_->SetLayoutPattern(LayoutPattern::LeftTop);
-	SoulContainer_->SetRelativePosition(Vector2D(50, 65));
-	SoulContainer_->SetSize(Vector2D(106, 106));
-	SoulContainer_->LoadSprite("inventory_soul_");
-	SoulContainer_->SetLayer(11);
+	SoulContainer_->SetLayoutPattern(LayoutPattern::RightMiddle);
+	SoulContainer_->SetRelativePosition(FVector2D(75, 0));
+	SoulContainer_->LoadSprite("inventory_ins2");
+	SoulContainer_->SetLayer(10);
+
+	SilkContainer = AddWidget<Image>();
+	SilkContainer->AttachTo(SoulContainer);
+	SilkContainer->SetLayoutPattern(LayoutPattern::MiddleBottom);
+	SilkContainer->SetRelativePosition(FVector2D(25, 35));
+	SilkContainer->LoadSprite("inventory_ins3");
+	SilkContainer->SetLayer(11);
 
 	Coin = AddWidget<Image>();
 	Coin->AttachTo(SoulContainer);
-	Coin->SetLayoutPattern(LayoutPattern::RightMiddle);
-	Coin->SetRelativePosition(Vector2D(-40, 35));
-	Coin->SetSize(Vector2D(47, 48));
+	Coin->SetLayoutPattern(LayoutPattern::MiddleBottom);
+	Coin->SetRelativePosition(FVector2D(0, 100));
 	Coin->LoadSprite("inventory_coin");
 	Coin->SetLayer(12);
 
 	CoinNum = AddWidget<Text>();
 	CoinNum->AttachTo(Coin);
-	CoinNum->SetRelativePosition(Vector2D(65, 25));
-	CoinNum->SetSize(Vector2D(100, 50));
+	CoinNum->SetLayoutPattern(LayoutPattern::RightMiddle);
+	CoinNum->SetRelativePosition(FVector2D(15, 0));
+	CoinNum->SetSize(FVector2D(100, 50));
 	CoinNum->SetLayer(12);
 	CoinNum->SetPattern(CharactersPattern::Left);
 
+	ItemSector = AddWidget<Sector>();
+	ItemSector->AttachTo(SilkContainer);
+	ItemSector->SetRelativePosition(FVector2D(100, 0));
+	ItemSector->SetLayer(12);
+	ItemSector->SetLayoutPattern(LayoutPattern::Center);
+	ItemSector->LoadSectorFrontPicture("inventory_item");
+	ItemSector->LoadSectorBackPicture("inventory_item_");
+
 	Dart = AddWidget<Image>();
-	Dart->AttachTo(SoulContainer);
-	Dart->SetLayoutPattern(LayoutPattern::RightMiddle);
-	Dart->SetRelativePosition(Vector2D(-50, 100));
-	Dart->SetSize(Vector2D(47, 48));
+	Dart->AttachTo(ItemSector);
+	Dart->SetLayoutPattern(LayoutPattern::Center);
+	Dart->SetRelativePosition(FVector2D(4, 0));
+	Dart->SetSize(FVector2D(47, 48));
 	Dart->LoadSprite("dart");
 	Dart->SetLayer(12);
-
-	DartNum = AddWidget<Text>();
-	DartNum->AttachTo(Dart);
-	DartNum->SetRelativePosition(Vector2D(75, 25));
-	DartNum->SetSize(Vector2D(100, 50));
-	DartNum->SetLayer(12);
-	DartNum->SetPattern(CharactersPattern::Left);
-
-	ItemNum = AddWidget<Sector>();
-	ItemNum->AttachTo(Dart);
-	ItemNum->SetRelativePosition(Vector2D(-5, 0));
-	ItemNum->SetSize(Vector2D(200, 200));
-	ItemNum->SetLayer(12);
-	ItemNum->SetLayoutPattern(LayoutPattern::Center);
-	ItemNum->LoadSectorFrontPicture("inventory_item");
-	ItemNum->LoadSectorBackPicture("inventory_item_");
-
-
+	
 	for (int i = 0; i < 5; i++)
 	{
+		bloodidle[i].Load("inventory_bloodidle");
+		bloodidle[i].SetInterval(0.06f);
+		bloodidle[i].SetLooping(false);
+		bloodload[i].Load("inventory_bloodload");
+		bloodload[i].SetInterval(0.1f);
+		bloodload[i].SetLooping(false);
+		bloodminus[i].Load("inventory_bloodminus");
+		bloodminus[i].SetInterval(0.07f);
+		bloodminus[i].SetLooping(false);
+
 		Health[i] = AddWidget<Image>();
 		Health[i]->AttachTo(SoulContainer);
 		Health[i]->SetLayoutPattern(LayoutPattern::RightMiddle);
-		Health[i]->SetRelativePosition(Vector2D(45 * i - 45, -20));
-		Health[i]->SetSize(Vector2D(34, 50));
-		Health[i]->LoadSprite("inventory_health");
+		Health[i]->SetRelativePosition(FVector2D(45 * i+35, 0));
 		Health[i]->SetLayer(12);
+
+		Health[i]->EnableAnimControl();
+		Animator* ani = Health[i]->GetAnimator();
+		if (!ani)continue;
+		ani->Insert("idle", bloodidle[i]);
+		ani->Insert("load", bloodload[i]);
+		ani->Insert("minus", bloodminus[i]);
+		ani->SetNode("load");
 	}
 
-	for (int i = 0; i < 5; i++)
+	IdleBlink.Bind(2.5f, [this]() {
+		Player* player = Cast<Player>(GameplayStatics::GetController());
+		for (int i = 0; i < player->GetHealth(); i++)
+		{
+			Health[i]->GetAnimator()->SetNode("idle");
+		}
+		},true);
+
+	for (int i = 0; i < 9; i++)
 	{
-		Health_[i] = AddWidget<Image>();
-		Health_[i]->AttachTo(SoulContainer);
-		Health_[i]->SetLayoutPattern(LayoutPattern::RightMiddle);
-		Health_[i]->SetRelativePosition(Vector2D(45 * i - 45, -20));
-		Health_[i]->SetSize(Vector2D(34, 50));
-		Health_[i]->LoadSprite("inventory_health_");
-		Health_[i]->SetLayer(11);
+		silkidle[i].Load("inventory_silk");
+		silkidle[i].SetInterval(0.06f);
+		silkidle[i].SetLooping(false);
+	
+		Silk[i] = AddWidget<Image>();
+		Silk[i]->AttachTo(SilkContainer);
+		Silk[i]->SetLayoutPattern(LayoutPattern::LeftMiddle);
+		Silk[i]->SetRelativePosition(FVector2D(8 * i + 21, 0));
+		Silk[i]->SetLayer(12);
+
+		Silk[i]->EnableAnimControl();
+		Animator* ani = Silk[i]->GetAnimator();
+		ani->Insert("idle", silkidle[i]);
+		ani->SetNode("idle");
 	}
+
 }
 
 void GameUI::Update(float deltaTime)
@@ -98,31 +138,70 @@ void GameUI::Update(float deltaTime)
 
 	if (BYTE trans = White->GetTransparency())
 	{
-		White->SetTransparency(trans - 3);
+		White->SetTransparency(trans - blinkStep);
 	}
 	
 	Player* player = Cast<Player>(GameplayStatics::GetController());
-	for (int i = 0; i < player->GetHealth(); i++)
+	
+	if (player->GetHealth() == 1)
 	{
-		Health[i]->SetUIPattern(UIPattern::VisibleOnly);
+		lowHealthFlag += deltaTime * lowHealthDir * 100;
+		if (std::abs(lowHealthFlag - 150) > 100)
+		{
+			lowHealthDir = -lowHealthDir;
+			lowHealthFlag += deltaTime * lowHealthDir * 100;
+		}
 	}
-	for (int i = player->GetHealth(); i < 5; i++)
+	else if (player->GetHealth() == 0)
 	{
-		Health[i]->SetUIPattern(UIPattern::None);
+		lowHealthDir = -1;
+		lowHealthFlag += deltaTime * lowHealthDir * 200;
 	}
+	else
+	{
+		lowHealthFlag = 75;
+	}
+	LowHealth->SetTransparency(player->GetHealth() <= 1 ? BYTE(lowHealthFlag < 0 ? 0 : lowHealthFlag) : 0);
 
-	SoulContainer_->SetStartAndEndLoc({ 0,0 }, { 100,100 - int(100 * player->GetSoul() / 9) });
+	if (bRecover)
+	{
+		if (Black->GetTransparency() < 250)Black->SetTransparency(Black->GetTransparency() + 25);
+	}
+	else
+	{
+		if (Black->GetTransparency() > 0)Black->SetTransparency(Black->GetTransparency() - 5);
+	}
 
 	CoinNum->SetText("$0" + std::to_string(player->GetGeo()), 5, "Trajan Pro");
 
-	DartNum->SetText("$0" + std::to_string(player->GetDart()), 5, "Trajan Pro");
-
-	ItemNum->SetPercentage(float(player->GetDart())/15);
+	ItemSector->SetPercentage(float(player->GetDart())/15);
 }
 
-void GameUI::WhiteBlink()
+void GameUI::WhiteBlink(int32 step)
 {
 	White->SetTransparency(240);
+	blinkStep = step;
 }
 
+void GameUI::BloodLoad(int i)
+{
+	Health[i]->GetAnimator()->SetNode("load");
+	IdleBlink.Reset();
+}
 
+void GameUI::BloodMinus(int i)
+{
+	Health[i]->GetAnimator()->SetNode("minus");
+	IdleBlink.Reset();
+}
+
+void GameUI::SilkLoad(int i)
+{
+	Silk[i]->GetAnimator()->SetReverse(false);
+}
+
+void GameUI::SilkMinus(int i)
+{
+	Silk[i]->GetAnimator()->SetReverse(true);
+	silkidle[i].SetIndex(silkidle[i].GetIndex() - 1);
+}

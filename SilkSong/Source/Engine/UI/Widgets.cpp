@@ -4,7 +4,7 @@
 #include "Components/InputComponent.h"
 #include "Objects/Controller.h"
 #include "Tools/Math.h"
-
+#include "Components/Animator.h"
 
 
 
@@ -25,7 +25,7 @@ void Characters::SetCharacters(std::string text, int size, LPCTSTR type)
 	int temp = 0;
 	for (int i = 0; i < text.length(); ++i)
 	{
-		if (text[i] == '\n') { row++,column = temp>column?temp:column,temp = 0; }
+		if (text[i] == '\n') { row++, column = temp > column ? temp : column, temp = 0; }
 		else if (text[i] == '$' && (uint64)i + 1 < text.length())
 		{
 			std::string buf = "$" + text[i + 1];
@@ -40,7 +40,7 @@ void Characters::SetCharacters(std::string text, int size, LPCTSTR type)
 	this->type = type;
 }
 
-void Characters::PrintCharacters(Vector2D pos, CharactersPattern pattern)
+void Characters::PrintCharacters(FVector2D pos, CharactersPattern pattern)
 {
 	settextstyle(6*size,3*size,type);
 	settextcolor(BLACK);
@@ -63,9 +63,9 @@ void Characters::PrintCharacters(Vector2D pos, CharactersPattern pattern)
 			outtextxy((int)pos.x + (GetWidth() - int(temp.size()) * 3 * size) * pat / 2, (int)pos.y + r * 6 * size, temp.c_str());
 			temp.clear(), ++r;
 		}
-		else if (texts[i] == '$' && (uint64)i+1 < texts.length())
+		else if (texts[i] == '$' && (uint64)i + 1 < texts.length())
 		{
-			std::string buf = "$"+ std::string(1, texts[++i]);
+			std::string buf = "$" + std::string(1, texts[++i]);
 			if (TextColorMap.find(buf) != TextColorMap.end())
 			{
 				settextcolor(TextColorMap[buf]);
@@ -84,22 +84,22 @@ void Characters::PrintCharacters(Vector2D pos, CharactersPattern pattern)
 
 
 
-Vector2D Widget::GetLayoutOffset() const
+FVector2D Widget::GetLayoutOffset() const
 {
 	switch (layoutPattern)
 	{
-	case LayoutPattern::LeftTop:return Vector2D(-parent->GetSize().x / 2, -parent->GetSize().y / 2);
-	case LayoutPattern::MiddleTop:return Vector2D(0, -parent->GetSize().y / 2);
-	case LayoutPattern::RightTop:return Vector2D(parent->GetSize().x / 2, -parent->GetSize().y / 2);
-	case LayoutPattern::LeftMiddle:return Vector2D(-parent->GetSize().x / 2, 0);
-	case LayoutPattern::Center:return Vector2D(0, 0);
-	case LayoutPattern::RightMiddle:return Vector2D(parent->GetSize().x / 2, 0);
-	case LayoutPattern::LeftBottom:return Vector2D(-parent->GetSize().x / 2, parent->GetSize().y / 2);
-	case LayoutPattern::MiddleBottom:return Vector2D(0, parent->GetSize().y / 2);
-	case LayoutPattern::RightBottom:return Vector2D(parent->GetSize().x / 2, parent->GetSize().y / 2);
-	default:return Vector2D(0, 0);
+	case LayoutPattern::LeftTop:return FVector2D(-parent->GetSize().x / 2, -parent->GetSize().y / 2);
+	case LayoutPattern::MiddleTop:return FVector2D(0, -parent->GetSize().y / 2);
+	case LayoutPattern::RightTop:return FVector2D(parent->GetSize().x / 2, -parent->GetSize().y / 2);
+	case LayoutPattern::LeftMiddle:return FVector2D(-parent->GetSize().x / 2, 0);
+	case LayoutPattern::Center:return FVector2D(0, 0);
+	case LayoutPattern::RightMiddle:return FVector2D(parent->GetSize().x / 2, 0);
+	case LayoutPattern::LeftBottom:return FVector2D(-parent->GetSize().x / 2, parent->GetSize().y / 2);
+	case LayoutPattern::MiddleBottom:return FVector2D(0, parent->GetSize().y / 2);
+	case LayoutPattern::RightBottom:return FVector2D(parent->GetSize().x / 2, parent->GetSize().y / 2);
+	default:return FVector2D(0, 0);
 	}
-	return Vector2D(0, 0);
+	return FVector2D(0, 0);
 }
 
 bool Widget::IsUnderCursor() const
@@ -114,7 +114,7 @@ bool Widget::IsUnderCursor() const
 	{
 		if (Widget* widget = Cast<Widget>(*it))
 		{
-			Vector2D loc = widget->GetScreenPosition();
+			FVector2D loc = widget->GetScreenPosition();
 			if (x < GetSize().x / 2 + loc.x && x > loc.x - GetSize().x / 2 
 				&& y < GetSize().y / 2 + loc.y && y > loc.y - GetSize().y / 2 && widget == this)
 			{
@@ -134,13 +134,13 @@ void Widget::Update()
 {
 	if (uiPattern != UIPattern::VisibleAndInteractive)return;
 
-	Vector2D pos = GetScreenPosition() - GetSize()/2;
-	Pair newPoint(Math::Clamp(int(pos.x) / 200, 0, 5), Math::Clamp(int(pos.y) / 200, 0, 3));
+	FVector2D pos = GetScreenPosition() - GetSize() / 2;
+	FPair newPoint(Math::Clamp(int(pos.x) / 200, 0, 5), Math::Clamp(int(pos.y) / 200, 0, 3));
 	pos += size;
-	Pair newPoint_1(Math::Clamp(int(pos.x) / 200, 0, 5), Math::Clamp(int(pos.y) / 200, 0, 3));
+	FPair newPoint_1(Math::Clamp(int(pos.x) / 200, 0, 5), Math::Clamp(int(pos.y) / 200, 0, 3));
 	if (newPoint == point && newPoint_1 == point_1)return;
 
-	if (point != Pair(-1, -1))for (int i = point.x; i <= point_1.x; ++i)for (int j = point.y; j <= point_1.y; ++j)mainWorld.UIDetectZones[i][j].erase(this);
+	if (point != FPair(-1, -1))for (int i = point.x; i <= point_1.x; ++i)for (int j = point.y; j <= point_1.y; ++j)mainWorld.UIDetectZones[i][j].erase(this);
 	point = newPoint; point_1 = newPoint_1;
 	for (int i = point.x; i <= point_1.x; ++i)for (int j = point.y; j <= point_1.y; ++j)mainWorld.UIDetectZones[i][j].insert(this);
 }
@@ -153,7 +153,7 @@ void Widget::ShowInfoBox()
 		setlinestyle(PS_SOLID | PS_JOIN_BEVEL);
 		setfillcolor(RGB(255, 247, 213));
 
-		Vector2D pos = InputComponent::GetMousePosition() + Vector2D(-15, 15);
+		FVector2D pos = InputComponent::GetMousePosition() + FVector2D(-15, 15);
 		fillrectangle((int)pos.x, (int)pos.y, (int)pos.x + InfoText.GetWidth(), (int)pos.y + InfoText.GetHeight());
 		InfoText.PrintCharacters(pos);
 	}
@@ -162,7 +162,7 @@ void Widget::ShowInfoBox()
 void Widget::DrawDebugRect()
 {
 	setlinecolor(BLUE);
-	Vector2D pos = GetScreenPosition() - GetSize() / 2;
+	FVector2D pos = GetScreenPosition() - GetSize() / 2;
 	int left = int(pos.x), top = int(pos.y);
 	pos += GetSize();
 	int right = int(pos.x), bottom = int(pos.y);
@@ -178,17 +178,17 @@ void Widget::SetUIPattern(UIPattern pattern)
 	}
 	if (uiPattern != UIPattern::VisibleAndInteractive)
 	{
-		if (point != Pair(-1, -1))for (int i = point.x; i <= point_1.x; ++i)for (int j = point.y; j <= point_1.y; ++j)mainWorld.UIDetectZones[i][j].erase(this);
+		if (point != FPair(-1, -1))for (int i = point.x; i <= point_1.x; ++i)for (int j = point.y; j <= point_1.y; ++j)mainWorld.UIDetectZones[i][j].erase(this);
 		point = { -1, -1 }, point_1 = { -1, -1 };
 	}
 }
 
-Vector2D Widget::GetSize() const
+FVector2D Widget::GetSize() const
 {
 	return size * GetScreenScale();
 }
 
-Vector2D Widget::GetScreenPosition() const
+FVector2D Widget::GetScreenPosition() const
 {
 	if (parent)return parent->GetScreenPosition() + GetRelativePosition() + GetLayoutOffset();
 	else return GetRelativePosition(); 
@@ -200,7 +200,7 @@ float Widget::GetScreenRotation() const
 	else return GetRelativeRotation();
 }
 
-Vector2D Widget::GetScreenScale() const
+FVector2D Widget::GetScreenScale() const
 {
 	if (parent)return parent->GetScreenScale() * GetRelativeScale();
 	else return GetRelativeScale();
@@ -249,7 +249,7 @@ void Panel::Update()
 	}
 }
 
-void Panel::SetUnitSize(Vector2D size)
+void Panel::SetUnitSize(FVector2D size)
 {
 	unitSize = size;
 	Panel::Update();
@@ -297,37 +297,37 @@ void Panel::AdjustMemberSizeToUnit(Widget* member)
 void HorizontalPanel::AdjustMemberPosition(Widget* member, int32 index)
 {
 	if(index<0)return;
-	Vector2D pos = Vector2D(index * (unitSize.x + spacing), 0) + Vector2D(unitSize.x, unitSize.y)*0.5f;
+	FVector2D pos = FVector2D(index * (unitSize.x + spacing), 0) + FVector2D(unitSize.x, unitSize.y)*0.5f;
 	member->SetRelativePosition(pos);
 }
 
-Vector2D HorizontalPanel::GetSize() const
+FVector2D HorizontalPanel::GetSize() const
 {
-	return members.empty() ? Vector2D() : Vector2D(members.size() * (unitSize.x + spacing) - spacing, unitSize.y);
+	return members.empty() ? FVector2D() : FVector2D(members.size() * (unitSize.x + spacing) - spacing, unitSize.y);
 }
 
 void VerticalPanel::AdjustMemberPosition(Widget* member, int32 index)
 {
 	if (index<0)return;
-	Vector2D pos = Vector2D(0, index * (unitSize.y + spacing));
+	FVector2D pos = FVector2D(0, index * (unitSize.y + spacing));
 	member->SetRelativePosition(pos);
 }
 
-Vector2D VerticalPanel::GetSize() const
+FVector2D VerticalPanel::GetSize() const
 {
-	return members.empty() ? Vector2D() : Vector2D(unitSize.x, members.size() * (unitSize.y + spacing) - spacing);
+	return members.empty() ? FVector2D() : FVector2D(unitSize.x, members.size() * (unitSize.y + spacing) - spacing);
 }
 
 void GridPanel::AdjustMemberPosition(Widget* member, int32 index)
 {
 	if (index<0)return;
-	Vector2D pos = Vector2D((index % column) * (unitSize.x + spacingX), (index / column) * (unitSize.y + spacingY));
+	FVector2D pos = FVector2D((index % column) * (unitSize.x + spacingX), (index / column) * (unitSize.y + spacingY));
 	member->SetRelativePosition(pos);
 }
 
-Vector2D GridPanel::GetSize() const
+FVector2D GridPanel::GetSize() const
 {
-	return members.empty() ? Vector2D() : Vector2D(column * (unitSize.x + spacingX) - spacingX, row * (unitSize.y + spacingY) - spacingY);
+	return members.empty() ? FVector2D() : FVector2D(column * (unitSize.x + spacingX) - spacingX, row * (unitSize.y + spacingY) - spacingY);
 }
 
 
@@ -339,7 +339,7 @@ void Text::Update()
 {
 	Widget::Update();
 	if (bindedText)texts.SetCharacters(*bindedText);
-	size = Vector2D(float(texts.GetWidth()), float(texts.GetHeight()));
+	size = FVector2D(float(texts.GetWidth()), float(texts.GetHeight()));
 }
 
 void Text::Render()
@@ -353,19 +353,37 @@ void Text::Render()
 
 
 
+void Image::DealImage()
+{
+	if (GetScreenRotation() != 0)
+	{
+		RotateImage(angle);
+	}
+	if (filterLayers.size() > 0)
+	{
+		FilterImage();
+	}
+}
+
 void Image::Update()
 {
 	Widget::Update();
+
+	if(ani)ani->Update(0);
+
 	if (!sprite)return;
 
-	if (copy)spriteInfo.size = Pair(copy->getwidth(), copy->getheight());
-	else spriteInfo.size = Pair(sprite->getwidth(), sprite->getheight());
+	if (copy)spriteInfo.size = FPair(copy->getwidth(), copy->getheight());
+	else spriteInfo.size = FPair(sprite->getwidth(), sprite->getheight());
 
 	if (GetScreenRotation() != angle)
 	{
 		angle = GetScreenRotation();
-		RotateImage(PI * Math::NormalizeDegree(angle) / 180);
-		if (filterLayers.size() > 0)FilterImage();
+		RotateImage(angle);
+		if (filterLayers.size() > 0)
+		{
+			FilterImage();
+		}
 	}
 }
 
@@ -374,7 +392,7 @@ void Image::Render()
 	if (uiPattern == UIPattern::None || alpha == 0)return;
 	if (!sprite)return;
 
-	Vector2D pos = GetScreenPosition();
+	FVector2D pos = GetScreenPosition();
 	HDC dstDC = GetImageHDC();
 
 	IMAGE* img = copy ? copy : sprite;
@@ -382,18 +400,48 @@ void Image::Render()
 	int w = spriteInfo.endLoc.x - spriteInfo.startLoc.x;
 	int h = spriteInfo.endLoc.y - spriteInfo.startLoc.y;
 
-	int dw = int(GetSize().x * w / img->getwidth());
-	int dh = int(GetSize().y * h / img->getheight());
-
 	BLENDFUNCTION bf = { AC_SRC_OVER,0,alpha,AC_SRC_ALPHA };
 	if (filterLayers.size() > 0 && filter)srcDC = GetImageHDC(filter);
-	AlphaBlend(dstDC, (int)pos.x - GetSize().x / 2, (int)pos.y - GetSize().y / 2, dw, dh,
-		srcDC,(int)spriteInfo.startLoc.x, (int)spriteInfo.startLoc.y, w, h, bf);
+
+	if (ani)
+	{
+		int dw = int(GetScreenScale().x * w);
+		int dh = int(GetScreenScale().y * h);
+		AlphaBlend(dstDC, int(pos.x - dw * 0.5f), int(pos.y - dh * 0.5f), dw, dh,
+			srcDC, (int)spriteInfo.startLoc.x, (int)spriteInfo.startLoc.y, w, h, bf);
+	}
+	else
+	{
+		int dw = int(GetSize().x * w / img->getwidth());
+		int dh = int(GetSize().y * h / img->getheight());
+		AlphaBlend(dstDC, int(pos.x - GetSize().x * 0.5f), int(pos.y - GetSize().y * 0.5f), dw, dh,
+			srcDC, (int)spriteInfo.startLoc.x, (int)spriteInfo.startLoc.y, w, h, bf);
+	}
 }
 
 bool Image::IsMouseOn()
 {
 	return IsUnderCursor();
+}
+
+IMAGE* Image::LoadSprite(std::string name)
+{
+	IMAGE* spr = ImageInterface::LoadSprite(name);
+	if (spr && size == FVector2D())
+	{
+		size = FVector2D(spr->getwidth(), spr->getheight());
+	}
+	return spr;
+}
+
+void Image::EnableAnimControl()
+{
+	if (ani)
+	{
+		return;
+	}
+	ani = new Animator;
+	ani->SetupAttachment(this);
 }
 
 
@@ -456,7 +504,7 @@ void Bar::Update()
 void Bar::Render()
 {
 	if (uiPattern == UIPattern::None)return;
-	Vector2D pos = GetScreenPosition();
+	FVector2D pos = GetScreenPosition();
 	HDC dstDC = GetImageHDC();
 	BLENDFUNCTION bf = { AC_SRC_OVER,0,255,AC_SRC_ALPHA };
 
@@ -472,7 +520,7 @@ void Bar::Render()
 	{
 		HDC srcDC = GetImageHDC(barFront);
 
-		Pair startPosition,endPosition;
+		FPair startPosition,endPosition;
 
 		switch (direction)
 		{
@@ -499,19 +547,19 @@ void Bar::Render()
 void Bar::LoadBarFrontPicture(std::string path)
 {
 	barFront = mainWorld.resourcePool->Fetch(path);
-	SetFrontSize(Pair(barFront->getwidth(), barFront->getheight()));
+	SetFrontSize(FPair(barFront->getwidth(), barFront->getheight()));
 }
 
 void Bar::LoadBarBackPicture(std::string path)
 {
 	barBack = mainWorld.resourcePool->Fetch(path);
-	SetBackSize(Pair(barBack->getwidth(), barBack->getheight()));
+	SetBackSize(FPair(barBack->getwidth(), barBack->getheight()));
 }
 
 void Bar::LoadBarButtonPicture(std::string path)
 {
 	barButton = mainWorld.resourcePool->Fetch(path);
-	SetButtonSize(Pair(barButton->getwidth(), barButton->getheight()));
+	SetButtonSize(FPair(barButton->getwidth(), barButton->getheight()));
 }
 
 void Bar::SetPercentage(float per)
@@ -532,7 +580,7 @@ void Sector::Update()
 void Sector::Render()
 {
 	if (uiPattern == UIPattern::None)return;
-	Vector2D pos = GetScreenPosition();
+	FVector2D pos = GetScreenPosition();
 	HDC dstDC = GetImageHDC();
 	BLENDFUNCTION bf = { AC_SRC_OVER,0,255,AC_SRC_ALPHA };
 
@@ -560,13 +608,13 @@ void Sector::Render()
 void Sector::LoadSectorFrontPicture(std::string path)
 {
 	sectorFront = mainWorld.resourcePool->Fetch(path);
-	SetFrontSize(Pair(sectorFront->getwidth(), sectorFront->getheight()));
+	SetFrontSize(FPair(sectorFront->getwidth(), sectorFront->getheight()));
 }
 
 void Sector::LoadSectorBackPicture(std::string path)
 {
 	sectorBack = mainWorld.resourcePool->Fetch(path);
-	SetBackSize(Pair(sectorBack->getwidth(), sectorBack->getheight()));
+	SetBackSize(FPair(sectorBack->getwidth(), sectorBack->getheight()));
 }
 
 void Sector::SetPercentage(float per)
@@ -576,5 +624,5 @@ void Sector::SetPercentage(float per)
 
 void Sector::SetStartDegree(float start)
 {
-	startDegree = Math::Clamp(start, 0.f, 360.f);
+	startDegree = Math::NormalizeDegree(start);
 }

@@ -47,7 +47,7 @@ Bug::Bug()
 	StateUpdateTimerHandle.Bind(3.f, [this]() {
 		if (player && rigid->GetVelocity().y == 0 && !bIsDead)
 		{
-			if (Vector2D::Distance(player->GetWorldPosition(), GetWorldPosition()) > 350 &&
+			if (FVector2D::Distance(player->GetWorldPosition(), GetWorldPosition()) > 350 &&
 				std::abs(circle->GetWorldPosition().x - currentPlatForm->GetWorldPosition().x) < currentPlatForm->GetSize().x * 0.5f - 25)
 			{
 				bIsBuried = true;
@@ -87,7 +87,7 @@ void Bug::Update(float deltaTime)
 	rigid->AddForce({ GetWorldScale().x * 500,0 });
 	if (std::abs(rigid->GetVelocity().x) > 100)
 	{
-		Vector2D newVel = rigid->GetVelocity();
+		FVector2D newVel = rigid->GetVelocity();
 		newVel.x *= 0.95f;
 		rigid->SetVelocity(newVel);
 	}
@@ -108,7 +108,7 @@ void Bug::Update(float deltaTime)
 	if (circle->IsCollisionsEmpty())currentPlatForm = nullptr;
 }
 
-void Bug::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor, Vector2D normalImpulse, const HitResult& hitResult)
+void Bug::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const HitResult& hitResult)
 {
 	if (hitComp->GetType() == CollisionType::Player || bIsDead)return;
 
@@ -132,7 +132,7 @@ void Bug::SpawnGeos()
 	for (int i = 0; i<3; i++)
 	{
 		Geo* geo = GameplayStatics::CreateObject<Geo>(GetWorldPosition());
-		geo->Init("1geo");
+		geo->Init("1geo", 1);
 	}
 }
 

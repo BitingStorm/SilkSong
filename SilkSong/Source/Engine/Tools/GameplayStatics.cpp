@@ -76,17 +76,17 @@ void GameplayStatics::DontDestroyOnLoad(UserInterface* obj)
     mainWorld.OverallGameUIs_to_add.push_back(obj);
 }
 
-Vector2D GameplayStatics::ProjectScreenToWorld(Vector2D pos)
+FVector2D GameplayStatics::ProjectScreenToWorld(FVector2D pos)
 {
-    Vector2D position = (pos - Vector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2)) * 0.05f
+    FVector2D position = (pos - FVector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2)) * 0.05f
         * mainWorld.mainCamera->GetVirtualSpringArmLength() + mainWorld.mainCamera->GetVirtualPosition();
     return position;
 }
 
-Vector2D GameplayStatics::ProjectWorldToScreen(Vector2D pos)
+FVector2D GameplayStatics::ProjectWorldToScreen(FVector2D pos)
 {
-    Vector2D position = (pos - mainWorld.mainCamera->GetVirtualPosition()) * 20.f 
-        / mainWorld.mainCamera->GetVirtualSpringArmLength() + Vector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2);
+    FVector2D position = (pos - mainWorld.mainCamera->GetVirtualPosition()) * 20.f 
+        / mainWorld.mainCamera->GetVirtualSpringArmLength() + FVector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2);
     return position;
 }
 

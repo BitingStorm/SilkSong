@@ -22,7 +22,7 @@ void AudioPlayer::Update(float deltaTime)
 	if (!bIsEnabled || !bSpacial)return;
 
 	int vol = volume;
-	float dis = Vector2D::Distance(mainWorld.mainCamera->GetWorldPosition(), GetWorldPosition());
+	float dis = FVector2D::Distance(mainWorld.mainCamera->GetWorldPosition(), GetWorldPosition());
 	if (dis <= innerRadius) {  }
 	else if (dis > outerRadius)vol = 0;
 	else vol = (outerRadius - dis) * float(volume) / (outerRadius - innerRadius);

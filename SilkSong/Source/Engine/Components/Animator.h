@@ -22,21 +22,21 @@ DECLARE_NO_PARAM_UNICAST_DELEGATE_CLASS(AnimationDelegate)
 class IMAGE;
 class Animator;
 class AnimEdge;
-class SpriteRenderer;
+class ImageInterface;
 
 
 
 /*----------------------------------
 			   动画源
   ----------------------------------*/
-class Animation final : public ITimerHandler
+class Animation final :public ITimerHandler
 {
     friend Animator;
 	friend AnimEdge;
 
 	Animator* animController = nullptr;
 	int num = 0;//动画帧数
-	Vector2D offset = {0,0};//偏移量
+	FVector2D offset = {0,0};//偏移量
 	IMAGE**images = nullptr;//动画帧数组
 	int index = 0;//当前帧索引
 	bool bLooping = true;//是否可循环播放
@@ -56,7 +56,7 @@ public:
 	Animation() { clock.Bind(0, this, &Animation::Tick, true); clock.Stop();}
 
 	//加载动画资源
-	void Load(std::string name, Vector2D delta = {0,0});
+	void Load(std::string name, FVector2D delta = {0,0});
 
 	//设置动画帧间隔时间
 	void SetInterval(double interval) { clock.SetDelay(interval); }
@@ -64,11 +64,14 @@ public:
 	//设置动画帧下标
 	void SetIndex(int i) { index = i; }
 
+	//获取动画帧下标
+	int GetIndex()const { return index; }
+
 	//设置是否循环播放
 	void SetLooping(bool loop) { bLooping = loop; }
 
 	//在指定帧处添加动画通知
-	void AddNotification(int index,const AnimationDelegate& event) { notifications.insert({ index,event }); }
+	void AddNotification(int index, const AnimationDelegate& event) { notifications.insert({ index,event }); }
 
 	AnimationDelegate OnAnimEnter;//进入动画事件
 	AnimationDelegate OnAnimExit;//离开动画事件
@@ -160,7 +163,7 @@ class AnimEdge final
 	TransitionCondition::ComparisonMode comparisonMode;
 
 public:
-	AnimEdge() = default;
+	AnimEdge() :start{}, end{}, comparisonMode(TransitionCondition::ComparisonMode::AND) {}
 
 	/**
 	 * @brief 动画过渡初始化
@@ -215,11 +218,11 @@ enum class ParamType: uint8
 /*----------------------------------
 			  动画播放器
   ----------------------------------*/
-class Animator : public ActorComponent
+class Animator :public ActorComponent
 {
 	DEFINE_SUPER(ActorComponent)
 
-    friend SpriteRenderer;
+    friend ImageInterface;
 public:
 	virtual ~Animator();
 	virtual void BeginPlay() override;
@@ -231,20 +234,20 @@ public:
 	//插入动画节点
 	void Insert(std::string name, Animation& ani);
 
-	//设置动画节点(不建议直接使用)
+	//设置动画节点(如果不熟悉Animator架构不建议直接使用)
 	void SetNode(std::string nodeName);
 
-	//设置动画节点(不建议直接使用)
+	//设置动画节点(如果不熟悉Animator架构不建议直接使用)
 	void SetNode(Animation* node);
 
 	//设置附着渲染器
-	void SetupAttachment(SpriteRenderer*renderer);
+	void SetupAttachment(ImageInterface* renderer);
 
 	//播放动画蒙太奇片段
 	void PlayMontage(std::string nodeName);
 
 	//添加参数
-	void AddParamater(std::string paramName,ParamType type);
+	void AddParamater(std::string paramName, ParamType type);
 
 	//设置int参数
 	void SetInteger(std::string paramName, int value);
@@ -285,7 +288,7 @@ private:
 
 	Animation* lastNode = nullptr;//播放蒙太奇前的动画
 
-	SpriteRenderer* rendererAttached = nullptr;//附着的渲染器
+	ImageInterface* rendererAttached = nullptr;//附着的渲染器
 
 	IMAGE* currentSprite = nullptr;//当前播放的图像
 

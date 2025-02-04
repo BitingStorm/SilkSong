@@ -18,30 +18,31 @@ using std::chrono::time_point;
 
 
 /* 粒子放射形状 */
-enum class ParticlePattern :uint8
+enum class EParticlePattern :uint8
 {
 	Center, //中心放射状
 	Line //线性放射状
 };
 
 /* 粒子消失类型 */
-enum class ParticleFadingType :uint8
+enum class EParticleFadingType :uint8
 {
 	FadeInAndOut, //渐变
 	ExpandAndShrink //放缩
 };
 
 /* 单个粒子信息 */
-struct ParticleInfo
+struct FParticleInfo
 {
-	Vector2D position;//粒子坐标
+	FVector2D position;//粒子坐标
 	int index = 0; //当前帧索引
-	Vector2D velocity; //速度
+	FVector2D velocity; //速度
 	time_point<steady_clock>lastTime;//粒子创建时间
 	float alpha = 255.f; //透明度
 	float size = 1.f;//大小
-	float maxSize = 1.f;//极值大小 
-	ParticleInfo() { lastTime = steady_clock::now(); }
+	float maxSize = 1.f;//极值大小
+	float degree = 0.f;//角度
+	FParticleInfo() { lastTime = steady_clock::now(); }
 };
 
 
@@ -51,8 +52,9 @@ struct ParticleInfo
   ----------------------------------*/
 class ParticleSystem final : public SceneComponent, public LayerInterface, public ImageInterface
 {
-	std::deque<ParticleInfo>particles;
+	std::deque<FParticleInfo>particles;
 	int capacity = 0; //粒子容量
+	int parNum = 0;//粒子生产数目
 
 	float maxSpeed = 1.f; //粒子最大初速度
 	float minSpeed = 1.f; //粒子最小初速度
@@ -64,18 +66,18 @@ class ParticleSystem final : public SceneComponent, public LayerInterface, publi
 	float interval = 0.1f; //生产间隔
 	float fadingInTime = 0; //粒子逐渐出现的时间
 	float fadingOutTime = 0; //粒子逐渐消失的时间
-	ParticleFadingType fadingType = ParticleFadingType::FadeInAndOut;//粒子逐渐出现或消失的类型
+	EParticleFadingType fadingType = EParticleFadingType::FadeInAndOut;//粒子逐渐出现或消失的类型
 
 	IMAGE** images = nullptr;//粒子帧数组
 	int number = 0; //粒子帧数
-	Vector2D sizeRange; //大小范围（倍率系数）
+	FVector2D sizeRange; //大小范围（倍率系数）
 
-	ParticlePattern pattern = ParticlePattern::Center; //粒子放射状模式
-	Vector2D unitVector = Vector2D(0, 1); //粒子方向单位向量
+	EParticlePattern pattern = EParticlePattern::Center; //粒子放射状模式
+	FVector2D unitVector = FVector2D(0, 1); //粒子方向单位向量
 
 	/* 中心放射状属性成员 */
-	Vector2D radius = Vector2D(0, 0);//内外径
-	Vector2D scoop = Vector2D(0, 360);//放射范围
+	FVector2D radius = FVector2D(0, 0);//内外径
+	FVector2D scoop = FVector2D(0, 360);//放射范围
 
 	/* 线性放射状属性成员 */
 	float length = 1.f; //线性放射长度
@@ -83,8 +85,10 @@ class ParticleSystem final : public SceneComponent, public LayerInterface, publi
 
 	void Produce(); //产生粒子
 
+	void DealImage()override {}
+
 public:
-	ParticleSystem():sizeRange(Vector2D(0.75,1.25)) {lastTime = steady_clock::now();}
+	ParticleSystem():sizeRange(FVector2D(0.75,1.25)) {lastTime = steady_clock::now();}
 
 	//加载粒子资源
 	void Load(std::string name);
@@ -121,10 +125,10 @@ public:
 	void SetFadingOutTime(float fadingTime) { this->fadingOutTime = fadingTime; }
 
 	//设置粒子渐变消失类型
-	void SetFadingType(ParticleFadingType  fadingType) { this->fadingType = fadingType; }
+	void SetFadingType(EParticleFadingType  fadingType) { this->fadingType = fadingType; }
 
 	//设置粒子模式
-	void SetPattern(ParticlePattern pattern) { this->pattern = pattern; }
+	void SetPattern(EParticlePattern pattern) { this->pattern = pattern; }
 
 	/**
 	 * @brief 设置大小范围（倍率系数）
@@ -138,12 +142,12 @@ public:
 	 * @param[in] radius			放射圆环的内外径
 	 * @param[in] scoop				放射扇形的角度范围
 	 **/
-	void SetCenter(Vector2D radius, Vector2D scoop = Vector2D(0, 360)) { this->radius = radius; this->scoop = scoop; }
+	void SetCenter(FVector2D radius, FVector2D scoop = FVector2D(0, 360));
 
 	/**
 	 * @brief 设置线性放射状参数
 	 * @param[in] length			放射线段长度
 	 * @param[in] angle	            线段与水平夹角
 	 **/
-	void SetLine(float length, float angle) { this->length = length; this->angle = angle; }
+	void SetLine(float length, float angle);
 };

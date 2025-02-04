@@ -39,6 +39,11 @@ float Math::RadianToDegree(float radian)
     return radian * 180 / PI;
 }
 
+float Math::DegreeToRadian(float degree)
+{
+    return degree * PI / 180;
+}
+
 float Math::NormalizeDegree(float angle)
 {
     float ang = std::fmod(angle, 360.0f);

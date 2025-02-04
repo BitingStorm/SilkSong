@@ -27,7 +27,7 @@ void RigidBody::Update(float deltaTime)
 			for (auto& another : collider->collisions)
 			{
 				if (another->mode != CollisionMode::Collision)continue;
-				RestrictVelocity(-collider->CollisionHit(another).ImpactNormal, PhysicsMaterial::Combine(collider->material,another->material), another->rigidAttached);
+				RestrictVelocity(-collider->CollisionHit(another).ImpactNormal, FPhysicsMaterial::Combine(collider->material,another->material), another->rigidAttached);
 			}
 		}
 		for (auto& collider : colliders)
@@ -36,10 +36,10 @@ void RigidBody::Update(float deltaTime)
 			for (auto& another : collider->collisions)
 			{
 				if (another->mode != CollisionMode::Collision || another->rigidAttached)continue;
-				RestrictVelocity(-collider->CollisionHit(another).ImpactNormal, PhysicsMaterial::Combine(collider->material, another->material));
+				RestrictVelocity(-collider->CollisionHit(another).ImpactNormal, FPhysicsMaterial::Combine(collider->material, another->material));
 			}
 		}
-		pOwner->AddPosition(Vector2D(Math::Clamp(velocity.x, -maxSpeed, maxSpeed), Math::Clamp(velocity.y, -maxSpeed, maxSpeed)) * deltaTime);
+		pOwner->AddPosition(FVector2D(Math::Clamp(velocity.x, -maxSpeed, maxSpeed), Math::Clamp(velocity.y, -maxSpeed, maxSpeed)) * deltaTime);
 		
 		if (linearDrag) 
 		{
@@ -62,12 +62,12 @@ void RigidBody::Update(float deltaTime)
 	}
 }
 
-void RigidBody::RestrictVelocity(Vector2D impactNormal,const PhysicsMaterial& material,RigidBody* another)
+void RigidBody::RestrictVelocity(FVector2D impactNormal,const FPhysicsMaterial& material,RigidBody* another)
 {
-	Vector2D tangentVector = { impactNormal.y, -impactNormal.x };
+	FVector2D tangentVector = { impactNormal.y, -impactNormal.x };
 
-	Vector2D normalVelocity = Vector2D::ProjectVector(velocity, impactNormal);
-	Vector2D tangentVelocity = Vector2D::ProjectVector(velocity, tangentVector);
+	FVector2D normalVelocity = FVector2D::ProjectVector(velocity, impactNormal);
+	FVector2D tangentVelocity = FVector2D::ProjectVector(velocity, tangentVector);
 
 	float friction = material.friction;
 	float bounciness = material.bounciness;
@@ -77,7 +77,7 @@ void RigidBody::RestrictVelocity(Vector2D impactNormal,const PhysicsMaterial& ma
 	 **/
 	if (!another)
 	{
-		if (Vector2D::DotProduct(velocity, impactNormal) < 0)
+		if (FVector2D::DotProduct(velocity, impactNormal) < 0)
 		{
 			float multiplier = (tangentVelocity.Size() - normalVelocity.Size() * friction) / tangentVelocity.Size();
 			multiplier = Math::Clamp(multiplier, 0.0f, 1.0f);
@@ -90,12 +90,12 @@ void RigidBody::RestrictVelocity(Vector2D impactNormal,const PhysicsMaterial& ma
 	/**
 	 * 双刚体弹性碰撞处理逻辑（忽略摩擦）
 	 **/
-	Vector2D anotherNormalVelocity = Vector2D::ProjectVector(another->velocity, impactNormal);
-	Vector2D anotherTangentVelocity = Vector2D::ProjectVector(another->velocity, tangentVector);
+	FVector2D anotherNormalVelocity = FVector2D::ProjectVector(another->velocity, impactNormal);
+	FVector2D anotherTangentVelocity = FVector2D::ProjectVector(another->velocity, tangentVector);
 
-	if (Vector2D::DotProduct(normalVelocity - anotherNormalVelocity, impactNormal) >= 0)return;//确保有相碰的趋势
+	if (FVector2D::DotProduct(normalVelocity - anotherNormalVelocity, impactNormal) >= 0)return;//确保有相碰的趋势
 
-	Vector2D normalVelocity_ = normalVelocity;
+	FVector2D normalVelocity_ = normalVelocity;
 	normalVelocity = ((mass - bounciness * another->mass) * normalVelocity + (1 + bounciness) * another->mass * anotherNormalVelocity) / (mass + another->mass);
 	anotherNormalVelocity = ((another->mass - bounciness * mass) * anotherNormalVelocity + (1 + bounciness) * mass * normalVelocity_) / (mass + another->mass);
 

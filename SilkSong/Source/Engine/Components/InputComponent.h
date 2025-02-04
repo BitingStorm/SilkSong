@@ -13,7 +13,7 @@
 
 
 /* 按键信号类型 */
-enum class InputType :uint8
+enum class EInputType :uint8
 {
 	Pressed,
 	Released,
@@ -22,7 +22,7 @@ enum class InputType :uint8
 };
 
 /* 键码 */
-enum KeyCode :int32
+enum class EKeyCode :int32
 {
 	VK_LButton = 1,
 	VK_RButton,
@@ -46,10 +46,10 @@ enum KeyCode :int32
 };
 
 /* 按键映射信息 */
-struct KeyBindInfo
+struct FKeyBindInfo
 {
 	std::function<void()> func;
-	InputType type = InputType::Pressed;
+	EInputType type = EInputType::Pressed;
 	int pressFlag = 0;
 	float lastTime = 0;
 };
@@ -62,22 +62,22 @@ class InputComponent final: public ActorComponent
 {
 public:
 	//设置按键映射
-	void SetMapping(std::string mappingName, KeyCode value);
+	void SetMapping(std::string mappingName, EKeyCode value);
 
 	//绑定按键事件映射（瞬时触发，触发频率受帧率影响）
 	template<typename T>
-	void BindAction(std::string actionName,InputType type, T* obj, void(T::*func)())
+	void BindAction(std::string actionName,EInputType type, T* obj, void(T::*func)())
 	{
 	    if(mappings.find(actionName)!= mappings.end())
 		actionCallbacks.insert({ actionName, { std::bind(func, obj),type,false } });
 	}
 
 	//绑定按键事件映射（瞬时触发，触发频率受帧率影响）
-	void BindAction(std::string actionName, InputType type, std::function<void()>func);
+	void BindAction(std::string actionName, EInputType type, std::function<void()>func);
 
 
 	//获取鼠标屏幕坐标
-	static Vector2D GetMousePosition();
+	static FVector2D GetMousePosition();
 	
 	//鼠标左键是否按下
 	static bool IsMouseButtonPressed();
@@ -94,11 +94,11 @@ public:
 	void MouseTick();
 
 private:
-	std::unordered_map<std::string, KeyCode>mappings;
-	std::unordered_map<std::string, KeyBindInfo>actionCallbacks;
-	std::unordered_map<std::string, KeyBindInfo>axisCallbacks;
+	std::unordered_map<std::string, EKeyCode>mappings;
+	std::unordered_map<std::string, FKeyBindInfo>actionCallbacks;
+	std::unordered_map<std::string, FKeyBindInfo>axisCallbacks;
 
-	static Vector2D mousePos;//鼠标在绘图窗口坐标
+	static FVector2D mousePos;//鼠标在绘图窗口坐标
 	static bool bActive;//是否启用交互
 	ExMessage msg;
 };

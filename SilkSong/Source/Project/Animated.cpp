@@ -21,5 +21,5 @@ void Animated::Init(std::string name, float delay, int layer)
 	ani->SetNode("idle");
 
 	render->SetLayer(layer);
-	render->SetLocalScale(Vector2D(1, 1) + Vector2D(0.05, 0)*layer);
+	render->SetLocalScale(FVector2D(1, 1) + FVector2D(0.05, 0)*layer);
 }

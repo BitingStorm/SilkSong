@@ -3,7 +3,7 @@
 #include "Math.h"
 #include "Core/World.h"
 #include "Tools/FileManager.h"
-
+#include "Components/Animator.h"
 
 
 
@@ -33,53 +33,22 @@ int LayerInterface::GetLayer()const
 
 
 
-void ImageInterface::RotateImage(double radian)
+ImageInterface::~ImageInterface()
+{
+	if (copy)delete copy; if (filter)delete filter; if (blur)delete blur;
+	if (animatorAttached)animatorAttached->rendererAttached = nullptr;
+}
+
+void ImageInterface::RotateImage(float degree)
 {			
-	radian = -radian;
-	float fSin = (float)sin(radian), fCos = (float)cos(radian);
-	int w = sprite->getwidth(), h = sprite->getheight();
-	POINT points[4] = { {0, 0}, {w, 0}, {0, h}, {w, h} };
-	int min_x = 0, min_y = 0;
-	int max_x = 0, max_y = 0;
-	for (int i = 0; i < 4; i++)
-	{
-		points[i] = {
-			(int)(points[i].x * fCos - points[i].y * fSin),
-			(int)(points[i].x * fSin + points[i].y * fCos)
-		};
-		min_x = MIN(min_x, points[i].x);
-		min_y = MIN(min_y, points[i].y);
-		max_x = MAX(max_x, points[i].x);
-		max_y = MAX(max_y, points[i].y);
-	}
-
-	int nw = max_x - min_x;
-	int nh = max_y - min_y;
-
-
-	if (!copy)copy = new IMAGE(nw, nh);
-	copy->Resize(nw, nh);
-	spriteInfo.endLoc = { nw, nh };
-
-	DWORD* pNewBuf = GetImageBuffer(copy);
-	const DWORD* pBuf = GetImageBuffer(sprite);
-
-	for (int i = min_x, ni = 0; ni < nw; ++i, ++ni)				    // i 用于映射原图像坐标，ni 用于定位旋转后图像坐标
-	{
-		for (int j = min_y, nj = 0; nj < nh; ++j, ++nj)
-		{
-			pNewBuf[nj * nw + ni] = 0;
-			int nx = (int)(i * fCos + j * fSin);				    // 从旋转后的图像坐标向原图像坐标映射
-			int ny = (int)(-i * fSin + j * fCos);
-			if (nx >= 0 && nx < w && ny >= 0 && ny < h)				// 若目标映射在原图像范围内，则拷贝色值
-				pNewBuf[nj * nw + ni] = pBuf[ny * w + nx];
-		}
-	}
-	ImageToolkit::GaussianFilter(copy,copy,1);//抗锯齿
+	if (!copy)copy = new IMAGE;
+	spriteInfo.endLoc = ImageToolkit::RotateImage(sprite, copy, degree);
 }
 
 void ImageInterface::FilterImage()
 {
+	if (!sprite)return;
+
 	IMAGE* img = copy ? copy : sprite;
 	if (!filter)filter = new IMAGE(img->getwidth(), img->getheight());
 	filter->Resize(img->getwidth(), img->getheight());
@@ -90,7 +59,7 @@ void ImageInterface::FilterImage()
 
 	for (int i = 0; i < num; ++i)
 	{
-		if (pBuf[i]>>24)
+		if (pBuf[i] >> 24)
 		{
 			// 获取BGR
 			uint32 pNewBufB = pBuf[i] & 0xFF;
@@ -98,13 +67,13 @@ void ImageInterface::FilterImage()
 			uint32 pNewBufR = (pBuf[i] & 0xFF0000) >> 16;
 
 			// 将颜色值进行平均化
-			for (auto& filterInfo : filterLayers) 
+			for (auto& filterInfo : filterLayers)
 			{
 				int level = filterInfo.level;
-				if((pBuf[i]>>24) < 255)level = (pBuf[i] >> 24)*level>>8;//使得颜色滤镜从低透明度到高透明度平滑过渡
-				pNewBufB = (pNewBufB * (128 - level) + level * GetBValue(filterInfo.color))>>7;
-				pNewBufG = (pNewBufG * (128 - level) + level * GetGValue(filterInfo.color))>>7;
-				pNewBufR = (pNewBufR * (128 - level) + level * GetRValue(filterInfo.color))>>7;
+				if ((pBuf[i] >> 24) < 255)level = (pBuf[i] >> 24) * level >> 8;//使得颜色滤镜从低透明度到高透明度平滑过渡
+				pNewBufB = (pNewBufB * (128 - level) + level * GetBValue(filterInfo.color)) >> 7;
+				pNewBufG = (pNewBufG * (128 - level) + level * GetGValue(filterInfo.color)) >> 7;
+				pNewBufR = (pNewBufR * (128 - level) + level * GetRValue(filterInfo.color)) >> 7;
 			}
 			// 重新组合成一个新的颜色值（BGR）
 			pNewBuf[i] = (pBuf[i] & 0xFF000000) | (pNewBufR << 16) | (pNewBufG << 8) | pNewBufB;
@@ -136,9 +105,6 @@ void ImageInterface::SetFilter(bool enable,COLORREF col, int level)
 	}
 }
 
-
-
-
 void ImageInterface::MeanBlur(unsigned level)
 {
 	if (!sprite || blur || level == 0)return;
@@ -155,13 +121,17 @@ void ImageInterface::GaussianBlur(unsigned level)
 	sprite = blur;
 }
 
-void ImageInterface::LoadSprite(std::string name)
+IMAGE* ImageInterface::LoadSprite(std::string name)
 {
 	sprite = mainWorld.resourcePool->Fetch(name); 
-    spriteInfo.endLoc = { sprite->getwidth(), sprite->getheight() };
+	if (sprite) 
+	{
+		spriteInfo.endLoc = { sprite->getwidth(), sprite->getheight() };
+	}
+	return sprite;
 }
 
-void ImageInterface::SetStartAndEndLoc(Pair start, Pair end)
+void ImageInterface::SetStartAndEndLoc(FPair start, FPair end)
 {
 	start.x = Math::Clamp(start.x, 0, spriteInfo.size.x);
     start.y = Math::Clamp(start.y, 0, spriteInfo.size.y);
@@ -174,98 +144,10 @@ void ImageInterface::SetStartAndEndLoc(Pair start, Pair end)
 
 
 
-//using namespace std;
-//#include <complex>
-//
-//
-//// 快速傅里叶变换
-//void fft(vector<complex<double>>& a, bool invert) {
-//	int n = a.size();
-//	if (n == 1) return;
-//	
-//	vector<complex<double>> a0(n / 2), a1(n / 2);
-//	for (int i = 0, j = 0; i < n; i += 2, ++j) {
-//		a0[j] = a[i];
-//		a1[j] = a[i + 1];
-//	}
-//
-//
-//	fft(a0, invert);
-//	fft(a1, invert);
-//
-//	double ang = 2 * PI / n * (invert ? -1 : 1);
-//	complex<double> w(1), wn(cos(ang), sin(ang));
-//	for (int i = 0; i < n / 2; ++i) {
-//		a[i] = a0[i] + w * a1[i];
-//		a[i + n / 2] = a0[i] - w * a1[i];
-//		if (invert) {
-//			a[i] /= 2;
-//			a[i + n / 2] /= 2;
-//		}
-//		w *= wn;
-//	}
-//}
-//
-//// 图像卷积
-//void ImageInterface::Convolve(IMAGE* img, int radius)
-//{
-//	int width = img->getwidth();
-//	int height = img->getheight();
-//	int size = width * height;
-//	DWORD* pixels = GetImageBuffer(img);
-//
-//	vector<complex<double>> imgData(size);
-//	for (int i = 0; i < size; ++i) {
-//		imgData[i] = complex<double>((pixels[i] >> 16) & 0xFF, 0);
-//	}
-//
-//	// 生成简单抗锯齿核
-//	int Size = radius * 2 + 1;
-//	vector<complex<double>> kernel(Size * Size);
-//	for (int y = -radius; y <= radius; ++y) {
-//		for (int x = -radius; x <= radius; ++x) {
-//			int index = (y + radius) * Size + (x + radius);
-//			kernel[index] = complex<double>(1.0 / (Size * Size), 0);
-//		}
-//	}
-//
-//
-//	int kernelSize = kernel.size();
-//	int paddedSize = size + kernelSize - 1;
-//	int paddedWidth = width + sqrt(kernelSize) - 1;
-//	int paddedHeight = height + sqrt(kernelSize) - 1;
-//
-//	vector<complex<double>> paddedImg(paddedSize);
-//	vector<complex<double>> paddedKernel(paddedSize);
-//
-//	std::copy(imgData.begin(), imgData.end(), paddedImg.begin());
-//	std::copy(kernel.begin(), kernel.end(), paddedKernel.begin());
-//
-//	fft(paddedImg, false);
-//	fft(paddedKernel, false);
-//
-//	for (int i = 0; i < paddedSize; ++i) {
-//		paddedImg[i] *= paddedKernel[i];
-//	}
-//
-//	fft(paddedImg, true);
-//
-//	for (int y = 0; y < height; ++y) {
-//		for (int x = 0; x < width; ++x) {
-//			int index = y * width + x;
-//			int r = static_cast<int>(round(paddedImg[index].real()));
-//			pixels[index] = RGB(r, r, r);
-//		}
-//	}
-//}
-
-
-
 
 
 bool ImageToolkit::bIsGaussianFilterOn = false;
 int ImageToolkit::GaussianFilterLevel = 2;
-
 
 DWORD ImageToolkit::GetPixel(IMAGE* img, int i, int j)
 {
@@ -344,7 +226,55 @@ void ImageToolkit::GetSectorImage(IMAGE* srcImg, IMAGE* dstImg, float start, flo
 	}
 }
 
+FPair ImageToolkit::RotateImage(IMAGE* srcImg, IMAGE* dstImg, float degree)
+{
+	if (!srcImg || !dstImg)return{};
 
+	degree = Math::NormalizeDegree(degree);
+	float radian = Math::DegreeToRadian(degree);
+	radian = -radian;
+	float fSin = sin(radian), fCos = cos(radian);
+	int w = srcImg->getwidth(), h = srcImg->getheight();
+	POINT points[4] = { {0, 0}, {w, 0}, {0, h}, {w, h} };
+	int min_x = 0, min_y = 0;
+	int max_x = 0, max_y = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		points[i] =
+		{
+			(int)(points[i].x * fCos - points[i].y * fSin),
+			(int)(points[i].x * fSin + points[i].y * fCos)
+		};
+		min_x = MIN(min_x, points[i].x);
+		min_y = MIN(min_y, points[i].y);
+		max_x = MAX(max_x, points[i].x);
+		max_y = MAX(max_y, points[i].y);
+	}
+
+	int nw = max_x - min_x;
+	int nh = max_y - min_y;
+
+	dstImg->Resize(nw, nh);
+
+	DWORD* pNewBuf = GetImageBuffer(dstImg);
+	const DWORD* pBuf = GetImageBuffer(srcImg);
+
+	for (int i = min_x, ni = 0; ni < nw; ++i, ++ni)//i用于映射原图像坐标，ni用于定位旋转后图像坐标
+	{
+		for (int j = min_y, nj = 0; nj < nh; ++j, ++nj)
+		{
+			pNewBuf[nj * nw + ni] = 0;
+			int nx = (int)(i * fCos + j * fSin);//从旋转后的图像坐标向原图像坐标映射
+			int ny = (int)(-i * fSin + j * fCos);
+			if (nx >= 0 && nx < w && ny >= 0 && ny < h)
+			{
+				pNewBuf[nj * nw + ni] = pBuf[ny * w + nx];//若目标映射在原图像范围内，则拷贝色值
+			}
+		}
+	}
+
+	return FPair(nw, nh);
+}
 
 void ImageToolkit::MeanFilter(IMAGE* srcImg, IMAGE* dstImg, int radius)
 {
@@ -477,5 +407,3 @@ void ImageToolkit::ApplyGaussianFilterOnScreen()
 	GaussianFilter(&buf, &buf, GaussianFilterLevel);
 	putimage(0, 0, &buf);
 }
-
-

@@ -5,8 +5,6 @@
 
 class RockParticle :public Actor
 {
-	DEFINE_SUPER(Actor)
-
 public:
 	RockParticle();
 

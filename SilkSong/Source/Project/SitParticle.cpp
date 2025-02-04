@@ -11,7 +11,7 @@ SitParticle::SitParticle()
 	particle->Load("particle_heal");
 	particle->SetMaxSpeed(150);
 	particle->SetMinSpeed(75);
-	particle->SetPattern(ParticlePattern::Line);
+	particle->SetPattern(EParticlePattern::Line);
 	particle->SetLine(length = 75,90);
 	particle->SetFadingOutTime(0.5f);
 	particle->SetLifeCycle(1.5f);

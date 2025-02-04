@@ -35,9 +35,9 @@ void Controller::MouseTick()
 	inputComponent->MouseTick();
 }
 
-Vector2D Controller::GetCursorPosition() const
+FVector2D Controller::GetCursorPosition() const
 {
-	return InputComponent::GetMousePosition() + mainWorld.mainCamera->GetWorldPosition() - Vector2D(WIN_WIDTH,WIN_HEIGHT)/2;
+	return InputComponent::GetMousePosition() + mainWorld.mainCamera->GetWorldPosition() - FVector2D(WIN_WIDTH,WIN_HEIGHT)/2;
 }
 
 bool Controller::IsMouseClicked() const
@@ -47,7 +47,7 @@ bool Controller::IsMouseClicked() const
 
 HitResult Controller::GetHitResultUnderCursor()
 {
-	Vector2D pos = GetCursorPosition();
+	FVector2D pos = GetCursorPosition();
 	int x = Math::Clamp(int(pos.x + 2000) / 400, 0, 9);
 	int y = Math::Clamp(int(pos.y) / 200, 0, 5);
 

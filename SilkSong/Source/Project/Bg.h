@@ -14,7 +14,7 @@ public:
 protected:
 	class SpriteRenderer* render;
 
-	Vector2D InitPos;
+	FVector2D InitPos;
 
 	class Player* player;
 

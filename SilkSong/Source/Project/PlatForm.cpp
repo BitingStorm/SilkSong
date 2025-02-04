@@ -16,7 +16,7 @@ PlatForm::PlatForm()
 	box->SetType(CollisionType::Block);
 }
 
-void PlatForm::Init(std::string path, Vector2D size, Vector2D delta)
+void PlatForm::Init(std::string path, FVector2D size, FVector2D delta)
 {
 	if(path != "")render->LoadSprite(path); 
 	box->SetSize(size);

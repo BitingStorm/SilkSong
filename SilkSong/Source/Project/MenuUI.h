@@ -8,7 +8,7 @@ class MenuUI :public UserInterface
 	Image* Title;
 	Image* Logo;
 	Image* Icon;
-	Image* Black;
+	Image* LowHealth;
 
 	Text* Edition;
 	Text* Options[5];

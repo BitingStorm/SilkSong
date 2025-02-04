@@ -234,6 +234,9 @@
     <ClInclude Include="Source\Project\SceneUI.h">
       <Filter>Project</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Project\SilkParticle.h">
+      <Filter>Project\Enemies</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Components\ActorComponent.cpp">
@@ -403,6 +406,9 @@
     </ClCompile>
     <ClCompile Include="Source\Project\SceneUI.cpp">
       <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\SilkParticle.cpp">
+      <Filter>Project\Enemies</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -101,7 +101,7 @@ void Actor::Destroy()
 	}
 }
 
-const Vector2D& Actor::GetLocalPosition() const
+const FVector2D& Actor::GetLocalPosition() const
 {
 	return root->GetLocalPosition();
 }
@@ -111,13 +111,13 @@ float Actor::GetLocalRotation() const
 	return root->GetLocalRotation();
 }
 
-const Vector2D& Actor::GetLocalScale() const
+const FVector2D& Actor::GetLocalScale() const
 {
 	return root->GetLocalScale();
 }
 
 
-Vector2D Actor::GetWorldPosition() const
+FVector2D Actor::GetWorldPosition() const
 {
 	if (parent)return parent->GetWorldPosition() + GetLocalPosition();
 	else return GetLocalPosition();
@@ -129,13 +129,13 @@ float Actor::GetWorldRotation() const
 	else return GetLocalRotation();
 }
 
-Vector2D Actor::GetWorldScale() const
+FVector2D Actor::GetWorldScale() const
 {
 	if (parent)return parent->GetWorldScale() * GetLocalScale();
 	else return GetLocalScale();
 }
 
-void Actor::SetLocalPosition(const Vector2D& pos)
+void Actor::SetLocalPosition(const FVector2D& pos)
 {
 	root->SetLocalPosition(pos);
 }
@@ -145,12 +145,12 @@ void Actor::SetLocalRotation(float angle)
 	root->SetLocalRotation(angle);
 }
 
-void Actor::SetLocalScale(const Vector2D& scale)
+void Actor::SetLocalScale(const FVector2D& scale)
 {
 	root->SetLocalScale(scale);
 }
 
-void Actor::AddPosition(Vector2D pos)
+void Actor::AddPosition(FVector2D pos)
 {
 	root->AddPosition(pos);
 }
@@ -162,9 +162,9 @@ void Actor::AddRotation(float rot)
 
 void Actor::DrawDebugPosition() const
 {
-	settextstyle(25, 10, "Arial");
+	settextstyle(20, 8, "Arial");
 	settextcolor(WHITE);
-	Vector2D pos = (GetWorldPosition() - mainWorld.mainCamera->GetVirtualPosition())
-		* 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength() + Vector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2);
+	FVector2D pos = (GetWorldPosition() - mainWorld.mainCamera->GetVirtualPosition())
+		* 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength() + FVector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2);
 	outtextxy((int)pos.x, (int)pos.y, GetWorldPosition().ToString().c_str());
 }

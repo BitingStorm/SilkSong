@@ -25,7 +25,7 @@ public:
 
 	//创建游戏对象
 	template<typename T>
-	static T* CreateObject(Vector2D pos = Vector2D(0, 0), float angle = 0, Vector2D scale = Vector2D(1, 1));
+	static T* CreateObject(FVector2D pos = FVector2D(0, 0), float angle = 0, FVector2D scale = FVector2D(1, 1));
 
 	//通过类查找游戏对象
 	template<typename T>
@@ -75,10 +75,10 @@ public:
 	static void DontDestroyOnLoad(class UserInterface* obj);
 
 	//将屏幕坐标投射到世界
-	static Vector2D ProjectScreenToWorld(Vector2D pos);
+	static FVector2D ProjectScreenToWorld(FVector2D pos);
 
 	//将世界坐标投射到屏幕
-	static Vector2D ProjectWorldToScreen(Vector2D pos);
+	static FVector2D ProjectWorldToScreen(FVector2D pos);
 };
 
 
@@ -87,7 +87,7 @@ public:
 
 
 template<typename T>
-inline T* GameplayStatics::CreateObject(Vector2D pos, float angle, Vector2D scale)
+inline T* GameplayStatics::CreateObject(FVector2D pos, float angle, FVector2D scale)
 {
 	T* pObj = new T;
 	if (pObj && static_cast<Actor*>(pObj))

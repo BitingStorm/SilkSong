@@ -11,6 +11,7 @@
 #include"Core/Macro.h"
 #include"Core/Struct.h"
 #include"Core/Object.h"
+#include"Core/Interfaces.h"
 #include<windows.h>
 #include<set>
 #include<unordered_set>
