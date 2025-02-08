@@ -3,8 +3,6 @@
 #include "Animator.h"
 #include "Core/World.h"
 #include "Tools/FileManager.h"
-#include "Tools/Math.h"
-#include "Tools/Timer.h"
 #pragma comment(lib,"Msimg32.lib")
 
 
@@ -30,35 +28,40 @@ void SpriteRenderer::Render()
 {
 	if (!sprite || !bIsEnabled || alpha == 0)return;
 
+	float multi_sa = 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength();
+
 	FVector2D pos = (GetWorldPosition() - mainWorld.mainCamera->GetVirtualPosition() + spriteInfo.offset * GetWorldScale())
-		* 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength() + FVector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2);
-	HDC dstDC = GetImageHDC();
+		* multi_sa + FVector2D(WIN_WIDTH, WIN_HEIGHT) * 0.5f;
 
+	int32 w = spriteInfo.endLoc.x - spriteInfo.startLoc.x, h = spriteInfo.endLoc.y - spriteInfo.startLoc.y;
 
-	int w = spriteInfo.endLoc.x - spriteInfo.startLoc.x;
-	int h = spriteInfo.endLoc.y - spriteInfo.startLoc.y;
-
-	float multi_w = std::abs(GetWorldScale().x) * 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength();
-	float multi_h = std::abs(GetWorldScale().y) * 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength();
+	float multi_w = FMath::Abs(GetWorldScale().x) * multi_sa, multi_h = FMath::Abs(GetWorldScale().y) * multi_sa;
 
 	IMAGE* img = copy ? copy : sprite;
 	if (filterLayers.size() > 0 && filter)img = filter;
 
+	float draw_x = pos.x - multi_w * img->getwidth() * 0.5f, draw_y = pos.y - multi_h * img->getheight() * 0.5f;
+
 	
-	IMAGE* mirImg{}; 
-	if(GetWorldScale().x * GetWorldScale().y < 0)
-	{	
-		mirImg = new IMAGE(img->getwidth(),img->getheight());
+	FRect cameraRect(FVector2D::ZeroVector, FVector2D(WIN_WIDTH, WIN_HEIGHT));
+	FRect imgRect(FVector2D(pos.x, pos.y), img->getwidth() * multi_w, img->getheight() * multi_h);
+	if (!cameraRect.Intersects(imgRect))//如若在视野外则不必进行接下来的渲染操作
+	{
+		return;
+	}
+
+	IMAGE* mirImg{};
+	if (GetWorldScale().x * GetWorldScale().y < 0)//检查是否需要镜像颠倒
+	{
+		mirImg = new IMAGE(img->getwidth(), img->getheight());
 		ImageToolkit::FlipImage(img, mirImg, GetWorldScale().x < 0);
 		img = mirImg;
 	}
 
+	HDC dstDC = GetImageHDC();
 	HDC srcDC = GetImageHDC(img);
-	AlphaBlend(dstDC, int(pos.x - multi_w * img->getwidth() * 0.5f), int(pos.y - multi_h * img->getheight() * 0.5f),
-		int(w * multi_w), int(h * multi_h),
-		srcDC, spriteInfo.startLoc.x, spriteInfo.startLoc.y,
-		w, h, { AC_SRC_OVER,0,alpha,AC_SRC_ALPHA });
-
+	AlphaBlend(dstDC, int(draw_x), int(draw_y), int(w * multi_w), int(h * multi_h),
+		srcDC, spriteInfo.startLoc.x, spriteInfo.startLoc.y, w, h, { AC_SRC_OVER,0,alpha,AC_SRC_ALPHA });
 	if (mirImg)delete mirImg;
 }
 
@@ -72,7 +75,7 @@ void SpriteRenderer::Update(float deltaTime)
 	 * 图像变换处理逻辑
 	 **/
 	IMAGE* img = copy ? copy : sprite;
-	spriteInfo.size = FPair(img->getwidth(), img->getheight());
+	spriteInfo.size = FIntVector2(img->getwidth(), img->getheight());
 	
 	if (GetWorldRotation() != angle)
 	{
@@ -98,11 +101,11 @@ void SpriteRenderer::Update(float deltaTime)
 	if (isBlinking)AddFilter({ blinkFilter.color, int(transistionLevel),1 });
 }
 
-void SpriteRenderer::Blink(float duration, COLORREF color, int level)
+void SpriteRenderer::Blink(float duration, COLORREF color, int32 level)
 {
 	if (!isBlinking)
 	{
-		duration = Math::Clamp(duration, 0.1f, 1.f);
+		duration = FMath::Clamp(duration, 0.1f, 1.f);
 		blinkFlag = true; isBlinking = true;
 		blinkFilter = { color, level,1 };
 		transistionLevel = float(level);

@@ -9,9 +9,8 @@
 
 #pragma once
 #include"ActorComponent.h"
-#include"Tools/Timer.h"
-#include"Tools/Delegate.h"
-#include<unordered_map>
+
+
 
 
 
@@ -29,16 +28,16 @@ class ImageInterface;
 /*----------------------------------
 			   动画源
   ----------------------------------*/
-class Animation final :public ITimerHandler
+class Animation final :public TimerHandler
 {
     friend Animator;
 	friend AnimEdge;
 
 	Animator* animController = nullptr;
-	int num = 0;//动画帧数
+	int32 num = 0;//动画帧数
 	FVector2D offset = {0,0};//偏移量
-	IMAGE**images = nullptr;//动画帧数组
-	int index = 0;//当前帧索引
+	IMAGE** images = nullptr;//动画帧数组
+	int32 index = 0;//当前帧索引
 	bool bLooping = true;//是否可循环播放
 	
 	AnimationDelegate OnMontageExit;//蒙太奇结束事件（用于记录播放蒙太奇前一个动画，以便于当蒙太奇无后继节点时触发该事件从而恢复前一个动画）
@@ -46,7 +45,7 @@ class Animation final :public ITimerHandler
 
 	Timer clock;//计时器
 
-	std::unordered_map<int, AnimationDelegate>notifications;//自定义动画通知
+	std::unordered_map<int32, AnimationDelegate>notifications;//自定义动画通知
 
 	std::list<AnimEdge*>nexts;//动画桥
 
@@ -62,16 +61,16 @@ public:
 	void SetInterval(double interval) { clock.SetDelay(interval); }
 
 	//设置动画帧下标
-	void SetIndex(int i) { index = i; }
+	void SetIndex(int32 i) { index = i; }
 
 	//获取动画帧下标
-	int GetIndex()const { return index; }
+	int32 GetIndex()const { return index; }
 
 	//设置是否循环播放
 	void SetLooping(bool loop) { bLooping = loop; }
 
 	//在指定帧处添加动画通知
-	void AddNotification(int index, const AnimationDelegate& event) { notifications.insert({ index,event }); }
+	void AddNotification(int32 index, const AnimationDelegate& event) { notifications.insert({ index,event }); }
 
 	AnimationDelegate OnAnimEnter;//进入动画事件
 	AnimationDelegate OnAnimExit;//离开动画事件
@@ -96,12 +95,12 @@ enum class TransitionComparison : uint8
 
 
 /* 动画转换条件 */
-namespace TransitionCondition
+namespace AnimTransition
 {
 	struct Integer 
 	{
 		std::string paramName;
-		int value;
+		int32 value;
 		TransitionComparison comparison;
 	};
 
@@ -155,15 +154,15 @@ class AnimEdge final
 	Animation* start;
 	Animation* end;
 
-	std::vector<TransitionCondition::Integer> integerConditions;
-	std::vector<TransitionCondition::Float> floatConditions;
-	std::vector<TransitionCondition::Bool> boolConditions;
-	std::vector<TransitionCondition::Trigger> triggerConditions;
+	std::vector<AnimTransition::Integer> integerConditions;
+	std::vector<AnimTransition::Float> floatConditions;
+	std::vector<AnimTransition::Bool> boolConditions;
+	std::vector<AnimTransition::Trigger> triggerConditions;
 
-	TransitionCondition::ComparisonMode comparisonMode;
+	AnimTransition::ComparisonMode comparisonMode;
 
 public:
-	AnimEdge() :start{}, end{}, comparisonMode(TransitionCondition::ComparisonMode::AND) {}
+	AnimEdge() :start{}, end{}, comparisonMode(AnimTransition::ComparisonMode::AND) {}
 
 	/**
 	 * @brief 动画过渡初始化
@@ -171,25 +170,25 @@ public:
 	 * @param[in] end	            到达节点
 	 * @param[in] mode              过渡比较模式（AND需要满足所有条件，OR只需满足任意条件）
 	 **/
-	void Init(Animation& start, Animation& end, TransitionCondition::ComparisonMode mode = TransitionCondition::AND)
+	void Init(Animation& start, Animation& end, AnimTransition::ComparisonMode mode = AnimTransition::AND)
 	{
 		this->start = &start; this->end = &end; comparisonMode = mode; this->start->nexts.push_back(this);
 	}
 
 	//添加过渡条件
-	void AddCondition(const TransitionCondition::Integer& condition) 
+	void AddCondition(const AnimTransition::Integer& condition) 
 	{
 		integerConditions.push_back(condition);
     }
-	void AddCondition(const TransitionCondition::Float& condition)
+	void AddCondition(const AnimTransition::Float& condition)
 	{
 	    floatConditions.push_back(condition);
 	}
-	void AddCondition(const TransitionCondition::Bool& condition)
+	void AddCondition(const AnimTransition::Bool& condition)
 	{
 		boolConditions.push_back(condition);
 	}
-	void AddCondition(const TransitionCondition::Trigger& condition)
+	void AddCondition(const AnimTransition::Trigger& condition)
 	{
 		triggerConditions.push_back(condition);
 	}
@@ -250,7 +249,7 @@ public:
 	void AddParamater(std::string paramName, ParamType type);
 
 	//设置int参数
-	void SetInteger(std::string paramName, int value);
+	void SetInteger(std::string paramName, int32 value);
 
 	//设置float参数
 	void SetFloat(std::string paramName, float value);

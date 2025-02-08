@@ -7,8 +7,6 @@
 
 #pragma once
 #include "ActorComponent.h"
-#include <unordered_map>
-#include <functional>
 #include <easyx.h>
 
 
@@ -50,7 +48,7 @@ struct FKeyBindInfo
 {
 	std::function<void()> func;
 	EInputType type = EInputType::Pressed;
-	int pressFlag = 0;
+	int32 pressFlag = 0;
 	float lastTime = 0;
 };
 
@@ -61,18 +59,35 @@ struct FKeyBindInfo
 class InputComponent final: public ActorComponent
 {
 public:
-	//设置按键映射
+	/**
+	 * @brief 设置按键映射
+	 * @param[in] mappingName			  事件名
+	 * @param[in] value                   键码
+	 **/
 	void SetMapping(std::string mappingName, EKeyCode value);
 
-	//绑定按键事件映射（瞬时触发，触发频率受帧率影响）
+	/**
+	 * @brief 绑定按键事件映射
+	 * @param[in] actionName		      事件名
+	 * @param[in] type                    按键输入类型
+	 * @param[in] obj	                  类函数所属对象指针
+	 * @param[in] function                类函数指针
+	 **/
 	template<typename T>
-	void BindAction(std::string actionName,EInputType type, T* obj, void(T::*func)())
+	void BindAction(std::string actionName, EInputType type, T* obj, void(T::* func)())
 	{
-	    if(mappings.find(actionName)!= mappings.end())
-		actionCallbacks.insert({ actionName, { std::bind(func, obj),type,false } });
+		if (mappings.find(actionName) != mappings.end())
+		{
+			actionCallbacks.insert({ actionName, { std::bind(func, obj),type,false } });
+		}
 	}
 
-	//绑定按键事件映射（瞬时触发，触发频率受帧率影响）
+	/**
+     * @brief 绑定按键事件映射
+     * @param[in] actionName		      事件名
+     * @param[in] type                    按键输入类型
+     * @param[in] function                函数包装
+     **/
 	void BindAction(std::string actionName, EInputType type, std::function<void()>func);
 
 
@@ -85,10 +100,10 @@ public:
 	//激活输入输出
 	static void EnableInput(bool enable);
 
-	//action
+	//Action(行为事件，瞬时触发，触发频率受帧率影响)
 	void PeekInfo();
 	
-	//axis
+	//Axis(轴事件，连续触发，触发频率恒定)
 	void PeekInfo_();
 
 	void MouseTick();

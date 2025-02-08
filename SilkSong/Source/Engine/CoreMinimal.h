@@ -1,21 +1,25 @@
  /**
-  * @file	CoreMinimal.h
-  * @brief	核心代码文件，包含引擎基本头文件以及全局函数
-  * @author	Arty
+  * @file	 CoreMinimal.h
+  * @brief	 核心代码文件，包含引擎基本头文件以及全局函数
+  * @author	 Arty
   **/
 
 
 #pragma once
-
-
 #include"Core/Macro.h"
+#include"Core/Math.h"
+#include"Core/Vector2D.h"
+#include"Core/Box2D.h"
 #include"Core/Struct.h"
 #include"Core/Object.h"
-#include"Core/Interfaces.h"
+#include"Core/Delegate.h"
 #include<windows.h>
 #include<set>
 #include<unordered_set>
+#include<unordered_map>
 #include<vector>
+#include<stack>
+#include<queue>
 #include<ctime>
 #include<cmath>
 
@@ -26,7 +30,7 @@
 
 //类型转换
 template<typename T, typename F>
-inline T * Cast(F * pBase)
+FORCEINLINE T * Cast(F * pBase)
 {
 	if(pBase)return dynamic_cast<T*>(pBase);
 

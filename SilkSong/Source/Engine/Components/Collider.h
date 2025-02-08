@@ -7,9 +7,7 @@
 
 #pragma once
 #include"SceneComponent.h"
-#include"Tools/Delegate.h"
 #include"Tools/CollisionManager.h"
-#include"Core/World.h"
 
 
 /* 碰撞体形状 */
@@ -22,6 +20,7 @@ enum class CollisionMode:uint8 { None, Trigger, Collision };
 class RigidBody;
 class Controller;
 class Collider;
+class World;
 
 
 /* 碰撞结果 */
@@ -60,10 +59,10 @@ class Collider :public SceneComponent
 
 	friend Controller;
 	friend RigidBody;
-	friend void World::ProcessColliders();
+	friend World;
 
 public:
-	Collider():type(CollisionType::Default) { mainWorld.GameColliders.insert(this); }
+	Collider();
 	virtual ~Collider();
 
 	virtual void BeginPlay() override;
@@ -114,7 +113,7 @@ public:
 protected:
 	FPhysicsMaterial material;
 
-	ColliderShape shape = ColliderShape::Circle;
+	ColliderShape shape{};
 
 	//是否在鼠标所属世界坐标位置
 	virtual bool IsMouseOver() = 0;
@@ -122,12 +121,12 @@ protected:
 	FRect rect;//矩形框
 
 private:
-	int layer = 0;
-	CollisionType type;
+	int32 layer = 0;
+	CollisionType type = CollisionType::Default;
 	CollisionMode mode = CollisionMode::Trigger;
 	std::string collisionTag;
 
-	FPair point{ -1, -1 }, point_1{ -1, -1 };
+	FIntVector2 point{ -1, -1 }, point_1{ -1, -1 };
 	std::unordered_set<Collider*>collisions;
 	std::vector<Actor*>aims;
 	std::vector<Collider*>collisions_to_erase;
@@ -175,7 +174,7 @@ public:
 	virtual void DrawDebugLine()override;
 	virtual bool IsMouseOver()override;
 	float GetRadius()const { return radius; }
-	void SetRadius(float r) { radius = r; radius_ini = r / sqrtf(GetWorldScale().x * GetWorldScale().y); }
+	void SetRadius(float r);
 private:
 	float radius = 0;
 	float radius_ini = 0;
@@ -193,11 +192,8 @@ public:
 	virtual void DrawDebugLine()override;
 	virtual bool IsMouseOver()override;
 	FVector2D GetSize()const { return size; }
-	void SetSize(FVector2D size) { this->size = size; size_ini = size / GetWorldScale(); }
-
-	//获取重叠矩形宽高，需传入已经确定发生碰撞的两个碰撞器
-	static FVector2D GetOverlapRect(const FRect& r1, const FRect& r2);
+	void SetSize(FVector2D size);
 private:
-	FVector2D size = FVector2D(0, 0);
-	FVector2D size_ini = FVector2D(0, 0);
+	FVector2D size{};
+	FVector2D size_ini{};
 };

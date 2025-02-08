@@ -2,7 +2,6 @@
 #include "Components/Collider.h"
 #include "Components/SpriteRenderer.h"
 #include "Components/RigidBody.h"
-#include "Tools/Math.h"
 #include "Player.h"
 #include "Effect.h"
 #include "GameplayStatics.h"
@@ -27,7 +26,7 @@ Geo::Geo()
 
 	rigid = ConstructComponent<RigidBody>();
 	/*rigid->SetAngularDrag(0.75f);
-	rigid->SetAngularVelocity(Math::RandReal(-400,400));*/
+	rigid->SetAngularVelocity(FMath::RandReal(-400,400));*/
 
 	box->OnComponentHit.AddDynamic(this,&Geo::OnHit);
 	box->OnComponentBeginOverlap.AddDynamic(this, &Geo::OnOverlap);
@@ -41,8 +40,8 @@ void Geo::Init(std::string name, int price)
 	float half = price == 1 ? 15 : 20;
 	box->SetSize({half,half});
 	render->LoadSprite(name);
-	rigid->AddImpulse(FVector2D(Math::RandInt(-250,250),Math::RandInt(-300,-450)));
-	rotateDelta = Math::RandReal(0.002, 0.008) * (rigid->GetVelocity().x > 0 ? 1:-1);
+	rigid->AddImpulse(FVector2D(FMath::RandInt(-250,250),FMath::RandInt(-300,-450)));
+	rotateDelta = FMath::RandReal(0.002, 0.008) * (rigid->GetVelocity().x > 0 ? 1:-1);
 }
 
 void Geo::Update(float deltaTime)
@@ -68,8 +67,8 @@ void Geo::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherActor)
 		Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
 		if (!effect)return;
 		effect->Init("effect_geo", -0.05f);
-		effect->SetLocalScale(FVector2D(1, 1) * Math::RandReal(0.9f + std::sqrtf(float(price)) * 0.1f, 1.15f + std::sqrtf(float(price)) * 0.1f));
-		effect->SetLocalRotation(Math::RandReal(-20, 20));
+		effect->SetLocalScale(FVector2D(1, 1) * FMath::RandReal(0.9f + std::sqrtf(float(price)) * 0.1f, 1.15f + std::sqrtf(float(price)) * 0.1f));
+		effect->SetLocalRotation(FMath::RandReal(-20, 20));
 		GameplayStatics::PlaySound2D("sound_geo");
 	}
 }

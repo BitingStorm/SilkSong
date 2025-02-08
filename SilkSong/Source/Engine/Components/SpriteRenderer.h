@@ -31,7 +31,7 @@ public:
 	 * @param[in] color	            频闪发光的滤镜颜色
 	 * @param[in] level             发光滤镜施加程度（最大为100，最小为0）
 	 **/
-	void Blink(float duration = 0.2f, COLORREF color = BLACK, int level = 60);
+	void Blink(float duration = 0.2f, COLORREF color = BLACK, int32 level = 60);
 
 	//保存图像资源到本地
 	void SaveImage();
@@ -41,6 +41,6 @@ private:
 	bool blinkFlag = false;
 	float transistionLevel = 0;
 	float transistionCoefficient = 0;
-	FilterInfo blinkFilter;
-	class Timer* recoverTimerHandle{};
+	ArtyEngine::FilterInfo blinkFilter;
+	Timer* recoverTimerHandle{};
 };

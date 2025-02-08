@@ -4,7 +4,6 @@
 #include "GameplayStatics.h"
 #include "Effect.h"
 #include "Dart.h"
-#include "Tools/Math.h"
 
 
 
@@ -39,14 +38,14 @@ void AttackBox::Init(ECharacterDirection direction)
 
 void AttackBox::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherActor)
 {
-	FVector2D normal = (-GetOwner()->GetWorldPosition() + otherActor->GetWorldPosition()).Normalize();
+	FVector2D normal = (-GetOwner()->GetWorldPosition() + otherActor->GetWorldPosition()).GetSafeNormal();
 	if (Enemy* enemy = Cast<Enemy>(otherActor))
 	{
 		if (!GetOwner())return;
 		enemy->TakeDamage(normal);
 		this->enemy = enemy;
 		if (direction == ECharacterDirection::LookDown)Cast<Player>(GetOwner())->Bounce();
-		if (Math::RandInt(0, 10) > 5)GameplayStatics::PlaySound2D("sound_damage_0");
+		if (FMath::RandInt(0, 10) > 5)GameplayStatics::PlaySound2D("sound_damage_0");
 		else GameplayStatics::PlaySound2D("sound_damage_1");
 	}
 	else if (Cast<Dart>(otherActor))

@@ -15,13 +15,13 @@ int Object::tag = 0;
 extern World mainWorld{};
 
 
-bool LayerSort::operator()(const LayerInterface* a, const LayerInterface* b) const
+bool ArtyEngine::LayerSort::operator()(const LayerInterface* a, const LayerInterface* b) const
 {
 	if (a->GetLayer() == b->GetLayer()) return a < b;
 	else return a->GetLayer() < b->GetLayer();
 }
 
-bool ColliderSort::operator()(const Collider* a, const Collider* b)const
+bool ArtyEngine::ColliderSort::operator()(const Collider* a, const Collider* b)const
 {
 	if (a->GetLayer() == b->GetLayer()) return a < b;
 	else return a->GetLayer() < b->GetLayer();

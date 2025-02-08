@@ -6,8 +6,8 @@
 
 
 #pragma once
-#include"Components/InputComponent.h"
 #include"Actor.h"
+#include"Components/InputComponent.h"
 #include"Components/Collider.h"
 
 
@@ -51,7 +51,7 @@ public:
 	 * @brief 获取鼠标所处位置物体的信息（该物体必须拥有碰撞体）
 	 * @return  HitResult 世界坐标系下鼠标所处位置最顶层的物体信息
 	 **/
-	HitResult GetHitResultUnderCursor();
+	HitResult GetHitResultUnderCursor() const;
 
 	//激活输入输出
 	void EnableInput(bool enable);

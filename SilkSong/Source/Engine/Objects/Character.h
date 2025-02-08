@@ -58,6 +58,6 @@ private:
 	ECharacterMovementState movementState;
 	float maxWalkingSpeed;//最大移动速度
 	bool bAddMoving;//是否正在输入移动命令
-	int MoveFlag;//输入标记
+	int32 MoveFlag;//输入标记
 	float lastX;
 };

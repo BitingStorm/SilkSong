@@ -3,7 +3,6 @@
 #include "Components/SpriteRenderer.h"
 #include "Components/RigidBody.h"
 #include "Enemy.h"
-#include "Tools/Math.h"
 #include "GameplayStatics.h"
 
 
@@ -50,7 +49,7 @@ void Dart::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVec
 	{
 		if (Enemy* enemy = Cast<Enemy>(otherActor)) 
 		{
-			enemy->TakeDamage((otherActor->GetWorldPosition() - GetWorldPosition()).Normalize(), false);
+			enemy->TakeDamage((otherActor->GetWorldPosition() - GetWorldPosition()).GetSafeNormal(), false);
 			GameplayStatics::PlaySound2D("sound_damage_2");
 			Destroy();
 		}

@@ -5,7 +5,6 @@
 #include "Geo.h"
 #include "GameplayStatics.h"
 #include "Components/AudioPlayer.h"
-#include "Tools/Math.h"
 
 
 
@@ -27,11 +26,11 @@ Bug::Bug()
 	turn_to_walk.Init(turn, walk);
 	appear_to_walk.Init(appear, walk);
 	walk_to_bury.Init(walk, bury);
-	walk_to_bury.AddCondition(TransitionCondition::Bool{ "burying",true });
+	walk_to_bury.AddCondition(AnimTransition::Bool{ "burying",true });
 	bury_to_appear.Init(bury, appear);
-	bury_to_appear.AddCondition(TransitionCondition::Bool{ "burying",false });
+	bury_to_appear.AddCondition(AnimTransition::Bool{ "burying",false });
 	walk_to_die.Init(walk, die);
-	walk_to_die.AddCondition(TransitionCondition::Bool{ "dead",true });
+	walk_to_die.AddCondition(AnimTransition::Bool{ "dead",true });
 
 
 	ani->Insert("walk", walk);
@@ -58,7 +57,7 @@ Bug::Bug()
 			{
 				circle->SetCollisonMode(CollisionMode::Collision);
 				rigid->SetMoveable(true);
-				if(Math::RandInt(0,10)>5)audio->Play("sound_bug_appear");
+				if(FMath::RandInt(0,10)>5)audio->Play("sound_bug_appear");
 				else audio->Play("sound_bug_appear_");
 				bIsBuried = false;
 			}

@@ -24,7 +24,7 @@ MenuController::MenuController()
 	whiteRadiant->SetLifeCycle(4.f);
 	whiteRadiant->SetFadingOutTime(1.f);
 	whiteRadiant->SetFadingInTime(1.f);
-	whiteRadiant->SetGravity(0.1);
+	whiteRadiant->SetGravity(0.1f);
 	whiteRadiant->SetSizeRange(0.25, 0.5);
 
 	audio = ConstructComponent<AudioPlayer>();

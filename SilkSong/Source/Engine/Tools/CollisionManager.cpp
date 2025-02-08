@@ -1,7 +1,8 @@
 #include "CollisionManager.h"
 
 
-
+//************************************************
+//*********       用户需编辑部分          **********
 
 void CollisionManager::Initialize()
 {
@@ -19,7 +20,8 @@ void CollisionManager::Initialize()
 	AddMapping(CollisionType::Dart, CollisionType::HurtBox);
 }
 
-
+//*********                             **********
+//************************************************
 
 
 

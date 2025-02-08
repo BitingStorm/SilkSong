@@ -6,7 +6,6 @@
 #include "Components/AudioPlayer.h"
 #include "Components/ParticleSystem.h"
 #include "GameplayStatics.h"
-#include "Tools/Math.h"
 
 #include "PlayerAnimator.h"
 #include "Effect.h"
@@ -55,7 +54,7 @@ Player::Player()
 	camera = GetComponentByClass<Camera>();
 	camera->SetDistanceThreshold(100);
 	camera->SetSmoothness(50);
-	camera->SetRectFrame({-375,725,1125,-1000});
+	camera->SetRectFrame(FRect({ -375.f,725.f }, { 1125.f,-1000.f }));
 
 	audio = ConstructComponent<AudioPlayer>();
 	audio->AttachTo(root);
@@ -153,7 +152,7 @@ Player::Player()
 void Player::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	BlinkTimer.Bind(0.2f, [this]()
 		{
 			if (blinkTimes > 0)
@@ -335,7 +334,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 			if (bRushing)ani->PlayMontage("rushjump");
 			else ani->PlayMontage("jump");
 			lastJumpTime = GameplayStatics::GetTimeSeconds();
-			int32 jumpNum = Math::RandInt(0, 10);
+			int32 jumpNum = FMath::RandInt(0, 10);
 			if (jumpNum < 3)audio->Play("voice_jump_0");
 			else if (jumpNum < 5)audio->Play("voice_jump_1");
 			else if (jumpNum < 7)audio->Play("voice_jump_2");
@@ -348,7 +347,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 			rigid->AddImpulse({ GetWorldScale().x * 500,-500 });
 			ani->PlayMontage("jump");
 			lastJumpTime = GameplayStatics::GetTimeSeconds();
-			int32 jumpNum = Math::RandInt(0, 12);
+			int32 jumpNum = FMath::RandInt(0, 12);
 			if (jumpNum < 2)audio->Play("voice_jump_0");
 			else if (jumpNum < 4)audio->Play("voice_jump_1");
 			else if (jumpNum < 6)audio->Play("voice_jump_2");
@@ -397,7 +396,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		{ 
 			ani->PlayMontage("evade"); bEvading = true; lastEvadeTime = GameplayStatics::GetTimeSeconds(); 
 			audio->Play("sound_evade");
-			int32 jumpNum = Math::RandInt(0, 8);
+			int32 jumpNum = FMath::RandInt(0, 8);
 			if (jumpNum < 3)audio->Play("sound_evade_0");
 			else if (jumpNum < 5)audio->Play("sound_evade_1");
 		}
@@ -433,7 +432,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		if (dartNum <= 0 || GameplayStatics::GetTimeSeconds() - lastThrowTime < 0.5f)return;
 		lastThrowTime = GameplayStatics::GetTimeSeconds();
 		ani->PlayMontage("throw"); audio->Play("sound_throw");
-		if (Math::RandInt(0, 10) > 5)audio->Play("voice_throw");
+		if (FMath::RandInt(0, 10) > 5)audio->Play("voice_throw");
 		});
 	inputComponent->BindAction("Leave", EInputType::Pressed, [this]() {
 		if (bSitting || bWall) return;
@@ -451,14 +450,14 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		GameplayStatics::CreateObject<CloseSkillBox>(GetWorldPosition());
 		lastFloatTime = GameplayStatics::GetTimeSeconds(); SetFloating(true);
 		audio->Play("sound_closeskill");
-		if (Math::RandInt(0, 10) > 5)audio->Play("voice_closeskill_0");
+		if (FMath::RandInt(0, 10) > 5)audio->Play("voice_closeskill_0");
 		else audio->Play("voice_closeskill_1");
 		});
 	inputComponent->BindAction("RemoteSkill", EInputType::Pressed, [this]() {
 		if (bSitting || bWall) return;
 		if (silk < 3 || !bGround)return; AddSilk(-3); EnableInput(false);
 		ani->PlayMontage("remoteskill");
-		if (Math::RandInt(0, 10) > 5)audio->Play("voice_remoteskill_0");
+		if (FMath::RandInt(0, 10) > 5)audio->Play("voice_remoteskill_0");
 		else audio->Play("voice_remoteskill_1");
 		});
 }
@@ -548,7 +547,7 @@ void Player::TakeDamage(FVector2D normal)
 	effect->Init("effect_hurt_");
 	effect->AttachTo(this);
 
-	int32 stunNum = Math::RandInt(0, 10);
+	int32 stunNum = FMath::RandInt(0, 10);
 	audio->Play("sound_hurt");
 	if (stunNum < 3)audio->Play("sound_stun");
 	else if (stunNum < 6)audio->Play("sound_stun_");
@@ -607,7 +606,7 @@ void Player::AddSilk(int delta)
 void Player::AddDart(int32 delta)
 {
 	dartNum += delta;
-	dartNum = Math::Clamp(dartNum, 0, 999);
+	dartNum = FMath::Clamp(dartNum, 0, 999);
 }
 
 void Player::SetFloating(bool enable)
@@ -741,5 +740,5 @@ void Player::SpawnWetWalkEffect()
 	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(0, 60));
 	if (!effect)return;
 	effect->Init("effect_wetwalk");
-	effect->SetLocalScale(GetWorldScale() * Math::RandReal(0.8f, 1.1f));
+	effect->SetLocalScale(GetWorldScale() * FMath::RandReal(0.8f, 1.1f));
 }

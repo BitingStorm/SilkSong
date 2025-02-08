@@ -8,7 +8,7 @@
 
 #pragma once
 #include"CoreMinimal.h"
-
+#include"Tools/Timer.h"
 
 class ActorComponent;
 class SceneComponent;
@@ -17,7 +17,7 @@ class SceneComponent;
 /*----------------------------------
 			 场景对象基类
   ----------------------------------*/
-class Actor :public Object, public ITimerHandler
+class Actor :public Object, public TimerHandler
 {
 	friend class RigidBody;
 

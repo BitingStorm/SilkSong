@@ -6,7 +6,6 @@
 
 #pragma once
 #include <unordered_map>
-#include <string>
 #include <vector>
 #include "Core/Struct.h"
 
@@ -15,12 +14,14 @@
 class IMAGE;
 
 /* 动画资源类 */
-struct AnimationResource
+namespace ArtyEngine
 {
-	IMAGE** images;
-	int num;
-};
-
+	struct FAnimationResource
+	{
+		IMAGE** images;
+		int32 num;
+	};
+}
 
 /*----------------------------------
 			 资源管理器
@@ -31,11 +32,11 @@ public:
 	void Initialize();
 
 	IMAGE* Fetch(std::string name);
-	AnimationResource FetchAnimation(std::string name);
+	ArtyEngine::FAnimationResource FetchAnimation(std::string name);
 
 private:
 	std::unordered_map<std::string, IMAGE*>imagePool;
-	std::unordered_map<std::string, AnimationResource>animationPool;
+	std::unordered_map<std::string, ArtyEngine::FAnimationResource>animationPool;
 	std::unordered_map<std::string, std::string>audioPool;
 
 	/**
@@ -63,7 +64,7 @@ private:
 	 * @param[in] path              资源路径
 	 * @param[in] arr			    传入一个Pair数组，用于指定每一帧动画的宽度与高度
 	 **/
-	void Load(std::string name, std::string path, const std::vector<FPair>& arr);
+	void Load(std::string name, std::string path, const std::vector<FIntVector2>& arr);
 
 	/**
 	 * @brief 加载SpriteSheet动画图像资源

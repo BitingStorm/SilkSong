@@ -8,8 +8,7 @@
 #pragma once
 #include"CoreMinimal.h"
 #include"Tools/VisualInterface.h"
-#include"Tools/Delegate.h"
-#include<unordered_map>
+
 
 
 /* 文字对齐格式 */
@@ -21,23 +20,26 @@ enum class CharactersPattern :uint8
 };
 
 /* 文字 */
-class Characters
+namespace ArtyEngine
 {
-	int row = 1;
-	int column = 0;
-	std::string texts = "";
-	int size = 3;
-	LPCTSTR type = "楷体";
+	class Characters
+	{
+		int32 row = 1;
+		int32 column = 0;
+		std::string texts = "";
+		int size = 3;
+		LPCTSTR type = "楷体";
 
-	//颜色映射表
-	static std::unordered_map<std::string, COLORREF> TextColorMap;
-public:
-	int GetWidth() const { return column * size * 3; }
-	int GetHeight() const { return row * size * 6; }
-	
-	void SetCharacters(std::string text, int size = 3, LPCTSTR type = "楷体");
-	void PrintCharacters(FVector2D pos, CharactersPattern pattern = CharactersPattern::Middle);
-};
+		//颜色映射表
+		static std::unordered_map<std::string, COLORREF> TextColorMap;
+	public:
+		int GetWidth() const { return column * size * 3; }
+		int GetHeight() const { return row * size * 6; }
+
+		void SetCharacters(std::string text, int size = 3, LPCTSTR type = "楷体");
+		void PrintCharacters(FVector2D pos, CharactersPattern pattern = CharactersPattern::Middle);
+	};
+}
 
 
 
@@ -71,7 +73,7 @@ enum class UIPattern :uint8
 class Widget :public Object, public LayerInterface
 {
 	friend class Panel;
-	FPair point{ -1, -1 }, point_1{ -1, -1 };
+	FIntVector2 point{ -1, -1 }, point_1{ -1, -1 };
 
 	void BeginPlay()override {}
 	void EndPlay()override {}
@@ -87,7 +89,7 @@ protected:
 	LayoutPattern layoutPattern;
 	UIPattern uiPattern;
 
-	Characters InfoText;
+	ArtyEngine::Characters InfoText;
 	bool bInfoBox = false;
 	bool IsUnderCursor() const;
 
@@ -142,7 +144,7 @@ protected:
 	std::vector<class UserInterface*>members_ui;
 
 	FVector2D unitSize;
-	virtual void AdjustMemberPosition(Widget* member,int32 index) = 0;
+	virtual void AdjustMemberPosition(Widget* member, int32 index) = 0;
 public:
 	virtual ~Panel();
 
@@ -212,7 +214,7 @@ public:
 class Text :public Widget
 {
 protected:
-	Characters texts;
+	ArtyEngine::Characters texts;
 	CharactersPattern textPattern;
 	std::string* bindedText = nullptr;
 public:
@@ -241,7 +243,7 @@ class Image :public Widget, public ImageInterface
 	void DealImage()override;
 
 public:
-	virtual ~Image() { if (ani)delete ani; }
+	virtual ~Image();
 	virtual void Update()override;
 	virtual void Render()override;
 
@@ -315,9 +317,9 @@ class Bar final :public Widget
 	IMAGE* barFront;
 	IMAGE* barBack;
 	IMAGE* barButton;
-	FPair sizeFront = FPair(0, 0);
-	FPair sizeBack = FPair(0, 0);
-	FPair sizeButton = FPair(0, 0);
+	FIntVector2 sizeFront = FIntVector2(0, 0);
+	FIntVector2 sizeBack = FIntVector2(0, 0);
+	FIntVector2 sizeButton = FIntVector2(0, 0);
 	BarDirection direction;
 public:
 	virtual void Update()override;
@@ -328,9 +330,9 @@ public:
 	void LoadBarButtonPicture(std::string path);
 
 	void SetDirection(BarDirection dir) { direction = dir; }
-	void SetFrontSize(FPair size) { sizeFront = size; }
-	void SetBackSize(FPair size) { sizeBack = size; }
-	void SetButtonSize(FPair size) { sizeButton = size; }
+	void SetFrontSize(FIntVector2 size) { sizeFront = size; }
+	void SetBackSize(FIntVector2 size) { sizeBack = size; }
+	void SetButtonSize(FIntVector2 size) { sizeButton = size; }
 
 	void SetPercentage(float per);
 	float GetPercentage() const { return percentage; }
@@ -345,8 +347,8 @@ class Sector final :public Widget
 	float percentage = 0;
 	IMAGE* sectorFront;
 	IMAGE* sectorBack;
-	FPair sizeFront = FPair(0, 0);
-	FPair sizeBack = FPair(0, 0);
+	FIntVector2 sizeFront = FIntVector2(0, 0);
+	FIntVector2 sizeBack = FIntVector2(0, 0);
 	float startDegree = 90;
 public:
 	virtual void Update()override;
@@ -355,8 +357,8 @@ public:
 	void LoadSectorFrontPicture(std::string path);
 	void LoadSectorBackPicture(std::string path);
 
-	void SetFrontSize(FPair size) { sizeFront = size; }
-	void SetBackSize(FPair size) { sizeBack = size; }
+	void SetFrontSize(FIntVector2 size) { sizeFront = size; }
+	void SetBackSize(FIntVector2 size) { sizeBack = size; }
 
 	void SetPercentage(float per);
 	float GetPercentage() const { return percentage; }

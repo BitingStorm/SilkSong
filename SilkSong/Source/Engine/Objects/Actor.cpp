@@ -3,7 +3,7 @@
 #include "Components/SceneComponent.h"
 #include "Components/Camera.h"
 #include <easyx.h>
-#include <stack>
+
 
 
 Actor::Actor()

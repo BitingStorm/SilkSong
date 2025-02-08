@@ -11,19 +11,27 @@
 
 
 /*----------------------------------
-			 基础对象类
+			  基础对象类
   ----------------------------------*/
 class Object 
 {
 	static int tag;
 
 	std::string name;
+
 public:
-	Object() { tag++; name = typeid(*this).name() + std::string(" ") + std::to_string(tag); }
+	Object() { tag++; InitName(typeid(*this).name()); }
 	virtual ~Object() { tag--; }
+
+	//初始化标签名
+	void InitName(const std::string& name) 
+	{ 
+		this->name = name + std::string(" ") + std::to_string(tag);
+	}
 
 	//获取标签名
 	std::string GetName()const { return name; }
+
 	//设置标签名
 	void SetName(const std::string& name) { this->name = name; }
 
@@ -36,7 +44,7 @@ public:
 
 
 /*----------------------------------
-			 游戏关卡
+			  游戏关卡
   ----------------------------------*/
 class Level :public Object
 {

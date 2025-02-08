@@ -17,6 +17,7 @@ class LevelManager;
 class ResourceManager;
 class CollisionManager;
 class GameplayStatics;
+class Actor;
 class Timer;
 class LayerInterface;
 class ImageInterface;
@@ -34,21 +35,23 @@ class CircleCollider;
 class BoxCollider;
 class Controller;
 class AudioPlayer;
-class ITimerHandler;
+class TimerHandler;
 
 
-/* 渲染图层排序规则 */
-struct LayerSort
+namespace ArtyEngine
 {
-	bool operator()(const LayerInterface* a, const LayerInterface* b) const;
-};
+	/* 渲染图层排序规则 */
+	struct LayerSort
+	{
+		bool operator()(const LayerInterface* a, const LayerInterface* b) const;
+	};
 
-/* 碰撞图层排序规则 */
-struct ColliderSort
-{
-	bool operator()(const Collider* a, const Collider* b) const;
-};
-
+	/* 碰撞图层排序规则 */
+	struct ColliderSort
+	{
+		bool operator()(const Collider* a, const Collider* b) const;
+	};
+}
 
 /*----------------------------------
 			   游戏世界
@@ -78,7 +81,7 @@ class World final
 	friend Sector;
 	friend LevelManager;
 	friend AudioPlayer;
-	friend ITimerHandler;
+	friend TimerHandler;
 
 	std::mutex updateMutex;//互斥锁
 
@@ -113,11 +116,11 @@ class World final
 
 	/**  渲染、碰撞计算、UI鼠标检测容器 **/
 
-	std::set<LayerInterface*, LayerSort>GameRenderers;
+	std::set<LayerInterface*, ArtyEngine::LayerSort>GameRenderers;
 	std::unordered_set<Collider*>GameColliders;
 	std::unordered_set<Collider*>GameColliders_to_clear;
-	std::set<Collider*, ColliderSort>ColliderZones[10][6];
-	std::set<LayerInterface*, LayerSort>UIDetectZones[6][4];
+	std::set<Collider*, ArtyEngine::ColliderSort>ColliderZones[10][6];
+	std::set<LayerInterface*, ArtyEngine::LayerSort>UIDetectZones[6][4];
 
 	/** 游戏单例对象 **/
 
@@ -127,6 +130,7 @@ class World final
 
 
 	/** 核心逻辑遍历 **/
+
 	//逻辑处理
 	void Update(float deltaTime);
 
@@ -144,7 +148,6 @@ class World final
 
 
 
-	
 	//Debug模式 
 	void Debug();
 

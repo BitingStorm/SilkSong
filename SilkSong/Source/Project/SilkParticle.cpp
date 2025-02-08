@@ -1,6 +1,6 @@
 #include "SilkParticle.h"
 #include "Components/ParticleSystem.h"
-#include "Tools/Math.h"
+
 
 
 SilkParticle::SilkParticle()

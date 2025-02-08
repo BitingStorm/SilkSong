@@ -6,7 +6,6 @@
 #include "PlatForm.h"
 #include "GameplayStatics.h"
 #include "Effect.h"
-#include "Tools/Math.h"
 #include "Components/AudioPlayer.h"
 #include "Components/ParticleSystem.h"
 #include "SilkParticle.h"
@@ -87,14 +86,14 @@ void Enemy::TakeDamage(FVector2D normal, bool gain)
 	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
 	if (effect)
 	{
-		effect->SetLocalRotation(Math::RandInt(-15, 15) + FVector2D::VectorToDegree(normal)); effect->Init("effect_attack", -0.03f);
-		effect->SetLocalScale(FVector2D{ delta_x < 0 ? 1.f : -1.f ,1.f }*Math::RandReal(1, 1.5));
+		effect->SetLocalRotation(FMath::RandInt(-15, 15) + FVector2D::VectorToDegree(normal)); effect->Init("effect_attack", -0.03f);
+		effect->SetLocalScale(FVector2D{ delta_x < 0 ? 1.f : -1.f ,1.f }*FMath::RandReal(1, 1.5));
 	}
 
 	if (blood <= 0 && !bIsDead)
 	{
 		Die();
-		rigid->SetAngularVelocity(100 * (delta_x > 0 ? 1.f : -1.f) * Math::RandPerc());
+		rigid->SetAngularVelocity(100 * (delta_x > 0 ? 1.f : -1.f) * FMath::RandPerc());
 		SpawnGeos();
 	}
 	else
@@ -102,8 +101,8 @@ void Enemy::TakeDamage(FVector2D normal, bool gain)
 		Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D((delta_x < 0 ? 1.f : -1.f) * 300, 0));
 		if (!effect)return;
 		effect->Init("effect_attack_", 0.02f);
-		effect->SetLocalScale(FVector2D{ delta_x < 0 ? 1.f : -1.f ,1.f }*Math::RandReal(0.9, 1.3));
-		effect->SetLocalRotation(Math::RandInt(10, -10));
+		effect->SetLocalScale(FVector2D{ delta_x < 0 ? 1.f : -1.f ,1.f }*FMath::RandReal(0.9, 1.3));
+		effect->SetLocalRotation(FMath::RandInt(10, -10));
 	}
 }
 
@@ -111,7 +110,7 @@ void Enemy::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherActor)
 {
 	if (Player* player = Cast<Player>(otherActor))
 	{
-		FVector2D normal = (-GetWorldPosition() + player->GetWorldPosition()).Normalize();
+		FVector2D normal = (-GetWorldPosition() + player->GetWorldPosition()).GetSafeNormal();
 		player->TakeDamage(normal);
 	}
 }

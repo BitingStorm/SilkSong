@@ -1,6 +1,5 @@
 #include "Controller.h"
 #include "Components/Camera.h"
-#include "Tools/Math.h"
 #include "Core/World.h"
 
 
@@ -45,11 +44,11 @@ bool Controller::IsMouseClicked() const
 	return InputComponent::IsMouseButtonPressed();
 }
 
-HitResult Controller::GetHitResultUnderCursor()
+HitResult Controller::GetHitResultUnderCursor() const
 {
 	FVector2D pos = GetCursorPosition();
-	int x = Math::Clamp(int(pos.x + 2000) / 400, 0, 9);
-	int y = Math::Clamp(int(pos.y) / 200, 0, 5);
+	int x = FMath::Clamp(int(pos.x + 2000) / 400, 0, 9);
+	int y = FMath::Clamp(int(pos.y) / 200, 0, 5);
 
 	if (!mainWorld.ColliderZones[x][y].empty())
 	{

@@ -6,13 +6,13 @@
 
 #pragma once
 #include"Widgets.h"
-
+#include"Tools/Timer.h"
 
 
 /*----------------------------------
 			    UI¿‡ 
   ----------------------------------*/
-class UserInterface : public Object, public ITimerHandler
+class UserInterface : public Object, public TimerHandler
 {
 	friend Panel;
 	friend class WidgetComponent;
@@ -27,7 +27,7 @@ protected:
 
 public:
 	UserInterface();
-	~UserInterface() { for (auto& widget : widgets)delete widget; }
+	virtual ~UserInterface() { for (auto& widget : widgets)delete widget; }
 
 	virtual void Update(float deltaTime);
 

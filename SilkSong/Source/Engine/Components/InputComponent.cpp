@@ -51,7 +51,7 @@ void InputComponent::PeekInfo()
 		else if (info.pressFlag)
 		{
 			if (info.type == EInputType::Released)info.func();
-			if (info.type == EInputType::DoubleClick && info.lastTime == 0)info.lastTime = GameplayStatics::GetTimeSeconds();
+			if (info.type == EInputType::DoubleClick && info.lastTime == 0)info.lastTime = float(GameplayStatics::GetTimeSeconds());
 			if (info.type == EInputType::DoubleClick && info.lastTime == -1)info.lastTime = 0;
 			info.pressFlag = false;
 		}

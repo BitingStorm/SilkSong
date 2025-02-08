@@ -7,10 +7,6 @@
 #pragma once
 
 
-
-constexpr int WIN_WIDTH = 1200;
-constexpr int WIN_HEIGHT = 800;
-
 typedef unsigned long long uint64;
 typedef unsigned int uint32;
 typedef unsigned short uint16;
@@ -21,8 +17,18 @@ typedef short int16;
 typedef char int8;
 
 #define DEFINE_SUPER(SuperClass) typedef SuperClass Super;
-#define To_String(x) #x;
-#define GetAValue(rgba)					(BYTE)( ((rgba)>>24) & 0xFF )
+#define TO_STRING(T) #T
+#define GET_A_VALUE(rgba)				(BYTE)( ((rgba)>>24) & 0xFF )
 #define SET_ALPHA(rgb, a)				(COLORREF)( ((rgb) & 0xFFFFFF) | ((a)<<24) )
 #define MIN(a,b) ((a)<(b)?(a):(b))
 #define MAX(a,b) ((a)>(b)?(a):(b))
+
+#ifdef  _MSC_VER
+#define FORCEINLINE __forceinline
+#else
+#define FORCEINLINE inline
+#endif
+
+
+constexpr int WIN_WIDTH = 1200;
+constexpr int WIN_HEIGHT = 800;

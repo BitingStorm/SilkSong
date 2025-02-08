@@ -122,15 +122,15 @@ void PlayerAnimator::BeginPlay()
 	Animator::BeginPlay();
 
 	idle_to_walkstart.Init(idle, walkstart);
-	idle_to_walkstart.AddCondition(TransitionCondition::Float{ "walkingSpeed",10.f,TransitionComparison::GreaterEqual });
-	idle_to_walkstart.AddCondition(TransitionCondition::Bool{ "flying", false });
+	idle_to_walkstart.AddCondition(AnimTransition::Float{ "walkingSpeed",10.f,TransitionComparison::GreaterEqual });
+	idle_to_walkstart.AddCondition(AnimTransition::Bool{ "flying", false });
 	
 	walk_to_rush.Init(walk, rush);
-	walk_to_rush.AddCondition(TransitionCondition::Float{ "walkingSpeed",500.f,TransitionComparison::GreaterEqual });
+	walk_to_rush.AddCondition(AnimTransition::Float{ "walkingSpeed",500.f,TransitionComparison::GreaterEqual });
 	rush_to_walk.Init(rush, walk);
-	rush_to_walk.AddCondition(TransitionCondition::Float{ "walkingSpeed",500.f,TransitionComparison::Less });
+	rush_to_walk.AddCondition(AnimTransition::Float{ "walkingSpeed",500.f,TransitionComparison::Less });
 	walk_to_walkend.Init(walk, walkend);
-	walk_to_walkend.AddCondition(TransitionCondition::Float{ "walkingSpeed",10.f,TransitionComparison::Less });
+	walk_to_walkend.AddCondition(AnimTransition::Float{ "walkingSpeed",10.f,TransitionComparison::Less });
 	walkstart_to_walk.Init(walkstart, walk);
 	walkend_to_idle.Init(walkend, idle);
 
@@ -140,9 +140,9 @@ void PlayerAnimator::BeginPlay()
 	attack_1_to_idle.Init(attack_1, idle);
 	attackup_to_idle.Init(attackup, idle);
 	attackdown_to_idle.Init(attackdown, idle);
-	attackdown_to_idle.AddCondition(TransitionCondition::Bool{ "validDownAttack",false });
+	attackdown_to_idle.AddCondition(AnimTransition::Bool{ "validDownAttack",false });
 	attackdown_to_attackbounce.Init(attackdown, attackbounce);
-	attackdown_to_attackbounce.AddCondition(TransitionCondition::Bool{ "validDownAttack",true });
+	attackdown_to_attackbounce.AddCondition(AnimTransition::Bool{ "validDownAttack",true });
 	attackbounce_to_idle.Init(attackbounce, idle);
 	jump_to_fall.Init(jump, fall);
 	rushjump_to_fall.Init(rushjump, fall);
@@ -156,29 +156,29 @@ void PlayerAnimator::BeginPlay()
 	remoteskill_to_idle.Init(remoteskill, idle);
 	_closeskill_to_closeskill.Init(_closeskill, closeskill);
 	closeskill_to_idle.Init(closeskill, idle);
-	closeskill_to_idle.AddCondition(TransitionCondition::Trigger{ "floatingEnd" });
+	closeskill_to_idle.AddCondition(AnimTransition::Trigger{ "floatingEnd" });
 	standup_to_idle.Init(standup, idle);
 	wall_to_idle.Init(wall, idle);
-	wall_to_idle.AddCondition(TransitionCondition::Trigger{ "leaveWall" });
+	wall_to_idle.AddCondition(AnimTransition::Trigger{ "leaveWall" });
 
 	idle_to_fall.Init(idle, fall);
-	idle_to_fall.AddCondition(TransitionCondition::Bool{ "flying",true });
-	idle_to_fall.AddCondition(TransitionCondition::Float{ "fallingSpeed",10.f,TransitionComparison::Greater });
+	idle_to_fall.AddCondition(AnimTransition::Bool{ "flying",true });
+	idle_to_fall.AddCondition(AnimTransition::Float{ "fallingSpeed",10.f,TransitionComparison::Greater });
 
 	walk_to_fall.Init(walk, fall);
-	walk_to_fall.AddCondition(TransitionCondition::Bool{ "flying",true });
+	walk_to_fall.AddCondition(AnimTransition::Bool{ "flying",true });
 
 	fall_to_hardland.Init(fall, hardland);
-	fall_to_hardland.AddCondition(TransitionCondition::Float{ "landingSpeed",1200.f,TransitionComparison::Greater });
+	fall_to_hardland.AddCondition(AnimTransition::Float{ "landingSpeed",1200.f,TransitionComparison::Greater });
 
 	fall_to_softland.Init(fall, softland);
-	fall_to_softland.AddCondition(TransitionCondition::Float{ "landingSpeed",1200.f,TransitionComparison::LessEqual });
-	fall_to_softland.AddCondition(TransitionCondition::Float{ "landingSpeed",500.f,TransitionComparison::Greater });
-	fall_to_softland.AddCondition(TransitionCondition::Float{ "walkingSpeed",100.f,TransitionComparison::Less });
+	fall_to_softland.AddCondition(AnimTransition::Float{ "landingSpeed",1200.f,TransitionComparison::LessEqual });
+	fall_to_softland.AddCondition(AnimTransition::Float{ "landingSpeed",500.f,TransitionComparison::Greater });
+	fall_to_softland.AddCondition(AnimTransition::Float{ "walkingSpeed",100.f,TransitionComparison::Less });
 
 	fall_to_idle.Init(fall, idle);
-	fall_to_idle.AddCondition(TransitionCondition::Float{ "fallingSpeed",0.f,TransitionComparison::LessEqual });
-	fall_to_idle.AddCondition(TransitionCondition::Bool{ "flying",false });
+	fall_to_idle.AddCondition(AnimTransition::Float{ "fallingSpeed",0.f,TransitionComparison::LessEqual });
+	fall_to_idle.AddCondition(AnimTransition::Bool{ "flying",false });
 
 	leave_to_fall.Init(leave, fall);
 	defend_to_idle.Init(defend, idle);

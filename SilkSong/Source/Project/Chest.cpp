@@ -6,9 +6,7 @@
 #include "Needle.h"
 #include "Geo.h"
 #include "GameplayStatics.h"
-#include "Tools/Math.h"
 #include "RockParticle.h"
-#include "Tools/Math.h"
 
 
 
@@ -40,14 +38,14 @@ void Chest::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherActor)
 
 void Chest::TakeDamage()
 {
-	int num = Math::RandInt(5, 8);
+	int num = FMath::RandInt(5, 8);
 	this->num -= num;
 
 	for (int i = 0; i < num; i++)
 	{
 		Geo* geo = GameplayStatics::CreateObject<Geo>(GetWorldPosition());
-		if (Math::RandInt(0, 10) > 2)geo->Init("1geo",1);
-		else if (Math::RandInt(0, 10) > 2)geo->Init("5geo",5);
+		if (FMath::RandInt(0, 10) > 2)geo->Init("1geo",1);
+		else if (FMath::RandInt(0, 10) > 2)geo->Init("5geo",5);
 		else geo->Init("25geo",25);
 	}
 	GameplayStatics::PlayCameraShake(5);

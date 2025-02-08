@@ -12,7 +12,7 @@ MenuUI::MenuUI()
 	Title->SetLayoutPattern(LayoutPattern::Center);
 	Title->SetRelativePosition(FVector2D(0, -175));
 	Title->SetSize(FVector2D(500, 275));
-	Title->LoadSprite("menu_title_");
+	Title->LoadSprite("menu_title");
 	Title->SetLayer(10);
 
 	Logo = AddWidget<Image>();

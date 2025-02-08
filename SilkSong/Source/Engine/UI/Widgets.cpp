@@ -1,14 +1,12 @@
 #include "UserInterface.h"
 #include "Tools/ResourceManager.h"
 #include "GameplayStatics.h"
-#include "Components/InputComponent.h"
 #include "Objects/Controller.h"
-#include "Tools/Math.h"
 #include "Components/Animator.h"
 
 
 
-std::unordered_map<std::string, COLORREF>Characters::TextColorMap =
+std::unordered_map<std::string, COLORREF>ArtyEngine::Characters::TextColorMap =
 {
 	{"$0",WHITE}/*白色*/,{"$1",RGB(245, 245, 245)}/*烟白色*/,
 	{"$2",LIGHTGRAY}/*浅灰色*/,{"$3",DARKGRAY}/*深灰色*/, {"$4",BLACK}/*黑色*/,
@@ -19,7 +17,7 @@ std::unordered_map<std::string, COLORREF>Characters::TextColorMap =
 	{"$h",CYAN}/*青色*/,{"$i",BROWN}/*褐色*/
 };
 
-void Characters::SetCharacters(std::string text, int size, LPCTSTR type)
+void ArtyEngine::Characters::SetCharacters(std::string text, int size, LPCTSTR type)
 {
 	row = 1, column = 0;
 	int temp = 0;
@@ -40,7 +38,7 @@ void Characters::SetCharacters(std::string text, int size, LPCTSTR type)
 	this->type = type;
 }
 
-void Characters::PrintCharacters(FVector2D pos, CharactersPattern pattern)
+void ArtyEngine::Characters::PrintCharacters(FVector2D pos, CharactersPattern pattern)
 {
 	settextstyle(6*size,3*size,type);
 	settextcolor(BLACK);
@@ -107,8 +105,8 @@ bool Widget::IsUnderCursor() const
 	float x = InputComponent::GetMousePosition().x;
 	float y = InputComponent::GetMousePosition().y;
 
-	int i = Math::Clamp((int)x / 200, 0, 5);
-	int j = Math::Clamp((int)y / 200, 0, 3);
+	int i = FMath::Clamp((int)x / 200, 0, 5);
+	int j = FMath::Clamp((int)y / 200, 0, 3);
 
 	for (auto it = mainWorld.UIDetectZones[i][j].rbegin(); it != mainWorld.UIDetectZones[i][j].rend(); ++it)
 	{
@@ -135,12 +133,12 @@ void Widget::Update()
 	if (uiPattern != UIPattern::VisibleAndInteractive)return;
 
 	FVector2D pos = GetScreenPosition() - GetSize() / 2;
-	FPair newPoint(Math::Clamp(int(pos.x) / 200, 0, 5), Math::Clamp(int(pos.y) / 200, 0, 3));
+	FIntVector2 newPoint(FMath::Clamp(int(pos.x) / 200, 0, 5), FMath::Clamp(int(pos.y) / 200, 0, 3));
 	pos += size;
-	FPair newPoint_1(Math::Clamp(int(pos.x) / 200, 0, 5), Math::Clamp(int(pos.y) / 200, 0, 3));
+	FIntVector2 newPoint_1(FMath::Clamp(int(pos.x) / 200, 0, 5), FMath::Clamp(int(pos.y) / 200, 0, 3));
 	if (newPoint == point && newPoint_1 == point_1)return;
 
-	if (point != FPair(-1, -1))for (int i = point.x; i <= point_1.x; ++i)for (int j = point.y; j <= point_1.y; ++j)mainWorld.UIDetectZones[i][j].erase(this);
+	if (point != FIntVector2(-1, -1))for (int i = point.x; i <= point_1.x; ++i)for (int j = point.y; j <= point_1.y; ++j)mainWorld.UIDetectZones[i][j].erase(this);
 	point = newPoint; point_1 = newPoint_1;
 	for (int i = point.x; i <= point_1.x; ++i)for (int j = point.y; j <= point_1.y; ++j)mainWorld.UIDetectZones[i][j].insert(this);
 }
@@ -178,7 +176,7 @@ void Widget::SetUIPattern(UIPattern pattern)
 	}
 	if (uiPattern != UIPattern::VisibleAndInteractive)
 	{
-		if (point != FPair(-1, -1))for (int i = point.x; i <= point_1.x; ++i)for (int j = point.y; j <= point_1.y; ++j)mainWorld.UIDetectZones[i][j].erase(this);
+		if (point != FIntVector2(-1, -1))for (int i = point.x; i <= point_1.x; ++i)for (int j = point.y; j <= point_1.y; ++j)mainWorld.UIDetectZones[i][j].erase(this);
 		point = { -1, -1 }, point_1 = { -1, -1 };
 	}
 }
@@ -262,7 +260,7 @@ void Panel::AddMember(Widget* member, int32 index)
 	else members.push_back(member);
 	member->attachedPanel = this;
 	AdjustMemberSizeToUnit(member);
-	AdjustMemberPosition(member, index >= 0 ? index : members.size() - 1);
+	AdjustMemberPosition(member, index >= 0 ? index : int32(members.size()) - 1);
 }
 void Panel::RemoveMember(Widget* member)
 {
@@ -273,13 +271,13 @@ void Panel::RemoveMember(Widget* member)
 void Panel::AddMember(UserInterface* member, int32 index)
 {
 	member->rootCanvas->AttachTo(this);
-	index = Math::Clamp(index,-1,int32(members.size()));
+	index = FMath::Clamp(index,-1,int32(members.size()));
 	if (index >= 0)members.emplace(members.begin()+index, member->rootCanvas);
 	else members.push_back(member->rootCanvas);
 	members_ui.push_back(member);
 	member->rootCanvas->attachedPanel = this;
 	AdjustMemberSizeToUnit(member->rootCanvas);
-	AdjustMemberPosition(member->rootCanvas, index >= 0 ? index : members.size() - 1);
+	AdjustMemberPosition(member->rootCanvas, index >= 0 ? index : int32(members.size()) - 1);
 }
 void Panel::RemoveMember(UserInterface* member)
 {
@@ -351,7 +349,10 @@ void Text::Render()
 
 
 
-
+Image::~Image()
+{
+	if (ani)delete ani;
+}
 
 void Image::DealImage()
 {
@@ -373,8 +374,8 @@ void Image::Update()
 
 	if (!sprite)return;
 
-	if (copy)spriteInfo.size = FPair(copy->getwidth(), copy->getheight());
-	else spriteInfo.size = FPair(sprite->getwidth(), sprite->getheight());
+	if (copy)spriteInfo.size = FIntVector2(copy->getwidth(), copy->getheight());
+	else spriteInfo.size = FIntVector2(sprite->getwidth(), sprite->getheight());
 
 	if (GetScreenRotation() != angle)
 	{
@@ -427,9 +428,9 @@ bool Image::IsMouseOn()
 IMAGE* Image::LoadSprite(std::string name)
 {
 	IMAGE* spr = ImageInterface::LoadSprite(name);
-	if (spr && size == FVector2D())
+	if (spr && size == FVector2D::ZeroVector)
 	{
-		size = FVector2D(spr->getwidth(), spr->getheight());
+		size = FVector2D(float(spr->getwidth()), float(spr->getheight()));
 	}
 	return spr;
 }
@@ -520,7 +521,7 @@ void Bar::Render()
 	{
 		HDC srcDC = GetImageHDC(barFront);
 
-		FPair startPosition,endPosition;
+		FIntVector2 startPosition,endPosition;
 
 		switch (direction)
 		{
@@ -547,24 +548,24 @@ void Bar::Render()
 void Bar::LoadBarFrontPicture(std::string path)
 {
 	barFront = mainWorld.resourcePool->Fetch(path);
-	SetFrontSize(FPair(barFront->getwidth(), barFront->getheight()));
+	SetFrontSize(FIntVector2(barFront->getwidth(), barFront->getheight()));
 }
 
 void Bar::LoadBarBackPicture(std::string path)
 {
 	barBack = mainWorld.resourcePool->Fetch(path);
-	SetBackSize(FPair(barBack->getwidth(), barBack->getheight()));
+	SetBackSize(FIntVector2(barBack->getwidth(), barBack->getheight()));
 }
 
 void Bar::LoadBarButtonPicture(std::string path)
 {
 	barButton = mainWorld.resourcePool->Fetch(path);
-	SetButtonSize(FPair(barButton->getwidth(), barButton->getheight()));
+	SetButtonSize(FIntVector2(barButton->getwidth(), barButton->getheight()));
 }
 
 void Bar::SetPercentage(float per)
 { 
-	percentage = Math::Clamp(per, 0.f, 1.f);
+	percentage = FMath::Clamp(per, 0.f, 1.f);
 }
 
 
@@ -608,21 +609,21 @@ void Sector::Render()
 void Sector::LoadSectorFrontPicture(std::string path)
 {
 	sectorFront = mainWorld.resourcePool->Fetch(path);
-	SetFrontSize(FPair(sectorFront->getwidth(), sectorFront->getheight()));
+	SetFrontSize(FIntVector2(sectorFront->getwidth(), sectorFront->getheight()));
 }
 
 void Sector::LoadSectorBackPicture(std::string path)
 {
 	sectorBack = mainWorld.resourcePool->Fetch(path);
-	SetBackSize(FPair(sectorBack->getwidth(), sectorBack->getheight()));
+	SetBackSize(FIntVector2(sectorBack->getwidth(), sectorBack->getheight()));
 }
 
 void Sector::SetPercentage(float per)
 {
-	percentage = Math::Clamp(per, 0.f, 1.f);
+	percentage = FMath::Clamp(per, 0.f, 1.f);
 }
 
 void Sector::SetStartDegree(float start)
 {
-	startDegree = Math::NormalizeDegree(start);
+	startDegree = FMath::NormalizeDegree(start);
 }

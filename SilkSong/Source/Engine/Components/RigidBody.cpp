@@ -1,6 +1,5 @@
 #include "RigidBody.h"
 #include "Collider.h"
-#include "Tools/Math.h"
 #include "Objects/Actor.h"
 
 
@@ -9,25 +8,27 @@
 
 RigidBody::~RigidBody()
 {
-	for(auto& collider : colliders)collider->rigidAttached = nullptr;
+	for (auto& collider : colliders)collider->rigidAttached = nullptr;
 }
 
 void RigidBody::Update(float deltaTime)
 {
 	this->deltaTime = deltaTime;
-	if (!pOwner||!bIsEnabled)return;
+	if (!pOwner || !bIsEnabled)return;
 
-	if (bMoveable) 
+	if (bMoveable)
 	{
-		if (bGravityEnabled)velocity.y += gravity * deltaTime;
-
+		if (bGravityEnabled)
+		{
+			velocity.y += gravity * deltaTime;
+		}
 		for (auto& collider : colliders)
 		{
 			if (collider->mode != CollisionMode::Collision)continue;
 			for (auto& another : collider->collisions)
 			{
 				if (another->mode != CollisionMode::Collision)continue;
-				RestrictVelocity(-collider->CollisionHit(another).ImpactNormal, FPhysicsMaterial::Combine(collider->material,another->material), another->rigidAttached);
+				RestrictVelocity(-collider->CollisionHit(another).ImpactNormal, FPhysicsMaterial::Combine(collider->material, another->material), another->rigidAttached);
 			}
 		}
 		for (auto& collider : colliders)
@@ -39,30 +40,39 @@ void RigidBody::Update(float deltaTime)
 				RestrictVelocity(-collider->CollisionHit(another).ImpactNormal, FPhysicsMaterial::Combine(collider->material, another->material));
 			}
 		}
-		pOwner->AddPosition(FVector2D(Math::Clamp(velocity.x, -maxSpeed, maxSpeed), Math::Clamp(velocity.y, -maxSpeed, maxSpeed)) * deltaTime);
-		
-		if (linearDrag) 
+
+		FVector2D offset = velocity.ClampAxes(-maxSpeed, maxSpeed) * deltaTime;
+		pOwner->AddPosition(FVector2D(FMath::IsSmallNumber(offset.x) ? 0 : offset.x, FMath::IsSmallNumber(offset.y) ? 0 : offset.y));
+
+		if (linearDrag)
 		{
-			float buffer = velocity.x - velocity.x * linearDrag * deltaTime / mass;
-			velocity.x = ((*(int*)&velocity.x) ^ (*(int*)&buffer)) < 0 ? 0 : buffer;
-			buffer = velocity.y - velocity.y * linearDrag * deltaTime / mass;
-			velocity.y = ((*(int*)&velocity.y) ^ (*(int*)&buffer)) < 0 ? 0 : buffer;
+			if (!FMath::IsSmallNumber(velocity.x))
+			{
+				float buffer = velocity.x - velocity.x * linearDrag * deltaTime / mass;
+				velocity.x = (velocity.x < 0) != (buffer < 0) ? 0 : buffer;
+			}
+			if (!FMath::IsSmallNumber(velocity.y))
+			{
+				float buffer = velocity.y - velocity.y * linearDrag * deltaTime / mass;
+				velocity.y = (velocity.y < 0) != (buffer < 0) ? 0 : buffer;
+			}
 		}
 	}
 
 	if (bRotatable)
 	{
-		pOwner->AddRotation(angularVelocity * deltaTime);
-		
-		if (angularDrag) 
+		float offset = angularVelocity * deltaTime;
+		pOwner->AddRotation(FMath::IsSmallNumber(offset) ? 0 : offset);
+
+		if (angularDrag && !FMath::IsSmallNumber(angularVelocity))
 		{
 			float buffer = angularVelocity - angularVelocity * angularDrag * deltaTime / mass;
-			angularVelocity = ((*(int*)&angularVelocity) ^ (*(int*)&buffer)) < 0 ? 0 : buffer;
+			angularVelocity = (angularVelocity < 0) != (buffer < 0) ? 0 : buffer;
 		}
 	}
 }
 
-void RigidBody::RestrictVelocity(FVector2D impactNormal,const FPhysicsMaterial& material,RigidBody* another)
+void RigidBody::RestrictVelocity(FVector2D impactNormal, const FPhysicsMaterial& material, RigidBody* another)
 {
 	FVector2D tangentVector = { impactNormal.y, -impactNormal.x };
 
@@ -79,8 +89,8 @@ void RigidBody::RestrictVelocity(FVector2D impactNormal,const FPhysicsMaterial& 
 	{
 		if (FVector2D::DotProduct(velocity, impactNormal) < 0)
 		{
-			float multiplier = (tangentVelocity.Size() - normalVelocity.Size() * friction) / tangentVelocity.Size();
-			multiplier = Math::Clamp(multiplier, 0.0f, 1.0f);
+			float multiplier = 1.f - normalVelocity.Size() * friction * FMath::InvSqrt(tangentVelocity.SizeSquared());
+			multiplier = FMath::Clamp(multiplier, 0.0f, 1.0f);
 			velocity = tangentVelocity * multiplier - bounciness * normalVelocity;
 		}
 		return;
@@ -102,6 +112,3 @@ void RigidBody::RestrictVelocity(FVector2D impactNormal,const FPhysicsMaterial& 
 	velocity = normalVelocity + tangentVelocity;
 	another->velocity = anotherNormalVelocity + anotherTangentVelocity;
 }
-
-
-

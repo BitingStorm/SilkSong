@@ -12,7 +12,7 @@
 /*----------------------------------
               µ¥²¥Î¯ÍÐ
   ----------------------------------*/
-template<typename R = void,typename... Args>
+template<typename R = void, typename... Args>
 class UnicastDelegate
 {
     std::function<R(Args...)> callback;
@@ -67,25 +67,23 @@ public:
     void BroadCast(Args... args);
 
     void operator()(Args... args){BroadCast(args...);}
+};
+
+
+
+#define DECLARE_MULTI_PARAM_WITH_RETURN_UNICAST_DELEGATE_CLASS(Name, R, ...) typedef UnicastDelegate<R,__VA_ARGS__> Name;
+#define DECLARE_NO_PARAM_WITH_RETURN_UNICAST_DELEGATE_CLASS(Name, R) typedef UnicastDelegate<R> Name;
+
+#define DECLARE_MULTI_PARAM_UNICAST_DELEGATE_CLASS(Name, ...) typedef UnicastDelegate<void,__VA_ARGS__> Name;
+#define DECLARE_NO_PARAM_UNICAST_DELEGATE_CLASS(Name) typedef UnicastDelegate<void> Name;
+
+#define DECLARE_MULTI_PARAM_MULTICAST_DELEGATE_CLASS(Name, ...) typedef MulticastDelegate<__VA_ARGS__> Name;
+#define DECLARE_NO_PARAM_MULTICAST_DELEGATE_CLASS(Name) typedef MulticastDelegate<> Name;
 
 #define AddDynamic(obj, func) Add(obj, func)
 #define RemoveDynamic(obj, func) Remove(obj, func)
 #define AddLambda(callback) Add(callback)
 #define RemoveLambda(callback) Remove(callback)
-};
-
-
-
-#define DECLARE_MULTI_PARAM_WITH_RETURN_UNICAST_DELEGATE_CLASS(Name, R, ...) class Name : public UnicastDelegate<R,__VA_ARGS__> {};
-#define DECLARE_NO_PARAM_WITH_RETURN_UNICAST_DELEGATE_CLASS(Name, R) class Name : public UnicastDelegate<R> {};
-
-#define DECLARE_MULTI_PARAM_UNICAST_DELEGATE_CLASS(Name, ...) class Name : public UnicastDelegate<void,__VA_ARGS__> {};
-#define DECLARE_NO_PARAM_UNICAST_DELEGATE_CLASS(Name) class Name : public UnicastDelegate<void> {};
-
-#define DECLARE_MULTI_PARAM_MULTICAST_DELEGATE_CLASS(Name, ...) class Name : public MulticastDelegate<__VA_ARGS__> {};
-#define DECLARE_NO_PARAM_MULTICAST_DELEGATE_CLASS(Name) class Name : public MulticastDelegate<> {};
-
-
 
 
 
@@ -103,8 +101,6 @@ inline R UnicastDelegate<R, Args...>::Execute(Args ...args)
     }
     return R();
 }
-
-
 
 template<typename ...Args>
 inline void MulticastDelegate<Args...>::Add(std::function<void(Args...)> callback)
@@ -139,4 +135,3 @@ inline void MulticastDelegate<Args...>::BroadCast(Args ...args)
         callback(args...);
     }
 }
-

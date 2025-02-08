@@ -17,7 +17,7 @@
   ----------------------------------*/
 class LayerInterface
 {
-	int layer = 0;
+	int32 layer = 0;
 public:
 	LayerInterface();
 	virtual ~LayerInterface();
@@ -30,34 +30,36 @@ public:
 	virtual void Render() = 0;
 };
 
-
-/* 渲染补充信息 */
-struct FSpriteInfo
+namespace ArtyEngine
 {
-	FVector2D offset = FVector2D(0, 0);
-	FPair size = FPair(0, 0);
-	FPair startLoc = FPair(0, 0);
-	FPair endLoc = FPair(0, 0);
-};
-
-
-/* 滤镜信息 */
-struct FilterInfo 
-{
-	COLORREF color = BLACK;//滤镜颜色
-	int level = 50;//颜色过渡层级（1~100）
-	int layer = 0;//滤镜层级（0和1）
-};
-
-
-/* 滤镜图层排序规则 */
-struct FFilterSort
-{
-	bool operator()(const FilterInfo& a, const FilterInfo& b) const
+	/* 渲染补充信息 */
+	struct FSpriteInfo
 	{
-        return a.layer < b.layer;
-	}
-};
+		FVector2D offset{};
+		FIntVector2 size{};
+		FIntVector2 startLoc{};
+		FIntVector2 endLoc{};
+	};
+
+
+	/* 滤镜信息 */
+	struct FilterInfo
+	{
+		COLORREF color = BLACK;//滤镜颜色
+		int32 level = 50;//颜色过渡层级（1~100）
+		int32 layer = 0;//滤镜层级（0和1）
+	};
+
+
+	/* 滤镜图层排序规则 */
+	struct FFilterSort
+	{
+		bool operator()(const FilterInfo& a, const FilterInfo& b) const
+		{
+			return a.layer < b.layer;
+		}
+	};
+}
 
 class Animator;
 
@@ -70,7 +72,7 @@ class ImageInterface
 
 protected:
 	IMAGE* sprite{};
-	FSpriteInfo spriteInfo;
+	ArtyEngine::FSpriteInfo spriteInfo;
 	BYTE alpha = 255;
 
 	IMAGE* copy{};
@@ -78,9 +80,9 @@ protected:
 	void RotateImage(float degree);
 
 	IMAGE* filter{};
-	std::set<FilterInfo, FFilterSort>filterLayers;
+	std::set<ArtyEngine::FilterInfo, ArtyEngine::FFilterSort>filterLayers;
 	void FilterImage();
-	void AddFilter(FilterInfo filterInfo);
+	void AddFilter(ArtyEngine::FilterInfo filterInfo);
 	void RemoveFilter();
 
 	IMAGE* blur{};
@@ -101,7 +103,7 @@ public:
 	 * @param[in] color	            滤镜颜色
 	 * @param[in] level             滤镜施加程度（最大为100，最小为0）
 	 **/
-	void SetFilter(bool enable, COLORREF col = BLACK, int level = 60);
+	void SetFilter(bool enable, COLORREF col = BLACK, int32 level = 60);
 
 	/**
 	 * @brief 均值模糊（建议在Gameplay开始前预处理使用）
@@ -123,7 +125,7 @@ public:
 	 * @param[in] start			    截取图像起始位置坐标
 	 * @param[in] end               截取图像结尾位置坐标
 	 **/
-	void SetStartAndEndLoc(FPair start, FPair end);
+	void SetStartAndEndLoc(FIntVector2 start, FIntVector2 end);
 };
 
 
@@ -138,7 +140,7 @@ class ImageToolkit final
 
 public:
 	//获取二维坐标处像素值
-	static DWORD GetPixel(IMAGE* img, int i, int j);
+	static DWORD GetPixel(IMAGE* img, int32 i, int32 j);
 
 	//获取当前游戏截图（禁止高頻使用！）
 	static void GetScreenShot();
@@ -153,15 +155,15 @@ public:
 	static void GetSectorImage(IMAGE* srcImg, IMAGE* dstImg, float start, float end);
 
 	//旋转图像
-	static FPair RotateImage(IMAGE* srcImg, IMAGE* dstImg, float degree);
+	static FIntVector2 RotateImage(IMAGE* srcImg, IMAGE* dstImg, float degree);
 
 	/** 滤波 **/
 
 	//快速均值滤波(模糊)
-	static void MeanFilter(IMAGE* srcImg, IMAGE* dstImg, int radius);
+	static void MeanFilter(IMAGE* srcImg, IMAGE* dstImg, int32 radius);
 
 	//高斯滤波(模糊且抗锯齿。但较为耗時，慎用)
-	static void GaussianFilter(IMAGE* srcImg, IMAGE* dstImg, int radius);
+	static void GaussianFilter(IMAGE* srcImg, IMAGE* dstImg, int32 radius);
 
 private:
 	//对整个屏幕施加高斯滤波

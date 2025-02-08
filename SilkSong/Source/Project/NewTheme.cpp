@@ -14,17 +14,17 @@ NewTheme::NewTheme()
 		particles[i]->SetCapacity(27 - i * 2);
 		particles[i]->SetInterval(0.12f - i * 0.008f);
 		particles[i]->Load("menu_ss_particle");
-		particles[i]->SetMaxSpeed(275 + i * 70);
-		particles[i]->SetMinSpeed(150 + i * 70);
+		particles[i]->SetMaxSpeed(275.f + i * 70);
+		particles[i]->SetMinSpeed(150.f + i * 70);
 		particles[i]->SetPattern(EParticlePattern::Line);
 		particles[i]->SetLine(800, 80 - 25 * (i % 2));
 		particles[i]->SetLayer(i);
-		particles[i]->SetLifeCycle(3.3f - i * 0.45);
+		particles[i]->SetLifeCycle(3.3f - i * 0.45f);
 		particles[i]->SetFadingOutTime(0.5f);
 		particles[i]->SetFadingInTime(0.25f);
 		particles[i]->SetFadingType(EParticleFadingType::FadeInAndOut);
 		particles[i]->SetGravity(0);
-		particles[i]->SetSizeRange(0.15 + i * 0.08, 0.2 + i * 0.08);
+		particles[i]->SetSizeRange(0.15f + i * 0.08f, 0.2 + i * 0.08f);
 	}
 	particles[2]->SetLine(800, 95);
 	particles[2]->SetLocalPosition({ 0,500 });

@@ -6,6 +6,7 @@
 
 #pragma once
 #include"CoreMinimal.h"
+#include"Tools/Timer.h"
 
 class Actor;
 
@@ -13,9 +14,11 @@ class Actor;
 /*----------------------------------
 			  组件基类
   ----------------------------------*/
-class ActorComponent : public Object, public ITimerHandler
+class ActorComponent : public Object, public TimerHandler
 {
 public:
+	virtual ~ActorComponent() {}
+
 	//获取绑定游戏对象
 	Actor* GetOwner();
 
@@ -33,6 +36,7 @@ public:
 
 	//组件是否启用
 	bool GetEnabled()const { return bIsEnabled; }
+
 protected:
 	Actor* pOwner = nullptr;//处理控制逻辑
 

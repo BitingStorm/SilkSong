@@ -1,6 +1,5 @@
 #include "VisualInterface.h"
 #include "ResourceManager.h"
-#include "Math.h"
 #include "Core/World.h"
 #include "Tools/FileManager.h"
 #include "Components/Animator.h"
@@ -83,7 +82,7 @@ void ImageInterface::FilterImage()
 
 }
 
-void ImageInterface::AddFilter(FilterInfo filterInfo)
+void ImageInterface::AddFilter(ArtyEngine::FilterInfo filterInfo)
 {
 	filterLayers.insert(filterInfo);
 	FilterImage();
@@ -94,13 +93,13 @@ void ImageInterface::RemoveFilter()
 	filterLayers.erase({ BLACK,60,1 });
 }
 
-void ImageInterface::SetFilter(bool enable,COLORREF col, int level)
+void ImageInterface::SetFilter(bool enable, COLORREF col, int32 level)
 {
-	filterLayers.erase(FilterInfo{ col, level});
-	if (enable) 
+	filterLayers.erase(ArtyEngine::FilterInfo{ col, level });
+	if (enable)
 	{
-		level = Math::Clamp(level, 0, 100);
-		filterLayers.insert(FilterInfo{ col, level});
+		level = FMath::Clamp(level, 0, 100);
+		filterLayers.insert(ArtyEngine::FilterInfo{ col, level });
 		FilterImage();
 	}
 }
@@ -131,12 +130,12 @@ IMAGE* ImageInterface::LoadSprite(std::string name)
 	return sprite;
 }
 
-void ImageInterface::SetStartAndEndLoc(FPair start, FPair end)
+void ImageInterface::SetStartAndEndLoc(FIntVector2 start, FIntVector2 end)
 {
-	start.x = Math::Clamp(start.x, 0, spriteInfo.size.x);
-    start.y = Math::Clamp(start.y, 0, spriteInfo.size.y);
-    end.x = Math::Clamp(end.x, 0, spriteInfo.size.x);
-    end.y = Math::Clamp(end.y, 0, spriteInfo.size.y);
+	start.x = FMath::Clamp(start.x, 0, spriteInfo.size.x);
+    start.y = FMath::Clamp(start.y, 0, spriteInfo.size.y);
+    end.x = FMath::Clamp(end.x, 0, spriteInfo.size.x);
+    end.y = FMath::Clamp(end.y, 0, spriteInfo.size.y);
     spriteInfo.startLoc = start;
     spriteInfo.endLoc = end;
 }
@@ -149,11 +148,11 @@ void ImageInterface::SetStartAndEndLoc(FPair start, FPair end)
 bool ImageToolkit::bIsGaussianFilterOn = false;
 int ImageToolkit::GaussianFilterLevel = 2;
 
-DWORD ImageToolkit::GetPixel(IMAGE* img, int i, int j)
+DWORD ImageToolkit::GetPixel(IMAGE* img, int32 i, int32 j)
 {
 	DWORD* pBuf = GetImageBuffer(img);
-	j = Math::Clamp(j, 0, img->getwidth() - 1);
-	i = Math::Clamp(i, 0, img->getheight() - 1);
+	j = FMath::Clamp(j, 0, img->getwidth() - 1);
+	i = FMath::Clamp(i, 0, img->getheight() - 1);
 	return pBuf[i * img->getwidth() + j];
 }
 
@@ -194,11 +193,11 @@ void ImageToolkit::GetSectorImage(IMAGE* srcImg, IMAGE* dstImg, float start, flo
 	DWORD* pNewBuf = GetImageBuffer(dstImg);
 	int width = srcImg->getwidth(), height = srcImg->getheight();
 
-	int centerX = width / 2;
-	int centerY = height / 2;
+	float centerX = width * 0.5f;
+	float centerY = height * 0.5f;
 
-	start = Math::NormalizeDegree(start);
-	end = Math::NormalizeDegree(end);
+	start = FMath::NormalizeDegree(start);
+	end = FMath::NormalizeDegree(end);
 	
 
 	for (int i = 0; i < height; ++i)
@@ -207,8 +206,8 @@ void ImageToolkit::GetSectorImage(IMAGE* srcImg, IMAGE* dstImg, float start, flo
 		{
 			float x = j - centerX;
 			float y = i - centerY;
-			float theta = atan2(-y, x) * 180.0f / PI;  
-			theta = Math::NormalizeDegree(theta);
+			float theta = FMath::RadianToDegree(FMath::Atan2(-y, x));  
+			theta = FMath::NormalizeDegree(theta);
 
 			if (end <= start)
 			{
@@ -226,14 +225,14 @@ void ImageToolkit::GetSectorImage(IMAGE* srcImg, IMAGE* dstImg, float start, flo
 	}
 }
 
-FPair ImageToolkit::RotateImage(IMAGE* srcImg, IMAGE* dstImg, float degree)
+FIntVector2 ImageToolkit::RotateImage(IMAGE* srcImg, IMAGE* dstImg, float degree)
 {
 	if (!srcImg || !dstImg)return{};
 
-	degree = Math::NormalizeDegree(degree);
-	float radian = Math::DegreeToRadian(degree);
+	degree = FMath::NormalizeDegree(degree);
+	float radian = FMath::DegreeToRadian(degree);
 	radian = -radian;
-	float fSin = sin(radian), fCos = cos(radian);
+	float fSin = FMath::Sin(radian), fCos = FMath::Cos(radian);
 	int w = srcImg->getwidth(), h = srcImg->getheight();
 	POINT points[4] = { {0, 0}, {w, 0}, {0, h}, {w, h} };
 	int min_x = 0, min_y = 0;
@@ -272,11 +271,11 @@ FPair ImageToolkit::RotateImage(IMAGE* srcImg, IMAGE* dstImg, float degree)
 			}
 		}
 	}
-
-	return FPair(nw, nh);
+	
+	return FIntVector2(nw, nh);
 }
 
-void ImageToolkit::MeanFilter(IMAGE* srcImg, IMAGE* dstImg, int radius)
+void ImageToolkit::MeanFilter(IMAGE* srcImg, IMAGE* dstImg, int32 radius)
 {
 	if (!srcImg||!dstImg||radius == 0)return;
 
@@ -286,8 +285,8 @@ void ImageToolkit::MeanFilter(IMAGE* srcImg, IMAGE* dstImg, int radius)
 
 	auto GetIndex = [=](int i, int j)->int
 		{
-			j = Math::Clamp(j, 0, width - 1);
-			i = Math::Clamp(i, 0, height - 1);
+			j = FMath::Clamp(j, 0, width - 1);
+			i = FMath::Clamp(i, 0, height - 1);
 			return i * width + j;
 		};
 
@@ -321,18 +320,18 @@ void ImageToolkit::MeanFilter(IMAGE* srcImg, IMAGE* dstImg, int radius)
 		for (int j = 0; j < width; ++j) 
 		{
 			int x = i + 1, y = j + 1;
-			int x1 = max(x - w, 1), y1 = max(y - w, 1);
-			int x2 = min(x + w, height), y2 = min(y + w, width);
+			int x1 = MAX(x - w, 1), y1 = MAX(y - w, 1);
+			int x2 = MIN(x + w, height), y2 = MIN(y + w, width);
 			rgb center = integralImage[x2][y2] + integralImage[x1][y1] - integralImage[x2][y1] - integralImage[x1][y2];
 			int validArea = (x2 - x1) * (y2 - y1);
-			int r = Math::Clamp(center.r / validArea, 0, 255), g = Math::Clamp(center.g / validArea, 0, 255), b = Math::Clamp(center.b / validArea, 0, 255);
+			int r = FMath::Clamp(center.r / validArea, 0, 255), g = FMath::Clamp(center.g / validArea, 0, 255), b = FMath::Clamp(center.b / validArea, 0, 255);
 
 			pNewBuf[GetIndex(i, j)] = (pBuf[GetIndex(i, j)] & 0xFF000000) | (r << 16) | (g << 8) | b;
 		}
 	}
 }
 
-void ImageToolkit::GaussianFilter(IMAGE* srcImg, IMAGE* dstImg, int radius)
+void ImageToolkit::GaussianFilter(IMAGE* srcImg, IMAGE* dstImg, int32 radius)
 {
 	if (!srcImg || !dstImg || radius == 0)return;
 
@@ -348,7 +347,7 @@ void ImageToolkit::GaussianFilter(IMAGE* srcImg, IMAGE* dstImg, int radius)
 	for (int i = 0; i < size; i++)
 	{
 		float x = float(i) - radius;
-		kernel[i] = exp(-x * x / (2 * sigma * sigma)) / (sqrt(2 * PI) * sigma);
+		kernel[i] = FMath::Exp(-x * x / (2 * sigma * sigma)) / (FMath::Sqrt(2 * AE_PI) * sigma);
 		sum += kernel[i];
 	}
 	for (int i = 0; i < size; i++) kernel[i] /= sum;
@@ -391,7 +390,7 @@ void ImageToolkit::GaussianFilter(IMAGE* srcImg, IMAGE* dstImg, int radius)
 				g += ((temp[index] >> 8) & 0xFF) * kernel[i + radius];
 				b += (temp[index] & 0xFF) * kernel[i + radius];
 			}
-			pNewBuf[y * width + x] = (pBuf[y * width + x] & 0xFF000000)|RGB((int)r, (int)g, (int)b);
+			pNewBuf[y * width + x] = (pBuf[y * width + x] & 0xFF000000) | RGB((int)r, (int)g, (int)b);
 		}
 	}
 

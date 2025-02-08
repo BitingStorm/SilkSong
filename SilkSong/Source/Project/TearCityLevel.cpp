@@ -8,13 +8,11 @@
 #include "Animated.h"
 #include "Chest.h"
 #include "Chair.h"
-#include "Tools/Math.h"
 
 
 
 void TearCityLevel::BeginPlay()
 {
-
 	mainController = GameplayStatics::CreateObject<Player>({-800,800});
 	
 	Chair* chair = GameplayStatics::CreateObject<Chair>({-835,930});
@@ -35,7 +33,7 @@ void TearCityLevel::BeginPlay()
 
 	Bg* ev1 = GameplayStatics::CreateObject<Bg>({ 0,975 });ev1->Init("tearcity_environment_1", -2);
 	for (int i = 0; i < 5; i++) {
-		Animated* rainland = GameplayStatics::CreateObject<Animated>({ -225 + float(i) * Math::RandInt(80,120),-50 });
+		Animated* rainland = GameplayStatics::CreateObject<Animated>({ -225 + float(i) * FMath::RandInt(80,120),-50 });
 		rainland->Init("rain_land", 0.08f, -2);
 		rainland->AttachTo(ev1);
 	}
@@ -50,9 +48,9 @@ void TearCityLevel::BeginPlay()
 		watertop->Init("water_top", 0.08f, 4); watertop->AttachTo(ev4);
 	}
 	for (int i = 0; i < 10; i++) {
-		Animated* rainland = GameplayStatics::CreateObject<Animated>({ -1500 + float(i) * Math::RandInt(100,500),-75 });
+		Animated* rainland = GameplayStatics::CreateObject<Animated>({ -1500 + float(i) * FMath::RandInt(100,500),-75 });
 		rainland->Init("rain_land", 0.08f, 4); rainland->AttachTo(ev4);
-		rainland->SetLocalScale(FVector2D(1.25, 1.25) * Math::RandReal(0.8f, 1.2f));
+		rainland->SetLocalScale(FVector2D(1.25, 1.25) * FMath::RandReal(0.8f, 1.2f));
 	}
 
 
@@ -69,7 +67,6 @@ void TearCityLevel::BeginPlay()
 	GameplayStatics::CreateObject<Bg>({ 450,845 })->Init("tearcity_environment_14", 5, false, false);
 	GameplayStatics::CreateObject<Bg>({ -785,950 })->Init("tearcity_environment_15", 5);
 
-	
 
 	GameplayStatics::CreateObject<PlatForm>({ 650,400 })->Init("tearcity_plat_0", { 130,60 }, {0,-25});
 	GameplayStatics::CreateObject<PlatForm>({ 300,700 })->Init("tearcity_plat_2", { 80,70 }, {0,-10});
@@ -78,9 +75,9 @@ void TearCityLevel::BeginPlay()
 
 	PlatForm* plat = GameplayStatics::CreateObject<PlatForm>({ 0,1075 }); plat->Init("tearcity_floor", { 1125,210 }, {});
 	for (int i = 0; i < 5; i++) { 
-		Animated* rainland = GameplayStatics::CreateObject<Animated>({ -500 + float(i) * Math::RandInt(150,250),-100 });
+		Animated* rainland = GameplayStatics::CreateObject<Animated>({ -500 + float(i) * FMath::RandInt(150,250),-100 });
 		rainland->Init("rain_land", 0.08f, 4);
-		rainland->SetLocalScale(FVector2D(1,1)* Math::RandReal(0.75f,1.25f));
+		rainland->SetLocalScale(FVector2D(1,1)* FMath::RandReal(0.75f,1.25f));
 		rainland->AttachTo(plat);
 	}
 

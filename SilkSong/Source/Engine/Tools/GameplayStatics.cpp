@@ -56,7 +56,7 @@ void GameplayStatics::SetGaussianFilterOn(bool enable, int level)
 
 void GameplayStatics::Pause(float delay)
 {
-    Sleep(uint32(1000*delay));
+    Sleep(uint32(1000 * delay));
     mainWorld.deltaTime -= delay;
 }
 
@@ -78,15 +78,14 @@ void GameplayStatics::DontDestroyOnLoad(UserInterface* obj)
 
 FVector2D GameplayStatics::ProjectScreenToWorld(FVector2D pos)
 {
-    FVector2D position = (pos - FVector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2)) * 0.05f
+    FVector2D position = (pos - FVector2D(WIN_WIDTH, WIN_HEIGHT) * 0.5f) * 0.05f
         * mainWorld.mainCamera->GetVirtualSpringArmLength() + mainWorld.mainCamera->GetVirtualPosition();
     return position;
 }
 
 FVector2D GameplayStatics::ProjectWorldToScreen(FVector2D pos)
 {
-    FVector2D position = (pos - mainWorld.mainCamera->GetVirtualPosition()) * 20.f 
-        / mainWorld.mainCamera->GetVirtualSpringArmLength() + FVector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2);
+    FVector2D position = (pos - mainWorld.mainCamera->GetVirtualPosition()) * 20.f
+        / mainWorld.mainCamera->GetVirtualSpringArmLength() + FVector2D(WIN_WIDTH, WIN_HEIGHT) * 0.5f;
     return position;
 }
-

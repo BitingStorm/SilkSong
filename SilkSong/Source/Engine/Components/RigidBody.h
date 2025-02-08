@@ -35,13 +35,13 @@ public:
 	void SetMass(float mass) { this->mass = mass; }
 	
 	//添加力
-	void AddForce(FVector2D force) { velocity += force * deltaTime/mass; }
+	void AddForce(FVector2D force) { velocity += force * deltaTime / mass; }
 	
 	//添加冲量
-	void AddImpulse(FVector2D pulse) { velocity += pulse/mass; }
+	void AddImpulse(FVector2D pulse) { velocity += pulse / mass; }
 
 	//是否可移动
-	void SetMoveable(bool moveable) { this->bMoveable = moveable;if(!moveable)velocity = FVector2D(0, 0); }
+	void SetMoveable(bool moveable) { this->bMoveable = moveable; if (!moveable)velocity = FVector2D::ZeroVector; }
 	
 	//是否启用重力
 	void SetGravityEnabled(bool enabled) { this->bGravityEnabled = enabled; }
@@ -59,7 +59,7 @@ public:
 	FVector2D GetVelocity()const { return velocity; }
 
 private:
-	FVector2D velocity = FVector2D(0, 0);
+	FVector2D velocity{};
 	float maxSpeed = 5000.0f;
 	bool bMoveable = true;
 	
@@ -76,7 +76,7 @@ private:
 	std::unordered_set<Collider*> colliders;
 
 	//运动模拟
-	void RestrictVelocity(FVector2D impactNormal,const FPhysicsMaterial& material,RigidBody* another = nullptr);
+	void RestrictVelocity(FVector2D impactNormal, const FPhysicsMaterial& material, RigidBody* another = nullptr);
 
 	float deltaTime = 0.f;
 };

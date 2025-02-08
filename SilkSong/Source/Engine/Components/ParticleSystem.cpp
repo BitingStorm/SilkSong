@@ -2,7 +2,7 @@
 #include"Camera.h"
 #include"Core/World.h"
 #include"Tools/ResourceManager.h"
-#include"Tools/Math.h"
+
 
 
 
@@ -10,40 +10,42 @@
 
 void ParticleSystem::Produce()
 {
-	FParticleInfo temp;
+	ArtyEngine::FParticleInfo temp;
 	temp.position = GetWorldPosition();
 	temp.alpha =  alpha;
-	temp.maxSize = Math::RandReal(sizeRange.x, sizeRange.y);
+	temp.maxSize = FMath::RandReal(sizeRange.x, sizeRange.y);
 	temp.size = temp.maxSize;
 	if (fadingInTime > 0)
 	{
 		fadingType == EParticleFadingType::FadeInAndOut ? temp.alpha = 0 : temp.size = 0;
 	}
-	temp.index = Math::RandInt(0, number - 1);
+	temp.index = FMath::RandInt(0, number - 1);
 	
 	if (pattern == EParticlePattern::Center)
 	{
-		temp.degree = Math::RandReal(0, 360);
-		float radian = -Math::DegreeToRadian(Math::RandReal(scoop.x, scoop.y));
-		unitVector = FVector2D(cos(radian), sin(radian));
-		if (radius != FVector2D(0, 0))temp.position += unitVector *
-			float((min(radius.x, radius.y) + std::abs(radius.y - radius.x) * Math::RandPerc()));
-		temp.velocity = Math::RandReal(minSpeed, maxSpeed) * unitVector;
+		temp.degree = FMath::RandReal(0, 360);
+		float radian = -FMath::DegreeToRadian(FMath::RandReal(scoop.x, scoop.y));
+		unitVector = FVector2D(FMath::Cos(radian), FMath::Sin(radian));
+		if (radius != FVector2D::ZeroVector)
+		{
+			temp.position += unitVector * float((FMath::Min(radius.x, radius.y) + FMath::Abs(radius.y - radius.x) * FMath::RandPerc()));
+		}
+		temp.velocity = FMath::RandReal(minSpeed, maxSpeed) * unitVector;
 	}
 	else if (pattern == EParticlePattern::Line)
 	{
-		float radian = -Math::DegreeToRadian(angle);
-		unitVector = FVector2D(cos(radian), sin(radian));
+		float radian = -FMath::DegreeToRadian(angle);
+		unitVector = FVector2D(FMath::Cos(radian), FMath::Sin(radian));
 		FVector2D lineVector = FVector2D::RotateVector(90, unitVector);
-		if (length)temp.position += lineVector * (float)(-length * 0.5f + length * Math::RandPerc());
-		temp.velocity = Math::RandReal(minSpeed, maxSpeed) * unitVector;
+		if (length)temp.position += lineVector * (float)(-length * 0.5f + length * FMath::RandPerc());
+		temp.velocity = FMath::RandReal(minSpeed, maxSpeed) * unitVector;
 	}
 	particles.push_back(temp);
 }
 
 void ParticleSystem::Load(std::string name)
 {
-	AnimationResource aniRes = mainWorld.resourcePool->FetchAnimation(name);
+	ArtyEngine::FAnimationResource aniRes = mainWorld.resourcePool->FetchAnimation(name);
 	number = aniRes.num;
 	images = aniRes.images;
 }
@@ -119,27 +121,34 @@ void ParticleSystem::Render()
 	if (!bIsEnabled || !images || alpha == 0)return;
 
 	HDC dstDC = GetImageHDC();
+	float multi_sa = 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength();
 
 	for (auto& each : particles)
 	{
-		int w = images[0]->getwidth();
-		int h = images[0]->getheight();
-		float dw = std::abs(float(w * GetWorldScale().x * 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength()));
-		float dh = std::abs(float(h * GetWorldScale().y * 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength()));
-		float alpha = Math::Clamp(each.alpha, 0.f, 255.f);
-		BLENDFUNCTION bf = { AC_SRC_OVER,0,(BYTE)alpha,AC_SRC_ALPHA };
-		FVector2D pos = (each.position - mainWorld.mainCamera->GetVirtualPosition()) * 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength()
+		int32 w = images[0]->getwidth(), h = images[0]->getheight();
+		float dw = FMath::Abs(w * GetWorldScale().x * multi_sa), dh = FMath::Abs(h * GetWorldScale().y * multi_sa);
+		float alpha = FMath::Clamp(each.alpha, 0.f, 255.f);
+		FVector2D pos = (each.position - mainWorld.mainCamera->GetVirtualPosition()) * multi_sa
 			+ FVector2D(WIN_WIDTH, WIN_HEIGHT) * 0.5f - FVector2D(dw, dh) * each.size * 0.5f;
+		
+		FRect cameraRect(FVector2D::ZeroVector, FVector2D(WIN_WIDTH, WIN_HEIGHT));
+		FRect imgRect(FVector2D(pos.x, pos.y), dw, dh);
+		if (!cameraRect.Intersects(imgRect) || alpha <= 0.f)
+		{
+			continue;
+		}
+
 		IMAGE* img = images[each.index];
 		if (each.degree != 0)
 		{
 			img = new IMAGE;
-			FPair newPair = ImageToolkit::RotateImage(images[each.index], img, each.degree - 90);
-			w = std::abs(newPair.x), h = std::abs(newPair.y);
-			dw = dw * float(w) / images[0]->getwidth(), dh = dh * float(h) / images[0]->getheight();
+			FIntVector2 newPair = ImageToolkit::RotateImage(images[each.index], img, each.degree - 90);
+			w = FMath::Abs(newPair.x), h = FMath::Abs(newPair.y);
+			dw = dw * w / images[0]->getwidth(), dh = dh * h / images[0]->getheight();
 		}
 		HDC srcDC = GetImageHDC(img);
-		AlphaBlend(dstDC, (int)pos.x, (int)pos.y, (int)(dw * each.size), (int)(dh * each.size), srcDC, 0, 0, w, h, bf);
+		BLENDFUNCTION bf = { AC_SRC_OVER,0,(BYTE)alpha,AC_SRC_ALPHA };
+		AlphaBlend(dstDC, int(pos.x - dw * 0.5f), int(pos.y - dh * 0.5f), int(dw * each.size), int(dh * each.size), srcDC, 0, 0, w, h, bf);
 		if (img != images[each.index])delete img;
 	}
 }
@@ -151,5 +160,5 @@ void ParticleSystem::SetCenter(FVector2D radius, FVector2D scoop)
 
 void ParticleSystem::SetLine(float length, float angle)
 {
-	this->length = length; this->angle = Math::NormalizeDegree(angle);
+	this->length = length; this->angle = FMath::NormalizeDegree(angle);
 }

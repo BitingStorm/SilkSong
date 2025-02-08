@@ -25,7 +25,7 @@ public:
 
 	//创建游戏对象
 	template<typename T>
-	static T* CreateObject(FVector2D pos = FVector2D(0, 0), float angle = 0, FVector2D scale = FVector2D(1, 1));
+	static T* CreateObject(FVector2D pos = FVector2D::ZeroVector, float angle = 0, FVector2D scale = FVector2D::UnitVector);
 
 	//通过类查找游戏对象
 	template<typename T>
@@ -52,7 +52,7 @@ public:
 	/**
 	 * @brief 相机震动
 	 * @param[in] intensity			  震动强度（幅度）
-	 * @param[in] decay               震动衰减系数，范围为1`100，越大则衰减速率越快
+	 * @param[in] decay               震动衰减系数，范围为1~100，越大则衰减速率越快
 	 **/
 	static void PlayCameraShake(int intensity, int decay = 10);
 
@@ -60,7 +60,7 @@ public:
 	static double GetTimeSeconds();
 
 	//启用高斯模糊抗锯齿，每一帧都会处理，很耗性能。如果有人怂恿你使用这个函数那他非蠢即坏
-	static void SetGaussianFilterOn(bool enable,int level = 2);
+	static void SetGaussianFilterOn(bool enable, int level = 2);
 
 	//暂停游戏数秒
 	static void Pause(float delay);
@@ -92,6 +92,7 @@ inline T* GameplayStatics::CreateObject(FVector2D pos, float angle, FVector2D sc
 	T* pObj = new T;
 	if (pObj && static_cast<Actor*>(pObj))
 	{
+		pObj->InitName(typeid(*pObj).name());
 		mainWorld.GameActors_to_add.push_back(pObj);
 		pObj->SetLocalPosition(pos);
 		pObj->SetLocalRotation(angle);
@@ -146,4 +147,3 @@ inline T* GameplayStatics::CreateUI()
 	delete pUI;
 	return nullptr;
 }
-

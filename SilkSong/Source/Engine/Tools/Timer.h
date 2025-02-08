@@ -5,7 +5,7 @@
  **/
 
 #pragma once
-#include"Core/World.h"
+#include<unordered_set>
 #include<functional>
 #include<chrono>
 
@@ -16,15 +16,32 @@ using std::chrono::time_point;
 using std::chrono::milliseconds;
 
 
+class Timer;
+
 /*----------------------------------
-			  计时器
+			  计时器接口
+  ----------------------------------*/
+class TimerHandler
+{
+	std::unordered_set<Timer*> timers;
+
+public:
+	TimerHandler() {}
+	virtual ~TimerHandler();
+
+	void AddTimer(Timer* timer) { timers.insert(timer); }
+};
+
+
+/*----------------------------------
+			   计时器
   ----------------------------------*/
 class Timer final
 {
 	friend class World;
 public:
 	Timer() { lastTime = steady_clock::now(); }
-	~Timer() { mainWorld.GameTimers.erase(this); }
+	~Timer();
 
 	/**
 	 * @brief 绑定类成员函数到计时器定时回调
@@ -37,9 +54,9 @@ public:
 	template<typename T>
 	void Bind(double delay, T* obj, void(T::* function)(), bool repeat = false, double firstDelay = -1.0)
 	{
-		static_assert(std::is_base_of<ITimerHandler, T>::value, "T must be a derived class of ITimerHandler");
+		static_assert(std::is_base_of<TimerHandler, T>::value, "T must be a derived class of ITimerHandler");
 
-		ITimerHandler* handler = Cast<ITimerHandler>(obj);
+		TimerHandler* handler = dynamic_cast<TimerHandler*>(obj);
 		handler->AddTimer(this);
 
 		callback = std::bind(function, obj);
@@ -47,7 +64,7 @@ public:
 		lastTime = steady_clock::now();
 		if (firstDelay >= 0)lastTime -= milliseconds(int(1000 * (delay - firstDelay)));
 		bPersistent = repeat;
-		mainWorld.GameTimers.insert(this);
+		RegisterTimer();
 	}
 
 	/**
@@ -90,4 +107,6 @@ private:
 	}
 
 	void Execute();
+
+	void RegisterTimer();
 };

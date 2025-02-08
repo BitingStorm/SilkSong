@@ -1,7 +1,7 @@
 #include "AudioPlayer.h"
 #include "Core/World.h"
 #include "Components/Camera.h"
-#include "Tools/Math.h"
+
 
 
 using std::string;
@@ -21,12 +21,12 @@ void AudioPlayer::Update(float deltaTime)
 
 	if (!bIsEnabled || !bSpacial)return;
 
-	int vol = volume;
+	int32 vol = volume;
 	float dis = FVector2D::Distance(mainWorld.mainCamera->GetWorldPosition(), GetWorldPosition());
 	if (dis <= innerRadius) {  }
 	else if (dis > outerRadius)vol = 0;
-	else vol = (outerRadius - dis) * float(volume) / (outerRadius - innerRadius);
-	vol = Math::Clamp(vol, 0, 1000);
+	else vol = int32((outerRadius - dis) * volume / (outerRadius - innerRadius));
+	vol = FMath::Clamp(vol, 0, 1000);
 	if (currentVol == vol)return;
 	currentVol = vol;
 	for (auto& obj : paths)
@@ -36,9 +36,9 @@ void AudioPlayer::Update(float deltaTime)
 	}
 }
 
-void AudioPlayer::SetVolume(int vol)
+void AudioPlayer::SetVolume(int32 vol)
 {
-	volume = Math::Clamp(vol,0,1000);
+	volume = FMath::Clamp(vol,0,1000);
 	if (bSpacial)return;
 	for (auto& obj : paths)
 	{

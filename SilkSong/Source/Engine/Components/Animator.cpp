@@ -67,7 +67,7 @@ void Animation::Tick()
 
 void Animation::Load(std::string name, FVector2D delta)
 {
-	AnimationResource aniRes = mainWorld.resourcePool->FetchAnimation(name);
+	ArtyEngine::FAnimationResource aniRes = mainWorld.resourcePool->FetchAnimation(name);
 	num = aniRes.num;
 	images = aniRes.images;
 	offset = delta;
@@ -226,7 +226,7 @@ void Animator::AddParamater(std::string paramName, ParamType type)
 	}
 }
 
-void Animator::SetInteger(std::string paramName, int value)
+void Animator::SetInteger(std::string paramName, int32 value)
 {
 	if (paramatersInteger.find(paramName) != paramatersInteger.end())
 	{
@@ -264,31 +264,31 @@ bool Animator::CheckConditions(AnimEdge* edge)
 	for (const auto& condition : edge->integerConditions) {
 
 		if (paramatersInteger.find(condition.paramName) == paramatersInteger.end())continue;
-		result = TransitionCondition::GetComparisonResult(paramatersInteger[condition.paramName], condition.value, condition.comparison);
-		if (result && edge->comparisonMode == TransitionCondition::OR)return true;
-		if (!result && edge->comparisonMode == TransitionCondition::AND)return false;
+		result = AnimTransition::GetComparisonResult(paramatersInteger[condition.paramName], condition.value, condition.comparison);
+		if (result && edge->comparisonMode == AnimTransition::OR)return true;
+		if (!result && edge->comparisonMode == AnimTransition::AND)return false;
 	}
 	for (const auto& condition : edge->floatConditions) {
 
 		if (paramatersFloat.find(condition.paramName) == paramatersFloat.end())continue;
-		result = TransitionCondition::GetComparisonResult(paramatersFloat[condition.paramName], condition.value, condition.comparison);
-		if (result && edge->comparisonMode == TransitionCondition::OR)return true;
-		if (!result && edge->comparisonMode == TransitionCondition::AND)return false;
+		result = AnimTransition::GetComparisonResult(paramatersFloat[condition.paramName], condition.value, condition.comparison);
+		if (result && edge->comparisonMode == AnimTransition::OR)return true;
+		if (!result && edge->comparisonMode == AnimTransition::AND)return false;
 	}
 	for (const auto& condition : edge->boolConditions) {
 
 		if (paramatersBool.find(condition.paramName) == paramatersBool.end())continue;
 		result = (paramatersBool[condition.paramName] == condition.value);
-		if (result && edge->comparisonMode == TransitionCondition::OR)return true;
-		if (!result && edge->comparisonMode == TransitionCondition::AND)return false;
+		if (result && edge->comparisonMode == AnimTransition::OR)return true;
+		if (!result && edge->comparisonMode == AnimTransition::AND)return false;
 	}
 	for (const auto& condition : edge->triggerConditions) {
 
 		if (paramatersTrigger.find(condition.paramName) == paramatersTrigger.end())continue;
 		result = (paramatersTrigger[condition.paramName] == true);
 		paramatersTrigger[condition.paramName] = false;
-		if (result && edge->comparisonMode == TransitionCondition::OR)return true;
-		if (!result && edge->comparisonMode == TransitionCondition::AND)return false;
+		if (result && edge->comparisonMode == AnimTransition::OR)return true;
+		if (!result && edge->comparisonMode == AnimTransition::AND)return false;
 	}
 	return result;
 }

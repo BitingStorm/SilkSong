@@ -1,6 +1,6 @@
 #include "Animated.h"
 #include "Components/SpriteRenderer.h"
-#include "Tools/Math.h"
+
 
 
 Animated::Animated()
@@ -14,7 +14,7 @@ Animated::Animated()
 void Animated::Init(std::string name, float delay, int layer)
 {
 	idle.Load(name);
-	idle.SetIndex(Math::RandInt(0,9));
+	idle.SetIndex(FMath::RandInt(0,9));
 	idle.SetInterval(delay);
 
 	ani->Insert("idle", idle);

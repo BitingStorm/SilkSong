@@ -4,6 +4,9 @@
 #pragma comment (lib,"Gdiplus.lib")
 
 
+//************************************************
+//*********       用户需编辑部分          **********
+
 void ResourceManager::Initialize()
 {
 	/*************
@@ -108,8 +111,7 @@ void ResourceManager::Initialize()
 	Load("menu_0", "Asset/Images/Menu/Voidheart_menu_BG.jpg", 1250, 875);
 	Load("menu_1", "Asset/Images/Menu/title-bg.png", 1400, 800);
 	Load("menu_2", "Asset/Images/Menu/title-f.png", 475, 750);
-	Load("menu_title", "Asset/Images/Menu/title.png", 1274, 521);
-	Load("menu_title_", "Asset/Images/Menu/title_.png", 782, 404);
+	Load("menu_title", "Asset/Images/Menu/title.png", 782, 404);
 	Load("menu_icon", "Asset/Images/Menu/team_cherry_logo_main_menu.png", 250, 203);
 	Load("menu_logo", "Asset/Images/Menu/Hidden_Dreams_Logo.png", 141, 38);
 	
@@ -166,9 +168,9 @@ void ResourceManager::Initialize()
 	Load("inventory_item", "Asset/Images/UI/ins_item.png", 60, 60);
 	Load("inventory_item_", "Asset/Images/UI/ins_item_bk.png", 60, 60);
 	Load("inventory_coin", "Asset/Images/UI/InventoryCoin.png", 47, 48);
-	Load("black", "Asset/Images/UI/mask_black.png", 1212, 808);
-	Load("white", "Asset/Images/UI/mask_white.png", 1200, 800);
-	Load("low_health", "Asset/Images/UI/vignette_low_health.png", 1200, 800);
+	Load("black", "Asset/Images/UI/mask_black.png", WIN_WIDTH + 12, WIN_HEIGHT + 8);
+	Load("white", "Asset/Images/UI/mask_white.png", WIN_WIDTH, WIN_HEIGHT);
+	Load("low_health", "Asset/Images/UI/vignette_low_health.png", WIN_WIDTH, WIN_HEIGHT);
 	Load("inventory_ins1", "Asset/Images/UI/ins_1.png", 72, 72);
 	Load("inventory_ins2", "Asset/Images/UI/ins_2.png", 173, 49);
 	Load("inventory_ins3", "Asset/Images/UI/ins_3.png", 104, 44);
@@ -247,7 +249,8 @@ void ResourceManager::Initialize()
 	LoadCustomCursor("Asset/cursor.cur");
 }
 
-
+//*********                             **********
+//************************************************
 
 
 
@@ -257,7 +260,7 @@ IMAGE* ResourceManager::Fetch(std::string name)
 	return imagePool[name];
 }
 
-AnimationResource ResourceManager::FetchAnimation(std::string name)
+ArtyEngine::FAnimationResource ResourceManager::FetchAnimation(std::string name)
 {
 	return animationPool[name];
 }
@@ -281,7 +284,7 @@ void ResourceManager::Load(std::string name, std::string path, int wid, int hei,
 	animationPool.insert({ name, {images,num } });
 }
 
-void ResourceManager::Load(std::string name, std::string path, const std::vector<FPair>& arr)
+void ResourceManager::Load(std::string name, std::string path, const std::vector<FIntVector2>& arr)
 {
 	int num = int(arr.size());
 	IMAGE** images = new IMAGE * [num];
@@ -348,7 +351,6 @@ void ResourceManager::LoadCustomCursor(std::string path)
 		return;
 	}
 
-	// 获取光标的 ICONINFO
 	ICONINFO iconInfo;
 	if (GetIconInfo(hcur, &iconInfo))
 	{
@@ -373,7 +375,6 @@ void ResourceManager::LoadCustomCursor(std::string path)
 			return;
 		}
 
-		// 释放旧的光标资源
 		DeleteObject(iconInfo.hbmColor);
 		DeleteObject(iconInfo.hbmMask);
 

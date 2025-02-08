@@ -19,9 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\Core\Box2D.h" />
+    <ClInclude Include="Source\Engine\Core\Vector2D.h" />
+    <ClInclude Include="Source\Project\DamageResponseComponent.h" />
+    <ClInclude Include="Source\Project\DamageSystem.h" />
+    <ClInclude Include="Source\Project\GameMode.h" />
+    <ClInclude Include="Source\Project\PropertyComponent.h" />
     <ClInclude Include="Source\Project\SceneUI.h" />
     <ClInclude Include="Source\Engine\Components\WidgetComponent.h" />
-    <ClInclude Include="Source\Engine\Core\Interfaces.h" />
     <ClInclude Include="Source\Project\Chair.h" />
     <ClInclude Include="Source\Project\DieParticle.h" />
     <ClInclude Include="Source\Project\MenuController.h" />
@@ -70,9 +75,9 @@
     <ClInclude Include="Source\Engine\Objects\Actor.h" />
     <ClInclude Include="Source\Engine\Objects\Controller.h" />
     <ClInclude Include="Source\Engine\Tools\CollisionManager.h" />
-    <ClInclude Include="Source\Engine\Tools\Delegate.h" />
+    <ClInclude Include="Source\Engine\Core\Delegate.h" />
     <ClInclude Include="Source\Engine\Tools\LevelManager.h" />
-    <ClInclude Include="Source\Engine\Tools\Math.h" />
+    <ClInclude Include="Source\Engine\Core\Math.h" />
     <ClInclude Include="Source\Engine\Tools\ResourceManager.h" />
     <ClInclude Include="Source\Engine\Tools\Timer.h" />
     <ClInclude Include="Source\Engine\Tools\VisualInterface.h" />
@@ -82,8 +87,9 @@
     <ClInclude Include="Source\Project\RainProducer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Project\DamageSystem.cpp" />
+    <ClCompile Include="Source\Project\GameMode.cpp" />
     <ClCompile Include="Source\Engine\Components\WidgetComponent.cpp" />
-    <ClCompile Include="Source\Engine\Core\Interfaces.cpp" />
     <ClCompile Include="Source\Project\Chair.cpp" />
     <ClCompile Include="Source\Project\DieParticle.cpp" />
     <ClCompile Include="Source\Project\MenuController.cpp" />
@@ -128,7 +134,7 @@
     <ClCompile Include="Source\Engine\Tools\CollisionManager.cpp" />
     <ClCompile Include="Source\Engine\Tools\GameplayStatics.cpp" />
     <ClCompile Include="Source\Engine\Tools\LevelManager.cpp" />
-    <ClCompile Include="Source\Engine\Tools\Math.cpp" />
+    <ClCompile Include="Source\Engine\Core\Math.cpp" />
     <ClCompile Include="Source\Engine\Tools\Timer.cpp" />
     <ClCompile Include="Source\Engine\Tools\VisualInterface.cpp" />
     <ClCompile Include="Source\Engine\UI\UserInterface.cpp" />

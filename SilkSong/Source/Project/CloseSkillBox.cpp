@@ -33,7 +33,7 @@ CloseSkillBox::CloseSkillBox()
 			if (Enemy* enemy = Cast<Enemy>(obj))
 			{
 				if (enemy->IsDead())continue;
-				enemy->TakeDamage((enemy->GetWorldPosition() - circle->GetWorldPosition()).Normalize(),false);
+				enemy->TakeDamage((enemy->GetWorldPosition() - circle->GetWorldPosition()).GetSafeNormal(),false);
 				GameplayStatics::PlaySound2D("sound_damage_0");
 			}
 		}
