@@ -15,9 +15,12 @@
 class RigidBody final :public ActorComponent
 {
 	friend class Collider;
+
 public:
+	RigidBody();
 	virtual ~RigidBody();
 	virtual void Update(float deltaTime) override;
+	void PreciseUpdate(float deltaTime);
 
 	//ÉèÖÃÖØÁ¦
 	void SetGravity(float gravity) { this->gravity = gravity; }

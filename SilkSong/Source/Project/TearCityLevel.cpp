@@ -3,6 +3,7 @@
 #include "Bug.h"
 #include "PlatForm.h"
 #include "Bg.h"
+#include "Interactive.h"
 #include "GameplayStatics.h"
 #include "RainProducer.h"
 #include "Animated.h"
@@ -55,16 +56,19 @@ TearCityLevel::TearCityLevel()
 
 
 	Bg* ev5 = GameplayStatics::CreateObject<Bg>({ -850,950 }); ev5->Init("tearcity_environment_4", -2);
-	Bg* ev6 = GameplayStatics::CreateObject<Bg>({ -400,850 }); ev6->Init("tearcity_environment_5", -1);
+	Interactive* ev6 = GameplayStatics::CreateObject<Interactive>({ -400,850 });
+	ev6->Init("tearcity_environment_16", -1); ev6->Init_("tearcity_environment_5", { 20,200 });
 	Bg* ev7 = GameplayStatics::CreateObject<Bg>({ 1200,875 }); ev7->Init("tearcity_environment_6", 5, false, false);
 	Bg* ev8 = GameplayStatics::CreateObject<Bg>({ 800,680 }); ev8->Init("tearcity_environment_7", 0);
 	Bg* ev9 = GameplayStatics::CreateObject<Bg>({ 900,980 }); ev9->Init("tearcity_environment_8", 5);
 	GameplayStatics::CreateObject<Bg>({ 750,1075 })->Init("tearcity_environment_9", -2);
-	GameplayStatics::CreateObject<Bg>({ 1100,850 })->Init("tearcity_environment_10", -2);
+	Interactive* ev10 = GameplayStatics::CreateObject<Interactive>({ 1100,850 });
+	ev10->Init("tearcity_environment_10", -2); ev10->Init_("tearcity_environment_14", {20,200});
 	GameplayStatics::CreateObject<Bg>({ 1580,975 })->Init("tearcity_environment_11", 4);
 	GameplayStatics::CreateObject<Bg>({ 1500,830 })->Init("tearcity_environment_12", -1);
 	GameplayStatics::CreateObject<Bg>({ -600,1050 })->Init("tearcity_environment_13", -2);
-	GameplayStatics::CreateObject<Bg>({ 450,845 })->Init("tearcity_environment_14", 5, false, false);
+	Interactive* ev14 = GameplayStatics::CreateObject<Interactive>({ 450,845 });
+	ev14->Init("tearcity_environment_10", 5, false, false); ev14->Init_("tearcity_environment_14", { 20,200 });
 	GameplayStatics::CreateObject<Bg>({ -785,950 })->Init("tearcity_environment_15", 5);
 
 

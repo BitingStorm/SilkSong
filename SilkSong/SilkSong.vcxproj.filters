@@ -300,6 +300,9 @@
     <ClInclude Include="Source\Project\VolumeBarUI.h">
       <Filter>Project\Menu</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Project\Interactive.h">
+      <Filter>Project</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Components\ActorComponent.cpp">
@@ -502,6 +505,9 @@
     </ClCompile>
     <ClCompile Include="Source\Project\VolumeBarUI.cpp">
       <Filter>Project\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\Interactive.cpp">
+      <Filter>Project</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

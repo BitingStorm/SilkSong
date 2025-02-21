@@ -21,10 +21,12 @@ void ActorComponent::Destruct()
 
 void ActorComponent::Activate()
 {
+	OnActivated.BroadCast();
 	bIsEnabled = true;
 }
 
 void ActorComponent::Deactivate()
 {
+	OnDeactivated.BroadCast();
 	bIsEnabled = false;
 }

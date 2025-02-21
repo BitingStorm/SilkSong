@@ -28,6 +28,15 @@ FDamageCauseInfo DamageResponseComponent::TakeDamage(IDamagable* damageCauser, f
 	return damageInfo;
 }
 
+void DamageResponseComponent::SetStrategy(DamageStrategy* newStrategy)
+{
+	if (strategy)
+	{
+		delete strategy;
+	}
+	strategy = newStrategy;
+}
+
 void DamageResponseComponent::EndPlay()
 {
 	Super::EndPlay();

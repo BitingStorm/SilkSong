@@ -9,7 +9,7 @@ protected:
 public:
 	virtual FDamageCauseInfo TakeDamage(IDamagable* damageCauser, float baseValue, EDamageType damageType)
 	{
-		return {};
+		return FDamageCauseInfo(true, damageCauser, baseValue);
 	}
 
 	void SetOwner(Actor* owner)

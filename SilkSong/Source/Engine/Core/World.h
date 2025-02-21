@@ -37,6 +37,7 @@ class Controller;
 class AudioPlayer;
 class TimerHandler;
 class Level;
+class RigidBody;
 
 
 namespace ArtyEngine
@@ -73,6 +74,7 @@ class World final
 	friend Animation;
 	friend ParticleSystem;
 	friend Collider;
+	friend RigidBody;
 	friend CircleCollider;
 	friend BoxCollider;
 	friend Controller;
@@ -122,6 +124,7 @@ class World final
 	std::set<LayerInterface*, ArtyEngine::LayerSort>GameRenderers;
 	std::unordered_set<Collider*>GameColliders;
 	std::unordered_set<Collider*>GameColliders_to_clear;
+	std::unordered_set<RigidBody*>GameRigids;
 	std::set<Collider*, ArtyEngine::ColliderSort>ColliderZones[10][6];
 	std::set<LayerInterface*, ArtyEngine::LayerSort>UIDetectZones[6][4];
 
@@ -149,7 +152,8 @@ class World final
 	//碰撞计算
 	void ProcessColliders();
 
-
+	//处理碰撞事件
+	void ProcessCollisions(float deltaTime);
 
 	//Debug模式 
 	void Debug();

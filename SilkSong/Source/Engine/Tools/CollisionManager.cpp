@@ -25,6 +25,7 @@ void CollisionManager::Initialize()
 
 
 
+
 CollisionManager::CollisionManager()
 {
 	collisionMap.insert({ int(CollisionType::Default) * int(CollisionType::Default) + int(CollisionType::Default) * int(CollisionType::Default) });

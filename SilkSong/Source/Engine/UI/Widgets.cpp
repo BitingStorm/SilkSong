@@ -538,7 +538,8 @@ void Bar::Render()
 
 		int w = endPosition.x - startPosition.x;
 		int h = endPosition.y - startPosition.y;
-		AlphaBlend(dstDC, int(pos.x - sizeFront.x * 0.5f), int(pos.y - sizeFront.y * 0.5f), w, h, srcDC, 0, 0, w, h, bf);
+		AlphaBlend(dstDC, int(pos.x - sizeFront.x * 0.5f), int(pos.y - sizeFront.y * 0.5f), w, h, srcDC, 0, 0,
+			float(barFront->getwidth() * w) / sizeFront.x, float(barFront->getheight() * h) / sizeFront.y, bf);
 
 		if (barButton)
 		{

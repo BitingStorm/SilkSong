@@ -4,6 +4,7 @@
 #include "GameplayStatics.h"
 #include "Effect.h"
 #include "Dart.h"
+#include "Interactive.h"
 #include "Chest.h"
 #include "Player.h"
 #include "GameModeHelper.h"
@@ -65,9 +66,9 @@ void AttackBox::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherAc
 			effect->SetLocalRotation(FVector2D::VectorToDegree(normal) + 100);
 		}
 	}
-	else if (Chest* chest = Cast<Chest>(otherActor))
+	else if (otherComp->GetType() == CollisionType::Chest)
 	{
-		GameModeHelper::ApplyDamage(this, chest, 1, EDamageType::Player);
+		GameModeHelper::ApplyDamage(this, Cast<IDamagable>(otherActor), 1, EDamageType::Player);
 	}
 }
 

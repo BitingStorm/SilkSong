@@ -76,6 +76,7 @@ void ResourceManager::Initialize()
 	Load("inventory_bloodload", "Asset/Animations/UI/BloodLoad/", 33, 49, 4);
 	Load("inventory_bloodminus", "Asset/Animations/UI/BloodMinus/", { {68,136}, {65,140}, {67,131}, {114,128}, {108,128}, {118,112}, {33,47} });
 	Load("inventory_silk", "Asset/Animations/UI/Silk/", { {19,75}, {19,75}, {23,71}, {21,68}, {28,91}, {25,47}, {16,39} });
+	Load("menu_warning", "Asset/Animations/UI/Warning/", 767, 64, 7);
 
 	//Enemy
 	Load("bug_walk", "Asset/Animations/Enemy/Bug/Walk/", 90, 84, 4);
@@ -137,7 +138,7 @@ void ResourceManager::Initialize()
 	Load("tearcity_environment_13", "Asset/Images/Environment/TearCity/_0022_city_break.png", 130, 300);
 	Load("tearcity_environment_14", "Asset/Images/Environment/TearCity/_0030_city_break.png", 74, 315);
 	Load("tearcity_environment_15", "Asset/Images/Environment/TearCity/ruin_small_corner_piece.png", 170, 250);
-
+	Load("tearcity_environment_16", "Asset/Images/Environment/TearCity/_0016_city_break.png", 61, 324);
 
 	Load("tearcity_plat_0", "Asset/Images/PlatForm/TearCity/ruin_plat_float_01.png", 163, 118);
 	Load("tearcity_plat_1", "Asset/Images/PlatForm/TearCity/ruin_plat_float_02.png", 114, 83);

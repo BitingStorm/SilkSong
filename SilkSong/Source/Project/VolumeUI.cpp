@@ -16,6 +16,23 @@ VolumeUI::VolumeUI()
 	Title->SetLayer(10);
 	Title->SetText("$0AUDIO", 7, "Trajan Pro");
 
+	Warning = AddWidget<Image>();
+	Warning->AttachTo(Title);
+	Warning->SetLayoutPattern(LayoutPattern::MiddleBottom);
+	Warning->SetRelativePosition(FVector2D(0, 50));
+	Warning->SetLayer(10);
+	Warning->EnableAnimControl();
+	idle.Load("menu_warning");
+    idle.SetInterval(0.05f);
+	idle.SetLooping(false);
+	Animator* ani = Warning->GetAnimator();
+	if(ani)
+	{
+		ani->Insert("idle", idle);
+		ani->SetNode("idle");
+	}
+	OnAddedToViewport.AddLambda([this]() {idle.SetIndex(0); });
+
 	Back = AddWidget<Button>();
 	Back->AttachTo(rootCanvas);
 	Back->SetLayoutPattern(LayoutPattern::MiddleBottom);

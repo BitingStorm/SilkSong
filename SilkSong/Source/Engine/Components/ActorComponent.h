@@ -10,6 +10,7 @@
 
 class Actor;
 
+DECLARE_NO_PARAM_MULTICAST_DELEGATE_CLASS(ComponentEvent)
 
 /*----------------------------------
 			  组件基类
@@ -36,6 +37,10 @@ public:
 
 	//组件是否启用
 	bool GetEnabled()const { return bIsEnabled; }
+
+	/* 组件使用事件 */
+	ComponentEvent OnActivated;
+	ComponentEvent OnDeactivated;
 
 protected:
 	Actor* pOwner = nullptr;//处理控制逻辑

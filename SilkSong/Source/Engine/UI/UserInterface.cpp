@@ -29,6 +29,7 @@ void UserInterface::DrawDebugRect()
 
 void UserInterface::AddToViewport()
 {
+	OnAddedToViewport.BroadCast();
 	for (auto& widget : widgets)
 	{
 		widget->SetUIPattern(UIPattern::VisibleAndInteractive);
@@ -41,6 +42,7 @@ void UserInterface::AddToViewport()
 
 void UserInterface::HideFromViewport()
 {
+	OnHidFromViewport.BroadCast();
 	for (auto& widget : widgets)
 	{
 		widget->SetUIPattern(UIPattern::None);
@@ -53,6 +55,7 @@ void UserInterface::HideFromViewport()
 
 void UserInterface::RemoveFromViewport()
 {
+	OnRemovedFromViewport.BroadCast();
 	mainWorld.GameUIs_to_delete.insert(this);
 	for (auto& ui : userInterfaces)
 	{

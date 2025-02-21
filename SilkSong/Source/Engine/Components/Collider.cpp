@@ -120,8 +120,7 @@ void Collider::Insert(Collider* another)
             HitResult hitResult = this->CollisionHit(another);
             OnComponentHit.BroadCast(this, another, another->pOwner, -hitResult.ImpactNormal, hitResult);
             another->OnComponentHit.BroadCast(another, this, pOwner, hitResult.ImpactNormal, { hitResult.ImpactPoint,-hitResult.ImpactNormal,pOwner,this });
-            if (rigidAttached)
-            {
+            if (rigidAttached) {
                 rigidAttached->RestrictVelocity(-hitResult.ImpactNormal, FPhysicsMaterial::Combine(this->material, another->material), another->rigidAttached);
             }
         }
@@ -145,7 +144,6 @@ void Collider::Erase()
     }
     for (auto& another : collisions_to_erase) collisions.erase(another);
 }
-
 
 bool Collider::CollisionJudge(Collider* another)
 {

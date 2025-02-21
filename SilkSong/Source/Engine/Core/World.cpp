@@ -5,6 +5,7 @@
 #include"Tools/VisualInterface.h"
 #include"Components/Camera.h"
 #include"Components/Collider.h"
+#include"Components/RigidBody.h"
 #include"Objects/Controller.h"
 #include"UI/UserInterface.h"
 #include"Objects/Level.h"
@@ -32,10 +33,13 @@ bool ArtyEngine::ColliderSort::operator()(const Collider* a, const Collider* b)c
 
 void World::Update(float deltaTime)
 {
+	for (int i = 0; i < 5; i++)
+	{
+		ProcessCollisions(deltaTime * 0.2f);
+	}
 	ProcessColliders();
-	
-	//交互处理（点输入）
-	GameplayStatics::GetController()->PeekInfo();
+
+	GameplayStatics::GetController()->PeekInfo();//交互处理（点输入）
 
 	currentLevel->Update(deltaTime);
 
@@ -121,12 +125,6 @@ void World::Update(float deltaTime)
 void World::ProcessColliders()
 {
 	/**
-	 * 碰撞插入信息更新
-	 **/
-	for (auto& arr_i : ColliderZones)for (auto& arr_j : arr_i) if (!arr_j.empty())
-		for (auto& me : arr_j)for (auto& he : arr_j) if (he != me) me->Insert(he);
-
-	/**
 	 * 碰撞删除信息更新
 	 **/
 	for (auto& it : GameColliders)it->Erase();
@@ -136,9 +134,21 @@ void World::ProcessColliders()
 	 **/
 	{
 		std::lock_guard<std::mutex> lock(updateMutex);
+
 		for (auto& it : GameColliders_to_clear)it->Clear();
 		GameColliders_to_clear.clear();
 	}
+}
+
+void World::ProcessCollisions(float deltaTime)
+{
+	for (auto& it : GameRigids)it->PreciseUpdate(deltaTime);
+
+	/**
+     * 碰撞插入信息更新
+     **/
+	for (auto& arr_i : ColliderZones)for (auto& arr_j : arr_i) if (!arr_j.empty())
+		for (auto& me : arr_j)for (auto& he : arr_j) if (he != me) me->Insert(he);
 }
 
 

@@ -30,6 +30,7 @@
     <ClInclude Include="Source\Project\DamageSystem.h" />
     <ClInclude Include="Source\Project\GameMode.h" />
     <ClInclude Include="Source\Project\GameModeHelper.h" />
+    <ClInclude Include="Source\Project\Interactive.h" />
     <ClInclude Include="Source\Project\PlayerPropertyComponent.h" />
     <ClInclude Include="Source\Project\PropertyCarrier.h" />
     <ClInclude Include="Source\Project\PropertyComponent.h" />
@@ -107,6 +108,7 @@
     <ClCompile Include="Source\Project\Chair.cpp" />
     <ClCompile Include="Source\Project\DieParticle.cpp" />
     <ClCompile Include="Source\Project\GameModeHelper.cpp" />
+    <ClCompile Include="Source\Project\Interactive.cpp" />
     <ClCompile Include="Source\Project\MenuController.cpp" />
     <ClCompile Include="Source\Project\MenuLevel.cpp" />
     <ClCompile Include="Source\Project\CloseSkillBox.cpp" />

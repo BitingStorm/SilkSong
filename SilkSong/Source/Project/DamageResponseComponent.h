@@ -16,5 +16,7 @@ public:
 
 	FDamageCauseInfo TakeDamage(IDamagable* damageCauser, float baseValue, EDamageType damageType);
 
+	void SetStrategy(DamageStrategy* newStrategy);
+
 	virtual void EndPlay()override;
 };

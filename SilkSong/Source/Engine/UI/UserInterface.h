@@ -9,6 +9,8 @@
 #include"Tools/Timer.h"
 
 
+DECLARE_NO_PARAM_MULTICAST_DELEGATE_CLASS(ViewPortEvent)
+
 /*----------------------------------
 			    UI类 
   ----------------------------------*/
@@ -64,4 +66,9 @@ public:
 
 	//将UI从另一UI解绑
 	void DettachFrom(UserInterface* aim);
+
+	/* 视口事件 */
+	ViewPortEvent OnAddedToViewport;
+	ViewPortEvent OnHidFromViewport;
+	ViewPortEvent OnRemovedFromViewport;
 };

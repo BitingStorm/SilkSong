@@ -30,6 +30,7 @@ public:
 		WIN_WIDTH = 1200, WIN_HEIGHT = 800;
 		initgraph(WIN_WIDTH, WIN_HEIGHT);
 		/*setaspectratio(float(WIN_WIDTH)/1200,float(WIN_HEIGHT)/800);*/
+
 		//系统Debug绘制参数
 		setlinestyle(PS_SOLID | PS_JOIN_BEVEL);
 		setfillcolor(LIGHTBLUE);
@@ -64,9 +65,8 @@ public:
 	static void Tick(float deltaTime)//帧更新
 	{
 		mainWorld.deltaTime = 0;
-		mainWorld.Update(deltaTime * 0.5f);
+		mainWorld.Update(deltaTime);
 		mainWorld.Render();
-		mainWorld.Update(deltaTime * 0.5f);
 	}
 
 	static void Tick_()//高频更新

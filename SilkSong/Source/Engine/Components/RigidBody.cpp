@@ -1,13 +1,19 @@
 #include "RigidBody.h"
 #include "Collider.h"
 #include "Objects/Actor.h"
+#include "Core/World.h"
 
 
 
 
+RigidBody::RigidBody()
+{
+	mainWorld.GameRigids.insert(this);
+}
 
 RigidBody::~RigidBody()
 {
+	mainWorld.GameRigids.erase(this);
 	for (auto& collider : colliders)collider->rigidAttached = nullptr;
 }
 
@@ -17,32 +23,6 @@ void RigidBody::Update(float deltaTime)
 
 	if (bMoveable)
 	{
-		if (bGravityEnabled)
-		{
-			velocity.y += gravity * deltaTime;
-		}
-		for (auto& collider : colliders)
-		{
-			if (collider->mode != CollisionMode::Collision)continue;
-			for (auto& another : collider->collisions)
-			{
-				if (another->mode != CollisionMode::Collision)continue;
-				RestrictVelocity(-collider->CollisionHit(another).ImpactNormal, FPhysicsMaterial::Combine(collider->material, another->material), another->rigidAttached);
-			}
-		}
-		for (auto& collider : colliders)
-		{
-			if (collider->mode != CollisionMode::Collision)continue;
-			for (auto& another : collider->collisions)
-			{
-				if (another->mode != CollisionMode::Collision || another->rigidAttached)continue;
-				RestrictVelocity(-collider->CollisionHit(another).ImpactNormal, FPhysicsMaterial::Combine(collider->material, another->material));
-			}
-		}
-
-		FVector2D offset = velocity.ClampAxes(-maxSpeed, maxSpeed) * deltaTime;
-		pOwner->AddPosition(FVector2D(FMath::IsSmallNumber(offset.x) ? 0 : offset.x, FMath::IsSmallNumber(offset.y) ? 0 : offset.y));
-
 		if (linearDrag)
 		{
 			if (!FMath::IsSmallNumber(velocity.x))
@@ -69,6 +49,39 @@ void RigidBody::Update(float deltaTime)
 			angularVelocity = (angularVelocity < 0) != (buffer < 0) ? 0 : buffer;
 		}
 	}
+}
+
+void RigidBody::PreciseUpdate(float deltaTime)
+{
+	if (!bMoveable)
+	{
+		return;
+	}
+	if (bGravityEnabled)
+	{
+		velocity.y += gravity * deltaTime;
+	}
+	for (auto& collider : colliders)
+	{
+		if (collider->mode != CollisionMode::Collision)continue;
+		for (auto& another : collider->collisions)
+		{
+			if (another->mode != CollisionMode::Collision)continue;
+			RestrictVelocity(-collider->CollisionHit(another).ImpactNormal, FPhysicsMaterial::Combine(collider->material, another->material), another->rigidAttached);
+		}
+	}
+	for (auto& collider : colliders)
+	{
+		if (collider->mode != CollisionMode::Collision)continue;
+		for (auto& another : collider->collisions)
+		{
+			if (another->mode != CollisionMode::Collision || another->rigidAttached)continue;
+			RestrictVelocity(-collider->CollisionHit(another).ImpactNormal, FPhysicsMaterial::Combine(collider->material, another->material));
+		}
+	}
+
+	FVector2D offset = velocity.ClampAxes(-maxSpeed, maxSpeed) * deltaTime;
+	pOwner->AddPosition(FVector2D(FMath::IsSmallNumber(offset.x) ? 0 : offset.x, FMath::IsSmallNumber(offset.y) ? 0 : offset.y));
 }
 
 void RigidBody::RestrictVelocity(FVector2D impactNormal, const FPhysicsMaterial& material, RigidBody* another)

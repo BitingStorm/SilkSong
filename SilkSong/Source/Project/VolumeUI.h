@@ -1,10 +1,13 @@
 #pragma once
 #include "UI/UserInterface.h"
+#include "Components/Animator.h"
 
 
 class VolumeUI :public UserInterface
 {
 	Text* Title;
+	Image* Warning;
+	Animation idle;
 
 	Button* Back;
 	Text* BackText;
