@@ -27,14 +27,14 @@ MenuController::MenuController()
 	whiteRadiant->SetGravity(0.1f);
 	whiteRadiant->SetSizeRange(0.25, 0.5);
 
-	oldTheme = GameplayStatics::CreateObject<OldTheme>();
+	newTheme = GameplayStatics::CreateObject<NewTheme>();
 }
 
 void MenuController::BeginPlay()
 {
     Super::BeginPlay();
     GameplayStatics::CreateUI<MenuUI>()->AddToViewport();
-	GameModeHelper::PlayBGMusic("menu");
+	GameModeHelper::PlayBGMusic("menu_");
 }
 
 void MenuController::Update(float deltaTime)

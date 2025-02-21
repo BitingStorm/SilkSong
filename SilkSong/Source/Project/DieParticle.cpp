@@ -1,6 +1,7 @@
 #include "DieParticle.h"
 #include "Components/ParticleSystem.h"
 #include "Components/AudioPlayer.h"
+#include "GameModeHelper.h"
 
 
 DieParticle::DieParticle()
@@ -36,6 +37,6 @@ DieParticle::DieParticle()
 	silk->SetLayer(5);
 	silk->Deactivate();
 
-	ChangeTimerHandle.Bind(0.5f, [this]() {silk->Activate(); GetOwner()->GetComponentByClass<AudioPlayer>()->Play("sound_die"); }, false);
+	ChangeTimerHandle.Bind(0.5f, [this]() {silk->Activate(); GameModeHelper::PlayFXSound("sound_die"); }, false);
 	DestroyTimerHandle.Bind(3.f, [this]() {Destroy();}, false);
 }
