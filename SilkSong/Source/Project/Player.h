@@ -1,6 +1,7 @@
 #pragma once
 #include "Objects/Character.h"
-#include "Tools/Timer.h"
+#include "Damagable.h"
+#include "PropertyCarrier.h"
 
 
 enum class ECharacterDirection : uint8
@@ -10,10 +11,8 @@ enum class ECharacterDirection : uint8
 	LookDown,
 };
 
-DECLARE_NO_PARAM_MULTICAST_DELEGATE_CLASS(OnHurtEvent)
-DECLARE_NO_PARAM_MULTICAST_DELEGATE_CLASS(OnCureEvent)
 
-class Player :public Character
+class Player :public Character, public IDamagable, public IPropertyCarrier
 {
 	DEFINE_SUPER(Character)
 
@@ -24,23 +23,29 @@ public:
 
 	virtual void Update(float deltaTime)override;
 
-	void TakeDamage(FVector2D normal);
+	virtual FDamageCauseInfo TakeDamage(IDamagable* damageCauser, float baseValue, EDamageType damageType)override;
+
+	virtual void ExecuteDamageDealtEvent(FDamageCauseInfo extraInfo)override;
+
+	virtual void ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)override;
+
+	virtual PropertyComponent* GetProperty()override;
 
 	FVector2D GetCameraPos();
 
-	int32 GetHealth()const { return health; }
+	int32 GetHealth()const;
 
 	void AddHealth(int32 delta);
 
-	float GetSilk()const { return silk; }
+	float GetSilk()const;
 
-	void AddSilk(int delta);
+	void AddSilk(int32 delta);
 
-	int32 GetGeo()const { return geo; }
+	int32 GetGeo()const;
 
-	void AddGeo(int32 delta) { geo += delta; }
+	void AddGeo(int32 delta);
 
-	int32 GetDart()const { return dartNum; }
+	int32 GetDart()const;
 
 	void AddDart(int32 delta);
 
@@ -64,9 +69,6 @@ public:
 
 	void LeaveWall();
 
-	OnCureEvent cureEvent;
-	OnHurtEvent hurtEvent;
-
 protected:
 	virtual void SetupInputComponent(InputComponent* inputComponent)override;
 
@@ -81,8 +83,9 @@ private:
 	class PlayerAnimator* ani;
 	class RigidBody* rigid;
 	class Camera* camera;
-	class AudioPlayer* audio;
 	class ParticleSystem* particle;
+	class DamageResponseComponent* damageResponse;
+	class PlayerPropertyComponent* playerProperty;
 	class GameUI* ui;
 
 	Timer BlinkTimer;
@@ -111,14 +114,5 @@ private:
 	int32 jumpFlag;
 	ECharacterDirection direction;
 
-	int32 health;
-	int32 silk;
-	int32 geo;
-	int32 dartNum;
-
-	void SpawnDashEffect();
-
 	void SpawnWetLandEffect();
-
-	void SpawnWetWalkEffect();
 };

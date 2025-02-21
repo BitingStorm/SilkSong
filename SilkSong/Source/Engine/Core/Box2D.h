@@ -20,10 +20,16 @@ namespace Math
 		TVector2<T> max;
 
 		TBox2<T>()
-			: min(0.f, 0.f), max(0.f, 0.f) {}
+			: min(0, 0), max(0, 0) {}
 
 		TBox2<T>(const TVector2<T>& inMin, const TVector2<T>& inMax)
-			: min(inMin), max(inMax) {}
+			: min(inMin), max(inMax)
+		{
+			if (inMin.x >= inMax.x || inMin.y >= inMax.y)
+			{
+				min = max = TVector2<T>::ZeroVector;
+			}
+		}
 
 		FORCEINLINE TBox2<T>(const TVector2<T>& center, T width, T height);
 
@@ -60,8 +66,7 @@ namespace Math
 		//获取矩形面积
 		T GetArea() const
 		{
-			TVector2<T> size(max - min);
-			return size.x * size.y;
+			return (max.x - min.x) * (max.y - min.y);
 		}
 
 		//判断一个点是否位于矩形之中
@@ -80,7 +85,7 @@ namespace Math
 		FORCEINLINE bool Intersects(const TBox2<T>& other) const;
 
 		//获取重叠部分矩形
-		FORCEINLINE TBox2<T> GetOverlapRect(const TBox2<T>& other) const;
+		FORCEINLINE TBox2<T> Overlaps(const TBox2<T>& other) const;
 
 		//拿到矩形距离目标点最近的那个点
 		FORCEINLINE TVector2<T> GetClosestPointTo(const TVector2<T>& point) const;
@@ -108,7 +113,7 @@ namespace Math
 	}
 
 	template<typename T>
-	FORCEINLINE TBox2<T> TBox2<T>::GetOverlapRect(const TBox2<T>& other) const
+	FORCEINLINE TBox2<T> TBox2<T>::Overlaps(const TBox2<T>& other) const
 	{
 		if (!Intersects(other))
 		{

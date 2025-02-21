@@ -15,18 +15,18 @@
   ----------------------------------*/
 class Object 
 {
-	static int tag;
+	static int number;
 
 	std::string name;
 
 public:
-	Object() { tag++; InitName(typeid(*this).name()); }
-	virtual ~Object() { tag--; }
+	Object() { number++; InitName(std::string(typeid(*this).name()).substr(6)); }
+	virtual ~Object() { number--; }
 
 	//初始化标签名
 	void InitName(const std::string& name) 
 	{ 
-		this->name = name + std::string(" ") + std::to_string(tag);
+		this->name = name + std::string("_") + std::to_string(number);
 	}
 
 	//获取标签名
@@ -36,28 +36,13 @@ public:
 	void SetName(const std::string& name) { this->name = name; }
 
 	virtual void Update(float deltaTime) {}
+
 	virtual void BeginPlay() {}
 
-	//禁止用户自定义构造函数，而是使用该函数
+	//禁止用户自定义析构函数，而是使用该函数
 	virtual void EndPlay() {}
 };
 
-
-/*----------------------------------
-			  游戏关卡
-  ----------------------------------*/
-class Level :public Object
-{
-	friend class World;
-	friend class GameplayStatics;
-
-protected:
-	class Controller* mainController = nullptr;
-
-public:
-	/* 务必把关卡初始化逻辑写进BeginPlay，禁止写入构造函数 */
-	virtual void BeginPlay() {}
-};
 
 
 /*----------------------------------
@@ -65,5 +50,6 @@ public:
   ----------------------------------*/
 class GameInstance
 {
-
+public:
+	GameInstance();
 };

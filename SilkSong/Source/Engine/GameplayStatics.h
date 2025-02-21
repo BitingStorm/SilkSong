@@ -27,6 +27,10 @@ public:
 	template<typename T>
 	static T* CreateObject(FVector2D pos = FVector2D::ZeroVector, float angle = 0, FVector2D scale = FVector2D::UnitVector);
 
+	//创建游戏对象
+	template<typename T>
+	static T* CreateObject(FTransform transform);
+
 	//通过类查找游戏对象
 	template<typename T>
 	static std::vector<T*>FindObjectsOfClass();
@@ -36,8 +40,7 @@ public:
 	static T* FindObjectOfClass();
 
 	//通过标签名查找游戏对象
-	template<typename T>
-	static T* FindObjectOfName(std::string tagName);
+	static Actor* FindObjectOfName(std::string tagName);
 
 	//创建UI对象
 	template<class T>
@@ -92,11 +95,26 @@ inline T* GameplayStatics::CreateObject(FVector2D pos, float angle, FVector2D sc
 	T* pObj = new T;
 	if (pObj && static_cast<Actor*>(pObj))
 	{
-		pObj->InitName(typeid(*pObj).name());
+		pObj->InitName(std::string(typeid(*pObj).name()).substr(6));
 		mainWorld.GameActors_to_add.push_back(pObj);
 		pObj->SetLocalPosition(pos);
 		pObj->SetLocalRotation(angle);
 		pObj->SetLocalScale(scale);
+		return pObj;
+	}
+	delete pObj;
+	return nullptr;
+}
+
+template<typename T>
+inline T* GameplayStatics::CreateObject(FTransform transform)
+{
+	T* pObj = new T;
+	if (pObj && static_cast<Actor*>(pObj))
+	{
+		pObj->InitName(std::string(typeid(*pObj).name()).substr(6));
+		mainWorld.GameActors_to_add.push_back(pObj);
+		pObj->SetLocalTransform(transform);
 		return pObj;
 	}
 	delete pObj;
@@ -110,7 +128,11 @@ inline std::vector<T*> GameplayStatics::FindObjectsOfClass()
 	result.reserve(mainWorld.GameActors.size());
 	for (auto& obj : mainWorld.GameActors) 
 	{
-		if (T* pObj = dynamic_cast<T*>(obj))result.push_back(pObj);
+		if (T* pObj = Cast<T>(obj))result.push_back(pObj);
+	}
+	for (auto& obj : mainWorld.OverallGameActors)
+	{
+		if (T* pObj = Cast<T>(obj))result.push_back(pObj);
 	}
 	return result;
 }
@@ -120,17 +142,11 @@ inline T* GameplayStatics::FindObjectOfClass()
 {
 	for (auto& obj : mainWorld.GameActors)
 	{
-		if (T* pObj = dynamic_cast<T*>(obj))return pObj;
+		if (T* pObj = Cast<T>(obj))return pObj;
 	}
-	return nullptr;
-}
-
-template<typename T>
-inline T* GameplayStatics::FindObjectOfName(std::string tagName)
-{
-	for (auto& obj : mainWorld.GameActors)
+	for (auto& obj : mainWorld.OverallGameActors)
 	{
-		if (obj->GetName() == tagName)return obj;
+		if (T* pObj = Cast<T>(obj))return pObj;
 	}
 	return nullptr;
 }

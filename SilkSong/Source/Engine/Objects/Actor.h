@@ -66,6 +66,7 @@ public:
 	const FVector2D& GetLocalPosition() const;
 	float GetLocalRotation() const;
 	const FVector2D& GetLocalScale() const;
+	const FTransform& GetLocalTransform() const;
 
 	/** 获取场景属性（世界绝对坐标系）**/
 	FVector2D GetWorldPosition()const;
@@ -76,6 +77,8 @@ public:
 	void SetLocalPosition(const FVector2D& pos);
 	void SetLocalRotation(float angle);
 	void SetLocalScale(const FVector2D& scale);
+	void SetPositionAndRotation(const FVector2D& pos, float angle);
+	void SetLocalTransform(const FTransform& transform);
 
 	/** 增加场景属性偏移量 **/
 	void AddPosition(FVector2D pos);
@@ -105,8 +108,24 @@ public:
 	{
 		for (auto& com : components)
 		{
-			if (T* pCom = dynamic_cast<T*>(com))return pCom;
+			if (T* pCom = Cast<T>(com))return pCom;
 		}
 		return nullptr;
 	}
+
+	//通过类名获取组件
+	template<typename T>
+	std::vector<T*> GetComponentsByClass()
+	{
+		std::vector<T*> result;
+		result.reserve(components.size());
+		for (auto& obj : components)
+		{
+			if (T* pObj = Cast<T>(obj))result.push_back(pObj);
+		}
+		return result;
+	}
+
+	//通过标签名获取组件
+	ActorComponent* GetComponentByName(std::string tagName);
 };

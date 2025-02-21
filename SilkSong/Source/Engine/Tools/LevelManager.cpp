@@ -19,16 +19,20 @@ void LevelManager::Initialize()
 	AddLevel<MenuLevel>("Menu");
 	AddLevel<TearCityLevel>("TearCity");
 	SetDefaultLevel("Menu");
-}
 
 //*********                             **********
 //************************************************
+
+
+	mainWorld.currentLevel = level_to_create();
+	mainWorld.currentLevel->BeginPlay();
+}
 
 void LevelManager::SetDefaultLevel(std::string levelName)
 {
 	level_to_delete = mainWorld.currentLevel;
 	if (levelMap.find(levelName) == levelMap.end())return;
-	mainWorld.currentLevel = levelMap[levelName];
+	level_to_create = levelMap[levelName];
 }
 
 void LevelManager::RefreshLevel()
@@ -36,7 +40,9 @@ void LevelManager::RefreshLevel()
 	if (level_to_delete)
 	{
 		mainWorld.WipeData();
+		delete level_to_delete;
 		level_to_delete = nullptr;
+		mainWorld.currentLevel = level_to_create();
 		mainWorld.currentLevel->BeginPlay();
 	}
 }

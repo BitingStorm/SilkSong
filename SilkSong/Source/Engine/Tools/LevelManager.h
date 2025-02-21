@@ -8,7 +8,7 @@
 #pragma once
 #include <unordered_map>
 #include <string>
-
+#include <functional>
 
 class Level;
 
@@ -25,22 +25,18 @@ public:
 
 	void RefreshLevel();
 private:
-	std::unordered_map<std::string, Level*>levelMap;
+	std::unordered_map<std::string, std::function<Level*()>>levelMap;
 
 	template<class T>
 	void AddLevel(std::string levelName);
 
 	Level* level_to_delete = nullptr;
+
+	std::function<Level*()>level_to_create;
 };
 
 template<class T>
 inline void LevelManager::AddLevel(std::string levelName)
 {
-	T* pLevel = new T;
-	if (pLevel && static_cast<Level*>(pLevel))
-	{
-		levelMap.insert({levelName,pLevel});
-		return;
-	}
-	delete pLevel;
+	levelMap.insert({ levelName,[]() { return new T(); } });
 }

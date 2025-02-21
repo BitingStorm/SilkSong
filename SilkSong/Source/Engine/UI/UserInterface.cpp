@@ -5,8 +5,8 @@
 
 UserInterface::UserInterface()
 {
-	rootCanvas->SetSize({ WIN_WIDTH,WIN_HEIGHT }); 
-	rootCanvas->SetRelativePosition({ WIN_WIDTH * 0.5,WIN_HEIGHT * 0.5 });
+	rootCanvas->SetSize(FVector2D(WIN_WIDTH, WIN_HEIGHT));
+	rootCanvas->SetRelativePosition({ WIN_WIDTH * 0.5f, WIN_HEIGHT * 0.5f });
 }
 
 void UserInterface::Update(float deltaTime)
@@ -24,7 +24,7 @@ void UserInterface::ShowInfoBoxs()
 
 void UserInterface::DrawDebugRect()
 {
-	for (auto& widget : widgets) { widget->DrawDebugRect(); }
+	for (auto& widget : widgets) { if (widget->GetUIPattern() != UIPattern::None)widget->DrawDebugRect(); }
 }
 
 void UserInterface::AddToViewport()
@@ -32,6 +32,10 @@ void UserInterface::AddToViewport()
 	for (auto& widget : widgets)
 	{
 		widget->SetUIPattern(UIPattern::VisibleAndInteractive);
+	}
+	for (auto& ui : userInterfaces)
+	{
+		ui->AddToViewport();
 	}
 }
 
@@ -41,9 +45,27 @@ void UserInterface::HideFromViewport()
 	{
 		widget->SetUIPattern(UIPattern::None);
 	}
+	for (auto& ui : userInterfaces)
+	{
+		ui->HideFromViewport();
+	}
 }
 
 void UserInterface::RemoveFromViewport()
 {
 	mainWorld.GameUIs_to_delete.insert(this);
+	for (auto& ui : userInterfaces)
+	{
+		ui->RemoveFromViewport();
+	}
+}
+
+void UserInterface::AttachTo(UserInterface* aim)
+{
+	aim->userInterfaces.insert(this);
+}
+
+void UserInterface::DettachFrom(UserInterface* aim)
+{
+	aim->userInterfaces.erase(this);
 }

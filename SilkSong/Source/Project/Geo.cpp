@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Effect.h"
 #include "GameplayStatics.h"
+#include "GameModeHelper.h"
 
 
 
@@ -69,6 +70,6 @@ void Geo::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherActor)
 		effect->Init("effect_geo", -0.05f);
 		effect->SetLocalScale(FVector2D(1, 1) * FMath::RandReal(0.9f + std::sqrtf(float(price)) * 0.1f, 1.15f + std::sqrtf(float(price)) * 0.1f));
 		effect->SetLocalRotation(FMath::RandReal(-20, 20));
-		GameplayStatics::PlaySound2D("sound_geo");
+		GameModeHelper::PlayFXSound("sound_geo");
 	}
 }

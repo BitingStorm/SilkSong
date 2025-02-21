@@ -3,9 +3,11 @@
 #include "Components/SpriteRenderer.h"
 #include "Components/RigidBody.h"
 #include "Components/Camera.h"
-#include "Components/AudioPlayer.h"
 #include "Components/ParticleSystem.h"
+#include "DamageResponseComponent.h"
+#include "PlayerPropertyComponent.h"
 #include "GameplayStatics.h"
+#include "GameModeHelper.h"
 
 #include "PlayerAnimator.h"
 #include "Effect.h"
@@ -29,7 +31,7 @@ Player::Player()
 	render_light->LoadSprite("player_light");
 	render_light->SetLayer(0);
 	render_light->SetTransparency(75);
-
+	
 	ani = ConstructComponent<PlayerAnimator>();
 	ani->SetupAttachment(render);
 
@@ -46,7 +48,6 @@ Player::Player()
 	hurtBox->SetLocalPosition({ -5,10 });
 	hurtBox->SetType(CollisionType::HurtBox);
 
-
 	rigid = GetComponentByClass<RigidBody>();
 	rigid->SetLinearDrag(0.07f);
 	rigid->SetGravity(1960);
@@ -54,10 +55,7 @@ Player::Player()
 	camera = GetComponentByClass<Camera>();
 	camera->SetDistanceThreshold(100);
 	camera->SetSmoothness(50);
-	camera->SetRectFrame(FRect({ -375.f,725.f }, { 1125.f,-1000.f }));
-
-	audio = ConstructComponent<AudioPlayer>();
-	audio->AttachTo(root);
+	camera->SetRectFrame(FRect({ -375.f,-1000.f }, { 1125.f,725.f }));
 
 	particle = ConstructComponent<ParticleSystem>();
 	particle->AttachTo(root);
@@ -75,6 +73,8 @@ Player::Player()
 	particle->SetGravity(-9.8f);
 	particle->SetLifeCycle(1.5f);
 	
+	damageResponse = ConstructComponent<DamageResponseComponent>();
+	playerProperty = ConstructComponent<PlayerPropertyComponent>();
 
 	bGround = false;
 	bDashing = false;
@@ -103,13 +103,32 @@ Player::Player()
 	ui = GameplayStatics::CreateUI<GameUI>();
 	ui->AddToViewport();
 
-	ani->dashEffect.Bind(this, &Player::SpawnDashEffect);
+	ani->dashEffect.Bind([this]()
+		{
+			Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() - FVector2D(GetWorldScale().x * 150, 0));
+			if (!effect)return;
+			if (bGround)
+			{
+				effect->Init("effect_dash"); effect->SetLocalScale(GetWorldScale());
+			}
+			else
+			{
+				effect->Init("effect_dash_", -0.03f); effect->SetLocalScale({ -GetWorldScale().x,1.f }); effect->AddPosition({ -GetWorldScale().x * 125,-50 });
+			}
+			bDashing = true;
+		});
 	ani->cureEffect.Bind([this]()
 		{
 			GameplayStatics::CreateObject<HealParticle>()->AttachTo(this);
 			ui->WhiteBlink(6); camera->SetSpringArmLength(20);
 		});
-	ani->wetWalkEffect.Bind(this, &Player::SpawnWetWalkEffect);
+	ani->wetWalkEffect.Bind([this]()
+		{
+			Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(0, 60));
+			if (!effect)return;
+			effect->Init("effect_wetwalk");
+			effect->SetLocalScale(GetWorldScale() * FMath::RandReal(0.8f, 1.1f));
+		});
 	ani->dartSpawn.Bind([this]()
 		{
 			Dart* dart = GameplayStatics::CreateObject<Dart>(GetWorldPosition());
@@ -128,7 +147,7 @@ Player::Player()
 			needle->AttachTo(effect);
 			effect->Init("effect_remoteskill"); effect->SetLocalScale(GetLocalScale());
 			effect->AddPosition({ GetLocalScale().x * 500,25 });
-			audio->Play("sound_remoteskill");
+			GameModeHelper::PlayFXSound("sound_remoteskill");
 		});
 	ani->grabFinished.Bind(this, &Player::Grab);
 	ani->downAttackSpawn.Bind([this]()
@@ -143,16 +162,14 @@ Player::Player()
 		});
 
 	blinkTimes = 0;
-	health = 5;
-	silk = 9;
-	geo = 0;
-	dartNum = 15;
 }
 
 void Player::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	SetLocalPosition({ -800,800 });
+
 	BlinkTimer.Bind(0.2f, [this]()
 		{
 			if (blinkTimes > 0)
@@ -162,10 +179,7 @@ void Player::BeginPlay()
 				if (--blinkTimes == 0 && !bSitting)
 				{
 					hurtBox->SetCollisonMode(CollisionMode::Trigger);
-					if (health != 1)
-					{
-						particle->SetIsLoop(false);
-					}
+					if (playerProperty->GetHealth() != 1)particle->SetIsLoop(false);
 				}
 			}
 		}, true);
@@ -174,6 +188,8 @@ void Player::BeginPlay()
 	box->OnComponentStay.AddDynamic(this, &Player::OnStay);
 
 	particle->Deactivate();
+
+	GameModeHelper::PlayBGMusic("tear_city");
 }
 
 void Player::Update(float deltaTime)
@@ -210,11 +226,11 @@ void Player::Update(float deltaTime)
 	
 	if (GetMovementState() != ECharacterMovementState::Running)
 	{
-		audio->Stop("sound_swim");
-		audio->Stop("sound_waterwalk");
+		GameModeHelper::GetInstance()->GetAudioPlayer(0)->Stop("sound_swim");
+		GameModeHelper::GetInstance()->GetAudioPlayer(0)->Stop("sound_waterwalk");
 	}
 
-	ani->SetFloat("walkingSpeed", std::abs(rigid->GetVelocity().x));
+	ani->SetFloat("walkingSpeed", FMath::Abs(rigid->GetVelocity().x));
 	ani->SetFloat("landingSpeed", -1.f);
 	ani->SetFloat("fallingSpeed", rigid->GetVelocity().y);
 
@@ -335,23 +351,23 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 			else ani->PlayMontage("jump");
 			lastJumpTime = GameplayStatics::GetTimeSeconds();
 			int32 jumpNum = FMath::RandInt(0, 10);
-			if (jumpNum < 3)audio->Play("voice_jump_0");
-			else if (jumpNum < 5)audio->Play("voice_jump_1");
-			else if (jumpNum < 7)audio->Play("voice_jump_2");
-			audio->Play("sound_jump");
+			if (jumpNum < 3)GameModeHelper::PlayFXSound("voice_jump_0");
+			else if (jumpNum < 5)GameModeHelper::PlayFXSound("voice_jump_1");
+			else if (jumpNum < 7)GameModeHelper::PlayFXSound("voice_jump_2");
+			GameModeHelper::PlayFXSound("sound_jump");
 			jumpFlag = 1;
 		}
 		else if (bWall)
 		{
-			AddPosition({ GetWorldScale().x * 10,-10 });
-			rigid->AddImpulse({ GetWorldScale().x * 500,-500 });
+			AddPosition(FVector2D(GetWorldScale().x * 10.f, -10.f));
+			rigid->AddImpulse(FVector2D(GetWorldScale().x * 500, -500)); 
 			ani->PlayMontage("jump");
 			lastJumpTime = GameplayStatics::GetTimeSeconds();
 			int32 jumpNum = FMath::RandInt(0, 12);
-			if (jumpNum < 2)audio->Play("voice_jump_0");
-			else if (jumpNum < 4)audio->Play("voice_jump_1");
-			else if (jumpNum < 6)audio->Play("voice_jump_2");
-			audio->Play("sound_walljump");
+			if (jumpNum < 2)GameModeHelper::PlayFXSound("voice_jump_0");
+			else if (jumpNum < 4)GameModeHelper::PlayFXSound("voice_jump_1");
+			else if (jumpNum < 6)GameModeHelper::PlayFXSound("voice_jump_2");
+			GameModeHelper::PlayFXSound("sound_walljump");
 			jumpFlag = 2;
 		}
 		});
@@ -359,7 +375,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		if (bSitting || bWall) return;
 		if (rigid->GetVelocity().y < 0 && GameplayStatics::GetTimeSeconds() - lastJumpTime < 0.19f)
 		{
-			bGround = false; ani->SetBool("flying", true); rigid->AddImpulse({ 0,-5.f / jumpFlag });
+			bGround = false; ani->SetBool("flying", true); rigid->AddImpulse(FVector2D(0, -5.f / jumpFlag));
 		}
 		});
 	inputComponent->BindAction("Attack", EInputType::Pressed, [this]() {
@@ -368,7 +384,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		{
 			attackFlag = (attackFlag + 1) % 2;
 			lastAttackTime = GameplayStatics::GetTimeSeconds();
-			audio->Play("sound_attack");
+			GameModeHelper::PlayFXSound("sound_attack");
 			AttackBox* attackBox = GameplayStatics::CreateObject<AttackBox>();
 			attackBox->AttachTo(this);
 			switch (direction)
@@ -395,10 +411,10 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		if (bGround) 
 		{ 
 			ani->PlayMontage("evade"); bEvading = true; lastEvadeTime = GameplayStatics::GetTimeSeconds(); 
-			audio->Play("sound_evade");
+			GameModeHelper::PlayFXSound("sound_evade");
 			int32 jumpNum = FMath::RandInt(0, 8);
-			if (jumpNum < 3)audio->Play("sound_evade_0");
-			else if (jumpNum < 5)audio->Play("sound_evade_1");
+			if (jumpNum < 3)GameModeHelper::PlayFXSound("sound_evade_0");
+			else if (jumpNum < 5)GameModeHelper::PlayFXSound("sound_evade_1");
 		}
 		});
 	inputComponent->BindAction("Dash", EInputType::Pressed, [this]() {
@@ -410,17 +426,17 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 			AddPosition({ GetWorldScale().x * 25,-10 });
 		}
 		lastDashTime = GameplayStatics::GetTimeSeconds(); rigid->SetVelocity({ rigid->GetVelocity().x,0 });
-		rigid->SetGravityEnabled(false); audio->Play("sound_dash");
+		rigid->SetGravityEnabled(false); GameModeHelper::PlayFXSound("sound_dash");
 		});
 	inputComponent->BindAction("Cure", EInputType::Pressed, [this]() {
 		if (bSitting || bWall) return;
-		if (silk >= 9 && health < 5) 
+		if (playerProperty->GetSilk() >= 9 && playerProperty->GetHealth() < 5)
 		{
 			AddSilk(-9);
 			ani->PlayMontage("cure");   
 			camera->SetSpringArmLength(19); camera->ShakeCamera(5, 2);
-			audio->Play("voice_cure");
-			audio->Play("sound_cure");
+			GameModeHelper::PlayFXSound("voice_cure");
+			GameModeHelper::PlayFXSound("sound_cure");
 			lastFloatTime = GameplayStatics::GetTimeSeconds() + 1.f; 
 			SetFloating(true);
 			particle->SetIsLoop(false);
@@ -429,36 +445,38 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		});
 	inputComponent->BindAction("Throw", EInputType::Pressed, [this]() {
 		if (bSitting || bWall) return;
-		if (dartNum <= 0 || GameplayStatics::GetTimeSeconds() - lastThrowTime < 0.5f)return;
+		if (playerProperty->GetDart() <= 0 || GameplayStatics::GetTimeSeconds() - lastThrowTime < 0.5f)return;
 		lastThrowTime = GameplayStatics::GetTimeSeconds();
-		ani->PlayMontage("throw"); audio->Play("sound_throw");
-		if (FMath::RandInt(0, 10) > 5)audio->Play("voice_throw");
+		ani->PlayMontage("throw"); 
+		GameModeHelper::PlayFXSound("sound_throw");
+		if (FMath::RandInt(0, 10) > 5)GameModeHelper::PlayFXSound("voice_throw");
 		});
 	inputComponent->BindAction("Leave", EInputType::Pressed, [this]() {
 		if (bSitting || bWall) return;
-		if (silk < 3 || bGround)return; AddSilk(-3); EnableInput(false);
+		if (playerProperty->GetSilk() < 3 || bGround)return; AddSilk(-3); EnableInput(false);
 		lastThrowTime = GameplayStatics::GetTimeSeconds();
-		ani->PlayMontage("leave"); audio->Play("sound_leave");
+		ani->PlayMontage("leave"); 
+		GameModeHelper::PlayFXSound("sound_leave");
 		rigid->SetGravityEnabled(false);rigid->SetVelocity({});
 		GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(GetLocalScale().x > 0 ? 200 : -200, -150),
 			(GetLocalScale().x > 0 ? -150 : -30))->Init("effect_leave", -0.02f);
 		});
 	inputComponent->BindAction("CloseSkill", EInputType::Pressed, [this]() {
 		if (bSitting || bWall) return;
-		if (silk < 3) return; AddSilk(-3);
+		if (playerProperty->GetSilk() < 3) return; AddSilk(-3);
 		ani->PlayMontage("_closeskill");
 		GameplayStatics::CreateObject<CloseSkillBox>(GetWorldPosition());
 		lastFloatTime = GameplayStatics::GetTimeSeconds(); SetFloating(true);
-		audio->Play("sound_closeskill");
-		if (FMath::RandInt(0, 10) > 5)audio->Play("voice_closeskill_0");
-		else audio->Play("voice_closeskill_1");
+		GameModeHelper::PlayFXSound("sound_closeskill");
+		if (FMath::RandInt(0, 10) > 5)GameModeHelper::PlayFXSound("voice_closeskill_0");
+		else GameModeHelper::PlayFXSound("voice_closeskill_1");
 		});
 	inputComponent->BindAction("RemoteSkill", EInputType::Pressed, [this]() {
 		if (bSitting || bWall) return;
-		if (silk < 3 || !bGround)return; AddSilk(-3); EnableInput(false);
+		if (playerProperty->GetSilk() < 3 || !bGround)return; AddSilk(-3); EnableInput(false);
 		ani->PlayMontage("remoteskill");
-		if (FMath::RandInt(0, 10) > 5)audio->Play("voice_remoteskill_0");
-		else audio->Play("voice_remoteskill_1");
+		if (FMath::RandInt(0, 10) > 5)GameModeHelper::PlayFXSound("voice_remoteskill_0");
+		else GameModeHelper::PlayFXSound("voice_remoteskill_1");
 		});
 }
 
@@ -470,10 +488,10 @@ void Player::OnEnter(Collider* hitComp, Collider* otherComp, Actor* otherActor, 
 		bGround = true; ani->SetBool("flying", false);
 		ani->SetFloat("landingSpeed", rigid->GetVelocity().y);
 		SpawnWetLandEffect();
-		if (GetWorldPosition().y > 1000)audio->Play("sound_waterland");
-		if (rigid->GetVelocity().y > 1200)GameplayStatics::PlaySound2D("sound_hardland");
-		else if(rigid->GetVelocity().y > 500)GameplayStatics::PlaySound2D("sound_softland");
-		else GameplayStatics::PlaySound2D("sound_land");
+		if (GetWorldPosition().y > 1000)GameModeHelper::PlayFXSound("sound_waterland");
+		if (rigid->GetVelocity().y > 1200)GameModeHelper::PlayFXSound("sound_hardland");
+		else if(rigid->GetVelocity().y > 500)GameModeHelper::PlayFXSound("sound_softland");
+		else GameModeHelper::PlayFXSound("sound_land");
 	}
 	else if (normalImpulse.x != 0 && GetWorldScale().x == -normalImpulse.x)
 	{
@@ -486,7 +504,7 @@ void Player::OnEnter(Collider* hitComp, Collider* otherComp, Actor* otherActor, 
 				box->SetPhysicsMaterial({});
 				rigid->SetVelocity({ 0,3.75f * (delta_y > 0 ? 0 : delta_y) - 100.f });
 				ani->PlayMontage("grab");
-				GameplayStatics::PlaySound2D("sound_claw");
+				GameModeHelper::PlayFXSound("sound_claw");
 				EnableInput(false);
 			}
 		}
@@ -511,46 +529,75 @@ void Player::OnStay(Collider* hitComp, Collider* otherComp, Actor* otherActor, F
 				ani->SetNode("wall");
 				rigid->SetVelocity({});
 				rigid->SetGravityEnabled(false);
-				SetLocalScale(FVector2D(normalImpulse.x, GetWorldScale().y));
-				audio->Play("sound_claw");
+				SetLocalScale(FVector2D(normalImpulse.x, 1.f));
+				GameModeHelper::PlayFXSound("sound_claw");
 			}
 		}
 	}
 }
 
-void Player::TakeDamage(FVector2D normal)
+FDamageCauseInfo Player::TakeDamage(IDamagable* damageCauser, float baseValue, EDamageType damageType)
 {
-	if (blinkTimes > 0 || health == 0)
+	if (blinkTimes > 0)
+	{
+		return {};
+	}
+	FDamageCauseInfo damageInfo = damageResponse->TakeDamage(damageCauser, baseValue, damageType);
+	AddHealth(-damageInfo.realValue);
+	return damageInfo;
+}
+
+void Player::ExecuteDamageDealtEvent(FDamageCauseInfo extraInfo)
+{
+
+}
+
+void Player::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
+{
+	if (!extraInfo.bIsValid)
 	{
 		return;
 	}
-	AddHealth(-1);
-	if (health == 0)
+
+	if (GetHealth() <= 0)
 	{
 		DieStart(); return;
 	}
-	blinkTimes = 10;
-	particle->Activate();
-	particle->SetIsLoop(true);
 
-	ani->PlayMontage("hurt");
-	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
-	effect->Init("effect_hurt");
+	blinkTimes = 10;
 	bDashing = false;
 	bEvading = false;
 	bFloating = false;
+
+	ani->PlayMontage("hurt");
+	particle->Activate();
+	particle->SetIsLoop(true);
 	rigid->SetGravityEnabled(true);
 	rigid->SetVelocity({});
-	rigid->AddImpulse({ normal.x * 200,-200 });
+	Actor* causer = Cast<Actor>(extraInfo.damageCauser);
+	CHECK_PTR(causer)
+	rigid->AddImpulse({ (GetWorldPosition() - causer->GetWorldPosition()).GetSafeNormal().x * 200,-200 });
 	hurtBox->SetCollisonMode(CollisionMode::None);
+
+	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
+	effect->Init("effect_hurt");
 	effect = GameplayStatics::CreateObject<Effect>();
 	effect->Init("effect_hurt_");
 	effect->AttachTo(this);
 
+	GameModeHelper::PlayFXSound("sound_hurt");
 	int32 stunNum = FMath::RandInt(0, 10);
-	audio->Play("sound_hurt");
-	if (stunNum < 3)audio->Play("sound_stun");
-	else if (stunNum < 6)audio->Play("sound_stun_");
+	if (stunNum < 3)GameModeHelper::PlayFXSound("sound_stun");
+	else if (stunNum < 6)GameModeHelper::PlayFXSound("sound_stun_");
+}
+
+PropertyComponent* Player::GetProperty()
+{
+	if (!playerProperty)
+	{
+		playerProperty = ConstructComponent<PlayerPropertyComponent>();
+	}
+	return Cast<PropertyComponent>(playerProperty);
 }
 
 FVector2D Player::GetCameraPos()
@@ -559,54 +606,76 @@ FVector2D Player::GetCameraPos()
 	return FVector2D();
 }
 
+int32 Player::GetHealth() const
+{
+	return playerProperty->GetHealth();
+}
+
 void Player::AddHealth(int32 delta)
 {
-	if (delta > 0)
+	int32 initHealth = playerProperty->GetHealth();
+	int32 realDelta = playerProperty->AddHealth(delta);
+
+	if (realDelta > 0)
 	{
-		for (int i = 0; i < delta; i++)
+		for (int i = 0; i < realDelta; i++)
 		{
-			if (health >= 5)break;
-			ui->BloodLoad(health);
-			health++;
+			ui->BloodLoad(initHealth + i);
 		}
 	}
 	else
 	{
-		for (int i = 0; i < -delta; i++)
+		for (int i = 0; i > realDelta; i--)
 		{
-			if (health <= 0)break;
-			health--;
-			ui->BloodMinus(health);
+			ui->BloodMinus(initHealth + i - 1);
 		}
 	}
 }
 
-void Player::AddSilk(int delta)
+float Player::GetSilk() const
 {
-	if (delta > 0)
+	return playerProperty->GetSilk();
+}
+
+void Player::AddSilk(int32 delta)
+{
+	int32 initSilk = playerProperty->GetSilk();
+	int32 realDelta = playerProperty->AddSilk(delta);
+
+	if (realDelta > 0)
 	{
-		for (int i = 0; i < delta; i++)
+		for (int i = 0; i < realDelta; i++)
 		{
-			if (silk >= 9)break;
-			ui->SilkLoad(silk);
-			silk++;
+			ui->SilkLoad(initSilk + i);
 		}
 	}
 	else
 	{
-		for (int i = 0; i < -delta; i++)
+		for (int i = 0; i > realDelta; i--)
 		{
-			if (silk <= 0)break;
-			silk--;
-			ui->SilkMinus(silk);
+			ui->SilkMinus(initSilk + i - 1);
 		}
 	}
+}
+
+int32 Player::GetGeo() const
+{
+	return playerProperty->GetGeo();
+}
+
+void Player::AddGeo(int32 delta)
+{
+	playerProperty->AddGeo(delta);
+}
+
+int32 Player::GetDart() const
+{
+	return playerProperty->GetDart();
 }
 
 void Player::AddDart(int32 delta)
 {
-	dartNum += delta;
-	dartNum = FMath::Clamp(dartNum, 0, 999);
+	playerProperty->AddDart(delta);
 }
 
 void Player::SetFloating(bool enable)
@@ -642,7 +711,7 @@ void Player::DieStart()
 	rigid->SetGravityEnabled(false);
 	GameplayStatics::CreateObject<DieParticle>()->AttachTo(this);
 	DieTimer.Bind(3.f, this, &Player::DieEnd);
-	audio->Play("voice_die");
+	GameModeHelper::PlayFXSound("voice_die");
 	hurtBox->SetCollisonMode(CollisionMode::None);
 }
 
@@ -676,7 +745,7 @@ void Player::SitDown()
 		particle->SetIsLoop(false);
 		SetLocalPosition(chair->GetWorldPosition() - FVector2D{ 0,30 });
 		bSitting = true; ani->SetNode("sitdown"); blinkTimes = 1;
-		audio->Play("sound_heal"); ui->WhiteBlink(3);
+		GameModeHelper::PlayFXSound("sound_heal"); ui->WhiteBlink(3);
 		GameplayStatics::CreateObject<SitParticle>(GetWorldPosition() + FVector2D(0, 45));
 		Effect* effect = GameplayStatics::CreateObject<Effect>(FVector2D(-20, 0));
 		effect->Init("effect_sit", -0.02f);
@@ -695,7 +764,7 @@ void Player::StandUp()
 	bSitting = false;
 	hurtBox->SetCollisonMode(CollisionMode::Trigger);
 	rigid->SetGravityEnabled(true);
-	audio->Play("sound_land");
+	GameModeHelper::PlayFXSound("sound_land");
 }
 
 void Player::LeaveUp()
@@ -712,33 +781,10 @@ void Player::LeaveWall()
 }
 
 
-void Player::SpawnDashEffect()
-{
-	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() - FVector2D(GetWorldScale().x * 150, 0));
-	if (!effect)return;
-	if (bGround)
-	{
-		effect->Init("effect_dash"); effect->SetLocalScale(GetWorldScale());
-	}
-	else
-	{
-		effect->Init("effect_dash_", -0.03f); effect->SetLocalScale({ -GetWorldScale().x,1.f }); effect->AddPosition({ -GetWorldScale().x * 125,-50});
-	}
-	bDashing = true;
-}
-
 void Player::SpawnWetLandEffect()
 {
 	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(0, 55));
 	if (!effect)return;
 	effect->Init("effect_wetland");
 	effect->SetLocalScale(GetWorldScale());
-}
-
-void Player::SpawnWetWalkEffect()
-{
-	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(0, 60));
-	if (!effect)return;
-	effect->Init("effect_wetwalk");
-	effect->SetLocalScale(GetWorldScale() * FMath::RandReal(0.8f, 1.1f));
 }

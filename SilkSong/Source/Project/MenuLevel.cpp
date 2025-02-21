@@ -1,9 +1,11 @@
 #include "MenuLevel.h"
 #include "GameplayStatics.h"
 #include "MenuController.h"
+#include "GameMode.h"
 
-
-void MenuLevel::BeginPlay()
+MenuLevel::MenuLevel()
 {
-	mainController = GameplayStatics::CreateObject<MenuController>();
+	SetDefaultController<MenuController>();
+
+	GameplayStatics::DontDestroyOnLoad(GameplayStatics::CreateObject<GameMode>());
 }

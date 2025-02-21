@@ -10,6 +10,7 @@
 #include"Core/Math.h"
 #include"Core/Vector2D.h"
 #include"Core/Box2D.h"
+#include"Core/Transform.h"
 #include"Core/Struct.h"
 #include"Core/Object.h"
 #include"Core/Delegate.h"
@@ -22,7 +23,7 @@
 #include<queue>
 #include<ctime>
 #include<cmath>
-
+#include<cassert>
 
 
  #ifndef COREMINIMAL
@@ -62,6 +63,17 @@ inline std::string GetRealTime()
 	}
 	else std::cerr << "Failed to get local time." << std::endl;
 	return std::string{};
+}
+
+
+//检测指针是否有效
+inline void checkPtr(void* ptr, const char* ptrName, const char* fileName, int lineNumber)
+{
+	if (!ptr)
+	{
+		std::cerr << "Assertion failed: " << ptrName << " is nullptr in " << fileName << " at line " << lineNumber << std::endl;
+		assert(false);
+	}
 }
 
 //是否开启帧率限制

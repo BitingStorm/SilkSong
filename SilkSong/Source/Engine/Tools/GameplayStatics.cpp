@@ -1,4 +1,5 @@
 #include "GameplayStatics.h"
+#include "Objects/Level.h"
 #include "Objects/Controller.h"
 #include "LevelManager.h"
 #include "Components/Camera.h"
@@ -26,6 +27,19 @@ Controller* GameplayStatics::GetController()
         pController = mainWorld.currentLevel->mainController = CreateObject<Controller>();
     }
     return pController;
+}
+
+Actor* GameplayStatics::FindObjectOfName(std::string tagName)
+{
+    for (auto& obj : mainWorld.GameActors)
+    {
+        if (obj->GetName() == tagName)return obj;
+    }
+    for (auto& obj : mainWorld.OverallGameActors)
+    {
+        if (obj->GetName() == tagName)return obj;
+    }
+    return nullptr;
 }
 
 void GameplayStatics::OpenLevel(std::string levelName)

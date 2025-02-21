@@ -10,13 +10,7 @@
 #include<string>
 #include"Vector2D.h"
 #include"Box2D.h"
-
-
-namespace Math
-{
-	template<typename T> struct TVector2;
-	template<typename T> struct TBox2;
-}
+#include"Transform.h"
 
 
 using FVector2D = Math::TVector2<float>;
@@ -26,24 +20,8 @@ using FVector2d = Math::TVector2<double>;
 using FBox2D = Math::TBox2<float>;
 using FRect = Math::TBox2<float>;
 using FIntBox2 = Math::TBox2<int32>;
+using FTransform = Math::TTransform<float>;
 
-
-/* 场景属性类 */
-struct FTransform
-{
-	FVector2D position;
-	float rotation;
-	FVector2D scale;
-
-	FTransform() :position(0, 0), rotation(0), scale(1, 1) {}
-	FTransform(const FVector2D& pos, float angle, const FVector2D& scale)
-		:position(pos), rotation(angle), scale(scale) {}
-
-	FORCEINLINE FTransform Indentity() const
-	{
-		return FTransform(FVector2D::ZeroVector, 0, FVector2D::UnitVector);
-	}
-};
 
 
 /* 材质结合方式 */
@@ -71,4 +49,22 @@ struct FPhysicsMaterial
 				: FPhysicsMaterial(FMath::Max(m1.friction, m2.friction), FMath::Max(m1.bounciness, m2.bounciness));
 		}
 	}
+};
+
+
+
+class Actor;
+class ActorComponent;
+
+/* 碰撞结果 */
+struct HitResult
+{
+	FVector2D ImpactPoint;
+	FVector2D ImpactNormal;
+	Actor* HitObject;
+	ActorComponent* HitComponent;
+
+	HitResult() :ImpactPoint(0, 0), ImpactNormal(0, 0), HitObject(nullptr), HitComponent(nullptr) {}
+	HitResult(const FVector2D& impactPoint, const FVector2D& impactNormal, Actor* hitObject, ActorComponent* hitComponent)
+		:ImpactPoint(impactPoint), ImpactNormal(impactNormal), HitObject(hitObject), HitComponent(hitComponent) {}
 };

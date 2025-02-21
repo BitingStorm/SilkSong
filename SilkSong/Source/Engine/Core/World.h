@@ -36,6 +36,7 @@ class BoxCollider;
 class Controller;
 class AudioPlayer;
 class TimerHandler;
+class Level;
 
 
 namespace ArtyEngine
@@ -61,6 +62,7 @@ class World final
 	/** ÓÑÔªÉùÃ÷ **/
 	friend Engine;
 	friend GameplayStatics;
+	friend GameInstance;
 	friend Timer;
 	friend LayerInterface;
 	friend void Actor::Destroy();
@@ -82,6 +84,7 @@ class World final
 	friend LevelManager;
 	friend AudioPlayer;
 	friend TimerHandler;
+	friend Level;
 
 	std::mutex updateMutex;//»¥³âËø
 

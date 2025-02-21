@@ -1,9 +1,11 @@
 #pragma once
 #include "Objects/Actor.h"
-#include"Components/Animator.h"
+#include "Components/Animator.h"
+#include "Damagable.h"
+#include "PropertyCarrier.h"
 
 
-class Enemy :public Actor
+class Enemy :public Actor, public IDamagable, public IPropertyCarrier
 {
 	DEFINE_SUPER(Actor)
 
@@ -14,9 +16,15 @@ public:
 
 	virtual void Update(float deltaTime)override;
 
-	void TakeDamage(FVector2D normal, bool gain = true);
+	virtual FDamageCauseInfo TakeDamage(IDamagable* damageCauser, float baseValue, EDamageType damageType)override;
 
-	bool IsDead()const {return bIsDead;}
+	virtual void ExecuteDamageDealtEvent(FDamageCauseInfo extraInfo)override;
+
+	virtual void ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)override;
+
+	virtual PropertyComponent* GetProperty()override;
+
+	bool IsDead()const { return bIsDead; }
 
 protected:
 	void OnOverlap(class Collider* hitComp, Collider* otherComp, Actor* otherActor);
@@ -29,11 +37,11 @@ protected:
 	class SpriteRenderer* render_death;
 	class CircleCollider* circle;
 	class RigidBody* rigid;
-	class AudioPlayer* audio;
 	Animator* ani;
+	class DamageResponseComponent* damageResponse;
+	class PropertyComponent* property;
 
 	class Player* player;
 
-	int blood = 10;
 	bool bIsDead = false;
 };

@@ -19,11 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Project\DefaultDamageStrategy.h" />
     <ClInclude Include="Source\Engine\Core\Box2D.h" />
+    <ClInclude Include="Source\Engine\Core\Transform.h" />
     <ClInclude Include="Source\Engine\Core\Vector2D.h" />
+    <ClInclude Include="Source\Engine\Objects\Level.h" />
+    <ClInclude Include="Source\Project\Damagable.h" />
     <ClInclude Include="Source\Project\DamageResponseComponent.h" />
+    <ClInclude Include="Source\Project\DamageStrategy.h" />
     <ClInclude Include="Source\Project\DamageSystem.h" />
     <ClInclude Include="Source\Project\GameMode.h" />
+    <ClInclude Include="Source\Project\GameModeHelper.h" />
+    <ClInclude Include="Source\Project\PlayerPropertyComponent.h" />
+    <ClInclude Include="Source\Project\PropertyCarrier.h" />
     <ClInclude Include="Source\Project\PropertyComponent.h" />
     <ClInclude Include="Source\Project\SceneUI.h" />
     <ClInclude Include="Source\Engine\Components\WidgetComponent.h" />
@@ -85,13 +93,20 @@
     <ClInclude Include="Source\Engine\UI\Widgets.h" />
     <ClInclude Include="Source\Project\PlayerAnimator.h" />
     <ClInclude Include="Source\Project\RainProducer.h" />
+    <ClInclude Include="Source\Project\VolumeBarUI.h" />
+    <ClInclude Include="Source\Project\VolumeUI.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\Core\Object.cpp" />
+    <ClCompile Include="Source\Engine\Objects\Level.cpp" />
+    <ClCompile Include="Source\Project\DamageResponseComponent.cpp" />
     <ClCompile Include="Source\Project\DamageSystem.cpp" />
+    <ClCompile Include="Source\Project\DefaultDamageStrategy.cpp" />
     <ClCompile Include="Source\Project\GameMode.cpp" />
     <ClCompile Include="Source\Engine\Components\WidgetComponent.cpp" />
     <ClCompile Include="Source\Project\Chair.cpp" />
     <ClCompile Include="Source\Project\DieParticle.cpp" />
+    <ClCompile Include="Source\Project\GameModeHelper.cpp" />
     <ClCompile Include="Source\Project\MenuController.cpp" />
     <ClCompile Include="Source\Project\MenuLevel.cpp" />
     <ClCompile Include="Source\Project\CloseSkillBox.cpp" />
@@ -100,7 +115,9 @@
     <ClCompile Include="Source\Project\Needle.cpp" />
     <ClCompile Include="Source\Project\NewTheme.cpp" />
     <ClCompile Include="Source\Project\OldTheme.cpp" />
+    <ClCompile Include="Source\Project\PlayerPropertyComponent.cpp" />
     <ClCompile Include="Source\Project\Pointer.cpp" />
+    <ClCompile Include="Source\Project\PropertyComponent.cpp" />
     <ClCompile Include="Source\Project\RockParticle.cpp" />
     <ClCompile Include="Source\Project\Chest.cpp" />
     <ClCompile Include="Source\Project\Geo.cpp" />
@@ -145,6 +162,8 @@
     <ClCompile Include="Source\Project\TearCityLevel.cpp" />
     <ClCompile Include="Source\Project\PlayerAnimator.cpp" />
     <ClCompile Include="Source\Project\RainProducer.cpp" />
+    <ClCompile Include="Source\Project\VolumeBarUI.cpp" />
+    <ClCompile Include="Source\Project\VolumeUI.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

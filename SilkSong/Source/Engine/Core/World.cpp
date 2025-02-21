@@ -7,11 +7,11 @@
 #include"Components/Collider.h"
 #include"Objects/Controller.h"
 #include"UI/UserInterface.h"
+#include"Objects/Level.h"
 
 
 
-int Object::tag = 0;
-
+int Object::number = 0;
 extern World mainWorld{};
 
 

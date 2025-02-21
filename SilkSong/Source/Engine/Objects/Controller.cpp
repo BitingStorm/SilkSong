@@ -1,5 +1,6 @@
 #include "Controller.h"
 #include "Components/Camera.h"
+#include "Components/Collider.h"
 #include "Core/World.h"
 
 

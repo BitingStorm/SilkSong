@@ -1,11 +1,9 @@
 #pragma once
-#include "CoreMinimal.h"
+#include "Objects/Level.h"
 
 
 class TearCityLevel :public Level
 {
 public:
-	TearCityLevel() {}
-
-	virtual void BeginPlay()override;
+	TearCityLevel();
 };

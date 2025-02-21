@@ -13,7 +13,6 @@ RigidBody::~RigidBody()
 
 void RigidBody::Update(float deltaTime)
 {
-	this->deltaTime = deltaTime;
 	if (!pOwner || !bIsEnabled)return;
 
 	if (bMoveable)

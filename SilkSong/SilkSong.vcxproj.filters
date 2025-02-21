@@ -43,12 +43,6 @@
     <Filter Include="Project\Components">
       <UniqueIdentifier>{f5a18231-81b7-4800-b146-4be2853b95db}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\Menu">
-      <UniqueIdentifier>{1f40607f-32e2-44a8-9e4f-f6bf9acbf927}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\GameDefault">
-      <UniqueIdentifier>{bdb6336b-8818-4056-8524-6725685587c6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\Components\GameMode">
       <UniqueIdentifier>{e59d10c3-cd98-41de-ae28-9fab602cfde6}</UniqueIdentifier>
     </Filter>
@@ -66,6 +60,15 @@
     </Filter>
     <Filter Include="Project\Interfaces">
       <UniqueIdentifier>{cd7204fb-7069-40ee-8bff-a857fc42cf33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Utilities">
+      <UniqueIdentifier>{bdb6336b-8818-4056-8524-6725685587c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Game">
+      <UniqueIdentifier>{47e1ae8d-5e1f-4f9e-ad49-c797124c3d46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Menu">
+      <UniqueIdentifier>{1f40607f-32e2-44a8-9e4f-f6bf9acbf927}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -138,12 +141,6 @@
     <ClInclude Include="Source\Project\TearCityLevel.h">
       <Filter>Project\Levels</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Project\PlatForm.h">
-      <Filter>Project</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Project\Bg.h">
-      <Filter>Project</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Engine\Tools\FileManager.h">
       <Filter>Engine\Tools</Filter>
     </ClInclude>
@@ -159,9 +156,6 @@
     <ClInclude Include="Source\Project\Player.h">
       <Filter>Project\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Project\Effect.h">
-      <Filter>Project</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Project\Enemy.h">
       <Filter>Project\Enemies</Filter>
     </ClInclude>
@@ -174,20 +168,11 @@
     <ClInclude Include="Source\Project\AttackBox.h">
       <Filter>Project\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Project\RainProducer.h">
-      <Filter>Project\Levels</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Engine\Components\AudioPlayer.h">
       <Filter>Engine\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\Project\HealParticle.h">
       <Filter>Project\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Project\Animated.h">
-      <Filter>Project</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Project\GameUI.h">
-      <Filter>Project</Filter>
     </ClInclude>
     <ClInclude Include="Source\Project\Chest.h">
       <Filter>Project\Items</Filter>
@@ -237,14 +222,11 @@
     <ClInclude Include="Source\Engine\Components\WidgetComponent.h">
       <Filter>Engine\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Project\SceneUI.h">
-      <Filter>Project</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Project\SilkParticle.h">
       <Filter>Project\Enemies</Filter>
     </ClInclude>
     <ClInclude Include="Source\Project\GameMode.h">
-      <Filter>Project\GameDefault</Filter>
+      <Filter>Project\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Source\Project\DamageSystem.h">
       <Filter>Project\Components\GameMode</Filter>
@@ -266,6 +248,57 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Core\Box2D.h">
       <Filter>Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\Damagable.h">
+      <Filter>Project\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Core\Transform.h">
+      <Filter>Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Objects\Level.h">
+      <Filter>Engine\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\GameModeHelper.h">
+      <Filter>Project\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\DamageStrategy.h">
+      <Filter>Project\Strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\DefaultDamageStrategy.h">
+      <Filter>Project\Strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\PlayerPropertyComponent.h">
+      <Filter>Project\Components\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\PropertyCarrier.h">
+      <Filter>Project\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\PlatForm.h">
+      <Filter>Project\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\SceneUI.h">
+      <Filter>Project\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\GameUI.h">
+      <Filter>Project\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\RainProducer.h">
+      <Filter>Project\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\VolumeUI.h">
+      <Filter>Project\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\Animated.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\Effect.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\Bg.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\VolumeBarUI.h">
+      <Filter>Project\Menu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -332,12 +365,6 @@
     <ClCompile Include="Source\Project\TearCityLevel.cpp">
       <Filter>Project\Levels</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Project\PlatForm.cpp">
-      <Filter>Project</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Project\Bg.cpp">
-      <Filter>Project</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\Tools\FileManager.cpp">
       <Filter>Engine\Tools</Filter>
     </ClCompile>
@@ -350,9 +377,6 @@
     <ClCompile Include="Source\Project\Player.cpp">
       <Filter>Project\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Project\Effect.cpp">
-      <Filter>Project</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Project\Enemy.cpp">
       <Filter>Project\Enemies</Filter>
     </ClCompile>
@@ -362,9 +386,6 @@
     <ClCompile Include="Source\Project\AttackBox.cpp">
       <Filter>Project\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Project\RainProducer.cpp">
-      <Filter>Project\Levels</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\Components\AudioPlayer.cpp">
       <Filter>Engine\Components</Filter>
     </ClCompile>
@@ -373,12 +394,6 @@
     </ClCompile>
     <ClCompile Include="Source\Engine\Tools\ResourceManager.cpp">
       <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Project\Animated.cpp">
-      <Filter>Project</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Project\GameUI.cpp">
-      <Filter>Project</Filter>
     </ClCompile>
     <ClCompile Include="Source\Project\Chest.cpp">
       <Filter>Project\Items</Filter>
@@ -428,9 +443,6 @@
     <ClCompile Include="Source\Engine\Components\WidgetComponent.cpp">
       <Filter>Engine\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Project\SceneUI.cpp">
-      <Filter>Project</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Project\SilkParticle.cpp">
       <Filter>Project\Enemies</Filter>
     </ClCompile>
@@ -438,10 +450,58 @@
       <Filter>Engine\Core</Filter>
     </ClCompile>
     <ClCompile Include="Source\Project\GameMode.cpp">
-      <Filter>Project\GameDefault</Filter>
+      <Filter>Project\Utilities</Filter>
     </ClCompile>
     <ClCompile Include="Source\Project\DamageSystem.cpp">
       <Filter>Project\Components\GameMode</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Core\Object.cpp">
+      <Filter>Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Objects\Level.cpp">
+      <Filter>Engine\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\DamageResponseComponent.cpp">
+      <Filter>Project\Components\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\PropertyComponent.cpp">
+      <Filter>Project\Components\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\GameModeHelper.cpp">
+      <Filter>Project\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\DefaultDamageStrategy.cpp">
+      <Filter>Project\Strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\PlayerPropertyComponent.cpp">
+      <Filter>Project\Components\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\PlatForm.cpp">
+      <Filter>Project\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\SceneUI.cpp">
+      <Filter>Project\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\GameUI.cpp">
+      <Filter>Project\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\RainProducer.cpp">
+      <Filter>Project\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\Bg.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\Animated.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\Effect.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\VolumeUI.cpp">
+      <Filter>Project\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\VolumeBarUI.cpp">
+      <Filter>Project\Menu</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

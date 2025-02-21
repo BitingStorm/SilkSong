@@ -9,7 +9,6 @@ class MenuController :public Controller
 	DEFINE_SUPER(Controller)
 
 	class ParticleSystem* whiteRadiant;
-	class AudioPlayer* audio;
 	class OldTheme* oldTheme;
 	class NewTheme* newTheme;
 

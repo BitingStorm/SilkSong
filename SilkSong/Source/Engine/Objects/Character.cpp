@@ -56,9 +56,9 @@ void Character::AddInputX(float inputValue, bool bControlScale)
 {
 	if (bControlScale)SetLocalScale({ (inputValue >= 0.f ? 1.f : -1.f),1.f });
 	MoveFlag = 5;
-	if (std::abs(rigid->GetVelocity().x) >= maxWalkingSpeed)
+	if (FMath::Abs(rigid->GetVelocity().x) >= maxWalkingSpeed)
 	{
-		rigid->SetVelocity({ rigid->GetVelocity().x / std::abs(rigid->GetVelocity().x) * maxWalkingSpeed,rigid->GetVelocity().y }); return;
+		rigid->SetVelocity({ rigid->GetVelocity().x / FMath::Abs(rigid->GetVelocity().x) * maxWalkingSpeed,rigid->GetVelocity().y }); return;
 	}
 	rigid->AddImpulse({ inputValue,0 });
 }
@@ -71,5 +71,3 @@ void Character::OnTouching(Collider* hitComp, Collider* otherComp, Actor* otherA
 		lastX = GetWorldPosition().x;
 	}
 }
-
-

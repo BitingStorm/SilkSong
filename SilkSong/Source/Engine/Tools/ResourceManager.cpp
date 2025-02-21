@@ -108,13 +108,9 @@ void ResourceManager::Initialize()
 	/** 图像 **/
 
 	//Environment
-	Load("menu_0", "Asset/Images/Menu/Voidheart_menu_BG.jpg", 1250, 875);
-	Load("menu_1", "Asset/Images/Menu/title-bg.png", 1400, 800);
+	Load("menu_0", "Asset/Images/Menu/Voidheart_menu_BG.jpg", WIN_WIDTH + 50, WIN_HEIGHT + 75);
+	Load("menu_1", "Asset/Images/Menu/title-bg.png", float(WIN_WIDTH) * 7 / 6, float(WIN_HEIGHT));
 	Load("menu_2", "Asset/Images/Menu/title-f.png", 475, 750);
-	Load("menu_title", "Asset/Images/Menu/title.png", 782, 404);
-	Load("menu_icon", "Asset/Images/Menu/team_cherry_logo_main_menu.png", 250, 203);
-	Load("menu_logo", "Asset/Images/Menu/Hidden_Dreams_Logo.png", 141, 38);
-	
 
 	Load("tearcity_0", "Asset/Images/BackGround/TearCity/0.png", 2100, 1350);
 	Load("tearcity_1", "Asset/Images/BackGround/TearCity/ruins_bg_building_mid.png", 1500, 1750);
@@ -170,10 +166,16 @@ void ResourceManager::Initialize()
 	Load("inventory_coin", "Asset/Images/UI/InventoryCoin.png", 47, 48);
 	Load("black", "Asset/Images/UI/mask_black.png", WIN_WIDTH + 12, WIN_HEIGHT + 8);
 	Load("white", "Asset/Images/UI/mask_white.png", WIN_WIDTH, WIN_HEIGHT);
+	Load("bar_white", "Asset/Images/UI/bar_white.png", 198, 3);
 	Load("low_health", "Asset/Images/UI/vignette_low_health.png", WIN_WIDTH, WIN_HEIGHT);
 	Load("inventory_ins1", "Asset/Images/UI/ins_1.png", 72, 72);
 	Load("inventory_ins2", "Asset/Images/UI/ins_2.png", 173, 49);
 	Load("inventory_ins3", "Asset/Images/UI/ins_3.png", 104, 44);
+		Load("menu_title", "Asset/Images/Menu/title.png", 782, 404);
+	Load("menu_icon", "Asset/Images/Menu/team_cherry_logo_main_menu.png", 250, 203);
+	Load("menu_logo", "Asset/Images/Menu/Hidden_Dreams_Logo.png", 141, 38);
+	Load("menu_slider", "Asset/Images/Menu/MenuSliderHandle.png", 110, 50);
+
 
 	/*************
 	 * 媒体资源加载
@@ -347,7 +349,6 @@ void ResourceManager::LoadCustomCursor(std::string path)
 	HCURSOR hcur = (HCURSOR)LoadImage(NULL, path.c_str(), IMAGE_CURSOR, 0, 0, LR_LOADFROMFILE);
 	if (hcur == NULL)
 	{
-		/*MessageBox(NULL, "Failed to load cursor", "Error", MB_OK | MB_ICONERROR);*/
 		return;
 	}
 
@@ -369,7 +370,6 @@ void ResourceManager::LoadCustomCursor(std::string path)
 		HCURSOR newHcur = CreateIconIndirect(&newIconInfo);
 		if (newHcur == NULL)
 		{
-			/*MessageBox(NULL, "Failed to create new cursor", "Error", MB_OK | MB_ICONERROR);*/
 			DeleteObject(iconInfo.hbmColor);
 			DeleteObject(iconInfo.hbmMask);
 			return;
@@ -384,6 +384,5 @@ void ResourceManager::LoadCustomCursor(std::string path)
 	else
 	{
 		DeleteObject(hcur);
-		/*MessageBox(NULL, "Failed to get icon info", "Error", MB_OK | MB_ICONERROR);*/
 	}
 }

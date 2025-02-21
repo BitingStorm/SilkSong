@@ -35,6 +35,7 @@ public:
 	const FVector2D& GetLocalPosition() const { return transform_local.position; }
 	float GetLocalRotation() const { return transform_local.rotation; }
 	const FVector2D& GetLocalScale() const { return transform_local.scale; }
+	const FTransform& GetLocalTransform() const { return transform_local; }
 
 	/** 获取场景属性（世界绝对坐标系）**/
 	FVector2D GetWorldPosition() const;
@@ -45,6 +46,7 @@ public:
 	void SetLocalPosition(const FVector2D& pos) { transform_local.position = pos; }
 	void SetLocalRotation(float angle) { transform_local.rotation = angle; }
 	void SetLocalScale(const FVector2D& scale) { transform_local.scale = scale; }
+	void SetLocalTransform(const FTransform& transform) { transform_local = transform; }
 
 	/** 增加场景属性偏移量 **/
 	void AddPosition(FVector2D pos) { transform_local.position += pos; }

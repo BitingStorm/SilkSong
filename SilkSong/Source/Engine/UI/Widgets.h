@@ -273,12 +273,13 @@ DECLARE_NO_PARAM_MULTICAST_DELEGATE_CLASS(ButtonDelegate)
   ----------------------------------*/
 class Button final :public Image
 {
-	IMAGE* normal;
-	IMAGE* hover;
-	IMAGE* pressed;
+	IMAGE* normal{};
+	IMAGE* hover{};
+	IMAGE* pressed{};
 
 	bool isPressed = false;
 	bool isHover = false;
+
 public:
 	virtual void Update()override;
 
@@ -314,9 +315,9 @@ enum class BarDirection :uint8
 class Bar final :public Widget
 {
 	float percentage = 0;
-	IMAGE* barFront;
-	IMAGE* barBack;
-	IMAGE* barButton;
+	IMAGE* barFront{};
+	IMAGE* barBack{};
+	IMAGE* barButton{};
 	FIntVector2 sizeFront = FIntVector2(0, 0);
 	FIntVector2 sizeBack = FIntVector2(0, 0);
 	FIntVector2 sizeButton = FIntVector2(0, 0);

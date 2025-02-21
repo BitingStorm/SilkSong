@@ -116,6 +116,11 @@ const FVector2D& Actor::GetLocalScale() const
 	return root->GetLocalScale();
 }
 
+const FTransform& Actor::GetLocalTransform() const
+{
+	return root->GetLocalTransform();
+}
+
 
 FVector2D Actor::GetWorldPosition() const
 {
@@ -150,6 +155,17 @@ void Actor::SetLocalScale(const FVector2D& scale)
 	root->SetLocalScale(scale);
 }
 
+void Actor::SetPositionAndRotation(const FVector2D& pos, float angle)
+{
+	root->SetLocalPosition(pos);
+	root->SetLocalRotation(angle);
+}
+
+void Actor::SetLocalTransform(const FTransform& transform)
+{
+	root->SetLocalTransform(transform);
+}
+
 void Actor::AddPosition(FVector2D pos)
 {
 	root->AddPosition(pos);
@@ -165,6 +181,15 @@ void Actor::DrawDebugPosition() const
 	settextstyle(20, 8, "Arial");
 	settextcolor(WHITE);
 	FVector2D pos = (GetWorldPosition() - mainWorld.mainCamera->GetVirtualPosition())
-		* 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength() + FVector2D(WIN_WIDTH / 2, WIN_HEIGHT / 2);
+		* 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength() + FVector2D(WIN_WIDTH, WIN_HEIGHT) * 0.5f;
 	outtextxy((int)pos.x, (int)pos.y, GetWorldPosition().ToString().c_str());
+}
+
+ActorComponent* Actor::GetComponentByName(std::string tagName)
+{
+	for (auto& obj : components)
+	{
+		if (obj->GetName() == tagName)return obj;
+	}
+	return nullptr;
 }

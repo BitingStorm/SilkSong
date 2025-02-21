@@ -8,7 +8,7 @@
 #pragma once
 #include"Actor.h"
 #include"Components/InputComponent.h"
-#include"Components/Collider.h"
+
 
 
 class Camera;

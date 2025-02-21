@@ -113,8 +113,8 @@ bool Widget::IsUnderCursor() const
 		if (Widget* widget = Cast<Widget>(*it))
 		{
 			FVector2D loc = widget->GetScreenPosition();
-			if (x < GetSize().x / 2 + loc.x && x > loc.x - GetSize().x / 2 
-				&& y < GetSize().y / 2 + loc.y && y > loc.y - GetSize().y / 2 && widget == this)
+			FBox2D box(loc, GetSize().x, GetSize().y);
+			if (box.IsInside(InputComponent::GetMousePosition()) && widget == this)
 			{
 				return true;
 			}
@@ -169,6 +169,10 @@ void Widget::DrawDebugRect()
 
 void Widget::SetUIPattern(UIPattern pattern)
 {
+	if (uiPattern == pattern)
+	{
+		return;
+	}
 	uiPattern = pattern;
 	for (auto& child : children)
 	{
@@ -509,40 +513,40 @@ void Bar::Render()
 	HDC dstDC = GetImageHDC();
 	BLENDFUNCTION bf = { AC_SRC_OVER,0,255,AC_SRC_ALPHA };
 
-	if (barBack) 
+	if (barBack)
 	{
 		HDC srcDC = GetImageHDC(barBack);
 		int w = barBack->getwidth();
 		int h = barBack->getheight();
-		AlphaBlend(dstDC, (int)pos.x - sizeBack.x / 2, (int)pos.y - sizeBack.y / 2, sizeBack.x, sizeBack.y, srcDC, 0, 0, w, h, bf);
+		AlphaBlend(dstDC, int(pos.x - sizeBack.x * 0.5f), int(pos.y - sizeBack.y * 0.5f), sizeBack.x, sizeBack.y, srcDC, 0, 0, w, h, bf);
 	}
 
 	if (barFront)
 	{
 		HDC srcDC = GetImageHDC(barFront);
 
-		FIntVector2 startPosition,endPosition;
+		FIntVector2 startPosition, endPosition;
 
 		switch (direction)
 		{
-		case BarDirection::RightToLeft: startPosition = { 0,0 }; endPosition = { (int)(sizeFront.x * percentage),sizeFront.y }; break;
-		case BarDirection::LeftToRight: startPosition = { (int)(sizeFront.x * (1 - percentage)),0 }; endPosition = { sizeFront.x,sizeFront.y }; break;
-		case BarDirection::TopToBottom: startPosition = { 0,(int)(sizeFront.y * (1 - percentage)) }; endPosition = { sizeFront.x,sizeFront.y}; break;
-		case BarDirection::BottomToTop: startPosition = { 0,0 }; endPosition = { sizeFront.x,(int)(sizeFront.y * percentage), }; break;
+		case BarDirection::RightToLeft: startPosition = { 0,0 }; endPosition = { int(sizeFront.x * percentage),sizeFront.y }; break;
+		case BarDirection::LeftToRight: startPosition = { int(sizeFront.x * (1.f - percentage)),0 }; endPosition = { sizeFront.x,sizeFront.y }; break;
+		case BarDirection::TopToBottom: startPosition = { 0,int(sizeFront.y * (1.f - percentage)) }; endPosition = { sizeFront.x,sizeFront.y }; break;
+		case BarDirection::BottomToTop: startPosition = { 0,0 }; endPosition = { sizeFront.x,int(sizeFront.y * percentage), }; break;
 		default: startPosition = { 0,0 }; endPosition = { 0,0 }; break;
 		}
 
 		int w = endPosition.x - startPosition.x;
 		int h = endPosition.y - startPosition.y;
-		AlphaBlend(dstDC, (int)pos.x - sizeFront.x / 2, (int)pos.y - sizeFront.y / 2, sizeFront.x, sizeFront.y, srcDC, 0, 0, w, h, bf);
+		AlphaBlend(dstDC, int(pos.x - sizeFront.x * 0.5f), int(pos.y - sizeFront.y * 0.5f), w, h, srcDC, 0, 0, w, h, bf);
 
 		if (barButton)
 		{
-			AlphaBlend(dstDC, endPosition.x - sizeButton.x / 2, endPosition.y - sizeButton.y / 2, sizeButton.x, sizeButton.y, 
+			AlphaBlend(dstDC, int(pos.x - sizeFront.x * 0.5f + endPosition.x - sizeButton.x * 0.5f), 
+				int(pos.y - sizeFront.y * 0.5f - sizeButton.y * 0.5f), sizeButton.x, sizeButton.y,
 				GetImageHDC(barButton), 0, 0, barButton->getwidth(), barButton->getheight(), bf);
 		}
 	}
-
 }
 
 void Bar::LoadBarFrontPicture(std::string path)

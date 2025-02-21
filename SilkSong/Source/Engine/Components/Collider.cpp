@@ -266,7 +266,7 @@ HitResult Collider::collisionHitCircleToBox(Collider* c1, Collider* c2)
 
 HitResult Collider::collisionHitBoxToBox(Collider* c1, Collider* c2)
 {
-    FRect overlapRect = c1->GetRect().GetOverlapRect(c2->GetRect());
+    FRect overlapRect = c1->GetRect().Overlaps(c2->GetRect());
     FVector2D impactNormal;
     if (overlapRect.GetSize().x >= overlapRect.GetSize().y)
     {

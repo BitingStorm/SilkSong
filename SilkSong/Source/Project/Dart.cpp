@@ -4,6 +4,7 @@
 #include "Components/RigidBody.h"
 #include "Enemy.h"
 #include "GameplayStatics.h"
+#include "GameModeHelper.h"
 
 
 Dart::Dart()
@@ -47,17 +48,20 @@ void Dart::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVec
 {
 	if (otherComp->GetType() == CollisionType::Enemy)
 	{
-		if (Enemy* enemy = Cast<Enemy>(otherActor)) 
+		Enemy* enemy = Cast<Enemy>(otherActor);
+		CHECK_PTR(enemy)
+		if (enemy->IsDead())
 		{
-			enemy->TakeDamage((otherActor->GetWorldPosition() - GetWorldPosition()).GetSafeNormal(), false);
-			GameplayStatics::PlaySound2D("sound_damage_2");
-			Destroy();
+			return;
 		}
+		GameModeHelper::ApplyDamage(this, enemy, 3, EDamageType::Player);
+		GameModeHelper::PlayFXSound("sound_damage_2");
+		Destroy();
 	}
 	else if (otherComp->GetType() == CollisionType::Block)
 	{
 		rigid->SetMoveable(false);
 		rigid->SetRotatable(false);
-		GameplayStatics::PlaySound2D("sound_darthit");
+		GameModeHelper::PlayFXSound("sound_darthit");
 	}
 }

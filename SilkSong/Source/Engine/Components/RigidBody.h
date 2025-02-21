@@ -34,9 +34,6 @@ public:
 	//设置质量
 	void SetMass(float mass) { this->mass = mass; }
 	
-	//添加力
-	void AddForce(FVector2D force) { velocity += force * deltaTime / mass; }
-	
 	//添加冲量
 	void AddImpulse(FVector2D pulse) { velocity += pulse / mass; }
 
@@ -77,6 +74,4 @@ private:
 
 	//运动模拟
 	void RestrictVelocity(FVector2D impactNormal, const FPhysicsMaterial& material, RigidBody* another = nullptr);
-
-	float deltaTime = 0.f;
 };

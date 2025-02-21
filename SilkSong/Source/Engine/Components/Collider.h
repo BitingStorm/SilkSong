@@ -23,22 +23,6 @@ class Collider;
 class World;
 
 
-/* 碰撞结果 */
-struct HitResult
-{
-	FVector2D ImpactPoint;
-	FVector2D ImpactNormal;
-	Actor* HitObject;
-	ActorComponent* HitComponent;
-
-	HitResult() :ImpactPoint(0, 0), ImpactNormal(0, 0), HitObject(nullptr), HitComponent(nullptr) {}
-	HitResult(const FVector2D& impactPoint, const FVector2D& impactNormal, Actor* hitObject, ActorComponent* hitComponent)
-		:ImpactPoint(impactPoint), ImpactNormal(impactNormal), HitObject(hitObject), HitComponent(hitComponent) {}
-};
-
-
-
-
 /** 碰撞委托 **/
 /* Collider* overlapComp, Collider* otherComp, Actor* otherActor */
 DECLARE_MULTI_PARAM_MULTICAST_DELEGATE_CLASS(CollisionOverlapDelegate, Collider*, Collider*, Actor*)
@@ -131,7 +115,6 @@ private:
 	std::vector<Actor*>aims;
 	std::vector<Collider*>collisions_to_erase;
 
-  
 	//将碰撞体从世界彻底移除
 	void Clear();
 

@@ -1,20 +1,25 @@
 #pragma once
 #include "Objects/Actor.h"
+#include "Damagable.h"
+#include "PropertyCarrier.h"
 
 
-
-class Chest :public Actor
+class Chest :public Actor, public IDamagable, public IPropertyCarrier
 {
 public:
 	Chest();
 
-	void TakeDamage();
+	virtual FDamageCauseInfo TakeDamage(IDamagable* damageCauser, float baseValue, EDamageType damageType)override;
+
+	virtual void ExecuteDamageDealtEvent(FDamageCauseInfo extraInfo)override;
+
+	virtual void ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)override;
+
+	virtual PropertyComponent* GetProperty()override { return property; }
 
 protected:
-	void OnOverlap(class Collider* hitComp, Collider* otherComp, Actor* otherActor);
-
 	class SpriteRenderer* render;
 	class BoxCollider* box;
-
-	int32 num;
+	class DamageResponseComponent* damageResponse;
+	class PropertyComponent* property;
 };

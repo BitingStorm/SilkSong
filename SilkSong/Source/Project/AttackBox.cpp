@@ -4,7 +4,9 @@
 #include "GameplayStatics.h"
 #include "Effect.h"
 #include "Dart.h"
-
+#include "Chest.h"
+#include "Player.h"
+#include "GameModeHelper.h"
 
 
 AttackBox::AttackBox()
@@ -38,25 +40,34 @@ void AttackBox::Init(ECharacterDirection direction)
 
 void AttackBox::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherActor)
 {
+	if (!GetOwner())return;
 	FVector2D normal = (-GetOwner()->GetWorldPosition() + otherActor->GetWorldPosition()).GetSafeNormal();
 	if (Enemy* enemy = Cast<Enemy>(otherActor))
 	{
-		if (!GetOwner())return;
-		enemy->TakeDamage(normal);
-		this->enemy = enemy;
+		if (enemy->IsDead())
+		{
+			return;
+		}
 		if (direction == ECharacterDirection::LookDown)Cast<Player>(GetOwner())->Bounce();
-		if (FMath::RandInt(0, 10) > 5)GameplayStatics::PlaySound2D("sound_damage_0");
-		else GameplayStatics::PlaySound2D("sound_damage_1");
+		GameModeHelper::ApplyDamage(this, enemy, 3, EDamageType::Player);
+		if (FMath::RandInt(0, 10) > 5)GameModeHelper::PlayFXSound("sound_damage_0");
+		else GameModeHelper::PlayFXSound("sound_damage_1");
 	}
 	else if (Cast<Dart>(otherActor))
 	{
 		if (direction == ECharacterDirection::LookDown)Cast<Player>(GetOwner())->Bounce();
-		GameplayStatics::PlaySound2D("sound_swordhit");
+		GameModeHelper::PlayFXSound("sound_swordhit");
 		GameplayStatics::PlayCameraShake(3);
 		Effect* effect = GameplayStatics::CreateObject<Effect>(otherActor->GetWorldPosition());
-		if (!effect)return;
-		effect->Init("effect_nail", -0.02f);
-		effect->SetLocalRotation(FVector2D::VectorToDegree(normal) + 100);
+		if (effect)
+		{
+			effect->Init("effect_nail", -0.02f);
+			effect->SetLocalRotation(FVector2D::VectorToDegree(normal) + 100);
+		}
+	}
+	else if (Chest* chest = Cast<Chest>(otherActor))
+	{
+		GameModeHelper::ApplyDamage(this, chest, 1, EDamageType::Player);
 	}
 }
 
@@ -65,17 +76,5 @@ void AttackBox::OnEndOverlap(Collider* hitComp, Collider* otherComp, Actor* othe
 	if (hitComp->GetType() == CollisionType::Enemy || hitComp->GetType() == CollisionType::Dart)
 	{
 		box->SetCollisonMode(CollisionMode::None);
-	}
-}
-
-void AttackBox::EndPlay()
-{
-	Super::EndPlay();
-
-	if (enemy && enemy->IsDead())
-	{
-		Effect* effect = GameplayStatics::CreateObject<Effect>(enemy->GetWorldPosition());
-		if (!effect)return;
-		effect->Init("effect_death");
 	}
 }

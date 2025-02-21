@@ -1,11 +1,9 @@
 #pragma once
-#include "CoreMinimal.h"
+#include "Objects/Level.h"
 
 
 class MenuLevel :public Level
 {
 public:
-	MenuLevel() {}
-
-	virtual void BeginPlay()override;
+	MenuLevel();
 };

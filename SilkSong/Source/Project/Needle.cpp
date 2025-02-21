@@ -3,6 +3,8 @@
 #include "Components/SpriteRenderer.h"
 #include "Enemy.h"
 #include "GameplayStatics.h"
+#include "GameModeHelper.h"
+#include "Chest.h"
 
 
 Needle::Needle()
@@ -11,7 +13,6 @@ Needle::Needle()
 	render->AttachTo(root);
 	render->LoadSprite("needle");
 	render->SetLayer(5);
-
 
 	box = ConstructComponent<BoxCollider>();
 	box->SetType(CollisionType::HurtBox);
@@ -31,7 +32,7 @@ void Needle::Update(float deltaTime)
 	AddPosition({ delta, 0 });
 	distance += delta;
 
-	if (std::abs(distance) > 500)
+	if (FMath::Abs(distance) > 500)
 	{
 		distance = 500 * GetWorldScale().x;
 		SetLocalScale({ -GetLocalScale().x,1 });
@@ -42,7 +43,15 @@ void Needle::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherActor
 {
 	if (Enemy* enemy = Cast<Enemy>(otherActor))
 	{
-		enemy->TakeDamage({}, false);
-		GameplayStatics::PlaySound2D("sound_damage_1");
+		if (enemy->IsDead())
+		{
+			return;
+		}
+		GameModeHelper::ApplyDamage(this, enemy, 3, EDamageType::Player);
+		GameModeHelper::PlayFXSound("sound_damage_1");
+	}
+	else if (Chest* chest = Cast<Chest>(otherActor))
+	{
+		GameModeHelper::ApplyDamage(this, chest, 1, EDamageType::Player);
 	}
 }

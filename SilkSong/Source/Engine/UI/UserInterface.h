@@ -18,6 +18,7 @@ class UserInterface : public Object, public TimerHandler
 	friend class WidgetComponent;
 
 	std::unordered_set<Widget*>widgets;
+	std::unordered_set<UserInterface*>userInterfaces;
 
 	void BeginPlay()override {}
 	void EndPlay()override {}
@@ -57,4 +58,10 @@ public:
 
 	//将UI从视口移除
 	void RemoveFromViewport();
+
+	//将UI绑定在另一UI上
+	void AttachTo(UserInterface* aim);
+
+	//将UI从另一UI解绑
+	void DettachFrom(UserInterface* aim);
 };

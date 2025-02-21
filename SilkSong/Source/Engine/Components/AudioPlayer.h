@@ -40,6 +40,9 @@ public:
 		outerRadius = (outer < 0 ? 0 : outer);
 	}
 
+	//获取音量大小
+	int32 GetVolume()const { return volume; }
+
 	//设置音量大小
 	void SetVolume(int32 vol);
 
@@ -57,4 +60,7 @@ public:
 
 	//继续音乐
 	void Resume(std::string name);
+
+private:
+	int32 Reflect(int32 x);
 };

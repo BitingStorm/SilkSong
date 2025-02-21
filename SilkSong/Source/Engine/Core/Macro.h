@@ -22,6 +22,7 @@ typedef char int8;
 #define SET_ALPHA(rgb, a)				(COLORREF)( ((rgb) & 0xFFFFFF) | ((a)<<24) )
 #define MIN(a,b) ((a)<(b)?(a):(b))
 #define MAX(a,b) ((a)>(b)?(a):(b))
+#define CHECK_PTR(ptr) checkPtr(ptr, #ptr, __FILE__, __LINE__);
 
 #ifdef  _MSC_VER
 #define FORCEINLINE __forceinline
@@ -30,5 +31,5 @@ typedef char int8;
 #endif
 
 
-constexpr int WIN_WIDTH = 1200;
-constexpr int WIN_HEIGHT = 800;
+extern int WIN_WIDTH;
+extern int WIN_HEIGHT;

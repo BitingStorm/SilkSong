@@ -1,13 +1,12 @@
 #include "Chest.h"
 #include "Components/Collider.h"
 #include "Components/SpriteRenderer.h"
-#include "AttackBox.h"
-#include "CloseSkillBox.h"
-#include "Needle.h"
 #include "Geo.h"
 #include "GameplayStatics.h"
 #include "RockParticle.h"
-
+#include "DamageResponseComponent.h"
+#include "PropertyComponent.h"
+#include "GameModeHelper.h"
 
 
 Chest::Chest()
@@ -23,35 +22,39 @@ Chest::Chest()
 	box->SetType(CollisionType::Chest);
 	box->SetSize({100,140});
 
-	box->OnComponentBeginOverlap.AddDynamic(this, &Chest::OnOverlap);
-
-	num = 30;
+	damageResponse = ConstructComponent<DamageResponseComponent>();
+	property = ConstructComponent<PropertyComponent>();
+	
+	property->SetMaxHealth(5);
+	property->AddHealth(5);	
 }
 
-void Chest::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherActor)
+FDamageCauseInfo Chest::TakeDamage(IDamagable* damageCauser, float baseValue, EDamageType damageType)
 {
-	if (Cast<AttackBox>(otherActor) || Cast<Needle>(otherActor))
-	{
-		TakeDamage();
-	}
+	FDamageCauseInfo damageInfo = damageResponse->TakeDamage(damageCauser, baseValue, damageType);
+	property->AddHealth(-damageInfo.realValue);
+	return damageInfo;
 }
 
-void Chest::TakeDamage()
+void Chest::ExecuteDamageDealtEvent(FDamageCauseInfo extraInfo)
+{
+}
+
+void Chest::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 {
 	int num = FMath::RandInt(5, 8);
-	this->num -= num;
 
 	for (int i = 0; i < num; i++)
 	{
 		Geo* geo = GameplayStatics::CreateObject<Geo>(GetWorldPosition());
-		if (FMath::RandInt(0, 10) > 2)geo->Init("1geo",1);
-		else if (FMath::RandInt(0, 10) > 2)geo->Init("5geo",5);
-		else geo->Init("25geo",25);
+		if (FMath::RandInt(0, 10) > 2)geo->Init("1geo", 1);
+		else if (FMath::RandInt(0, 10) > 2)geo->Init("5geo", 5);
+		else geo->Init("25geo", 25);
 	}
 	GameplayStatics::PlayCameraShake(5);
-	GameplayStatics::PlaySound2D("sound_blockhit");
+	GameModeHelper::PlayFXSound("sound_blockhit");
 
-	if (this->num <= 0)
+	if (property->GetHealth() <= 0)
 	{
 		render->LoadSprite("chest_");
 		render->SetLocalPosition({ 0,14 });

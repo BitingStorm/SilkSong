@@ -12,5 +12,4 @@ public:
 private:
 	class ParticleSystem* particle;
 	class ParticleSystem* particle_;
-	class AudioPlayer* audio;
 };

@@ -5,6 +5,8 @@
 #include "Geo.h"
 #include "GameplayStatics.h"
 #include "Components/AudioPlayer.h"
+#include "PropertyComponent.h"
+#include "GameModeHelper.h"
 
 
 
@@ -44,10 +46,10 @@ Bug::Bug()
 	ani->AddParamater("dead", ParamType::Bool);
 
 	StateUpdateTimerHandle.Bind(3.f, [this]() {
-		if (player && rigid->GetVelocity().y == 0 && !bIsDead)
+		if (player && rigid->GetVelocity().y == 0 && !IsDead())
 		{
 			if (FVector2D::Distance(player->GetWorldPosition(), GetWorldPosition()) > 350 &&
-				std::abs(circle->GetWorldPosition().x - currentPlatForm->GetWorldPosition().x) < currentPlatForm->GetSize().x * 0.5f - 25)
+				FMath::Abs(circle->GetWorldPosition().x - currentPlatForm->GetWorldPosition().x) < currentPlatForm->GetSize().x * 0.5f - 25)
 			{
 				bIsBuried = true;
 				circle->SetCollisonMode(CollisionMode::None);
@@ -57,8 +59,8 @@ Bug::Bug()
 			{
 				circle->SetCollisonMode(CollisionMode::Collision);
 				rigid->SetMoveable(true);
-				if(FMath::RandInt(0,10)>5)audio->Play("sound_bug_appear");
-				else audio->Play("sound_bug_appear_");
+				if (FMath::RandInt(0, 10) > 5)GameModeHelper::PlayFXSound("sound_bug_appear");
+				else GameModeHelper::PlayFXSound("sound_bug_appear_");
 				bIsBuried = false;
 			}
 		}
@@ -71,6 +73,9 @@ void Bug::BeginPlay()
 	Super::BeginPlay();
 
 	circle->OnComponentHit.AddDynamic(this, &Bug::OnHit);
+
+	property->SetMaxHealth(10);
+	property->AddHealth(10);
 }
 
 void Bug::Update(float deltaTime)
@@ -78,13 +83,12 @@ void Bug::Update(float deltaTime)
 	Super::Update(deltaTime);
 
 	ani->SetBool("burying", bIsBuried);
-	ani->SetBool("dead", bIsDead);
+	ani->SetBool("dead", IsDead());
 
-	if (bIsBuried || bIsDead)return;
+	if (bIsBuried || IsDead())return;
 
-
-	rigid->AddForce({ GetWorldScale().x * 500,0 });
-	if (std::abs(rigid->GetVelocity().x) > 100)
+	rigid->AddImpulse({ GetWorldScale().x * 500 * deltaTime,0 });
+	if (FMath::Abs(rigid->GetVelocity().x) > 100)
 	{
 		FVector2D newVel = rigid->GetVelocity();
 		newVel.x *= 0.95f;
@@ -94,7 +98,7 @@ void Bug::Update(float deltaTime)
 	if (currentPlatForm) 
 	{
 		float delta = circle->GetWorldPosition().x - currentPlatForm->GetWorldPosition().x;
-		if (std::abs(delta) >= currentPlatForm->GetSize().x * 0.5f && std::abs(delta) < currentPlatForm->GetSize().x * 0.5f + 1
+		if (FMath::Abs(delta) >= currentPlatForm->GetSize().x * 0.5f && FMath::Abs(delta) < currentPlatForm->GetSize().x * 0.5f + 1
 			&& delta * GetLocalScale().x > 0)
 		{
 			rigid->SetVelocity(-rigid->GetVelocity()); 
@@ -109,7 +113,7 @@ void Bug::Update(float deltaTime)
 
 void Bug::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const HitResult& hitResult)
 {
-	if (hitComp->GetType() == CollisionType::Player || bIsDead)return;
+	if (hitComp->GetType() == CollisionType::Player || IsDead())return;
 
 	if (normalImpulse.y < 0)
 	{
@@ -128,7 +132,7 @@ void Bug::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVect
 
 void Bug::SpawnGeos()
 {
-	for (int i = 0; i<3; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		Geo* geo = GameplayStatics::CreateObject<Geo>(GetWorldPosition());
 		geo->Init("1geo", 1);
@@ -138,6 +142,5 @@ void Bug::SpawnGeos()
 void Bug::Die()
 {
 	Super::Die();
-	audio->Play("sound_bug_die");
-	audio->Deactivate();
+	GameModeHelper::PlayFXSound("sound_bug_die");
 }

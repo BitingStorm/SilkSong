@@ -1,6 +1,6 @@
 #include "RainProducer.h"
 #include "Components/ParticleSystem.h"
-#include"Components/AudioPlayer.h"
+
 
 RainProducer::RainProducer()
 {
@@ -28,12 +28,6 @@ RainProducer::RainProducer()
 	particle_->SetLine(2000, -90);
 	particle_->SetLifeCycle(0.4f);
 	particle_->SetLayer(5);
-
-	audio = ConstructComponent<AudioPlayer>();
-	audio->AttachTo(root);
-	audio->SetRadius(500,3000);
-	audio->SetSpacial(true);
-	audio->Play("tear_city",true);
 }
 
 

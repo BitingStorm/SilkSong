@@ -1,7 +1,7 @@
 #include "MenuController.h"
 #include "MenuUI.h"
 #include "GameplayStatics.h"
-#include "Components/AudioPlayer.h"
+#include "GameModeHelper.h"
 #include "Components/ParticleSystem.h"
 #include "OldTheme.h"
 #include "NewTheme.h"
@@ -27,10 +27,6 @@ MenuController::MenuController()
 	whiteRadiant->SetGravity(0.1f);
 	whiteRadiant->SetSizeRange(0.25, 0.5);
 
-	audio = ConstructComponent<AudioPlayer>();
-	audio->AttachTo(root);
-	audio->Play("menu", true);
-
 	oldTheme = GameplayStatics::CreateObject<OldTheme>();
 }
 
@@ -38,7 +34,7 @@ void MenuController::BeginPlay()
 {
     Super::BeginPlay();
     GameplayStatics::CreateUI<MenuUI>()->AddToViewport();
-	
+	GameModeHelper::PlayBGMusic("menu");
 }
 
 void MenuController::Update(float deltaTime)
@@ -53,15 +49,15 @@ void MenuController::ChangeTheme()
 		oldTheme->Destroy();
 		oldTheme = nullptr;
 		newTheme = GameplayStatics::CreateObject<NewTheme>();
-		audio->Stop("menu");
-		audio->Play("menu_", true);
+		GameModeHelper::GetInstance()->GetAudioPlayer(0)->Stop("menu");
+		GameModeHelper::PlayBGMusic("menu_");
 	}
 	else
 	{
 		newTheme->Destroy();
 		newTheme = nullptr;
 		oldTheme = GameplayStatics::CreateObject<OldTheme>();
-		audio->Stop("menu_");
-		audio->Play("menu", true);
+		GameModeHelper::GetInstance()->GetAudioPlayer(0)->Stop("menu_");
+		GameModeHelper::PlayBGMusic("menu");
 	}
 }

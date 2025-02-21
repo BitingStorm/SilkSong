@@ -226,4 +226,3 @@ void PlayerAnimator::BeginPlay()
 		wall.OnAnimExit.Bind([=]() {player->LeaveWall(); });
 	}
 }
-

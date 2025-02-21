@@ -1,8 +1,9 @@
 #include "GameMode.h"
-#include "DamageSystem.h"
 
 
 GameMode::GameMode()
 {
 	damageSystem = ConstructComponent<DamageSystem>();
+	music = ConstructComponent<AudioPlayer>();
+	sound = ConstructComponent<AudioPlayer>();
 }

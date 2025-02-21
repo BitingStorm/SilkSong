@@ -24,7 +24,6 @@ SilkParticle::SilkParticle()
 
 void SilkParticle::Init(FVector2D normal, bool dead)
 {
-	float degree = FVector2D::VectorToDegree(normal);
 	if (dead)
 	{
 		silk->SetCenter({ 20,200 }, { 0,360 });
@@ -34,6 +33,7 @@ void SilkParticle::Init(FVector2D normal, bool dead)
 	}
 	else
 	{
+		float degree = FVector2D::VectorToDegree(normal);
 		silk->SetCenter({ 50,150 }, { degree - 20,degree + 20 });
 	}
 }

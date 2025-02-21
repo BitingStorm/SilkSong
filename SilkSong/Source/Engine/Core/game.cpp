@@ -1,5 +1,6 @@
 #include"CoreMinimal.h"
 #include"World.h"
+#include"Objects/Level.h"
 
 #include"Tools/ResourceManager.h"
 #include"Tools/CollisionManager.h"
@@ -14,16 +15,21 @@
 #include <thread>
 #include <immintrin.h>
 
+
+extern int WIN_WIDTH = GetSystemMetrics(SM_CXSCREEN);
+extern int WIN_HEIGHT = GetSystemMetrics(SM_CYSCREEN);
+
 /*----------------------------------
-			   引擎
+			    引擎
   ----------------------------------*/
 class Engine
 {
 public:
 	static void Init()
 	{
+		WIN_WIDTH = 1200, WIN_HEIGHT = 800;
 		initgraph(WIN_WIDTH, WIN_HEIGHT);
-
+		/*setaspectratio(float(WIN_WIDTH)/1200,float(WIN_HEIGHT)/800);*/
 		//系统Debug绘制参数
 		setlinestyle(PS_SOLID | PS_JOIN_BEVEL);
 		setfillcolor(LIGHTBLUE);
@@ -51,7 +57,6 @@ public:
 		//初始化游戏世界
 		mainWorld.levelManager = new LevelManager;
 		mainWorld.levelManager->Initialize();
-		mainWorld.currentLevel->BeginPlay();
 		mainWorld.FPSClock = new Timer;
 		mainWorld.OverallClock = new Timer;
 	}
@@ -59,8 +64,9 @@ public:
 	static void Tick(float deltaTime)//帧更新
 	{
 		mainWorld.deltaTime = 0;
-		mainWorld.Update(deltaTime);
+		mainWorld.Update(deltaTime * 0.5f);
 		mainWorld.Render();
+		mainWorld.Update(deltaTime * 0.5f);
 	}
 
 	static void Tick_()//高频更新

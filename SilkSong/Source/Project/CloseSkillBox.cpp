@@ -4,6 +4,7 @@
 #include "Enemy.h"
 #include "GameplayStatics.h"
 #include "Chest.h"
+#include "GameModeHelper.h"
 
 
 CloseSkillBox::CloseSkillBox()
@@ -32,9 +33,12 @@ CloseSkillBox::CloseSkillBox()
 		{
 			if (Enemy* enemy = Cast<Enemy>(obj))
 			{
-				if (enemy->IsDead())continue;
-				enemy->TakeDamage((enemy->GetWorldPosition() - circle->GetWorldPosition()).GetSafeNormal(),false);
-				GameplayStatics::PlaySound2D("sound_damage_0");
+				if (enemy->IsDead())
+				{
+					continue;
+				}
+				GameModeHelper::ApplyDamage(this, enemy, 3, EDamageType::Player);
+				GameModeHelper::PlayFXSound("sound_damage_0");
 			}
 		}
 		std::vector<Actor*> chests = circle->GetCollisions(CollisionType::Chest);
@@ -42,10 +46,8 @@ CloseSkillBox::CloseSkillBox()
 		{
 			if (Chest* chest = Cast<Chest>(obj))
 			{
-				chest->TakeDamage();
+				GameModeHelper::ApplyDamage(this, chest, 1, EDamageType::Player);
 			}
 		}
-		},true,0.1f);
+		}, true, 0.1f);
 }
-
-

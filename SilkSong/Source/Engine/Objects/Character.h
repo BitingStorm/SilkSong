@@ -18,9 +18,10 @@ enum class ECharacterMovementState : uint8
 	Flying
 };
 
+class Collider;
 
  /*----------------------------------
-			   角色类
+			    角色类
    ----------------------------------*/
 class Character : public Controller
 {

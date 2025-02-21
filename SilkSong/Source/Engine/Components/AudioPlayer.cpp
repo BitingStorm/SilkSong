@@ -31,18 +31,18 @@ void AudioPlayer::Update(float deltaTime)
 	currentVol = vol;
 	for (auto& obj : paths)
 	{
-		string file = string("setaudio ") + obj + string(" volume to ") + std::to_string(vol);
+		string file = string("setaudio ") + obj + string(" volume to ") + std::to_string(Reflect(vol));
 		mciSendString(file.c_str(), NULL, 0, NULL);
 	}
 }
 
 void AudioPlayer::SetVolume(int32 vol)
 {
-	volume = FMath::Clamp(vol,0,1000);
+	volume = FMath::Clamp(vol, 0, 1000);
 	if (bSpacial)return;
 	for (auto& obj : paths)
 	{
-		string file = string("setaudio ") + obj + string(" volume to ") + std::to_string(vol);
+		string file = string("setaudio ") + obj + string(" volume to ") + std::to_string(Reflect(vol));
 		mciSendString(file.c_str(), NULL, 0, NULL);
 	}
 }
@@ -55,7 +55,7 @@ void AudioPlayer::Play(string name, bool repeat)
 	mciSendString((string("play ") + name + (repeat ? string(" repeat") : "")).c_str(), 0, 0, 0);
 
 	if (bSpacial)return;
-	string file = string("setaudio ") + name + string(" volume to ") + std::to_string(volume);
+	string file = string("setaudio ") + name + string(" volume to ") + std::to_string(Reflect(volume));
 	mciSendString(file.c_str(), NULL, 0, NULL);
 }
 
@@ -78,4 +78,9 @@ void AudioPlayer::Pause(string name)
 void AudioPlayer::Resume(string name)
 {
 	mciSendString((string("resume ") + name).c_str(), 0, 0, 0);
+}
+
+int32 AudioPlayer::Reflect(int32 x)
+{
+	return 10 * FMath::Pow(float(x) / 100.f, 2.f);
 }
