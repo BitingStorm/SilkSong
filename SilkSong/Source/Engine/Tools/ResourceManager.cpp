@@ -76,6 +76,7 @@ void ResourceManager::Initialize()
 	Load("inventory_bloodload", "Asset/Animations/UI/BloodLoad/", 33, 49, 4);
 	Load("inventory_bloodminus", "Asset/Animations/UI/BloodMinus/", { {68,136}, {65,140}, {67,131}, {114,128}, {108,128}, {118,112}, {33,47} });
 	Load("inventory_silk", "Asset/Animations/UI/Silk/", { {19,75}, {19,75}, {23,71}, {21,68}, {28,91}, {25,47}, {16,39} });
+	Load("inventory_soul", "Asset/Animations/UI/Soul/", { {77,77}, {120,120}, {72,67}, {60,57}, {47,48}, {47,48} });
 	Load("menu_warning", "Asset/Animations/UI/Warning/", 767, 64, 7);
 
 	//Enemy
@@ -92,7 +93,7 @@ void ResourceManager::Initialize()
 
 	//Others
 	Load("pointer", "Asset/Animations/Pointer/", 43, 31, 11);
-	Load("menuhit", "Asset/Animations/MenuHit/", { {250,52}, {167,30}, {348,35}, {348,40}, {348,38}, {348,28} });
+	Load("menuhit", "Asset/Animations/MenuHit/", 350, 51, 6);
 	Load("dart", "Asset/Animations/Dart/", 71, 74, 5);
 
 	/** Á£×Ó **/
@@ -105,6 +106,7 @@ void ResourceManager::Initialize()
 	Load("menu_smoke", "Asset/Particles/wispy_smoke_particle_abyss.png", 306, 1536, 5, 5, 1);
 	Load("menu_ss_particle", "Asset/Particles/ss_menu_particle.png", 65, 100, 1, 1, 1);
 	Load("particle_silk", "Asset/Particles/web_particle.png", 46, 183, 4, 4, 1);
+	Load("particle_smoke", "Asset/Particles/hot_spring_smoke.png", 98, 87, 1, 1, 1);
 
 	/** Í¼Ïñ **/
 

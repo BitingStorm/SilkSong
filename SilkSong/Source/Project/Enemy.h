@@ -44,4 +44,5 @@ protected:
 	class Player* player;
 
 	bool bIsDead = false;
+	float hurtTimer;
 };

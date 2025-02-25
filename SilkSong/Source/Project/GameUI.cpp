@@ -130,6 +130,21 @@ GameUI::GameUI()
 		ani->SetNode("idle");
 	}
 
+	soulidle.Load("inventory_soul");
+	soulidle.SetInterval(0.06f);
+	soulidle.SetLooping(false);
+
+	Soul = AddWidget<Image>();
+	Soul->AttachTo(SoulContainer);
+	Soul->SetLayoutPattern(LayoutPattern::Center);
+	Soul->SetRelativePosition(FVector2D(0, 0));
+	Soul->SetLayer(12);
+
+	Soul->EnableAnimControl();
+	Animator* ani = Soul->GetAnimator();
+	ani->Insert("idle", soulidle);
+	ani->SetNode("idle");
+	ani->SetReverse(true);
 }
 
 void GameUI::Update(float deltaTime)
@@ -204,4 +219,14 @@ void GameUI::SilkMinus(int i)
 {
 	Silk[i]->GetAnimator()->SetReverse(true);
 	silkidle[i].SetIndex(silkidle[i].GetIndex() - 1);
+}
+
+void GameUI::SoulLoad()
+{
+	Soul->GetAnimator()->SetReverse(true);
+}
+
+void GameUI::SoulMinus()
+{
+	Soul->GetAnimator()->SetReverse(false);
 }

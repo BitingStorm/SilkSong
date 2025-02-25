@@ -6,6 +6,7 @@
 #include "AttackBox.h"
 #include "DamageResponseComponent.h"
 #include "DamageStrategy.h"
+#include "Effect.h"
 
 
 Interactive::Interactive()
@@ -52,4 +53,12 @@ void Interactive::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 	GameModeHelper::PlayFXSound("sound_swordhit");
 	GameplayStatics::PlayCameraShake(5);
 	box->SetCollisonMode(CollisionMode::None);
+
+	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
+	if (effect)
+	{
+		effect->SetLocalRotation(FMath::RandInt(-15, 15));
+		effect->Init("effect_attack", -0.03f);
+		effect->SetLocalScale(FVector2D::UnitVector * FMath::RandReal(0.5f, 1.f));
+	}
 }

@@ -129,7 +129,7 @@ void ParticleSystem::Render()
 		float dw = FMath::Abs(w * GetWorldScale().x * multi_sa), dh = FMath::Abs(h * GetWorldScale().y * multi_sa);
 		float alpha = FMath::Clamp(each.alpha, 0.f, 255.f);
 		FVector2D pos = (each.position - mainWorld.mainCamera->GetVirtualPosition()) * multi_sa
-			+ FVector2D(WIN_WIDTH, WIN_HEIGHT) * 0.5f - FVector2D(dw, dh) * each.size * 0.5f;
+			+ FVector2D(WIN_WIDTH, WIN_HEIGHT) * 0.5f;
 		
 		FRect cameraRect(FVector2D::ZeroVector, FVector2D(WIN_WIDTH, WIN_HEIGHT));
 		FRect imgRect(FVector2D(pos.x, pos.y), dw, dh);
@@ -148,7 +148,7 @@ void ParticleSystem::Render()
 		}
 		HDC srcDC = GetImageHDC(img);
 		BLENDFUNCTION bf = { AC_SRC_OVER,0,(BYTE)alpha,AC_SRC_ALPHA };
-		AlphaBlend(dstDC, int(pos.x - dw * 0.5f), int(pos.y - dh * 0.5f), int(dw * each.size), int(dh * each.size), srcDC, 0, 0, w, h, bf);
+		AlphaBlend(dstDC, int(pos.x - dw * 0.5f * each.size), int(pos.y - dh * 0.5f * each.size), int(dw * each.size), int(dh * each.size), srcDC, 0, 0, w, h, bf);
 		if (img != images[each.index])delete img;
 	}
 }

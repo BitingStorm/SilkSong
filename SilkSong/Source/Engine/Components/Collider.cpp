@@ -12,6 +12,8 @@ bool (*Collider::collisionJudgeMap[3])(Collider*, Collider*) =
 HitResult(*Collider::collisionHitMap[3])(Collider*, Collider*) =
 { &Collider::collisionHitCircleToCircle,Collider::collisionHitCircleToBox,Collider::collisionHitBoxToBox };
 
+void (*Collider::collisionAdjustMap[3])(Collider*, Collider*, const HitResult&) =
+{ &Collider::collisionAdjustCircleToCircle,Collider::collisionAdjustCircleToBox,Collider::collisionAdjustBoxToBox };
 
 
 Collider::Collider()
@@ -117,12 +119,14 @@ void Collider::Insert(Collider* another)
         collisions.insert(another); another->collisions.insert(this);
         if (another->mode == CollisionMode::Collision && this->mode == CollisionMode::Collision)
         {
-            HitResult hitResult = this->CollisionHit(another);
+            HitResult hitResult = CollisionHit(another);
             OnComponentHit.BroadCast(this, another, another->pOwner, -hitResult.ImpactNormal, hitResult);
             another->OnComponentHit.BroadCast(another, this, pOwner, hitResult.ImpactNormal, { hitResult.ImpactPoint,-hitResult.ImpactNormal,pOwner,this });
-            if (rigidAttached) {
+            if (rigidAttached)
+            {
                 rigidAttached->RestrictVelocity(-hitResult.ImpactNormal, FPhysicsMaterial::Combine(this->material, another->material), another->rigidAttached);
             }
+            CollisionAdjust(another, hitResult);
         }
         else
         {
@@ -275,6 +279,42 @@ HitResult Collider::collisionHitBoxToBox(Collider* c1, Collider* c2)
         c1->GetWorldPosition().x - c2->GetWorldPosition().x > 0 ? impactNormal = { -1,0 } : impactNormal = { 1,0 };
     }
     return HitResult(overlapRect.GetCenter(), impactNormal, c2->pOwner, c2);
+}
+
+void Collider::CollisionAdjust(Collider* another, const HitResult& hitResult)
+{
+    int shape1 = int(this->shape), shape2 = int(another->shape);
+    return collisionAdjustMap[shape1 * shape1 + shape2 * shape2](this, another, hitResult);
+}
+
+void Collider::collisionAdjustCircleToCircle(Collider* c1, Collider* c2, const HitResult& hitResult)
+{
+}
+
+void Collider::collisionAdjustCircleToBox(Collider* c1, Collider* c2, const HitResult& hitResult)
+{
+}
+
+void Collider::collisionAdjustBoxToBox(Collider* c1, Collider* c2, const HitResult& hitResult)
+{
+    FRect overlapRect = c1->GetRect().Overlaps(c2->GetRect());
+    FVector2D impactNormal = hitResult.ImpactNormal;
+
+    float separationDistance = overlapRect.GetSize().x * FMath::Abs(impactNormal.x) + overlapRect.GetSize().y * FMath::Abs(impactNormal.y);
+
+    if (c1->rigidAttached && c2->rigidAttached)
+    {
+        c1->GetOwner()->AddPosition(-impactNormal * separationDistance * 0.5f);
+        c2->GetOwner()->AddPosition(impactNormal * separationDistance * 0.5f);
+    }
+    else if(c1->rigidAttached)
+    {
+        c1->GetOwner()->AddPosition(-impactNormal * separationDistance);
+    }
+    else if (c2->rigidAttached)
+    {
+        c2->GetOwner()->AddPosition(impactNormal * separationDistance);
+    }
 }
 
 

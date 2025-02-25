@@ -38,6 +38,8 @@ Enemy::Enemy()
 
 	damageResponse = ConstructComponent<DamageResponseComponent>();
 	property = ConstructComponent<PropertyComponent>();
+
+	hurtTimer = 0.f;
 }
 
 void Enemy::BeginPlay()
@@ -50,6 +52,8 @@ void Enemy::BeginPlay()
 void Enemy::Update(float deltaTime)
 {
     Super::Update(deltaTime);
+
+	hurtTimer -= deltaTime;
 
 	if (!player)
 	{
@@ -85,6 +89,10 @@ void Enemy::Update(float deltaTime)
 
 FDamageCauseInfo Enemy::TakeDamage(IDamagable* damageCauser, float baseValue, EDamageType damageType)
 {
+	if (hurtTimer > 0)
+	{
+		return {};
+	}
 	FDamageCauseInfo damageInfo = damageResponse->TakeDamage(damageCauser, baseValue, damageType);
 	property->AddHealth(-damageInfo.realValue);
 	return damageInfo;
@@ -100,7 +108,7 @@ void Enemy::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 	{
 		return;
 	}
-
+	hurtTimer = 0.1f;
 	Actor* causer = Cast<Actor>(extraInfo.damageCauser);
 	CHECK_PTR(causer)
 	FVector2D normal = (GetWorldPosition() - causer->GetWorldPosition()).GetSafeNormal();

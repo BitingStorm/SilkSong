@@ -219,8 +219,7 @@ namespace Math
 	template<typename T>
 	FORCEINLINE std::ostream& operator<<(std::ostream& out, const TVector2<T>& vec)
 	{
-		std::cout << "(" << vec.x << "," << vec.y << ")";
-		return out;
+		return out << "(" << vec.x << "," << vec.y << ")";
 	}
 
 	template<typename T>

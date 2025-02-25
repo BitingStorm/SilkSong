@@ -641,6 +641,8 @@ void Player::AddSilk(int32 delta)
 {
 	int32 initSilk = playerProperty->GetSilk();
 	int32 realDelta = playerProperty->AddSilk(delta);
+	if (delta < 0 && initSilk == 9)ui->SoulMinus();
+	else if (delta > 0 && playerProperty->GetSilk() == 9)ui->SoulLoad();
 
 	if (realDelta > 0)
 	{

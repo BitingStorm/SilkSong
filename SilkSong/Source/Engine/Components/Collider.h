@@ -141,6 +141,13 @@ private:
 	static HitResult collisionHitCircleToBox(Collider* c1, Collider* c2);
 	static HitResult collisionHitBoxToBox(Collider* c1, Collider* c2);
 
+	void CollisionAdjust(Collider* another, const HitResult& hitResult);
+
+	/** 碰撞调整 **/
+	static void(*collisionAdjustMap[3])(Collider*, Collider*, const HitResult& hitResult);
+	static void collisionAdjustCircleToCircle(Collider* c1, Collider* c2, const HitResult& hitResult);
+	static void collisionAdjustCircleToBox(Collider* c1, Collider* c2, const HitResult& hitResult);
+	static void collisionAdjustBoxToBox(Collider* c1, Collider* c2, const HitResult& hitResult);
 
 	RigidBody* rigidAttached = nullptr;//附着的刚体
 };

@@ -22,6 +22,9 @@ class GameUI :public UserInterface
 	Image* Silk[9];
 	Animation silkidle[9];
 
+	Image* Soul;
+	Animation soulidle;
+
 	Image* Coin;
 	Text* CoinNum;
 
@@ -52,4 +55,8 @@ public:
 	void SilkLoad(int i);
 
 	void SilkMinus(int i);
+
+	void SoulLoad();
+
+	void SoulMinus();
 };

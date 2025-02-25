@@ -7,6 +7,8 @@
 #include "DamageResponseComponent.h"
 #include "PropertyComponent.h"
 #include "GameModeHelper.h"
+#include "Effect.h"
+#include "Components/ParticleSystem.h"
 
 
 Chest::Chest()
@@ -16,17 +18,55 @@ Chest::Chest()
 	render->LoadSprite("chest");
 	render->SetLayer(0);
 
-
 	box = ConstructComponent<BoxCollider>();
 	box->AttachTo(root);
 	box->SetType(CollisionType::Chest);
 	box->SetSize({100,140});
+
+	particle = ConstructComponent<ParticleSystem>();
+	particle->AttachTo(root);
+	particle->SetCapacity(8);
+	particle->SetInterval(0.03f);
+	particle->Load("particle_smoke");
+	particle->SetMaxSpeed(125);
+	particle->SetMinSpeed(50);
+	particle->SetPattern(EParticlePattern::Center);
+	particle->SetCenter({ 0,50 }, { -30,210 });
+	particle->SetFadingInTime(0.25f);
+	particle->SetFadingOutTime(0.25f);
+	particle->SetLifeCycle(1.f);
+	particle->SetGravity(-9.8f);
+	particle->SetLayer(3);
+	particle->Deactivate();
 
 	damageResponse = ConstructComponent<DamageResponseComponent>();
 	property = ConstructComponent<PropertyComponent>();
 	
 	property->SetMaxHealth(5);
 	property->AddHealth(5);	
+}
+
+void Chest::Update(float deltaTime)
+{
+	Actor::Update(deltaTime);
+
+	if (smokeTimer > 0)
+	{
+		smokeTimer -= deltaTime;
+		if (smokeTimer <= 0)
+		{
+			particle->SetIsLoop(false);
+		}
+	}
+
+	if (intensity <= 0) 
+	{
+		intensity = 0;
+		return; 
+	}
+	float radian = FMath::DegreeToRadian(FMath::RandReal(0, 360));
+	SetLocalPosition(originPos + intensity * FVector2D(FMath::Cos(radian), FMath::Sin(radian)));
+	intensity -= deltaTime * 12;
 }
 
 FDamageCauseInfo Chest::TakeDamage(IDamagable* damageCauser, float baseValue, EDamageType damageType)
@@ -62,4 +102,23 @@ void Chest::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 		GameplayStatics::PlayCameraShake(10);
 		GameplayStatics::CreateObject<RockParticle>(GetWorldPosition());
 	}
+
+	if (intensity <= 0)
+	{
+		originPos = GetWorldPosition();
+		intensity = 4;
+	}
+
+	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
+	if (effect)
+	{
+		effect->SetLocalRotation(FMath::RandInt(-15, 15));
+		effect->Init("effect_attack", -0.03f);
+		effect->SetLocalScale(FVector2D::UnitVector * FMath::RandReal(0.8, 1.2));
+	}
+
+	particle->Activate();
+	particle->SetIsLoop(true);
+	smokeTimer = 0.4f;
 }
+
