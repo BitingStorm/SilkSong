@@ -124,3 +124,8 @@ void SpriteRenderer::SaveImage()
 
 	saveimage(path.c_str(), sprite);
 }
+
+void SpriteRenderer::RegisterDontDestroy()
+{
+	mainWorld.OverallRenders.insert(this);
+}

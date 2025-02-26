@@ -72,3 +72,15 @@ void UserInterface::DettachFrom(UserInterface* aim)
 {
 	aim->userInterfaces.erase(this);
 }
+
+void UserInterface::RegisterDontDestroy()
+{
+	for (auto& widget : widgets)
+	{
+		mainWorld.OverallRenders.insert(widget);
+	}
+	for (auto& ui : userInterfaces)
+	{
+		ui->RegisterDontDestroy();
+	}
+}

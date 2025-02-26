@@ -122,7 +122,7 @@ void MenuUI::Update(float deltaTime)
 
 		switch (startFlag)
 		{
-		case 1:GameplayStatics::OpenLevel("TearCity");
+		case 1:GameplayStatics::OpenLevel("RuinHouse");
 			GameModeHelper::GetInstance()->GetAudioPlayer(0)->Stop("menu");
 			GameModeHelper::GetInstance()->GetAudioPlayer(0)->Stop("menu_");
 			break;

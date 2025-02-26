@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\Core\Ray2D.h" />
     <ClInclude Include="Source\Project\DefaultDamageStrategy.h" />
     <ClInclude Include="Source\Engine\Core\Box2D.h" />
     <ClInclude Include="Source\Engine\Core\Transform.h" />
@@ -28,12 +29,15 @@
     <ClInclude Include="Source\Project\DamageResponseComponent.h" />
     <ClInclude Include="Source\Project\DamageStrategy.h" />
     <ClInclude Include="Source\Project\DamageSystem.h" />
+    <ClInclude Include="Source\Project\FragmentParticle.h" />
     <ClInclude Include="Source\Project\GameMode.h" />
     <ClInclude Include="Source\Project\GameModeHelper.h" />
     <ClInclude Include="Source\Project\Interactive.h" />
+    <ClInclude Include="Source\Project\LevelTransformer.h" />
     <ClInclude Include="Source\Project\PlayerPropertyComponent.h" />
     <ClInclude Include="Source\Project\PropertyCarrier.h" />
     <ClInclude Include="Source\Project\PropertyComponent.h" />
+    <ClInclude Include="Source\Project\RuinHouseLevel.h" />
     <ClInclude Include="Source\Project\SceneUI.h" />
     <ClInclude Include="Source\Engine\Components\WidgetComponent.h" />
     <ClInclude Include="Source\Project\Chair.h" />
@@ -103,12 +107,14 @@
     <ClCompile Include="Source\Project\DamageResponseComponent.cpp" />
     <ClCompile Include="Source\Project\DamageSystem.cpp" />
     <ClCompile Include="Source\Project\DefaultDamageStrategy.cpp" />
+    <ClCompile Include="Source\Project\FragmentParticle.cpp" />
     <ClCompile Include="Source\Project\GameMode.cpp" />
     <ClCompile Include="Source\Engine\Components\WidgetComponent.cpp" />
     <ClCompile Include="Source\Project\Chair.cpp" />
     <ClCompile Include="Source\Project\DieParticle.cpp" />
     <ClCompile Include="Source\Project\GameModeHelper.cpp" />
     <ClCompile Include="Source\Project\Interactive.cpp" />
+    <ClCompile Include="Source\Project\LevelTransformer.cpp" />
     <ClCompile Include="Source\Project\MenuController.cpp" />
     <ClCompile Include="Source\Project\MenuLevel.cpp" />
     <ClCompile Include="Source\Project\CloseSkillBox.cpp" />
@@ -158,6 +164,7 @@
     <ClCompile Include="Source\Engine\Tools\VisualInterface.cpp" />
     <ClCompile Include="Source\Engine\UI\UserInterface.cpp" />
     <ClCompile Include="Source\Engine\UI\Widgets.cpp" />
+    <ClCompile Include="Source\Project\RuinHouseLevel.cpp" />
     <ClCompile Include="Source\Project\SceneUI.cpp" />
     <ClCompile Include="Source\Project\SilkParticle.cpp" />
     <ClCompile Include="Source\Project\SitParticle.cpp" />

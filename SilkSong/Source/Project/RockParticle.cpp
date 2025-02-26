@@ -18,7 +18,6 @@ RockParticle::RockParticle()
 	particle->SetLifeCycle(2.5f);
 	particle->SetIsLoop(false);
 	particle->SetLayer(3);
-	
 
 	DestroyTimerHandle.Bind(2.5f, [this]() {Destroy(); }, false);
 }

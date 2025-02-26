@@ -1,3 +1,4 @@
+#include "Widgets.h"
 #include "UserInterface.h"
 #include "Tools/ResourceManager.h"
 #include "GameplayStatics.h"

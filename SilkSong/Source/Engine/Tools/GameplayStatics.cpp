@@ -83,11 +83,13 @@ void GameplayStatics::PlaySound2D(std::string name)
 void GameplayStatics::DontDestroyOnLoad(Actor* obj)
 {
     mainWorld.OverallGameActors_to_add.push_back(obj);
+    obj->RegisterDontDestroy();
 }
 
 void GameplayStatics::DontDestroyOnLoad(UserInterface* obj)
 {
     mainWorld.OverallGameUIs_to_add.push_back(obj);
+    obj->RegisterDontDestroy();
 }
 
 FVector2D GameplayStatics::ProjectScreenToWorld(FVector2D pos)

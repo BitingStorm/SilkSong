@@ -10,7 +10,7 @@ public:
 
 	virtual void Update(float deltaTime)override;
 
-	void Init_(std::string path, FVector2D boxSize);
+	void Init_(std::string path, FVector2D boxSize, bool flag = false);
 
 	virtual FDamageCauseInfo TakeDamage(IDamagable* damageCauser, float baseValue, EDamageType damageType)override;
 
@@ -22,4 +22,5 @@ protected:
 	class BoxCollider* box;
 	class DamageResponseComponent* damageResponse;
 	std::string path_;
+	bool flag;
 };

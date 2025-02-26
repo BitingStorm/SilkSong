@@ -7,6 +7,7 @@
 #include "DamageResponseComponent.h"
 #include "DamageStrategy.h"
 #include "Effect.h"
+#include "FragmentParticle.h"
 
 
 Interactive::Interactive()
@@ -26,10 +27,11 @@ void Interactive::Update(float deltaTime)
 	Bg::Update(deltaTime);
 }
 
-void Interactive::Init_(std::string path, FVector2D boxSize)
+void Interactive::Init_(std::string path, FVector2D boxSize, bool flag)
 {
 	path_ = path;
 	box->SetSize(boxSize);
+	this->flag = flag;
 }
 
 FDamageCauseInfo Interactive::TakeDamage(IDamagable* damageCauser, float baseValue, EDamageType damageType)
@@ -50,7 +52,8 @@ void Interactive::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 			render->SetLocalScale({ -1, 1 });
 		}
 	}
-	GameModeHelper::PlayFXSound("sound_swordhit");
+	flag ? GameModeHelper::PlayFXSound("sound_blockhit") : GameModeHelper::PlayFXSound("sound_swordhit");
+	if(flag) GameplayStatics::CreateObject<FragmentParticle>(GetWorldPosition());
 	GameplayStatics::PlayCameraShake(5);
 	box->SetCollisonMode(CollisionMode::None);
 

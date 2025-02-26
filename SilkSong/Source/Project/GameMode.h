@@ -11,7 +11,16 @@ public:
 
 	DamageSystem* GetDamageSystem()const { return damageSystem; }
 
-	AudioPlayer* GetAudioPlayer(int32 index)const { return index == 0 ? music : sound; }
+	AudioPlayer* GetAudioPlayer(int32 index)const 
+	{
+		switch (index)
+		{
+		case 0: return music;
+		case 1: return sound;
+		case 2: return music_;
+		default: return nullptr;
+		}
+	}
 
 protected:
 	DamageSystem* damageSystem;
@@ -19,4 +28,6 @@ protected:
 	AudioPlayer* music;
 
 	AudioPlayer* sound;
+
+	AudioPlayer* music_;
 };

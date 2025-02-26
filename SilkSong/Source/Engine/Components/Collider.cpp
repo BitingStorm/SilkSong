@@ -96,6 +96,11 @@ void Collider::SetCollisonMode(CollisionMode mode)
     this->mode = mode;
 }
 
+void Collider::RegisterDontDestroy()
+{
+    mainWorld.OverallColliders.insert(this);
+}
+
 void Collider::Clear()
 {
     for (auto& another : collisions)

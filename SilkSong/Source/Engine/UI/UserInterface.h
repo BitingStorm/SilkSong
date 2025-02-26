@@ -71,4 +71,7 @@ public:
 	ViewPortEvent OnAddedToViewport;
 	ViewPortEvent OnHidFromViewport;
 	ViewPortEvent OnRemovedFromViewport;
+
+	//全局对象注册
+	void RegisterDontDestroy();
 };

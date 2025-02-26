@@ -303,6 +303,18 @@
     <ClInclude Include="Source\Project\Interactive.h">
       <Filter>Project</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Project\FragmentParticle.h">
+      <Filter>Project\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Core\Ray2D.h">
+      <Filter>Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\RuinHouseLevel.h">
+      <Filter>Project\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\LevelTransformer.h">
+      <Filter>Project\Levels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Components\ActorComponent.cpp">
@@ -508,6 +520,15 @@
     </ClCompile>
     <ClCompile Include="Source\Project\Interactive.cpp">
       <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\FragmentParticle.cpp">
+      <Filter>Project\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\RuinHouseLevel.cpp">
+      <Filter>Project\Levels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\LevelTransformer.cpp">
+      <Filter>Project\Levels</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

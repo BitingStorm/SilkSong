@@ -162,3 +162,8 @@ void ParticleSystem::SetLine(float length, float angle)
 {
 	this->length = length; this->angle = FMath::NormalizeDegree(angle);
 }
+
+void ParticleSystem::RegisterDontDestroy()
+{
+	mainWorld.OverallRenders.insert(this);
+}

@@ -42,6 +42,9 @@ public:
 	ComponentEvent OnActivated;
 	ComponentEvent OnDeactivated;
 
+	//组件所属全局对象注册
+	virtual void RegisterDontDestroy() {}
+
 protected:
 	Actor* pOwner = nullptr;//处理控制逻辑
 

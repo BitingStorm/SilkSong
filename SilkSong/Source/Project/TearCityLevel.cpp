@@ -1,22 +1,20 @@
 #include "TearCityLevel.h"
-#include "Player.h"
 #include "Bug.h"
 #include "PlatForm.h"
 #include "Bg.h"
 #include "Interactive.h"
-#include "GameplayStatics.h"
 #include "RainProducer.h"
 #include "Animated.h"
 #include "Chest.h"
-#include "Chair.h"
-
+#include "GameModeHelper.h"
+#include "LevelTransformer.h"
 
 
 TearCityLevel::TearCityLevel()
 {
-	SetDefaultController<Player>();
-
-	Chair* chair = GameplayStatics::CreateObject<Chair>({ -835,930 });
+	GameMode* gameMode = GameModeHelper::GetInstance();
+	gameMode->GetAudioPlayer(2)->SetVolume(gameMode->GetAudioPlayer(0)->GetVolume());
+	GameplayStatics::CreateObject<LevelTransformer>({ -1050, 875 })->Init("RuinHouse", { 550,900 }, FRect({ -100.f,250.f }, { 100.f,750.f }));
 
 	Bg* bg0 = GameplayStatics::CreateObject<Bg>(); bg0->Init("tearcity_0", -30);
 	Bg* bg1 = GameplayStatics::CreateObject<Bg>({ 2500,350 }); bg1->Init("tearcity_1", -20);
@@ -29,8 +27,8 @@ TearCityLevel::TearCityLevel()
 	Animated* waterfall = GameplayStatics::CreateObject<Animated>({ -60,160 }); waterfall->Init("water_fountain", 0.05f, 0); waterfall->AttachTo(ev0);
 	waterfall = GameplayStatics::CreateObject<Animated>({ 50,160 }); waterfall->Init("water_fountain", 0.04f, -1); waterfall->AttachTo(ev0);
 	waterfall = GameplayStatics::CreateObject<Animated>({ -200,160 }); waterfall->Init("water_fountain", 0.08f, -4); waterfall->AttachTo(ev0);
-	waterfall = GameplayStatics::CreateObject<Animated>({ -150,160 });	waterfall->Init("water_fountain", 0.06f, -7); waterfall->AttachTo(ev0);
-	waterfall = GameplayStatics::CreateObject<Animated>({ 150,160 });	waterfall->Init("water_fountain", 0.08f, -6); waterfall->AttachTo(ev0);
+	waterfall = GameplayStatics::CreateObject<Animated>({ -150,160 }); waterfall->Init("water_fountain", 0.06f, -7); waterfall->AttachTo(ev0);
+	waterfall = GameplayStatics::CreateObject<Animated>({ 150,160 }); waterfall->Init("water_fountain", 0.08f, -6); waterfall->AttachTo(ev0);
 
 	Bg* ev1 = GameplayStatics::CreateObject<Bg>({ 0,975 }); ev1->Init("tearcity_environment_1", -2);
 	for (int i = 0; i < 5; i++) {
@@ -55,9 +53,10 @@ TearCityLevel::TearCityLevel()
 	}
 
 
-	Bg* ev5 = GameplayStatics::CreateObject<Bg>({ -850,950 }); ev5->Init("tearcity_environment_4", -2);
+	Interactive* ev5 = GameplayStatics::CreateObject<Interactive>({ -850,800 });
+	ev5->Init("tearcity_environment_19", -2); ev5->Init_("tearcity_environment_4", { 30,250 }, true);
 	Interactive* ev6 = GameplayStatics::CreateObject<Interactive>({ -400,850 });
-	ev6->Init("tearcity_environment_16", -1); ev6->Init_("tearcity_environment_5", { 20,200 });
+	ev6->Init("tearcity_environment_16", -2); ev6->Init_("tearcity_environment_5", { 20,210 });
 	Bg* ev7 = GameplayStatics::CreateObject<Bg>({ 1200,875 }); ev7->Init("tearcity_environment_6", 5, false, false);
 	Bg* ev8 = GameplayStatics::CreateObject<Bg>({ 800,680 }); ev8->Init("tearcity_environment_7", 0);
 	Bg* ev9 = GameplayStatics::CreateObject<Bg>({ 900,980 }); ev9->Init("tearcity_environment_8", 5);
@@ -70,7 +69,8 @@ TearCityLevel::TearCityLevel()
 	Interactive* ev14 = GameplayStatics::CreateObject<Interactive>({ 450,845 });
 	ev14->Init("tearcity_environment_10", 5, false, false); ev14->Init_("tearcity_environment_14", { 20,200 });
 	GameplayStatics::CreateObject<Bg>({ -785,950 })->Init("tearcity_environment_15", 5);
-
+	Interactive* ev16 = GameplayStatics::CreateObject<Interactive>({ 300,500 });
+	ev16->Init("tearcity_environment_17", -1, false, false); ev16->Init_("tearcity_environment_18", { 20,200 }, true);
 
 	GameplayStatics::CreateObject<PlatForm>({ 650,400 })->Init("tearcity_plat_0", { 130,60 }, { 0,-25 });
 	GameplayStatics::CreateObject<PlatForm>({ 300,700 })->Init("tearcity_plat_2", { 80,70 }, { 0,-10 });
@@ -88,7 +88,7 @@ TearCityLevel::TearCityLevel()
 	GameplayStatics::CreateObject<PlatForm>({ -1300,1075 })->Init("tearcity_floor", { 1125,210 }, {});
 	GameplayStatics::CreateObject<PlatForm>({ 1500,1075 })->Init("tearcity_floor", { 1125,210 }, {});
 
-	GameplayStatics::CreateObject<PlatForm>({ -1000,250 })->Init("", { 100,1300 }, {});
+	GameplayStatics::CreateObject<PlatForm>({ -1000,250 })->Init("", { 100,1100 }, {});
 	GameplayStatics::CreateObject<PlatForm>({ 1750,250 })->Init("", { 100,1300 }, {});
 
 	GameplayStatics::CreateObject<PlatForm>({ -650,1175 })->Init("", { 200,100 }, {});

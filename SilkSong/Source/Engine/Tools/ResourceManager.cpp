@@ -107,6 +107,7 @@ void ResourceManager::Initialize()
 	Load("menu_ss_particle", "Asset/Particles/ss_menu_particle.png", 65, 100, 1, 1, 1);
 	Load("particle_silk", "Asset/Particles/web_particle.png", 46, 183, 4, 4, 1);
 	Load("particle_smoke", "Asset/Particles/hot_spring_smoke.png", 98, 87, 1, 1, 1);
+	Load("particle_fragment", "Asset/Particles/rock_particle.png", 33, 88, 4, 4, 1);
 
 	/** 图像 **/
 
@@ -128,7 +129,7 @@ void ResourceManager::Initialize()
 	Load("tearcity_environment_3", "Asset/Images/Environment/TearCity/5.png", 500, 750);
 	Load("tearcity_water", "Asset/Images/Environment/TearCity/Lake_water.png", 3500, 160);
 
-	Load("tearcity_environment_4", "Asset/Images/Environment/TearCity/_0025_city_break.png", 100, 156);
+	Load("tearcity_environment_4", "Asset/Images/Environment/TearCity/_0025_city_break.png", 114, 410);
 	Load("tearcity_environment_5", "Asset/Images/Environment/TearCity/_0029_city_break.png", 61, 308);
 	Load("tearcity_environment_6", "Asset/Images/Environment/TearCity/ruin_sign_01.png", 72, 218);
 	Load("tearcity_environment_7", "Asset/Images/Environment/TearCity/corpse_set_01_0005_nail4-copy.png", 23, 105);
@@ -141,6 +142,9 @@ void ResourceManager::Initialize()
 	Load("tearcity_environment_14", "Asset/Images/Environment/TearCity/_0030_city_break.png", 74, 315);
 	Load("tearcity_environment_15", "Asset/Images/Environment/TearCity/ruin_small_corner_piece.png", 170, 250);
 	Load("tearcity_environment_16", "Asset/Images/Environment/TearCity/_0016_city_break.png", 61, 324);
+	Load("tearcity_environment_17", "Asset/Images/Environment/TearCity/_0019_city_break.png", 63, 329);
+	Load("tearcity_environment_18", "Asset/Images/Environment/TearCity/_0024_city_break.png", 63, 329);
+	Load("tearcity_environment_19", "Asset/Images/Environment/TearCity/_0021_city_break.png", 114, 410);
 
 	Load("tearcity_plat_0", "Asset/Images/PlatForm/TearCity/ruin_plat_float_01.png", 163, 118);
 	Load("tearcity_plat_1", "Asset/Images/PlatForm/TearCity/ruin_plat_float_02.png", 114, 83);
@@ -152,6 +156,9 @@ void ResourceManager::Initialize()
 	Load("chest", "Asset/Images/Chest - atlas0 #087042(1).png", 125, 144);
 	Load("chest_", "Asset/Images/Chest - atlas0 #087042(2).png", 125, 118);
 	Load("chair", "Asset/Images/chair.png", 184, 111);
+
+	Load("ruinhouse_0", "Asset/Images/BackGround/RuinHouse/ruin_house_BG.jpg", 1000, 580);
+	Load("ruinhouse_1", "Asset/Images/BackGround/RuinHouse/room_ruin_house_FG.png", 1500, 820);
 
 	//Others
 	Load("player_light", "Asset/Images/grimm_fader.png", 600, 500);
@@ -184,7 +191,9 @@ void ResourceManager::Initialize()
 	 * 媒体资源加载
 	 *************/
 	//Music
-	Load("tear_city", "Asset/Sounds/rain.mp3");
+	Load("tearcity_i", "Asset/Sounds/tearcity_i.mp3");
+	Load("tearcity_o", "Asset/Sounds/tearcity_o.mp3");
+	Load("rain", "Asset/Sounds/rain.mp3");
 	Load("menu", "Asset/Sounds/menu.mp3");
 	Load("menu_", "Asset/Sounds/menu_.mp3");
 

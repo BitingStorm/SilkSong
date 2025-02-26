@@ -4,6 +4,7 @@
 #include "SceneUI.h"
 #include "GameplayStatics.h"
 #include "Components/WidgetComponent.h"
+#include "Player.h"
 
 
 Chair::Chair()
@@ -26,13 +27,13 @@ Chair::Chair()
 	widget->AddPosition({0,-150});
 	widget->SetUI(GameplayStatics::CreateUI<SceneUI>());
 	widget->SetSize({100,100});
-	widget->Activate();
+	widget->Deactivate();
 }
 
 
 void Chair::OnBeginOverlap(Collider* hitComp, Collider* otherComp, Actor* otherActor)
 {
-	if (otherComp->GetType() == CollisionType::HurtBox)
+	if (Cast<Player>(otherActor))
 	{
 		widget->Activate();
 	}
@@ -40,7 +41,7 @@ void Chair::OnBeginOverlap(Collider* hitComp, Collider* otherComp, Actor* otherA
 
 void Chair::OnEndOverlap(Collider* hitComp, Collider* otherComp, Actor* otherActor)
 {
-	if (otherComp->GetType() == CollisionType::HurtBox)
+	if (Cast<Player>(otherActor))
 	{
 		widget->Deactivate();
 	}
@@ -52,7 +53,7 @@ void Chair::Update(float deltaTime)
 
 	widget->AddPosition({ 0,deltaTime * dir * 50 });
 
-	if (std::abs(widget->GetLocalPosition().y + 150) >= 8)
+	if (FMath::Abs(widget->GetLocalPosition().y + 150) >= 8)
 	{
 		dir = -dir;
 		widget->AddPosition({ 0,2 * deltaTime * dir * 100 });

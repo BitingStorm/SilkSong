@@ -58,6 +58,8 @@ public:
 	//获取速度
 	FVector2D GetVelocity()const { return velocity; }
 
+	virtual void RegisterDontDestroy()override;
+
 private:
 	FVector2D velocity{};
 	float maxSpeed = 5000.0f;

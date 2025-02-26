@@ -33,6 +33,8 @@ public:
 
 	void SetSize(FVector2D size);
 
+	virtual void RegisterDontDestroy()override;
+
 private:
 	UserInterface* userInterface;
 };

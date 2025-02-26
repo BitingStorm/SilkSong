@@ -186,6 +186,10 @@ void World::Debug()
 		obj->DrawDebugPosition();
 	for (auto& obj : GameUIs)
 		obj->DrawDebugRect();
+	for (auto& obj : OverallGameActors)
+		obj->DrawDebugPosition();
+	for (auto& obj : OverallGameUIs)
+		obj->DrawDebugRect();
 #endif
 
 	static int FPS = 0;
@@ -218,6 +222,20 @@ void World::WipeData()
 	GameUIs_to_delete.clear();
 	GameColliders.clear();
 	GameColliders_to_clear.clear();
+	GameRigids.clear();
 	GameRenderers.clear();
+	for (auto& obj : OverallRenders)
+	{
+		GameRenderers.insert(obj);
+	}
+	for (auto& obj : OverallColliders)
+	{
+		GameColliders.insert(obj);
+	}
+	for (auto& obj : OverallRigids)
+	{
+		GameRigids.insert(obj);
+	}
 	for (auto& arr_i : ColliderZones)for (auto& arr_j : arr_i)arr_j.clear();
+	for (auto& arr_i : UIDetectZones)for (auto& arr_j : arr_i)arr_j.clear();
 }

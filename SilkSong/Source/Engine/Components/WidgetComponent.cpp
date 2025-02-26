@@ -50,3 +50,8 @@ void WidgetComponent::SetSize(FVector2D size)
 	
 	userInterface->rootCanvas->SetSize(size);
 }
+
+void WidgetComponent::RegisterDontDestroy()
+{
+	userInterface->RegisterDontDestroy();
+}

@@ -9,6 +9,7 @@
 #pragma once
 #include"CoreMinimal.h"
 #include"Objects/Actor.h"
+#include"UI/UserInterface.h"
 #include <mutex>
 
 
@@ -78,7 +79,8 @@ class World final
 	friend CircleCollider;
 	friend BoxCollider;
 	friend Controller;
-	friend UserInterface;
+	friend void UserInterface::RemoveFromViewport();
+	friend void UserInterface::RegisterDontDestroy();
 	friend Widget;
 	friend Button;
 	friend Bar;
@@ -117,6 +119,9 @@ class World final
 	std::vector<Actor*>OverallGameActors_to_add;
 	std::unordered_set<UserInterface*>OverallGameUIs;
 	std::vector<UserInterface*>OverallGameUIs_to_add;
+	std::unordered_set<LayerInterface*>OverallRenders;
+	std::unordered_set<Collider*>OverallColliders;
+	std::unordered_set<RigidBody*>OverallRigids;
 	std::unordered_set<Timer*>GameTimers;
 
 	/**  ‰÷»æ°¢≈ˆ◊≤º∆À„°¢UI Û±ÍºÏ≤‚»›∆˜ **/

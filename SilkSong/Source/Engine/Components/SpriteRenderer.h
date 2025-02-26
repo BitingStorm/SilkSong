@@ -36,6 +36,8 @@ public:
 	//保存图像资源到本地
 	void SaveImage();
 
+	virtual void RegisterDontDestroy()override;
+
 private:
 	bool isBlinking = false;
 	bool blinkFlag = false;

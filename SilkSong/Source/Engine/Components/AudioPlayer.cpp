@@ -51,7 +51,7 @@ void AudioPlayer::Play(string name, bool repeat)
 {
 	if (paths.find(name) ==  paths.end())paths.insert(name);
 
-	mciSendString((string("seek ") + name + string(" to start")).c_str(), 0, 0, 0);
+	if(!repeat)mciSendString((string("seek ") + name + string(" to start")).c_str(), 0, 0, 0);
 	mciSendString((string("play ") + name + (repeat ? string(" repeat") : "")).c_str(), 0, 0, 0);
 
 	if (bSpacial)return;

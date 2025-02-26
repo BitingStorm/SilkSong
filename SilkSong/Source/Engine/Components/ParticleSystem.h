@@ -147,4 +147,6 @@ public:
 	 * @param[in] angle	            线段与水平夹角
 	 **/
 	void SetLine(float length, float angle);
+
+	virtual void RegisterDontDestroy()override;
 };

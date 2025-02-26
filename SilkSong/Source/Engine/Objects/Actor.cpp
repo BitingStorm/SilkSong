@@ -2,6 +2,7 @@
 #include "Core/World.h"
 #include "Components/SceneComponent.h"
 #include "Components/Camera.h"
+#include "Components/WidgetComponent.h"
 #include <easyx.h>
 
 
@@ -192,4 +193,12 @@ ActorComponent* Actor::GetComponentByName(std::string tagName)
 		if (obj->GetName() == tagName)return obj;
 	}
 	return nullptr;
+}
+
+void Actor::RegisterDontDestroy()
+{
+	for (auto& obj : components)
+	{
+		obj->RegisterDontDestroy();
+	}
 }

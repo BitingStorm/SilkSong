@@ -128,4 +128,7 @@ public:
 
 	//通过标签名获取组件
 	ActorComponent* GetComponentByName(std::string tagName);
+
+	//全局对象注册
+	void RegisterDontDestroy();
 };

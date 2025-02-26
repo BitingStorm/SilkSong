@@ -55,7 +55,7 @@ Player::Player()
 	camera = GetComponentByClass<Camera>();
 	camera->SetDistanceThreshold(100);
 	camera->SetSmoothness(50);
-	camera->SetRectFrame(FRect({ -375.f,-1000.f }, { 1125.f,725.f }));
+	camera->SetRectFrame(FRect({ -100.f,-250.f }, { 100.f,750.f }));
 
 	particle = ConstructComponent<ParticleSystem>();
 	particle->AttachTo(root);
@@ -168,7 +168,7 @@ void Player::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	SetLocalPosition({ -800,800 });
+	SetLocalPosition({ 0,900 });
 
 	BlinkTimer.Bind(0.2f, [this]()
 		{
@@ -189,7 +189,8 @@ void Player::BeginPlay()
 
 	particle->Deactivate();
 
-	GameModeHelper::PlayBGMusic("tear_city");
+	GameplayStatics::DontDestroyOnLoad(this);
+	GameplayStatics::DontDestroyOnLoad(ui);
 }
 
 void Player::Update(float deltaTime)
@@ -726,14 +727,13 @@ void Player::DieEnd()
 void Player::Recover()
 {
 	EnableInput(true);
-	if (Chair* chair = GameplayStatics::FindObjectOfClass<Chair>())
-	{
-		SetLocalPosition(chair->GetWorldPosition() - FVector2D{ 0,30 });
-		bSitting = true; ani->SetNode("sitdown"); 
-		rigid->SetVelocity({});
-		ui->BlackInterval(false);
-		AddHealth(5);
-	}
+
+	GameplayStatics::OpenLevel("RuinHouse");
+	SetLocalPosition({ 0,920 });
+	bSitting = true; ani->SetNode("sitdown");
+	rigid->SetVelocity({});
+	ui->BlackInterval(false);
+	AddHealth(5);
 }
 
 void Player::SitDown()

@@ -94,6 +94,8 @@ public:
 	CollisionHitDelegate OnComponentHit;
 	CollisionHitDelegate OnComponentStay;
 
+	virtual void RegisterDontDestroy()override;
+
 protected:
 	FPhysicsMaterial material;
 

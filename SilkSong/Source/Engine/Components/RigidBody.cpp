@@ -84,6 +84,11 @@ void RigidBody::PreciseUpdate(float deltaTime)
 	pOwner->AddPosition(FVector2D(FMath::IsSmallNumber(offset.x) ? 0 : offset.x, FMath::IsSmallNumber(offset.y) ? 0 : offset.y));
 }
 
+void RigidBody::RegisterDontDestroy()
+{
+	mainWorld.OverallRigids.insert(this);
+}
+
 void RigidBody::RestrictVelocity(FVector2D impactNormal, const FPhysicsMaterial& material, RigidBody* another)
 {
 	FVector2D tangentVector = { impactNormal.y, -impactNormal.x };
@@ -92,7 +97,7 @@ void RigidBody::RestrictVelocity(FVector2D impactNormal, const FPhysicsMaterial&
 	FVector2D tangentVelocity = FVector2D::ProjectVector(velocity, tangentVector);
 
 	float friction = material.friction;
-	float bounciness = material.bounciness;
+	float bounciness = FMath::Clamp(material.bounciness, 0.0f, 1.0f);
 
 	/**
 	 * 单一刚体处理逻辑

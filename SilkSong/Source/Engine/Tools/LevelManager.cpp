@@ -9,7 +9,7 @@
  **/
 #include "TearCityLevel.h"
 #include "MenuLevel.h"
-
+#include "RuinHouseLevel.h"
 
 
 void LevelManager::Initialize()
@@ -19,6 +19,7 @@ void LevelManager::Initialize()
 	 **/
 	AddLevel<MenuLevel>("Menu");
 	AddLevel<TearCityLevel>("TearCity");
+	AddLevel<RuinHouseLevel>("RuinHouse");
 	SetDefaultLevel("Menu");
 
 //*********                             **********
