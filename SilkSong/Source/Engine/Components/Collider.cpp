@@ -397,7 +397,6 @@ void CircleCollider::Update(float deltaTime)
     Collider::Update(deltaTime);
 
     radius = radius_ini * FMath::Sqrt(FMath::Abs(GetWorldScale().x * GetWorldScale().y));
-    rect = FRect(GetWorldPosition(), radius * 2, radius * 2);
 }
 
 void CircleCollider::DrawDebugLine()
@@ -420,7 +419,6 @@ void CircleCollider::SetRadius(float r)
     radius_ini = radius * FMath::InvSqrt(GetWorldScale().x * GetWorldScale().y);
    
     radius = radius_ini * FMath::Sqrt(FMath::Abs(GetWorldScale().x * GetWorldScale().y));
-    rect = FRect(GetWorldPosition(), radius * 2, radius * 2);
 }
 
 
@@ -436,7 +434,6 @@ void BoxCollider::Update(float deltaTime)
 
     size = size_ini * GetWorldScale();
     size.MakeAbs();
-    rect = FRect(GetWorldPosition(), size.x, size.y);
 }
 
 void BoxCollider::DrawDebugLine()
@@ -463,7 +460,6 @@ void BoxCollider::SetSize(FVector2D size)
 
     size = size_ini * GetWorldScale();
     size.MakeAbs();
-    rect = FRect(GetWorldPosition(), size.x, size.y);
 }
 
 
@@ -481,7 +477,7 @@ void PolygonCollider::DrawDebugLine()
 {
     if (GetCollisonMode() == CollisionMode::None || !polygon.bIsValid)return;
     setlinecolor(GREEN);
-    int n = polygon.vertices.size();
+    size_t n = polygon.vertices.size();
     /*for (int i = 0, j = n - 1; i < n; j = i++)
     {
         line(polygon.vertices[i].x, polygon.vertices[i].y, polygon.vertices[j].x, polygon.vertices[j].y);

@@ -38,7 +38,7 @@ void Controller::MouseTick()
 FVector2D Controller::GetCursorPosition() const
 {
 	return (InputComponent::GetMousePosition() - FVector2D(WIN_WIDTH, WIN_HEIGHT) * 0.5f)
-		* 20.f / mainWorld.mainCamera->GetVirtualSpringArmLength() + mainWorld.mainCamera->GetWorldPosition();
+		* mainWorld.mainCamera->GetVirtualSpringArmLength() / 20.f + mainWorld.mainCamera->GetWorldPosition();
 }
 
 bool Controller::IsMouseClicked() const

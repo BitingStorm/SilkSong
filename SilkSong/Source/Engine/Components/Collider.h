@@ -170,6 +170,7 @@ public:
 	virtual bool IsMouseOver()override;
 	float GetRadius()const { return radius; }
 	void SetRadius(float r);
+	FRect GetRect() override { return FRect(GetWorldPosition(), radius * 2, radius * 2); }
 private:
 	float radius = 0;
 	float radius_ini = 0;
