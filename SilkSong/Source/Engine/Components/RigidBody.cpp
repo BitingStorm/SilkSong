@@ -67,16 +67,8 @@ void RigidBody::PreciseUpdate(float deltaTime)
 		for (auto& another : collider->collisions)
 		{
 			if (another->mode != CollisionMode::Collision)continue;
-			RestrictVelocity(-collider->CollisionHit(another).ImpactNormal, FPhysicsMaterial::Combine(collider->material, another->material), another->rigidAttached);
-		}
-	}
-	for (auto& collider : colliders)
-	{
-		if (collider->mode != CollisionMode::Collision)continue;
-		for (auto& another : collider->collisions)
-		{
-			if (another->mode != CollisionMode::Collision || another->rigidAttached)continue;
-			RestrictVelocity(-collider->CollisionHit(another).ImpactNormal, FPhysicsMaterial::Combine(collider->material, another->material));
+			FHitResult hitResult = collider->CollisionHit(another);
+			RestrictVelocity(-hitResult.ImpactNormal, FPhysicsMaterial::Combine(collider->material, another->material), another->rigidAttached);
 		}
 	}
 

@@ -97,8 +97,8 @@ void ResourceManager::Initialize()
 	Load("dart", "Asset/Animations/Dart/", 71, 74, 5);
 
 	/** СЃзг **/
-	Load("rain_bg", "Asset/Particles/rain_particle.png", 10, 1000, 3, 3, 1);
-	Load("rain_bg_", "Asset/Particles/rain_particle_.png", 15, 800, 3, 3, 1);
+	Load("rain_bg", "Asset/Particles/rain_particle.png", 12, 1200, 3, 3, 1);
+	Load("rain_bg_", "Asset/Particles/rain_particle_.png", 16, 1000, 3, 3, 1);
 	Load("particle_heal", "Asset/Particles/heal_particle.png", 30, 80, 3, 3, 1);
 	Load("particle_rock", "Asset/Particles/particles_barrel.png", 43, 376, 6, 6, 1);
 	Load("menu_radiant_bottom", "Asset/Particles/gg_menu_radiant_0000_1.png", 15, 15, 1, 1, 1);

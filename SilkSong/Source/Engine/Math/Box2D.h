@@ -81,6 +81,12 @@ namespace Math
 			return ((testPoint.x >= min.x) && (testPoint.x <= max.x) && (testPoint.y >= min.y) && (testPoint.y <= max.y));
 		}
 
+		//判断一个点是否位于矩形边缘上
+		bool IsOn(const TVector2<T>& testPoint) const
+		{
+			return !IsInside(testPoint) && IsInsideOrOn(testPoint);
+		}
+
 		//检查两个矩形是否相交
 		FORCEINLINE bool Intersects(const TBox2<T>& other) const;
 

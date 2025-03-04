@@ -49,7 +49,7 @@ public:
 	void SetMaxWalkingSpeed(float maxSpeed) { maxWalkingSpeed = (maxSpeed > 0 ? maxSpeed : 0); }
 
 protected:
-	void OnTouching(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const HitResult& hitResult);
+	void OnTouching(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const FHitResult& hitResult);
 
 private:
 	class SpriteRenderer* render;

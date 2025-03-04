@@ -8,7 +8,7 @@
 #pragma once
 #include<iostream>
 #include<string>
-#include"Math.h"
+#include"Core/Math.h"
 
 
 namespace Math
@@ -207,10 +207,19 @@ namespace Math
 		/**
 		 * @brief 计算某一向量旋转后的结果并返回
 		 * @param[in] angle        待旋转角度
-		 * @param[in] another      待旋转向量
+		 * @param[in] v            待旋转向量
 		 * @return 旋转后的向量
 		 */
-		static FORCEINLINE TVector2<T> RotateVector(float angle, const TVector2<T>& another);
+		static FORCEINLINE TVector2<T> RotateVector(float angle, const TVector2<T>& v);
+
+		/**
+		 * @brief 计算某一点以另一点为中心旋转后的结果并返回
+		 * @param[in] angle        待旋转角度
+		 * @param[in] center       旋转中心
+		 * @param[in] another      待旋转点
+		 * @return 旋转后的点的坐标
+		 */
+		static FORCEINLINE TVector2<T> RotateAround(float angle, const TVector2<T>& center, const TVector2<T>& v);
 
 		//将向量 u 投影到向量 v 所在的直线上
 		static FORCEINLINE TVector2<T> ProjectVector(const TVector2<T>& u, const TVector2<T>& v);
@@ -360,12 +369,18 @@ namespace Math
 	}
 
 	template<typename T>
-	FORCEINLINE TVector2<T> TVector2<T>::RotateVector(float angle, const TVector2<T>& another)
+	FORCEINLINE TVector2<T> TVector2<T>::RotateVector(float angle, const TVector2<T>& v)
 	{
 		float radian = FMath::DegreeToRadian(angle);
 		float fsin = FMath::Sin(radian);
 		float fcos = FMath::Cos(radian);
-		return TVector2<T>(another.x * fcos - another.y * fsin, another.x * fsin + another.y * fcos);
+		return TVector2<T>(v.x * fcos - v.y * fsin, v.x * fsin + v.y * fcos);
+	}
+
+	template<typename T>
+	FORCEINLINE TVector2<T> TVector2<T>::RotateAround(float angle, const TVector2<T>& center, const TVector2<T>& v)
+	{
+		return RotateVector(angle, v - center) + center;
 	}
 
 	template<typename T>

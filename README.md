@@ -25,11 +25,13 @@ VS2022 + EasyX_20240601 
 
 菜单“CHANGE THEME”可以在怀旧和最新场景间来回切换，游戏中 WASD 控制上下左右，按住 Space 空格疾跑，J 攻击，K 跳跃（按住时间越久跳得越高，跳跃到平台边沿会自动攀爬），F 冲刺（地面小冲刺，空中大冲刺），L 闪避，Q 飞镖（飞镖可互动，向下攻击用作垫脚石），E 治疗，I 近战技能，地面使用 O 为远程技能，空中使用 O 发射钩锁斜向上移动，特别的，长按 W/S 向上/下看，W+J 向上攻击，S+J 斜向下攻击，座位旁按 W 坐下，坐下以后按 S 起立。
 
-
 ### 游戏执行效果
 
-![输入图片说明](QQ20250131-002024.jpg)
-![输入图片说明](QQ20250130-105855.jpg)
-![输入图片说明](QQ20250130-105947.jpg)
+![](https://codebus.cn/f/a/0/0/734/QQ20250130-105746.png)
+
+![](https://codebus.cn/f/a/0/0/734/QQ20250130-105855.png)
+
+![](https://codebus.cn/f/a/0/0/734/QQ20250130-105947.png)
+
 
 演示视频：[【Easyx】空洞骑士，但是Easyx](https://www.bilibili.com/video/BV1U8fSYkEsC/?share_source=copy_web&vd_source=a59fee9f89e8975f2e92a9b950cce6c5)

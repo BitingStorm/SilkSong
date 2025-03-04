@@ -8,9 +8,9 @@
 #pragma once
 #include<iostream>
 #include<string>
-#include"Vector2D.h"
-#include"Box2D.h"
-#include"Transform.h"
+#include"Math/Vector2D.h"
+#include"Math/Box2D.h"
+#include"Math/Transform.h"
 
 
 using FVector2D = Math::TVector2<float>;
@@ -57,14 +57,14 @@ class Actor;
 class ActorComponent;
 
 /* Åö×²½á¹û */
-struct HitResult
+struct FHitResult
 {
 	FVector2D ImpactPoint;
 	FVector2D ImpactNormal;
 	Actor* HitObject;
 	ActorComponent* HitComponent;
 
-	HitResult() :ImpactPoint(0, 0), ImpactNormal(0, 0), HitObject(nullptr), HitComponent(nullptr) {}
-	HitResult(const FVector2D& impactPoint, const FVector2D& impactNormal, Actor* hitObject, ActorComponent* hitComponent)
+	FHitResult() :ImpactPoint(0, 0), ImpactNormal(0, 0), HitObject(nullptr), HitComponent(nullptr) {}
+	FHitResult(const FVector2D& impactPoint, const FVector2D& impactNormal, Actor* hitObject, ActorComponent* hitComponent)
 		:ImpactPoint(impactPoint), ImpactNormal(impactNormal), HitObject(hitObject), HitComponent(hitComponent) {}
 };

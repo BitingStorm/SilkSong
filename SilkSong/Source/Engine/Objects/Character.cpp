@@ -63,7 +63,7 @@ void Character::AddInputX(float inputValue, bool bControlScale)
 	rigid->AddImpulse({ inputValue,0 });
 }
 
-void Character::OnTouching(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const HitResult& hitResult)
+void Character::OnTouching(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const FHitResult& hitResult)
 {
 	if (normalImpulse.y < 0)
 	{

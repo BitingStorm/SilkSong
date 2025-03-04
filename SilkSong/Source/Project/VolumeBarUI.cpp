@@ -46,7 +46,7 @@ void VolumeBarUI::Init(int32 i)
 	VolumeText->SetText(Texts[i], 5, "Trajan Pro");
 	index = i;
 
-	float delta_x = float(GameModeHelper::GetInstance()->GetAudioPlayer(index)->GetVolume()) / 5 - 100;
+	float delta_x = float(GameModeHelper::GetInstance()->GetVolume(index)) / 5 - 100;
 	VolumeButton->SetRelativePosition(FVector2D(delta_x, -30));
 }
 
@@ -54,7 +54,7 @@ void VolumeBarUI::Update(float deltaTime)
 {
 	UserInterface::Update(deltaTime);
 
-	AudioPlayer* audio = GameModeHelper::GetInstance()->GetAudioPlayer(index);
+	GameMode* mode = GameModeHelper::GetInstance();
 
 	if (VolumeButton->IsMousePressed())
 	{
@@ -64,8 +64,8 @@ void VolumeBarUI::Update(float deltaTime)
 
 		delta_x += 100;
 
-		audio->SetVolume(5 * delta_x);
+		mode->SetVolume(index, 5 * delta_x);
 	}
-	VolumeBar->SetPercentage(float(audio->GetVolume()) / 1000.f);
-	VolumeNumber->SetText("$0" + std::to_string(audio->GetVolume() / 100), 5, "Trajan Pro");
+	VolumeBar->SetPercentage(float(mode->GetVolume(index)) / 1000.f);
+	VolumeNumber->SetText("$0" + std::to_string(mode->GetVolume(index) / 100), 5, "Trajan Pro");
 }

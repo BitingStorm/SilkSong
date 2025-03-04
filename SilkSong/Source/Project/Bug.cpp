@@ -111,7 +111,7 @@ void Bug::Update(float deltaTime)
 	if (circle->IsCollisionsEmpty())currentPlatForm = nullptr;
 }
 
-void Bug::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const HitResult& hitResult)
+void Bug::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const FHitResult& hitResult)
 {
 	if (hitComp->GetType() == CollisionType::Player || IsDead())return;
 

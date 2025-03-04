@@ -271,7 +271,7 @@ FIntVector2 ImageToolkit::RotateImage(IMAGE* srcImg, IMAGE* dstImg, float degree
 			}
 		}
 	}
-	
+
 	return FIntVector2(nw, nh);
 }
 

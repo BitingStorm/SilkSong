@@ -179,6 +179,7 @@ void Player::BeginPlay()
 				if (--blinkTimes == 0 && !bSitting)
 				{
 					hurtBox->SetCollisonMode(CollisionMode::Trigger);
+					GameModeHelper::GetInstance()->RefreshVolume();
 					if (playerProperty->GetHealth() != 1)particle->SetIsLoop(false);
 				}
 			}
@@ -482,7 +483,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 }
 
 
-void Player::OnEnter(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const HitResult& hitResult)
+void Player::OnEnter(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const FHitResult& hitResult)
 {
 	if (normalImpulse.y < 0)
 	{
@@ -512,7 +513,7 @@ void Player::OnEnter(Collider* hitComp, Collider* otherComp, Actor* otherActor, 
 	}
 }
 
-void Player::OnStay(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const HitResult& hitResult)
+void Player::OnStay(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const FHitResult& hitResult)
 {
 	if (normalImpulse.y < 0)
 	{
@@ -590,6 +591,8 @@ void Player::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 	int32 stunNum = FMath::RandInt(0, 10);
 	if (stunNum < 3)GameModeHelper::PlayFXSound("sound_stun");
 	else if (stunNum < 6)GameModeHelper::PlayFXSound("sound_stun_");
+
+	GameModeHelper::GetInstance()->MakeEarRinging();
 }
 
 PropertyComponent* Player::GetProperty()

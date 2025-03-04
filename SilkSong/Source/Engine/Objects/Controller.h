@@ -49,9 +49,9 @@ public:
 
 	/**
 	 * @brief 获取鼠标所处位置物体的信息（该物体必须拥有碰撞体）
-	 * @return  HitResult 世界坐标系下鼠标所处位置最顶层的物体信息
+	 * @return  FHitResult 世界坐标系下鼠标所处位置最顶层的物体信息
 	 **/
-	HitResult GetHitResultUnderCursor() const;
+	FHitResult GetHitResultUnderCursor() const;
 
 	//激活输入输出
 	void EnableInput(bool enable);

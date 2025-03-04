@@ -145,7 +145,6 @@ public:
 	//获取当前游戏截图（禁止高頻使用！）
 	static void GetScreenShot();
 
-
 	/** 变换 **/
 
 	//镜像翻转变换

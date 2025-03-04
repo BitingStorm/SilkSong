@@ -19,11 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Engine\Core\Ray2D.h" />
+    <ClInclude Include="Source\Engine\Math\Polygon.h" />
+    <ClInclude Include="Source\Engine\Physics\Collisions2D.h" />
+    <ClInclude Include="Source\Engine\Math\Ray2D.h" />
     <ClInclude Include="Source\Project\DefaultDamageStrategy.h" />
-    <ClInclude Include="Source\Engine\Core\Box2D.h" />
-    <ClInclude Include="Source\Engine\Core\Transform.h" />
-    <ClInclude Include="Source\Engine\Core\Vector2D.h" />
+    <ClInclude Include="Source\Engine\Math\Box2D.h" />
+    <ClInclude Include="Source\Engine\Math\Transform.h" />
+    <ClInclude Include="Source\Engine\Math\Vector2D.h" />
     <ClInclude Include="Source\Engine\Objects\Level.h" />
     <ClInclude Include="Source\Project\Damagable.h" />
     <ClInclude Include="Source\Project\DamageResponseComponent.h" />
@@ -104,6 +106,7 @@
   <ItemGroup>
     <ClCompile Include="Source\Engine\Core\Object.cpp" />
     <ClCompile Include="Source\Engine\Objects\Level.cpp" />
+    <ClCompile Include="Source\Engine\Physics\Collisions2D.cpp" />
     <ClCompile Include="Source\Project\DamageResponseComponent.cpp" />
     <ClCompile Include="Source\Project\DamageSystem.cpp" />
     <ClCompile Include="Source\Project\DefaultDamageStrategy.cpp" />

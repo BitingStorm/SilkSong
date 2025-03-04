@@ -70,6 +70,12 @@
     <Filter Include="Project\Menu">
       <UniqueIdentifier>{1f40607f-32e2-44a8-9e4f-f6bf9acbf927}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Physics2D">
+      <UniqueIdentifier>{23ce5839-e770-4efd-841e-ca3581534c66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Math">
+      <UniqueIdentifier>{1b0d8621-dd40-4054-87c3-decd5627676c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\Components\ActorComponent.h">
@@ -243,17 +249,8 @@
     <ClInclude Include="Source\Engine\Core\Delegate.h">
       <Filter>Engine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Core\Vector2D.h">
-      <Filter>Engine\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Core\Box2D.h">
-      <Filter>Engine\Core</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Project\Damagable.h">
       <Filter>Project\Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Core\Transform.h">
-      <Filter>Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Objects\Level.h">
       <Filter>Engine\Objects</Filter>
@@ -306,14 +303,29 @@
     <ClInclude Include="Source\Project\FragmentParticle.h">
       <Filter>Project\Items</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\Core\Ray2D.h">
-      <Filter>Engine\Core</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Project\RuinHouseLevel.h">
       <Filter>Project\Levels</Filter>
     </ClInclude>
     <ClInclude Include="Source\Project\LevelTransformer.h">
       <Filter>Project\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Physics\Collisions2D.h">
+      <Filter>Engine\Physics2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Math\Box2D.h">
+      <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Math\Ray2D.h">
+      <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Math\Vector2D.h">
+      <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Math\Transform.h">
+      <Filter>Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Math\Polygon.h">
+      <Filter>Engine\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -529,6 +541,9 @@
     </ClCompile>
     <ClCompile Include="Source\Project\LevelTransformer.cpp">
       <Filter>Project\Levels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Physics\Collisions2D.cpp">
+      <Filter>Engine\Physics2D</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

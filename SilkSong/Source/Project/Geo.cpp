@@ -22,7 +22,7 @@ Geo::Geo()
 	box = ConstructComponent<BoxCollider>();
 	box->SetCollisonMode(CollisionMode::Collision);
 	box->SetType(CollisionType::Item);
-	box->SetPhysicsMaterial(FPhysicsMaterial(0.5f, 0.75f));
+	box->SetPhysicsMaterial(FPhysicsMaterial(0.5f, 1.f));
 	box->AttachTo(root);
 
 	rigid = ConstructComponent<RigidBody>();
@@ -54,7 +54,7 @@ void Geo::Update(float deltaTime)
 	SetLocalScale(GetLocalScale() + FVector2D(rotateDelta,0));
 }
 
-void Geo::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const HitResult& hitResult)
+void Geo::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const FHitResult& hitResult)
 {
 	rigid->SetRotatable(false);
 }

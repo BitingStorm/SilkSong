@@ -18,7 +18,7 @@ public:
 	virtual void ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)override {}
 
 protected:
-	void OnHit(class Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const struct HitResult& hitResult);
+	void OnHit(class Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const struct FHitResult& hitResult);
 
 	class SpriteRenderer* render;
 	class CircleCollider* circle;

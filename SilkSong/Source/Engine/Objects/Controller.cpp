@@ -45,7 +45,7 @@ bool Controller::IsMouseClicked() const
 	return InputComponent::IsMouseButtonPressed();
 }
 
-HitResult Controller::GetHitResultUnderCursor() const
+FHitResult Controller::GetHitResultUnderCursor() const
 {
 	FVector2D pos = GetCursorPosition();
 	int x = FMath::Clamp(int(pos.x + 2000) / 400, 0, 9);
@@ -55,10 +55,10 @@ HitResult Controller::GetHitResultUnderCursor() const
 	{
 		for (auto it = mainWorld.ColliderZones[x][y].rbegin(); it != mainWorld.ColliderZones[x][y].rend(); ++it)
 		{
-			if ((*it)->IsMouseOver())return HitResult(pos, {0,0}, (*it)->pOwner, *it);
+			if ((*it)->IsMouseOver())return FHitResult(pos, {0,0}, (*it)->pOwner, *it);
 		}
 	}
-	return HitResult();
+	return FHitResult();
 }
 
 void Controller::EnableInput(bool enable)

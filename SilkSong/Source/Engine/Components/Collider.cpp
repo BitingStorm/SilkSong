@@ -9,10 +9,10 @@
 bool (*Collider::collisionJudgeMap[3])(Collider*, Collider*) =
 { &Collider::collisionJudgeCircleToCircle,Collider::collisionJudgeCircleToBox,Collider::collisionJudgeBoxToBox };
 
-HitResult(*Collider::collisionHitMap[3])(Collider*, Collider*) =
+FHitResult(*Collider::collisionHitMap[3])(Collider*, Collider*) =
 { &Collider::collisionHitCircleToCircle,Collider::collisionHitCircleToBox,Collider::collisionHitBoxToBox };
 
-void (*Collider::collisionAdjustMap[3])(Collider*, Collider*, const HitResult&) =
+void (*Collider::collisionAdjustMap[3])(Collider*, Collider*, const FHitResult&) =
 { &Collider::collisionAdjustCircleToCircle,Collider::collisionAdjustCircleToBox,Collider::collisionAdjustBoxToBox };
 
 
@@ -45,26 +45,17 @@ void Collider::Update(float deltaTime)
     {
         if (another->mode == CollisionMode::Collision && this->mode == CollisionMode::Collision)
         {
-            HitResult hitResult = this->CollisionHit(another);
+            FHitResult hitResult = this->CollisionHit(another);
             OnComponentStay.BroadCast(this, another, another->pOwner, -hitResult.ImpactNormal, hitResult);
             another->OnComponentStay.BroadCast(another, this, pOwner, hitResult.ImpactNormal, { hitResult.ImpactPoint,-hitResult.ImpactNormal,pOwner,this });
+            CollisionAdjust(another, hitResult);
         }
         else
         {
             OnComponentOverlap.BroadCast(this, another, another->pOwner);  another->OnComponentOverlap.BroadCast(another, this, pOwner);
         }
     }
-
-    FVector2D pos = GetRect().min;
-    FIntVector2 newPoint(FMath::Clamp(int(pos.x + 2000) / 400, 0, 9), FMath::Clamp(int(pos.y) / 200, 0, 5));
-    pos = GetRect().max;
-    FIntVector2 newPoint_1(FMath::Clamp(int(pos.x + 2000) / 400, 0, 9), FMath::Clamp(int(pos.y) / 200, 0, 5));
-    if (newPoint == point && newPoint_1 == point_1)return;
-
-    //碰撞区块信息更新
-    if (point != FIntVector2(-1, -1))for (int i = point.x; i <= point_1.x; ++i)for (int j = point.y; j <= point_1.y; ++j)mainWorld.ColliderZones[i][j].erase(this);
-    point = newPoint, point_1 = newPoint_1;
-    for (int i = point.x; i <= point_1.x; ++i)for (int j = point.y; j <= point_1.y; ++j)mainWorld.ColliderZones[i][j].insert(this);
+    ColliderZoneTick();
 }
 
 void Collider::Deactivate()
@@ -101,6 +92,22 @@ void Collider::RegisterDontDestroy()
     mainWorld.OverallColliders.insert(this);
 }
 
+void Collider::ColliderZoneTick()
+{
+    if (mode == CollisionMode::None || !bIsEnabled)return;
+
+    FVector2D pos = GetRect().min;
+    FIntVector2 newPoint(FMath::Clamp(int(pos.x + 2000) / 400, 0, 9), FMath::Clamp(int(pos.y) / 200, 0, 5));
+    pos = GetRect().max;
+    FIntVector2 newPoint_1(FMath::Clamp(int(pos.x + 2000) / 400, 0, 9), FMath::Clamp(int(pos.y) / 200, 0, 5));
+    if (newPoint == point && newPoint_1 == point_1)return;
+
+    //碰撞区块信息更新
+    if (point != FIntVector2(-1, -1))for (int i = point.x; i <= point_1.x; ++i)for (int j = point.y; j <= point_1.y; ++j)mainWorld.ColliderZones[i][j].erase(this);
+    point = newPoint, point_1 = newPoint_1;
+    for (int i = point.x; i <= point_1.x; ++i)for (int j = point.y; j <= point_1.y; ++j)mainWorld.ColliderZones[i][j].insert(this);
+}
+
 void Collider::Clear()
 {
     for (auto& another : collisions)
@@ -124,7 +131,7 @@ void Collider::Insert(Collider* another)
         collisions.insert(another); another->collisions.insert(this);
         if (another->mode == CollisionMode::Collision && this->mode == CollisionMode::Collision)
         {
-            HitResult hitResult = CollisionHit(another);
+            FHitResult hitResult = CollisionHit(another);
             OnComponentHit.BroadCast(this, another, another->pOwner, -hitResult.ImpactNormal, hitResult);
             another->OnComponentHit.BroadCast(another, this, pOwner, hitResult.ImpactNormal, { hitResult.ImpactPoint,-hitResult.ImpactNormal,pOwner,this });
             if (rigidAttached)
@@ -212,20 +219,20 @@ bool Collider::collisionJudgeBoxToBox(Collider* c1, Collider* c2)
     return c1->GetRect().Intersects(c2->GetRect());
 }
 
-HitResult Collider::CollisionHit(Collider* another)
+FHitResult Collider::CollisionHit(Collider* another)
 {
     int shape1 = int(this->shape), shape2 = int(another->shape);
     return collisionHitMap[shape1 * shape1 + shape2 * shape2](this, another);
 }
 
-HitResult Collider::collisionHitCircleToCircle(Collider* c1, Collider* c2)
+FHitResult Collider::collisionHitCircleToCircle(Collider* c1, Collider* c2)
 {
     FVector2D impactNormal = (c2->GetWorldPosition() - c1->GetWorldPosition()).GetSafeNormal();
     FVector2D impactPoint = c1->GetWorldPosition() + impactNormal * c1->GetRect().GetHalf().x;
-    return HitResult(impactPoint, impactNormal, c2->pOwner, c2);
+    return FHitResult(impactPoint, impactNormal, c2->pOwner, c2);
 }
 
-HitResult Collider::collisionHitCircleToBox(Collider* c1, Collider* c2)
+FHitResult Collider::collisionHitCircleToBox(Collider* c1, Collider* c2)
 {
     Collider* circle; Collider* box;
     if (c1->GetShape() == ColliderShape::Circle)
@@ -268,10 +275,10 @@ HitResult Collider::collisionHitCircleToBox(Collider* c1, Collider* c2)
             else { impactPoint = { pos.x,rect.min.y }; impactNormal = { 0,1 }; }
         }
     }
-    return HitResult(impactPoint, impactNormal * (c1 == circle ? 1.f : -1.f), c2->pOwner, c2);
+    return FHitResult(impactPoint, impactNormal * (c1 == circle ? 1.f : -1.f), c2->pOwner, c2);
 }
 
-HitResult Collider::collisionHitBoxToBox(Collider* c1, Collider* c2)
+FHitResult Collider::collisionHitBoxToBox(Collider* c1, Collider* c2)
 {
     FRect overlapRect = c1->GetRect().Overlaps(c2->GetRect());
     FVector2D impactNormal;
@@ -283,29 +290,34 @@ HitResult Collider::collisionHitBoxToBox(Collider* c1, Collider* c2)
     {
         c1->GetWorldPosition().x - c2->GetWorldPosition().x > 0 ? impactNormal = { -1,0 } : impactNormal = { 1,0 };
     }
-    return HitResult(overlapRect.GetCenter(), impactNormal, c2->pOwner, c2);
+    return FHitResult(overlapRect.GetCenter(), impactNormal, c2->pOwner, c2);
 }
 
-void Collider::CollisionAdjust(Collider* another, const HitResult& hitResult)
+void Collider::CollisionAdjust(Collider* another, const FHitResult& hitResult)
 {
     int shape1 = int(this->shape), shape2 = int(another->shape);
     return collisionAdjustMap[shape1 * shape1 + shape2 * shape2](this, another, hitResult);
 }
 
-void Collider::collisionAdjustCircleToCircle(Collider* c1, Collider* c2, const HitResult& hitResult)
+void Collider::collisionAdjustCircleToCircle(Collider* c1, Collider* c2, const FHitResult& hitResult)
 {
 }
 
-void Collider::collisionAdjustCircleToBox(Collider* c1, Collider* c2, const HitResult& hitResult)
+void Collider::collisionAdjustCircleToBox(Collider* c1, Collider* c2, const FHitResult& hitResult)
 {
 }
 
-void Collider::collisionAdjustBoxToBox(Collider* c1, Collider* c2, const HitResult& hitResult)
+void Collider::collisionAdjustBoxToBox(Collider* c1, Collider* c2, const FHitResult& hitResult)
 {
     FRect overlapRect = c1->GetRect().Overlaps(c2->GetRect());
     FVector2D impactNormal = hitResult.ImpactNormal;
 
     float separationDistance = overlapRect.GetSize().x * FMath::Abs(impactNormal.x) + overlapRect.GetSize().y * FMath::Abs(impactNormal.y);
+    separationDistance = separationDistance - AE_KINDA_SMALL_NUMBER;
+    if (separationDistance <= 0)
+    {
+        return;
+    }
 
     if (c1->rigidAttached && c2->rigidAttached)
     {
@@ -388,7 +400,7 @@ void BoxCollider::DrawDebugLine()
 
 bool BoxCollider::IsMouseOver()
 {
-    return rect.IsInside(GameplayStatics::GetController()->GetCursorPosition());
+    return GetRect().IsInside(GameplayStatics::GetController()->GetCursorPosition());
 }
 
 void BoxCollider::SetSize(FVector2D size)
@@ -400,4 +412,30 @@ void BoxCollider::SetSize(FVector2D size)
     size = size_ini * GetWorldScale();
     size.MakeAbs();
     rect = FRect(GetWorldPosition(), size.x, size.y);
+}
+
+
+
+
+
+
+void PolygonCollider::Update(float deltaTime)
+{
+    Collider::Update(deltaTime);
+}
+
+void PolygonCollider::DrawDebugLine()
+{
+    if (GetCollisonMode() == CollisionMode::None || !polygon.bIsValid)return;
+    setlinecolor(GREEN);
+    int n = polygon.vertices.size();
+    /*for (int i = 0, j = n - 1; i < n; j = i++)
+    {
+        line(polygon.vertices[i].x, polygon.vertices[i].y, polygon.vertices[j].x, polygon.vertices[j].y);
+    }*/
+}
+
+bool PolygonCollider::IsMouseOver()
+{
+    return polygon.IsInside(GameplayStatics::GetController()->GetCursorPosition());
 }

@@ -28,8 +28,8 @@ Chest::Chest()
 	particle->SetCapacity(8);
 	particle->SetInterval(0.03f);
 	particle->Load("particle_smoke");
-	particle->SetMaxSpeed(125);
-	particle->SetMinSpeed(50);
+	particle->SetMaxSpeed(175);
+	particle->SetMinSpeed(75);
 	particle->SetPattern(EParticlePattern::Center);
 	particle->SetCenter({ 0,50 }, { -30,210 });
 	particle->SetFadingInTime(0.25f);
@@ -120,5 +120,11 @@ void Chest::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 	particle->Activate();
 	particle->SetIsLoop(true);
 	smokeTimer = 0.4f;
+
+	Actor* causer = Cast<Actor>(extraInfo.damageCauser);
+	CHECK_PTR(causer)
+	FVector2D normal = (GetWorldPosition() - causer->GetWorldPosition()).GetSafeNormal();
+	float degree = FVector2D::VectorToDegree(normal);
+	particle->SetCenter({ 0,50 }, { degree - 90.f,degree + 90.f });
 }
 

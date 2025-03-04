@@ -8,9 +8,9 @@
 #pragma once
 #include"Core/Macro.h"
 #include"Core/Math.h"
-#include"Core/Vector2D.h"
-#include"Core/Box2D.h"
-#include"Core/Transform.h"
+#include"Math/Vector2D.h"
+#include"Math/Box2D.h"
+#include"Math/Transform.h"
 #include"Core/Struct.h"
 #include"Core/Object.h"
 #include"Core/Delegate.h"

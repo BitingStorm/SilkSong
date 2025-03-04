@@ -33,9 +33,9 @@ bool ArtyEngine::ColliderSort::operator()(const Collider* a, const Collider* b)c
 
 void World::Update(float deltaTime)
 {
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 4; i++)
 	{
-		ProcessCollisions(deltaTime * 0.2f);
+		ProcessCollisions(deltaTime * 0.25f);
 	}
 	ProcessColliders();
 
@@ -144,6 +144,8 @@ void World::ProcessCollisions(float deltaTime)
 {
 	for (auto& it : GameRigids)it->PreciseUpdate(deltaTime);
 
+	for (auto& it : GameColliders)it->ColliderZoneTick();
+
 	/**
      * 碰撞插入信息更新
      **/
@@ -190,6 +192,36 @@ void World::Debug()
 		obj->DrawDebugPosition();
 	for (auto& obj : OverallGameUIs)
 		obj->DrawDebugRect();
+
+	setlinecolor(RGB(255, 165, 0));
+	setlinestyle(PS_SOLID | PS_JOIN_BEVEL);
+	for (int i = 1; i < 6; i++)
+	{
+		FVector2D pos1 = (FVector2D(-2000, 200 * i) - mainCamera->GetVirtualPosition())
+			* 20.f / mainCamera->GetVirtualSpringArmLength() + FVector2D(WIN_WIDTH * 0.5f, WIN_HEIGHT * 0.5f);
+		FVector2D pos2 = (FVector2D(2000, 200 * i) - mainCamera->GetVirtualPosition())
+			* 20.f / mainCamera->GetVirtualSpringArmLength() + FVector2D(WIN_WIDTH * 0.5f, WIN_HEIGHT * 0.5f);
+		line(pos1.x, pos1.y, pos2.x, pos2.y);
+	}
+	for (int j = 1; j < 10; j++)
+	{
+		FVector2D pos1 = (FVector2D(j * 400 - 2000, 0) - mainCamera->GetVirtualPosition())
+			* 20.f / mainCamera->GetVirtualSpringArmLength() + FVector2D(WIN_WIDTH * 0.5f, WIN_HEIGHT * 0.5f);
+		FVector2D pos2 = (FVector2D(j * 400 - 2000, 1200) - mainCamera->GetVirtualPosition())
+			* 20.f / mainCamera->GetVirtualSpringArmLength() + FVector2D(WIN_WIDTH * 0.5f, WIN_HEIGHT * 0.5f);
+		line(pos1.x, pos1.y, pos2.x, pos2.y);
+	}
+	settextstyle(25, 10, "Arial");
+	settextcolor(WHITE);
+	for (int i = 0; i < 6; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			FVector2D pos = (FVector2D(j * 400 - 2000, i * 200) - mainCamera->GetVirtualPosition())
+				* 20.f / mainCamera->GetVirtualSpringArmLength() + FVector2D(WIN_WIDTH * 0.5f, WIN_HEIGHT * 0.5f);
+			outtextxy(pos.x, pos.y, std::to_string(ColliderZones[j][i].size()).c_str());
+		}
+	}
 #endif
 
 	static int FPS = 0;
@@ -231,6 +263,7 @@ void World::WipeData()
 	for (auto& obj : OverallColliders)
 	{
 		GameColliders.insert(obj);
+		obj->Init();
 	}
 	for (auto& obj : OverallRigids)
 	{

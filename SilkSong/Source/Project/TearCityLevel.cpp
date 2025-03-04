@@ -13,7 +13,8 @@
 TearCityLevel::TearCityLevel()
 {
 	GameMode* gameMode = GameModeHelper::GetInstance();
-	gameMode->GetAudioPlayer(2)->SetVolume(gameMode->GetAudioPlayer(0)->GetVolume());
+	gameMode->RefreshVolume();
+	gameMode->SetVolume(2, gameMode->GetVolume(0));
 	GameplayStatics::CreateObject<LevelTransformer>({ -1050, 875 })->Init("RuinHouse", { 550,900 }, FRect({ -100.f,250.f }, { 100.f,750.f }));
 
 	Bg* bg0 = GameplayStatics::CreateObject<Bg>(); bg0->Init("tearcity_0", -30);

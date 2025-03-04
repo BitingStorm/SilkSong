@@ -8,10 +8,12 @@
 #pragma once
 #include"SceneComponent.h"
 #include"Tools/CollisionManager.h"
+#include"Math/Polygon.h"
+#include"Physics/Collisions2D.h"
 
 
 /* 碰撞体形状 */
-enum class ColliderShape:uint8 { Circle, Box };
+enum class ColliderShape:uint8 { Circle, Box, Polygon };
 
 /* 碰撞体模式 */
 enum class CollisionMode:uint8 { None, Trigger, Collision };
@@ -21,14 +23,15 @@ class RigidBody;
 class Controller;
 class Collider;
 class World;
+class Collision2D;
 
 
 /** 碰撞委托 **/
 /* Collider* overlapComp, Collider* otherComp, Actor* otherActor */
 DECLARE_MULTI_PARAM_MULTICAST_DELEGATE_CLASS(CollisionOverlapDelegate, Collider*, Collider*, Actor*)
 
-/* Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const HitResult& hitResult */
-DECLARE_MULTI_PARAM_MULTICAST_DELEGATE_CLASS(CollisionHitDelegate, Collider*, Collider*, Actor*, FVector2D, const HitResult&)
+/* Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const FHitResult& hitResult */
+DECLARE_MULTI_PARAM_MULTICAST_DELEGATE_CLASS(CollisionHitDelegate, Collider*, Collider*, Actor*, FVector2D, const FHitResult&)
 
 
 
@@ -48,7 +51,7 @@ class Collider :public SceneComponent
 public:
 	Collider();
 	virtual ~Collider();
-
+	void Init() { point = { -1, -1 }, point_1 = { -1, -1 }; }
 	virtual void BeginPlay() override;
 	virtual void Update(float deltaTime) override;
 	virtual void Deactivate()override;
@@ -84,8 +87,8 @@ public:
 	//设置物理材质
 	void SetPhysicsMaterial(const FPhysicsMaterial& material) { this->material = material; }
 
-	//获取矩形框
-	FRect GetRect()const { return rect; }
+	//获取外接矩形框
+	virtual FRect GetRect() { return rect; }
 
 	/** 碰撞事件 **/
 	CollisionOverlapDelegate OnComponentBeginOverlap;
@@ -96,6 +99,8 @@ public:
 
 	virtual void RegisterDontDestroy()override;
 
+	void ColliderZoneTick();
+
 protected:
 	FPhysicsMaterial material;
 
@@ -104,7 +109,7 @@ protected:
 	//是否在鼠标所属世界坐标位置
 	virtual bool IsMouseOver() = 0;
 
-	FRect rect;//矩形框
+	FRect rect;//外接矩形框
 
 private:
 	int32 layer = 0;
@@ -128,31 +133,29 @@ private:
 
 
 	bool CollisionJudge(Collider* another);
-
 	/** 碰撞判断 **/
 	static bool (*collisionJudgeMap[3])(Collider*, Collider*);
 	static bool collisionJudgeCircleToCircle(Collider* c1, Collider* c2);
 	static bool collisionJudgeCircleToBox(Collider* c1, Collider* c2);
 	static bool collisionJudgeBoxToBox(Collider* c1, Collider* c2);
 	
-	HitResult CollisionHit(Collider* another);
-
+	FHitResult CollisionHit(Collider* another);
 	/** 碰撞信息 **/
-	static HitResult (*collisionHitMap[3])(Collider*, Collider*);
-	static HitResult collisionHitCircleToCircle(Collider* c1, Collider* c2);
-	static HitResult collisionHitCircleToBox(Collider* c1, Collider* c2);
-	static HitResult collisionHitBoxToBox(Collider* c1, Collider* c2);
+	static FHitResult(*collisionHitMap[3])(Collider*, Collider*);
+	static FHitResult collisionHitCircleToCircle(Collider* c1, Collider* c2);
+	static FHitResult collisionHitCircleToBox(Collider* c1, Collider* c2);
+	static FHitResult collisionHitBoxToBox(Collider* c1, Collider* c2);
 
-	void CollisionAdjust(Collider* another, const HitResult& hitResult);
-
+	void CollisionAdjust(Collider* another, const FHitResult& hitResult);
 	/** 碰撞调整 **/
-	static void(*collisionAdjustMap[3])(Collider*, Collider*, const HitResult& hitResult);
-	static void collisionAdjustCircleToCircle(Collider* c1, Collider* c2, const HitResult& hitResult);
-	static void collisionAdjustCircleToBox(Collider* c1, Collider* c2, const HitResult& hitResult);
-	static void collisionAdjustBoxToBox(Collider* c1, Collider* c2, const HitResult& hitResult);
+	static void(*collisionAdjustMap[3])(Collider*, Collider*, const FHitResult& hitResult);
+	static void collisionAdjustCircleToCircle(Collider* c1, Collider* c2, const FHitResult& hitResult);
+	static void collisionAdjustCircleToBox(Collider* c1, Collider* c2, const FHitResult& hitResult);
+	static void collisionAdjustBoxToBox(Collider* c1, Collider* c2, const FHitResult& hitResult);
 
 	RigidBody* rigidAttached = nullptr;//附着的刚体
 };
+
 
 
 /*----------------------------------
@@ -173,6 +176,7 @@ private:
 };
 
 
+
 /*----------------------------------
 			  矩形碰撞器
   ----------------------------------*/
@@ -185,7 +189,27 @@ public:
 	virtual bool IsMouseOver()override;
 	FVector2D GetSize()const { return size; }
 	void SetSize(FVector2D size);
+	FRect GetRect() override{ return FRect(GetWorldPosition(), size.x, size.y); }
 private:
 	FVector2D size{};
 	FVector2D size_ini{};
+};
+
+
+
+using FPolygon = Math::TPolygon<float>;
+/*----------------------------------
+			凸多边形碰撞器
+  ----------------------------------*/
+class PolygonCollider final :public Collider
+{
+	friend class Physics2D::Collisions2D;
+public:
+	PolygonCollider() { shape = ColliderShape::Polygon; }
+	virtual void Update(float deltaTime)override;
+	virtual void DrawDebugLine()override;
+	virtual bool IsMouseOver()override;
+	void SetVertices(std::vector<FVector2D>vertices);
+private:
+	FPolygon polygon{};
 };

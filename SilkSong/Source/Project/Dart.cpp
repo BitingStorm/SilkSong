@@ -44,7 +44,7 @@ void Dart::Init(bool bIsLeft)
 }
 
 
-void Dart::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const HitResult& hitResult)
+void Dart::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const FHitResult& hitResult)
 {
 	if (otherComp->GetType() == CollisionType::Enemy)
 	{
