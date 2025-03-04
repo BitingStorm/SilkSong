@@ -21,20 +21,17 @@ void RigidBody::Update(float deltaTime)
 {
 	if (!pOwner || !bIsEnabled)return;
 
-	if (bMoveable)
+	if (bMoveable && linearDrag)
 	{
-		if (linearDrag)
+		if (!FMath::IsSmallNumber(velocity.x))
 		{
-			if (!FMath::IsSmallNumber(velocity.x))
-			{
-				float buffer = velocity.x - velocity.x * linearDrag * deltaTime / mass;
-				velocity.x = (velocity.x < 0) != (buffer < 0) ? 0 : buffer;
-			}
-			if (!FMath::IsSmallNumber(velocity.y))
-			{
-				float buffer = velocity.y - velocity.y * linearDrag * deltaTime / mass;
-				velocity.y = (velocity.y < 0) != (buffer < 0) ? 0 : buffer;
-			}
+			float buffer = velocity.x - velocity.x * linearDrag * deltaTime / mass;
+			velocity.x = (velocity.x < 0) != (buffer < 0) ? 0 : buffer;
+		}
+		if (!FMath::IsSmallNumber(velocity.y))
+		{
+			float buffer = velocity.y - velocity.y * linearDrag * deltaTime / mass;
+			velocity.y = (velocity.y < 0) != (buffer < 0) ? 0 : buffer;
 		}
 	}
 
@@ -94,7 +91,7 @@ void RigidBody::RestrictVelocity(FVector2D impactNormal, const FPhysicsMaterial&
 	/**
 	 * 单一刚体处理逻辑
 	 **/
-	if (!another)
+	if (!another || !another->bMoveable)
 	{
 		if (FVector2D::DotProduct(velocity, impactNormal) < 0)
 		{

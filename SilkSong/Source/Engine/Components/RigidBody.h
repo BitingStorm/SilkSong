@@ -38,7 +38,7 @@ public:
 	void SetMass(float mass) { this->mass = mass; }
 	
 	//添加冲量
-	void AddImpulse(FVector2D pulse) { velocity += pulse / mass; }
+	void AddImpulse(FVector2D pulse) { if (bMoveable) { velocity += pulse / mass; } }
 
 	//是否可移动
 	void SetMoveable(bool moveable) { this->bMoveable = moveable; if (!moveable)velocity = FVector2D::ZeroVector; }
@@ -47,7 +47,7 @@ public:
 	void SetGravityEnabled(bool enabled) { this->bGravityEnabled = enabled; }
 	
 	//是否可旋转
-	void SetRotatable(bool rotatable) { this->bRotatable = rotatable;if(!rotatable)angularVelocity = 0; }
+	void SetRotatable(bool rotatable) { this->bRotatable = rotatable; if (!rotatable)angularVelocity = 0; }
 
 	//设置线性阻尼
 	void SetLinearDrag(float linearDrag) { this->linearDrag = linearDrag; }

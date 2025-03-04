@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\Math\Circle.h" />
     <ClInclude Include="Source\Engine\Math\Polygon.h" />
     <ClInclude Include="Source\Engine\Physics\Collisions2D.h" />
     <ClInclude Include="Source\Engine\Math\Ray2D.h" />

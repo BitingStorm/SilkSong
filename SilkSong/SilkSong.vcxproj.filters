@@ -327,6 +327,9 @@
     <ClInclude Include="Source\Engine\Math\Polygon.h">
       <Filter>Engine\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Engine\Math\Circle.h">
+      <Filter>Engine\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Components\ActorComponent.cpp">

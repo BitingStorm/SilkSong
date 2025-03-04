@@ -301,10 +301,62 @@ void Collider::CollisionAdjust(Collider* another, const FHitResult& hitResult)
 
 void Collider::collisionAdjustCircleToCircle(Collider* c1, Collider* c2, const FHitResult& hitResult)
 {
+    FVector2D impactNormal = hitResult.ImpactNormal;
+
+    float separationDistance = c1->GetRect().GetHalf().x + c2->GetRect().GetHalf().x - FVector2D::Distance(c1->GetWorldPosition(), c2->GetWorldPosition());
+    separationDistance = separationDistance - AE_KINDA_SMALL_NUMBER;
+    if (separationDistance <= 0)
+    {
+        return;
+    }
+
+    if (c1->rigidAttached && c2->rigidAttached)
+    {
+        c1->GetOwner()->AddPosition(-impactNormal * separationDistance * 0.5f);
+        c2->GetOwner()->AddPosition(impactNormal * separationDistance * 0.5f);
+    }
+    else if (c1->rigidAttached)
+    {
+        c1->GetOwner()->AddPosition(-impactNormal * separationDistance);
+    }
+    else if (c2->rigidAttached)
+    {
+        c2->GetOwner()->AddPosition(impactNormal * separationDistance);
+    }
 }
 
 void Collider::collisionAdjustCircleToBox(Collider* c1, Collider* c2, const FHitResult& hitResult)
 {
+    FVector2D impactNormal = hitResult.ImpactNormal;
+    Collider* circle; Collider* box;
+    if (c1->GetShape() == ColliderShape::Circle)
+    {
+        circle = c1, box = c2;
+    }
+    else
+    {
+        circle = c2, box = c1;
+    }
+    float separationDistance = circle->GetRect().GetHalf().x - FVector2D::Distance(hitResult.ImpactPoint, circle->GetWorldPosition());
+    separationDistance = separationDistance - AE_KINDA_SMALL_NUMBER;
+    if (separationDistance <= 0)
+    {
+        return;
+    }
+
+    if (c1->rigidAttached && c2->rigidAttached)
+    {
+        c1->GetOwner()->AddPosition(-impactNormal * separationDistance * 0.5f);
+        c2->GetOwner()->AddPosition(impactNormal * separationDistance * 0.5f);
+    }
+    else if (c1->rigidAttached)
+    {
+        c1->GetOwner()->AddPosition(-impactNormal * separationDistance);
+    }
+    else if (c2->rigidAttached)
+    {
+        c2->GetOwner()->AddPosition(impactNormal * separationDistance);
+    }
 }
 
 void Collider::collisionAdjustBoxToBox(Collider* c1, Collider* c2, const FHitResult& hitResult)
@@ -419,6 +471,7 @@ void BoxCollider::SetSize(FVector2D size)
 
 
 
+
 void PolygonCollider::Update(float deltaTime)
 {
     Collider::Update(deltaTime);
@@ -438,4 +491,9 @@ void PolygonCollider::DrawDebugLine()
 bool PolygonCollider::IsMouseOver()
 {
     return polygon.IsInside(GameplayStatics::GetController()->GetCursorPosition());
+}
+
+void PolygonCollider::SetVertices(std::vector<FVector2D> vertices)
+{
+
 }
