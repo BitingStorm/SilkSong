@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file	Collisions2D.h
  * @brief   有关碰撞计算函数集合

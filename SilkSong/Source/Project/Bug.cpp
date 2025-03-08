@@ -95,20 +95,20 @@ void Bug::Update(float deltaTime)
 		rigid->SetVelocity(newVel);
 	}
 
+	if (circle->IsCollisionsEmpty())currentPlatForm = nullptr;
+
 	if (currentPlatForm) 
 	{
 		float delta = circle->GetWorldPosition().x - currentPlatForm->GetWorldPosition().x;
-		if (FMath::Abs(delta) >= currentPlatForm->GetSize().x * 0.5f && FMath::Abs(delta) < currentPlatForm->GetSize().x * 0.5f + 1
+		if (FMath::Abs(delta) >= currentPlatForm->GetSize().x * 0.5f - 5 && FMath::Abs(delta) < currentPlatForm->GetSize().x * 0.5f
 			&& delta * GetLocalScale().x > 0)
 		{
-			rigid->SetVelocity(-rigid->GetVelocity()); 
-			AddPosition(rigid->GetVelocity()* deltaTime);
+			rigid->SetVelocity(-rigid->GetVelocity());
+			AddPosition(rigid->GetVelocity() * deltaTime);
 			SetLocalScale({ -GetLocalScale().x,GetLocalScale().y });
 			ani->PlayMontage("turn");
 		}
 	}
-
-	if (circle->IsCollisionsEmpty())currentPlatForm = nullptr;
 }
 
 void Bug::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const FHitResult& hitResult)

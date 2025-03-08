@@ -29,6 +29,8 @@ public:
 	{
 		WIN_WIDTH = 1200, WIN_HEIGHT = 800;
 		initgraph(WIN_WIDTH, WIN_HEIGHT);
+		MoveWindow(GetHWnd(), (GetSystemMetrics(SM_CXSCREEN) - WIN_WIDTH) / 2, (GetSystemMetrics(SM_CYSCREEN) - WIN_HEIGHT) / 2, 
+			WIN_WIDTH, WIN_HEIGHT, TRUE);
 		/*setaspectratio(float(WIN_WIDTH)/1200,float(WIN_HEIGHT)/800);*/
 
 		//系统Debug绘制参数
@@ -108,17 +110,25 @@ void CALLBACK timecallback(UINT, UINT, DWORD_PTR, DWORD_PTR, DWORD_PTR)
 	Engine::Tick_();
 }
 
+#ifdef _DEBUG
 
 int main()
 {
 	Engine::Init();
-	
 	timeSetEvent(1, 0, timecallback,0, TIME_CALLBACK_FUNCTION | TIME_PERIODIC);
-	
 	Engine::Run();
-
 	Sleep(INFINITE);
 	return 0;
 }
 
+#endif
 
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
+{
+	
+	Engine::Init();
+	timeSetEvent(1, 0, timecallback, 0, TIME_CALLBACK_FUNCTION | TIME_PERIODIC);
+	Engine::Run();
+	Sleep(INFINITE);
+	return 0;
+}

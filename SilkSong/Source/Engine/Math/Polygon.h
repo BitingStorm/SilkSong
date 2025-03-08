@@ -61,6 +61,56 @@ namespace Math
 			bIsValid = (vts.size() >= 3);
 		}
 
+		//更新坐标转换
+		void UpdateTransform(const TVector2<T>& newMean, T newDegree = T(0), const TVector2<T>& newScale = TVector2<T>::UnitVector)
+		{
+			mean = newMean;
+
+			if (newScale == TVector2<T>::UnitVector && newDegree == T(0))
+			{
+				for (int i = 0; i < initVertices.size(); i++)
+				{
+					vertices[i] = mean + initVertices[i];
+				}
+				return;
+			}
+
+			if (newScale != TVector2<T>::UnitVector)
+			{
+				for (int i = 0; i < initVertices.size(); i++)
+				{
+					vertices[i] = initVertices[i] * newScale;
+				}
+			}
+			if (newDegree != T(0))
+			{
+				for (int i = 0; i < initVertices.size(); i++)
+				{
+					vertices[i] = TVector2<T>::RotateAround(newDegree, TVector2<T>::ZeroVector, vertices[i]);
+				}
+			}
+			for (int i = 0; i < initVertices.size(); i++)
+			{
+				vertices[i] += mean;
+			}
+		}
+
+		//获取边界范围
+		TBox2<T> GetExtents() const
+		{
+			T maxX, maxY, minX, minY;
+			maxX = minX = vertices[0].x;
+			maxY = minY = vertices[0].y;
+			for (auto& vertex : vertices)
+			{
+				maxX = vertex.x > maxX ? vertex.x : maxX;
+				maxY = vertex.x > maxY ? vertex.x : maxY;
+				minX = vertex.x < minX ? vertex.x : minX;
+				minY = vertex.x < minY ? vertex.x : minY;
+			}
+			return TBox2<T>(TVector2<T>(minX, minY), TVector2<T>(maxX, maxY));
+		}
+
 		//判断一个点是否位于多边形之内
 		bool IsInside(const TVector2<T>& testPoint) const
 		{
@@ -85,16 +135,6 @@ namespace Math
 				}
 			}
 			return num % 2 == 1;
-		}
-
-		//更新中心
-		void UpdateMean(const TVector2<T>& newMean)
-		{
-			mean = newMean;
-			for (int i = 0; i < initVertices.size(); i++)
-			{
-				vertices[i] = mean + initVertices[i];
-			}
 		}
 
 		//尝试与另一个多边形相交，并存储相关信息

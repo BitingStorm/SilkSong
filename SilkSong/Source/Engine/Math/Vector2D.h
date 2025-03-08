@@ -216,10 +216,10 @@ namespace Math
 		 * @brief 计算某一点以另一点为中心旋转后的结果并返回
 		 * @param[in] angle        待旋转角度
 		 * @param[in] center       旋转中心
-		 * @param[in] another      待旋转点
+		 * @param[in] p            待旋转点
 		 * @return 旋转后的点的坐标
 		 */
-		static FORCEINLINE TVector2<T> RotateAround(float angle, const TVector2<T>& center, const TVector2<T>& v);
+		static FORCEINLINE TVector2<T> RotateAround(float angle, const TVector2<T>& center, const TVector2<T>& p);
 
 		//将向量 u 投影到向量 v 所在的直线上
 		static FORCEINLINE TVector2<T> ProjectVector(const TVector2<T>& u, const TVector2<T>& v);
@@ -378,9 +378,9 @@ namespace Math
 	}
 
 	template<typename T>
-	FORCEINLINE TVector2<T> TVector2<T>::RotateAround(float angle, const TVector2<T>& center, const TVector2<T>& v)
+	FORCEINLINE TVector2<T> TVector2<T>::RotateAround(float angle, const TVector2<T>& center, const TVector2<T>& p)
 	{
-		return RotateVector(angle, v - center) + center;
+		return RotateVector(angle, p - center) + center;
 	}
 
 	template<typename T>
