@@ -44,13 +44,18 @@ void ResourceManager::Initialize()
 	Load("player_closeskill", "Asset/Animations/Player/CloseDisSkill/", 179, 152, 7);
 	Load("player_remoteskill", "Asset/Animations/Player/RemoteDisSkill/", { {215,162},{215,162},{215,162},{215,162},{215,162},{215,162},{215,162},{215,162},
 		{118,141},{118,141},{118,141},{118,141},{118,141},{118,141},{185,142},{185,142},{185,142},{185,142},{185,142},{185,142} });
+	Load("player_lowhealth", "Asset/Animations/Player/LowHealth/", 164, 164, 6);
 	Load("player_die", "Asset/Animations/Player/Die/", 146, 119, 4);
 	Load("player_sitdown", "Asset/Animations/Player/SitDown.png", 170, 159, 1, 1, 1);
 	Load("player_standup", "Asset/Animations/Player/StandUp.png", 177, 186, 1, 1, 1);
+	Load("player_lookdown", "Asset/Animations/Player/LookDown.png", 142, 169, 1, 1, 1);
+	Load("player_lookup", "Asset/Animations/Player/LookUp.png", 149, 122, 1, 1, 1);
 	Load("player_leave", "Asset/Animations/Player/Leave/", 304, 199, 8);
 	Load("player_wall", "Asset/Animations/Player/Wall.png", 100, 175, 1, 1, 1);
-	/*Load("player_defend", "Asset/Animations/Player/Defend", 117, 175, 1, 1, 1);
-	Load("player_defendattack", "Asset/Animations/Player/DefendAttack", 117, 175, 1, 1, 1);*/
+	Load("player_defend", "Asset/Animations/Player/Defend/", 158, 120, 4);
+	Load("player_defendstart", "Asset/Animations/Player/DefendStart/", 150, 172, 3);
+	Load("player_defendend", "Asset/Animations/Player/DefendEnd/", 92, 170, 2);
+	Load("player_defendattack", "Asset/Animations/Player/DefendAttack/", 201, 213, 3);
 
 	//Effect
 	Load("effect_dash", "Asset/Animations/Player/DashEffect/", 342, 433, 5);
@@ -63,7 +68,8 @@ void ResourceManager::Initialize()
 	Load("effect_attack", "Asset/Animations/Player/AttackEffect/", { {630,52},{532,55},{338,34},{138,17} });
 	Load("effect_attack_", "Asset/Animations/Player/AttackEffect_/", 375, 160, 3);
 	Load("effect_nailhit", "Asset/Animations/Player/NailHitEffect/", { {107,73},{241,153},{243,155} });
-	Load("effect_closeskill", "Asset/Animations/Player/CloseSkillEffect/", 350, 370, 9);
+	Load("effect_counter", "Asset/Animations/Player/CounterEffect/", { {209,167},{397,287},{445,260} });
+	Load("effect_closeskill", "Asset/Animations/Player/CloseSkillEffect/", 425, 450, 9);
 	Load("effect_throw", "Asset/Animations/Player/ThrowEffect/", 278, 133, 3);
 	Load("effect_remoteskill", "Asset/Animations/Player/RemoteSkillEffect/", 900, 40, 6);
 	Load("effect_geo", "Asset/Animations/Player/GeoEffect/", { {50,24},{39,32},{81,26},{100,30} });
@@ -181,7 +187,7 @@ void ResourceManager::Initialize()
 	Load("inventory_ins1", "Asset/Images/UI/ins_1.png", 72, 72);
 	Load("inventory_ins2", "Asset/Images/UI/ins_2.png", 173, 49);
 	Load("inventory_ins3", "Asset/Images/UI/ins_3.png", 104, 44);
-		Load("menu_title", "Asset/Images/Menu/title.png", 782, 404);
+	Load("menu_title", "Asset/Images/Menu/title.png", 782, 404);
 	Load("menu_icon", "Asset/Images/Menu/team_cherry_logo_main_menu.png", 250, 203);
 	Load("menu_logo", "Asset/Images/Menu/Hidden_Dreams_Logo.png", 141, 38);
 	Load("menu_slider", "Asset/Images/Menu/MenuSliderHandle.png", 110, 50);
@@ -238,6 +244,7 @@ void ResourceManager::Initialize()
 	Load("voice_die", "Asset/Sounds/Player/voice_die.mp3");
 	Load("sound_die", "Asset/Sounds/Player/sound_die.mp3");
 	Load("sound_swordhit", "Asset/Sounds/Player/sound_swordhit.mp3");
+	Load("sound_defend", "Asset/Sounds/Player/sound_defend.mp3");
 	Load("sound_leave", "Asset/Sounds/Player/sound_leave.mp3");
 	Load("sound_leave", "Asset/Sounds/Player/sound_leave.mp3");
 

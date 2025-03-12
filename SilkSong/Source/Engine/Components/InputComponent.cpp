@@ -15,6 +15,14 @@ void InputComponent::BindAction(std::string actionName, EInputType type, std::fu
 		actionCallbacks.insert({ actionName, { func,type,false } });
 }
 
+bool InputComponent::IsAnyKeyPressed()
+{
+	for (int i = 0; i < 256; ++i) 
+	{
+		if (GetAsyncKeyState(i) & 0x8000) return true;
+	}
+}
+
 FVector2D InputComponent::GetMousePosition()
 {
 	return bActive ? mousePos : FVector2D{};

@@ -330,6 +330,9 @@
     <ClInclude Include="Source\Engine\Math\Circle.h">
       <Filter>Engine\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Engine\Math\Segment2D.h">
+      <Filter>Engine\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Components\ActorComponent.cpp">
@@ -548,5 +551,10 @@
     <ClCompile Include="Source\Engine\Physics\Collisions2D.cpp">
       <Filter>Engine\Physics2D</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
   </ItemGroup>
 </Project>

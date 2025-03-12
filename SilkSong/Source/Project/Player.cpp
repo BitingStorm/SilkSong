@@ -5,6 +5,7 @@
 #include "Components/Camera.h"
 #include "Components/ParticleSystem.h"
 #include "DamageResponseComponent.h"
+#include "DefaultDamageStrategy.h"
 #include "PlayerPropertyComponent.h"
 #include "GameplayStatics.h"
 #include "GameModeHelper.h"
@@ -185,6 +186,11 @@ void Player::BeginPlay()
 			}
 		}, true);
 
+	LowHealthTimer.Bind(5.f, [this]()
+		{
+			ani->SetBool("lowHealth", GetHealth() <= 1);
+		}, true);
+
 	box->OnComponentHit.AddDynamic(this, &Player::OnEnter);
 	box->OnComponentStay.AddDynamic(this, &Player::OnStay);
 
@@ -197,19 +203,30 @@ void Player::BeginPlay()
 void Player::Update(float deltaTime)
 {
 	Super::Update(deltaTime);
-	
+
 	FVector2D cameraOffset;
 	cameraOffset.x = (GetWorldScale().x == 1.f ? 50.f : -50.f);
 	if (GetMovementState() == ECharacterMovementState::Standing)
 	{
-		if (direction == ECharacterDirection::LookDown && lookFlag > 1)cameraOffset.y = 200;
-		else if (direction == ECharacterDirection::LookUp && lookFlag > 1)cameraOffset.y = -200;
+		if (direction == ECharacterDirection::LookDown && lookFlag > 1)
+		{
+			cameraOffset.y = 200; ani->SetInteger("lookFlag", 1);
+		}
+		else if (direction == ECharacterDirection::LookUp && lookFlag > 1)
+		{
+			cameraOffset.y = -200; ani->SetInteger("lookFlag", 2);
+		}
 	}
 	else
 	{
 		lookFlag = 0;
-	}	
+	}
+	if (lookFlag == 0)
+	{
+		ani->SetInteger("lookFlag", 0);
+	}
 	camera->SetLocalPosition(cameraOffset);
+
 
 
 	if (box->IsCollisionsEmpty())
@@ -225,7 +242,7 @@ void Player::Update(float deltaTime)
 		}
 	}
 
-	
+
 	if (GetMovementState() != ECharacterMovementState::Running)
 	{
 		GameModeHelper::GetInstance()->GetAudioPlayer(0)->Stop("sound_swim");
@@ -235,6 +252,10 @@ void Player::Update(float deltaTime)
 	ani->SetFloat("walkingSpeed", FMath::Abs(rigid->GetVelocity().x));
 	ani->SetFloat("landingSpeed", -1.f);
 	ani->SetFloat("fallingSpeed", rigid->GetVelocity().y);
+	if (GetHealth() > 1 || IsAnyKeyPressed())
+	{ 
+		ani->SetBool("lowHealth", false); 
+	}
 
 	if (bEvading)
 	{
@@ -287,6 +308,8 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 	inputComponent->SetMapping("Leave", EKeyCode::VK_O);
 	inputComponent->SetMapping("CloseSkill", EKeyCode::VK_I);
 	inputComponent->SetMapping("RemoteSkill", EKeyCode::VK_O);
+	inputComponent->SetMapping("DefendStart", EKeyCode::VK_X);
+	inputComponent->SetMapping("DefendEnd", EKeyCode::VK_X);
 
 
 	inputComponent->BindAction("WalkLeft", EInputType::Holding, [this]() {
@@ -480,6 +503,17 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		if (FMath::RandInt(0, 10) > 5)GameModeHelper::PlayFXSound("voice_remoteskill_0");
 		else GameModeHelper::PlayFXSound("voice_remoteskill_1");
 		});
+	inputComponent->BindAction("DefendStart", EInputType::Pressed, [this]() {
+		if (bSitting || bWall || !bGround) return;
+		ani->PlayMontage("defendstart");
+		GameModeHelper::PlayFXSound("sound_swordhit");
+		});
+	inputComponent->BindAction("DefendEnd", EInputType::Released, [this]() {
+		if (ani->IsPlaying("defend") || ani->IsPlaying("defendstart") || ani->IsPlaying("defendattack"))
+		{
+			ani->SetTrigger("defendEnd");
+		}
+		});
 }
 
 
@@ -561,6 +595,16 @@ void Player::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 		return;
 	}
 
+	if (extraInfo.realValue == 0)
+	{
+		ani->PlayMontage("defendattack");
+		GameModeHelper::PlayFXSound("sound_defend");
+		Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(0.f, 35.f));
+		effect->Init("effect_counter");
+		effect->SetLocalScale(GetWorldScale());
+		return;
+	}
+
 	if (GetHealth() <= 0)
 	{
 		DieStart(); return;
@@ -569,7 +613,7 @@ void Player::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 	blinkTimes = 10;
 	bDashing = false;
 	bEvading = false;
-	bFloating = false;
+	SetFloating(false);
 
 	ani->PlayMontage("hurt");
 	particle->Activate();
@@ -785,8 +829,12 @@ void Player::LeaveWall()
 	bWall = false;
 }
 
+void Player::Defend(bool enable)
+{
+	damageResponse->SetStrategy(enable ? new DamageStrategy() : new DefaultDamageStrategy());
+}
 
-void Player::SpawnWetLandEffect()
+void Player::SpawnWetLandEffect() const
 {
 	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(0, 55));
 	if (!effect)return;

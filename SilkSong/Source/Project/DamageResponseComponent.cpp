@@ -35,6 +35,7 @@ void DamageResponseComponent::SetStrategy(DamageStrategy* newStrategy)
 		delete strategy;
 	}
 	strategy = newStrategy;
+	strategy->SetOwner(GetOwner());
 }
 
 void DamageResponseComponent::EndPlay()

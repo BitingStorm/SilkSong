@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\Math\Segment2D.h" />
     <ClInclude Include="Source\Engine\Math\Circle.h" />
     <ClInclude Include="Source\Engine\Math\Polygon.h" />
     <ClInclude Include="Source\Engine\Physics\Collisions2D.h" />
@@ -177,6 +178,11 @@
     <ClCompile Include="Source\Project\RainProducer.cpp" />
     <ClCompile Include="Source\Project\VolumeBarUI.cpp" />
     <ClCompile Include="Source\Project\VolumeUI.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

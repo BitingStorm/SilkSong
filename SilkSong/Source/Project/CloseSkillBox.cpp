@@ -22,7 +22,7 @@ CloseSkillBox::CloseSkillBox()
 
 	circle = ConstructComponent<CircleCollider>();
 	circle->AttachTo(root);
-	circle->SetRadius(200);
+	circle->SetRadius(235);
 	circle->SetType(CollisionType::HurtBox);
 
 

@@ -90,6 +90,8 @@ public:
      **/
 	void BindAction(std::string actionName, EInputType type, std::function<void()>func);
 
+	//是否有任何按键被按下
+	static bool IsAnyKeyPressed();
 
 	//获取鼠标屏幕坐标
 	static FVector2D GetMousePosition();

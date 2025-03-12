@@ -125,7 +125,7 @@ void Enemy::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 	if (property->GetHealth() <= 0 && !IsDead())
 	{
 		Die();
-		rigid->SetAngularVelocity(100 * (delta_x > 0 ? 1.f : -1.f) * FMath::RandPerc());
+		rigid->SetAngularVelocity(100 * (delta_x > 0 ? 1.f : -1.f));
 	}
 	else
 	{

@@ -61,6 +61,8 @@ PlayerAnimator::PlayerAnimator()
     remoteskill.SetInterval(0.08f);
 	die.Load("player_die");
 	die.SetInterval(0.08f);
+	lowhealth.Load("player_lowhealth", { 0,5 });
+	lowhealth.SetInterval(0.1f);
 	sitdown.Load("player_sitdown", {0,-5});
 	sitdown.SetInterval(0.1f);
 	standup.Load("player_standup");
@@ -69,8 +71,16 @@ PlayerAnimator::PlayerAnimator()
 	leave.SetInterval(0.08f);
 	wall.Load("player_wall", {20,0});
 	wall.SetInterval(0.1f);
-	defend.Load("player_defend");
+	lookdown.Load("player_lookdown", { -3,0 });
+	lookdown.SetInterval(0.1f);
+	lookup.Load("player_lookup", { -15,20 });
+	lookup.SetInterval(0.1f);
+	defend.Load("player_defend", { 0,20 });
 	defend.SetInterval(0.1f);
+	defendstart.Load("player_defendstart");
+	defendstart.SetInterval(0.1f);
+	defendend.Load("player_defendend");
+	defendend.SetInterval(0.1f);
 	defendattack.Load("player_defendattack");
 	defendattack.SetInterval(0.1f);
 
@@ -101,10 +111,17 @@ PlayerAnimator::PlayerAnimator()
 	Insert("closeskill", closeskill);
 	Insert("remoteskill", remoteskill);
 	Insert("die", die);
+	Insert("lowhealth", lowhealth);
 	Insert("sitdown", sitdown);
 	Insert("standup", standup);
+	Insert("lookdown", lookdown);
+	Insert("lookup", lookup);
 	Insert("leave", leave);
 	Insert("wall", wall);
+	Insert("defend", defend);
+	Insert("defendstart", defendstart);
+	Insert("defendend", defendend);
+	Insert("defendattack", defendattack);
 	SetNode("idle");
 
 
@@ -115,6 +132,9 @@ PlayerAnimator::PlayerAnimator()
 	AddParamater("floatingEnd", ParamType::Trigger);
 	AddParamater("validDownAttack", ParamType::Bool);
 	AddParamater("leaveWall", ParamType::Trigger);
+	AddParamater("lookFlag", ParamType::Integer);
+	AddParamater("defendEnd", ParamType::Trigger);
+	AddParamater("lowHealth", ParamType::Bool);
 }
 
 void PlayerAnimator::BeginPlay()
@@ -158,6 +178,15 @@ void PlayerAnimator::BeginPlay()
 	closeskill_to_idle.Init(closeskill, idle);
 	closeskill_to_idle.AddCondition(AnimTransition::Trigger{ "floatingEnd" });
 	standup_to_idle.Init(standup, idle);
+	lookdown_to_idle.Init(lookdown, idle);
+	lookdown_to_idle.AddCondition(AnimTransition::Integer{ "lookFlag",0,TransitionComparison::Equal });
+	idle_to_lookdown.Init(idle, lookdown);
+	idle_to_lookdown.AddCondition(AnimTransition::Integer{ "lookFlag",1,TransitionComparison::Equal });
+	standup_to_idle.Init(standup, idle);
+	lookup_to_idle.Init(lookup, idle);
+	lookup_to_idle.AddCondition(AnimTransition::Integer{ "lookFlag",0,TransitionComparison::Equal });
+	idle_to_lookup.Init(idle, lookup);
+	idle_to_lookup.AddCondition(AnimTransition::Integer{ "lookFlag",2,TransitionComparison::Equal });
 	wall_to_idle.Init(wall, idle);
 	wall_to_idle.AddCondition(AnimTransition::Trigger{ "leaveWall" });
 
@@ -181,8 +210,16 @@ void PlayerAnimator::BeginPlay()
 	fall_to_idle.AddCondition(AnimTransition::Bool{ "flying",false });
 
 	leave_to_fall.Init(leave, fall);
-	defend_to_idle.Init(defend, idle);
-	defendattack_to_idle.Init(defendattack, idle);
+	defendstart_to_defend.Init(defendstart, defend);
+	defend_to_defendend.Init(defend, defendend);
+	defend_to_defendend.AddCondition(AnimTransition::Trigger{ "defendEnd" });
+	defendend_to_idle.Init(defendend, idle);
+	
+	idle_to_lowhealth.Init(idle, lowhealth);
+	idle_to_lowhealth.AddCondition(AnimTransition::Bool{ "lowHealth",true });
+	lowhealth_to_idle.Init(lowhealth, idle);
+	lowhealth_to_idle.AddCondition(AnimTransition::Bool{ "lowHealth",false });
+
 
 	if (Player* player = Cast<Player>(pOwner))
 	{
@@ -201,9 +238,8 @@ void PlayerAnimator::BeginPlay()
 		cure.AddNotification(5, cureEffect);
 		hurt.OnAnimEnter.Bind([=]() {player->EnableInput(false); });
 		hurt.OnAnimExit.Bind([=]() {player->EnableInput(true); });
-		hurtPause.Bind([]() {GameplayStatics::Pause(0.1f); GameplayStatics::PlayCameraShake(5, 5); });
+		hurtPause.Bind([]() {GameplayStatics::Pause(0.25f); GameplayStatics::PlayCameraShake(7, 5); });
 		hurt.AddNotification(1, hurtPause);
-		hurt.AddNotification(2, hurtPause);
 		walk.OnAnimEnter.Bind([=]() {
 			AudioPlayer* audio = player->GetComponentByClass<AudioPlayer>();
 			if (!audio)return;
@@ -224,5 +260,9 @@ void PlayerAnimator::BeginPlay()
 		leave.OnAnimExit.Bind([=]() {player->LeaveUp(); });
 		leave.AddNotification(3, leaveStart);
 		wall.OnAnimExit.Bind([=]() {player->LeaveWall(); });
+		defend.OnAnimEnter.Bind([=]() {player->Defend(true); });
+		defend.OnAnimExit.Bind([=]() {player->Defend(false); });
+		defendPause.Bind([]() {GameplayStatics::Pause(0.25f); GameplayStatics::PlayCameraShake(7, 5); });
+		defendattack.AddNotification(1, defendPause);
 	}
 }

@@ -20,8 +20,6 @@ Character::Character()
 	Camera* camera = GetComponentByClass<Camera>();
 	camera->AttachTo(root);
 	box->AttachTo(root);
-
-	lastX = GetWorldPosition().x;
 }
 
 void Character::BeginPlay()
@@ -67,7 +65,6 @@ void Character::OnTouching(Collider* hitComp, Collider* otherComp, Actor* otherA
 {
 	if (normalImpulse.y < 0)
 	{
-		movementState = (lastX == GetWorldPosition().x ? ECharacterMovementState::Standing : ECharacterMovementState::Running);
-		lastX = GetWorldPosition().x;
+		movementState = (rigid->GetVelocity().x == 0 ? ECharacterMovementState::Standing : ECharacterMovementState::Running);
 	}
 }

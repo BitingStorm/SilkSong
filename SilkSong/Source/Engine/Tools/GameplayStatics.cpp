@@ -68,10 +68,16 @@ void GameplayStatics::SetGaussianFilterOn(bool enable, int level)
     ImageToolkit::GaussianFilterLevel = level;
 }
 
-void GameplayStatics::Pause(float delay)
+void GameplayStatics::Sleep(float delay)
 {
     Sleep(uint32(1000 * delay));
     mainWorld.deltaTime -= delay;
+}
+
+void GameplayStatics::Pause(float delay)
+{
+    mainWorld.pauseDelay = delay;
+    mainWorld.lastPauseTime = mainWorld.OverallClock->GetDelay();
 }
 
 void GameplayStatics::PlaySound2D(std::string name)

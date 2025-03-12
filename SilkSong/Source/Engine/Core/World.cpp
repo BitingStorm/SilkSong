@@ -33,18 +33,28 @@ bool ArtyEngine::ColliderSort::operator()(const Collider* a, const Collider* b)c
 
 void World::Update(float deltaTime)
 {
-	for (int i = 0; i < 4; i++)
+	if (pauseDelay > 0 && OverallClock->GetDelay() > lastPauseTime + pauseDelay)
 	{
-		ProcessCollisions(deltaTime * 0.25f);
+		pauseDelay = 0.f;
+	}
+
+	if (pauseDelay == 0)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			ProcessCollisions(deltaTime * 0.25f);
+		}
 	}
 	ProcessColliders();
 
 	GameplayStatics::GetController()->PeekInfo();//交互处理（点输入）
 
-	currentLevel->Update(deltaTime);
-
-	for (auto& obj : GameActors)obj->Update(deltaTime);
-	for (auto& obj : OverallGameActors)obj->Update(deltaTime);
+	if (pauseDelay == 0)
+	{
+		currentLevel->Update(deltaTime);
+		for (auto& obj : GameActors)obj->Update(deltaTime);
+		for (auto& obj : OverallGameActors)obj->Update(deltaTime);
+	}
 
 	{
 		std::lock_guard<std::mutex> lock(updateMutex);
@@ -110,9 +120,12 @@ void World::Update(float deltaTime)
 		GameUIs_to_delete.clear();
 	}
 
-	for (auto& obj : GameTimers)
+	if (pauseDelay == 0)
 	{
-		obj->Execute();
+		for (auto& obj : GameTimers)
+		{
+			obj->Execute();
+		}
 	}
 
 	{

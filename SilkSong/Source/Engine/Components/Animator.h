@@ -239,6 +239,9 @@ public:
 	//设置动画节点(如果不熟悉Animator架构不建议直接使用)
 	void SetNode(Animation* node);
 
+	//是否在播放某动画
+	bool IsPlaying(std::string nodeName);
+
 	//设置附着渲染器
 	void SetupAttachment(ImageInterface* renderer);
 
@@ -259,6 +262,15 @@ public:
 
 	//启动触发器
 	void SetTrigger(std::string paramName);
+
+	//获取int参数
+	int32 GetInteger(std::string paramName);
+
+	//获取float参数
+	float GetFloat(std::string paramName);
+
+	//获取bool参数
+	bool GetBool(std::string paramName);
 
 	//是否符合过渡条件
 	bool CheckConditions(AnimEdge* edge);

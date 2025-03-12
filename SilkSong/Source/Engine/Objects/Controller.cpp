@@ -46,6 +46,11 @@ bool Controller::IsMouseClicked() const
 	return InputComponent::IsMouseButtonPressed();
 }
 
+bool Controller::IsAnyKeyPressed() const
+{
+	return InputComponent::IsAnyKeyPressed();
+}
+
 FHitResult Controller::GetHitResultUnderCursor() const
 {
 	FVector2D pos = GetCursorPosition();

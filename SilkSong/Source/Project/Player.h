@@ -69,6 +69,8 @@ public:
 
 	void LeaveWall();
 
+	void Defend(bool enable);
+
 protected:
 	virtual void SetupInputComponent(InputComponent* inputComponent)override;
 
@@ -91,6 +93,7 @@ private:
 	Timer BlinkTimer;
 	Timer DieTimer;
 	Timer RecoverTimer;
+	Timer LowHealthTimer;
 	int blinkTimes;
 
 	bool bGround;
@@ -114,5 +117,5 @@ private:
 	int32 jumpFlag;
 	ECharacterDirection direction;
 
-	void SpawnWetLandEffect();
+	void SpawnWetLandEffect() const;
 };

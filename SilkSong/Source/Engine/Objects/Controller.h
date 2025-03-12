@@ -47,6 +47,9 @@ public:
 	//获取鼠标是否按下
 	bool IsMouseClicked() const;
 
+	//是否有任何按键被按下
+	bool IsAnyKeyPressed() const;
+
 	/**
 	 * @brief 获取鼠标所处位置物体的信息（该物体必须拥有碰撞体）
 	 * @return  FHitResult 世界坐标系下鼠标所处位置最顶层的物体信息

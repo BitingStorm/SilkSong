@@ -65,7 +65,10 @@ public:
 	//启用高斯模糊抗锯齿，每一帧都会处理，很耗性能。如果有人怂恿你使用这个函数那他非蠢即坏
 	static void SetGaussianFilterOn(bool enable, int level = 2);
 
-	//暂停游戏数秒
+	//暂停游戏数秒(完全暂停游戏所有逻辑，不建议使用)
+	static void Sleep(float delay);
+
+	//暂停游戏世界(不包括UI交互、碰撞判断)
 	static void Pause(float delay);
 
 	//播放音效片段

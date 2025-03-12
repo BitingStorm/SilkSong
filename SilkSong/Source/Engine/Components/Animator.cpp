@@ -176,6 +176,11 @@ void Animator::SetNode(Animation* node)
 	aniNode->OnAnimEnter.Execute();
 }
 
+bool Animator::IsPlaying(std::string nodeName)
+{
+	return aniNode == &(animations.find(nodeName)->second);
+}
+
 
 void Animator::SetupAttachment(ImageInterface* renderer)
 {
@@ -258,6 +263,33 @@ void Animator::SetTrigger(std::string paramName)
 	}
 }
 
+int32 Animator::GetInteger(std::string paramName)
+{
+	if (paramatersInteger.find(paramName) != paramatersInteger.end())
+	{
+		return paramatersInteger[paramName];
+	}
+	return {};
+}
+
+float Animator::GetFloat(std::string paramName)
+{
+	if (paramatersFloat.find(paramName) != paramatersFloat.end())
+	{
+		return paramatersFloat[paramName];
+	}
+	return {};
+}
+
+bool Animator::GetBool(std::string paramName)
+{
+	if (paramatersBool.find(paramName) != paramatersBool.end())
+	{
+		return paramatersBool[paramName];
+	}
+	return {};
+}
+
 bool Animator::CheckConditions(AnimEdge* edge)
 {
 	bool result = false;
@@ -285,7 +317,7 @@ bool Animator::CheckConditions(AnimEdge* edge)
 	for (const auto& condition : edge->triggerConditions) {
 
 		if (paramatersTrigger.find(condition.paramName) == paramatersTrigger.end())continue;
-		result = (paramatersTrigger[condition.paramName] == true);
+		result = paramatersTrigger[condition.paramName];
 		paramatersTrigger[condition.paramName] = false;
 		if (result && edge->comparisonMode == AnimTransition::OR)return true;
 		if (!result && edge->comparisonMode == AnimTransition::AND)return false;

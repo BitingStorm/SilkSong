@@ -20,6 +20,7 @@ public:
 	AnimationDelegate downAttackSpawn;
 	AnimationDelegate dieShake;
 	AnimationDelegate leaveStart;
+	AnimationDelegate defendPause;
 
 private:
 	Animation idle;
@@ -49,12 +50,18 @@ private:
 	Animation closeskill;
 	Animation remoteskill;
 	Animation die;
+	Animation lowhealth;
 	Animation sitdown;
 	Animation standup;
+	Animation lookdown;
+	Animation lookup;
 	Animation leave;
 	Animation wall;
+	Animation defendstart;
 	Animation defend;
+	Animation defendend;
 	Animation defendattack;
+	
 
 	AnimEdge idle_to_walkstart;
 	AnimEdge walkstart_to_walk;
@@ -90,6 +97,13 @@ private:
 	AnimEdge standup_to_idle;
 	AnimEdge leave_to_fall;
 	AnimEdge wall_to_idle;
-	AnimEdge defend_to_idle;
-	AnimEdge defendattack_to_idle;
+	AnimEdge idle_to_lookup;
+	AnimEdge lookup_to_idle;
+	AnimEdge idle_to_lookdown;
+	AnimEdge lookdown_to_idle;
+	AnimEdge defendstart_to_defend;
+	AnimEdge defend_to_defendend;
+	AnimEdge defendend_to_idle;
+	AnimEdge idle_to_lowhealth;
+	AnimEdge lowhealth_to_idle;
 };

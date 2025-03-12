@@ -46,6 +46,27 @@ struct FMath final
 		return (a < b) ? a : b;
 	}
 
+	//获取三数之间最大数
+	template<typename T>
+	static FORCEINLINE T Max(const T a, const T b, const T c)
+	{
+		return Max(Max(a, b), Max(a, c));
+	}
+
+	//获取三数之间最小数
+	template<typename T>
+	static FORCEINLINE T Min(const T a, const T b, const T c)
+	{
+		return Min(Min(a, b), Min(a, c));
+	}
+
+	//获取三数之间中位数
+	template<typename T>
+	static FORCEINLINE T Mid(const T a, const T b, const T c)
+	{
+		return a + b + c - Max(a, b, c) - Min(a, b, c);
+	}
+
 	//将某数限制在某个范围内
 	template<typename T>
 	static constexpr FORCEINLINE T Clamp(const T value, const T lower, const T upper)

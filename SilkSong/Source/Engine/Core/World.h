@@ -104,6 +104,9 @@ class World final
 
 	float deltaTime = 0;//帧间隔时间
 
+	float pauseDelay = 0.f;//世界逻辑暂停时长
+	float lastPauseTime = 0.f;//用于记录上次暂停时间
+
 	/** 场景对象、UI容器 **/
 
 	std::unordered_set<Actor*>GameActors;

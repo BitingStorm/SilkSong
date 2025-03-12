@@ -33,7 +33,7 @@ namespace Math
 
 		bool operator==(const TRay2<T>& other) const
 		{
-			return (origin == other.origin) && (direction == other.direction);
+			return (origin == other.origin) && direction.Equals(other.direction);
 		}
 
 		bool operator!=(const TRay2<T>& other) const
@@ -78,7 +78,7 @@ namespace Math
 		 */
 		T DistSquared(const TVector2<T>& point) const
 		{
-			T rayParameter = GetParameter();
+			T rayParameter = GetParameter(point);
 			if (rayParameter < 0)
 			{
 				return TVector2<T>::DistSquared(origin, point);
@@ -100,13 +100,13 @@ namespace Math
 		}
 
 		/**
-		 * @brief 找到距离射线最近的点
+		 * @brief 找到射线上距离某点最近的点
 		 * @param[in] 需要查询的点
-		 * @return 距离射线最近的点
+		 * @return 距离某点最近的点
 		 */
 		TVector2<T> ClosestPoint(const TVector2<T>& point) const
 		{
-			T rayParameter = GetParameter();
+			T rayParameter = GetParameter(point);
 			if (rayParameter < 0)
 			{
 				return origin;
