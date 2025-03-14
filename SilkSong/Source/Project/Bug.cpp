@@ -1,12 +1,14 @@
 #include "Bug.h"
 #include "Components/Collider.h"
 #include "Components/RigidBody.h"
+#include "Components/SpriteRenderer.h"
 #include "Player.h"
 #include "Geo.h"
 #include "GameplayStatics.h"
 #include "Components/AudioPlayer.h"
 #include "PropertyComponent.h"
 #include "GameModeHelper.h"
+#include "SilkParticle.h"
 
 
 
@@ -74,13 +76,32 @@ void Bug::BeginPlay()
 
 	circle->OnComponentHit.AddDynamic(this, &Bug::OnHit);
 
-	property->SetMaxHealth(10);
-	property->AddHealth(10);
+	property->SetMaxHealth(8);
+	property->AddHealth(8);
 }
 
 void Bug::Update(float deltaTime)
 {
 	Super::Update(deltaTime);
+
+	if (IsDead() && FMath::Abs(rigid->GetVelocity().x) < 0.5f)
+	{
+		rigid->SetMoveable(false);
+		rigid->SetRotatable(false);
+		circle->SetCollisonMode(CollisionMode::None);
+	}
+
+	if (!IsDead() && GetWorldPosition().y > 1080)
+	{
+		property->AddHealth(-9999);
+		GameplayStatics::PlayCameraShake(4);
+		render->Blink(0.3f, WHITE, 100);
+		SilkParticle* silk = GameplayStatics::CreateObject<SilkParticle>();
+		silk->AttachTo(this);
+		silk->Init({}, true);
+		rigid->AddImpulse({ 0,-500 });
+		Die();
+	}
 
 	ani->SetBool("burying", bIsBuried);
 	ani->SetBool("dead", IsDead());
@@ -108,6 +129,27 @@ void Bug::Update(float deltaTime)
 			SetLocalScale({ -GetLocalScale().x,GetLocalScale().y });
 			ani->PlayMontage("turn");
 		}
+	}
+}
+
+void Bug::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
+{
+	Super::ExecuteDamageTakenEvent(extraInfo);
+
+	if (!extraInfo.bIsValid)
+	{
+		return;
+	}
+
+	Actor* causer = Cast<Actor>(extraInfo.damageCauser);
+	CHECK_PTR(causer)
+	FVector2D normal = (GetWorldPosition() - causer->GetWorldPosition()).GetSafeNormal();
+	float delta_x = causer->GetWorldPosition().x - GetWorldPosition().x;
+
+	rigid->AddImpulse({ normal.x * 600,-200 });
+	if (property->GetHealth() <= 0)
+	{
+		rigid->SetAngularVelocity(100 * (delta_x > 0 ? 1.f : -1.f) * GetWorldScale().x);
 	}
 }
 

@@ -22,7 +22,8 @@ enum class CollisionType :uint8_t
 	Block,
 	Item,
 	Chest,
-	Dart
+	Dart,
+	Bullet
 };
 
 //*********                             **********

@@ -74,7 +74,6 @@ namespace Math
 				}
 				return;
 			}
-
 			if (newScale != TVector2<T>::UnitVector)
 			{
 				for (int i = 0; i < initVertices.size(); i++)

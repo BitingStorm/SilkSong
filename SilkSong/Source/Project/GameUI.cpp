@@ -114,9 +114,13 @@ GameUI::GameUI()
 
 	for (int i = 0; i < 9; i++)
 	{
-		silkidle[i].Load("inventory_silk");
-		silkidle[i].SetInterval(0.06f);
-		silkidle[i].SetLooping(false);
+		silkload[i].Load("inventory_silk");
+		silkload[i].SetInterval(0.06f);
+		silkload[i].SetLooping(false);
+		silkminus[i].Load("inventory_silk");
+		silkminus[i].SetInterval(0.06f);
+		silkminus[i].SetLooping(false);
+		silkminus[i].SetReverse(true);
 	
 		Silk[i] = AddWidget<Image>();
 		Silk[i]->AttachTo(SilkContainer);
@@ -126,13 +130,18 @@ GameUI::GameUI()
 
 		Silk[i]->EnableAnimControl();
 		Animator* ani = Silk[i]->GetAnimator();
-		ani->Insert("idle", silkidle[i]);
-		ani->SetNode("idle");
+		ani->Insert("load", silkload[i]);
+		ani->Insert("minus", silkminus[i]);
+		ani->SetNode("load");
 	}
 
-	soulidle.Load("inventory_soul");
-	soulidle.SetInterval(0.06f);
-	soulidle.SetLooping(false);
+	soulload.Load("inventory_soul");
+	soulload.SetInterval(0.06f);
+	soulload.SetLooping(false);
+	soulminus.Load("inventory_soul");
+	soulminus.SetInterval(0.06f);
+	soulminus.SetLooping(false);
+	soulminus.SetReverse(true);
 
 	Soul = AddWidget<Image>();
 	Soul->AttachTo(SoulContainer);
@@ -142,9 +151,9 @@ GameUI::GameUI()
 
 	Soul->EnableAnimControl();
 	Animator* ani = Soul->GetAnimator();
-	ani->Insert("idle", soulidle);
-	ani->SetNode("idle");
-	ani->SetReverse(true);
+	ani->Insert("load", soulload);
+	ani->Insert("minus", soulminus);
+	ani->SetNode("load");
 }
 
 void GameUI::Update(float deltaTime)
@@ -161,7 +170,7 @@ void GameUI::Update(float deltaTime)
 	if (player->GetHealth() == 1)
 	{
 		lowHealthFlag += deltaTime * lowHealthDir * 100;
-		if (std::abs(lowHealthFlag - 150) > 100)
+		if (FMath::Abs(lowHealthFlag - 150) > 100)
 		{
 			lowHealthDir = -lowHealthDir;
 			lowHealthFlag += deltaTime * lowHealthDir * 100;
@@ -212,21 +221,20 @@ void GameUI::BloodMinus(int i)
 
 void GameUI::SilkLoad(int i)
 {
-	Silk[i]->GetAnimator()->SetReverse(false);
+	Silk[i]->GetAnimator()->SetNode("load");
 }
 
 void GameUI::SilkMinus(int i)
 {
-	Silk[i]->GetAnimator()->SetReverse(true);
-	silkidle[i].SetIndex(silkidle[i].GetIndex() - 1);
+	Silk[i]->GetAnimator()->SetNode("minus");
 }
 
 void GameUI::SoulLoad()
 {
-	Soul->GetAnimator()->SetReverse(true);
+	Soul->GetAnimator()->SetNode("load");
 }
 
 void GameUI::SoulMinus()
 {
-	Soul->GetAnimator()->SetReverse(false);
+	Soul->GetAnimator()->SetNode("minus");
 }

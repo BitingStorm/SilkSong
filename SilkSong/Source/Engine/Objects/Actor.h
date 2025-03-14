@@ -30,8 +30,6 @@ class Actor :public Object, public TimerHandler
 protected:
 	SceneComponent* const root = nullptr;//场景根组件，赋予场景属性
 
-	Actor* GetOwner()const { return parent; }//获取所属场景对象
-
 public:
 	Actor();
 
@@ -42,6 +40,9 @@ public:
 	virtual void BeginPlay()override;
 
 	virtual void EndPlay()override;
+
+	//获取所属场景对象
+	Actor* GetOwner()const { return parent; }
 
 	//设置场景根组件(如果不清楚底层关系，不建议使用，否则容易出错)
 	void SetRootComponent(SceneComponent* newRoot);

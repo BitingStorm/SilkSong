@@ -13,14 +13,13 @@ void CollisionManager::Initialize()
 	AddMapping(CollisionType::Player, CollisionType::Block);
 	AddMapping(CollisionType::Enemy, CollisionType::Block);
 	AddMapping(CollisionType::Item, CollisionType::Block);
-
-	//AddMapping(CollisionType::Dart, CollisionType::Dart);
-
 	AddMapping(CollisionType::Item, CollisionType::HurtBox);
 	AddMapping(CollisionType::Chest, CollisionType::HurtBox);
 	AddMapping(CollisionType::Dart, CollisionType::Block);
 	AddMapping(CollisionType::Dart, CollisionType::Enemy);
 	AddMapping(CollisionType::Dart, CollisionType::HurtBox);
+	AddMapping(CollisionType::Bullet, CollisionType::Player);
+	AddMapping(CollisionType::Bullet, CollisionType::Block);
 }
 
 //*********                             **********

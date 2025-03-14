@@ -61,6 +61,9 @@ public:
 	//¼ÌĞøÒôÀÖ
 	void Resume(std::string name);
 
+	//¼ì²âÒôÀÖÊÇ·ñÔÚ²¥·Å
+	bool IsPlaying(std::string name);
+
 private:
 	int32 Reflect(int32 x);
 };

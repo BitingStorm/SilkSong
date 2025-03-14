@@ -13,6 +13,7 @@ protected:
 	class SpriteRenderer* render;
 	Animator* ani;
 
-	Animation effect;
+	Animation load;
+	Animation minus;
 	AnimationDelegate destroy;
 };

@@ -14,32 +14,27 @@ void Animation::Tick()
 	//如果不可循环则会静止在最后一帧
 	if (!bMontage && !bLooping)
 	{
-		if (index == num - 1 && !animController->IsReverse())
+		if (index == num - 1 && !IsReverse())
 		{
 			return;
 		}
-		if (index == 0 && animController->IsReverse())
+		if (index == 0 && IsReverse())
 		{
 			return;
 		}
 	}
 
 	//更新动画帧
-	index = ((index + (animController->IsReverse() ? -1 : 1)) + num) % num;
-
-	//执行动画通知
-	if (notifications.find(index) != notifications.end())
-	{
-		notifications[index].Execute();
-	}
+	index = ((index + (IsReverse() ? -1 : 1)) + num) % num;
 
 	//若为蒙太奇动画，则播放一遍后立马跳出
-	if (index == 0 && bMontage)
+	if (((index == 0 && !IsReverse()) || (index == num - 1 && IsReverse())) && bMontage)
 	{
 		bMontage = false;
 		if (OnMontageExit.IsBinded())
 		{
 			OnMontageExit.Execute();
+			return;
 		}
 		else
 		{
@@ -48,7 +43,7 @@ void Animation::Tick()
 				if (animController->CheckConditions(edge))
 				{
 					animController->SetNode(edge->end);
-					break;
+					return;
 				}
 			}
 		}
@@ -57,11 +52,17 @@ void Animation::Tick()
 	//若无过渡条件，则播放一遍结束立马到下一个节点
 	for (auto edge : nexts)
 	{
-		if ((edge->IsUnconditional() && index == 0))
+		if (edge->IsUnconditional() && ((index == 0 && !IsReverse()) || (index == num - 1 && IsReverse())))
 		{
 			animController->SetNode(edge->end);
-			break;
+			return;
 		}
+	}
+
+	//执行动画通知
+	if (notifications.find(index) != notifications.end())
+	{
+		notifications[index].Execute();
 	}
 }
 
@@ -148,9 +149,17 @@ void Animator::Insert(std::string name, Animation& ani)
 
 void Animator::SetNode(std::string nodeName)
 {
-	if (aniNode)
+	if (aniNode && !aniNode->exitLock)
 	{
-		aniNode->clock.Stop(); aniNode->OnAnimExit.Execute();
+		Animation* lastNode = aniNode;
+		lastNode->clock.Stop();
+		lastNode->exitLock = true;
+		lastNode->OnAnimExit.Execute();
+		lastNode->exitLock = false;
+		if (aniNode != lastNode)
+		{
+			return;
+		}
 	}
 
 	aniNode = &(animations.find(nodeName)->second);
@@ -158,20 +167,28 @@ void Animator::SetNode(std::string nodeName)
 	{
 		return;
 	}
-	aniNode->index = 0;
+	aniNode->index = aniNode->bReverse ? (aniNode->num - 1) : 0;
 	aniNode->clock.Continue();
 	aniNode->OnAnimEnter.Execute();
 }
 
 void Animator::SetNode(Animation* node)
 {
-	if (aniNode) 
+	if (aniNode && !aniNode->exitLock)
 	{
-		aniNode->clock.Stop(); aniNode->OnAnimExit.Execute();
+		Animation* lastNode = aniNode;
+		lastNode->clock.Stop(); 
+		lastNode->exitLock = true;
+		lastNode->OnAnimExit.Execute();
+		lastNode->exitLock = false;
+		if (aniNode != lastNode)
+		{
+			return;
+		}
 	}
 
 	aniNode = node;
-	aniNode->index = 0;
+	aniNode->index = aniNode->bReverse ? (aniNode->num - 1) : 0;
 	aniNode->clock.Continue(); 
 	aniNode->OnAnimEnter.Execute();
 }
@@ -192,11 +209,26 @@ void Animator::PlayMontage(std::string nodeName)
 {
 	if (aniNode == &(animations.find(nodeName)->second))//若当前正在播放相同蒙太奇动画，则重置为第一帧
 	{
-		aniNode->index = 0; return;
+		aniNode->index = aniNode->bReverse ? (aniNode->num - 1) : 0; return;
 	}
 	lastNode = aniNode;
 	SetNode(nodeName);
+	if (!aniNode)
+	{
+		return;
+	}
 	aniNode->bMontage = true;
+	
+	if (rendererAttached)
+	{
+		IMAGE* sprite = aniNode->images[aniNode->index];
+		currentSprite = sprite;
+		rendererAttached->sprite = sprite;
+
+		rendererAttached->spriteInfo.offset = aniNode->offset;
+		rendererAttached->spriteInfo.endLoc = { sprite->getwidth(), sprite->getheight() };
+		rendererAttached->DealImage();
+	}
 
 	if (aniNode->nexts.empty())
 	{

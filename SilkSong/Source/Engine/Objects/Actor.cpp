@@ -125,7 +125,7 @@ const FTransform& Actor::GetLocalTransform() const
 
 FVector2D Actor::GetWorldPosition() const
 {
-	if (parent)return parent->GetWorldPosition() + GetLocalPosition();
+	if (parent)return parent->GetWorldPosition() + FVector2D::RotateVector(parent->GetWorldRotation(), GetLocalPosition() * parent->GetWorldScale());
 	else return GetLocalPosition();
 }
 

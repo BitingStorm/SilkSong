@@ -47,7 +47,7 @@ FVector2D SceneComponent::GetWorldPosition() const
 {
 	if (parent)
 	{
-		return parent->GetWorldPosition() + GetLocalPosition();
+		return parent->GetWorldPosition() + FVector2D::RotateVector(parent->GetWorldRotation(), GetLocalPosition() * parent->GetWorldScale());
 	}
 	else
 	{
@@ -67,7 +67,6 @@ float SceneComponent::GetWorldRotation() const
 		if (pOwner)return pOwner->GetWorldRotation();
 		else return GetLocalRotation();
 	}
-
 }
 
 FVector2D SceneComponent::GetWorldScale() const

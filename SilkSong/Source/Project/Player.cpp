@@ -121,7 +121,7 @@ Player::Player()
 	ani->cureEffect.Bind([this]()
 		{
 			GameplayStatics::CreateObject<HealParticle>()->AttachTo(this);
-			ui->WhiteBlink(6); camera->SetSpringArmLength(20);
+			ui->WhiteBlink(6);
 		});
 	ani->wetWalkEffect.Bind([this]()
 		{
@@ -142,7 +142,7 @@ Player::Player()
 		});
 	ani->needleSpawn.Bind([this]()
 		{
-			Needle* needle = GameplayStatics::CreateObject<Needle>({ GetLocalScale().x * -500,0 });
+			Needle* needle = GameplayStatics::CreateObject<Needle>({ -500,0 });
 			Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
 			if (!effect || !needle)return;
 			needle->AttachTo(effect);
@@ -155,11 +155,19 @@ Player::Player()
 		{
 			AttackBox* attackBox = GameplayStatics::CreateObject<AttackBox>();
 			attackBox->AttachTo(this);
-			attackBox->SetLocalPosition(FVector2D(70 * GetWorldScale().x, 35));
+			attackBox->SetLocalPosition(FVector2D(70, 35));
 		});
 	ani->leaveStart.Bind([this]()
 		{
 			rigid->SetVelocity({ GetWorldScale().x * 840, -630 });
+		});
+	ani->defendAttack.Bind([this]()
+		{
+			GameModeHelper::PlayFXSound("sound_hardattack");
+			AttackBox* attackBox = GameplayStatics::CreateObject<AttackBox>();
+			attackBox->AttachTo(this);
+			attackBox->SetLocalPosition(FVector2D(30, -30));
+			attackBox->SetLocalScale(FVector2D(2.f, 1.5f));
 		});
 
 	blinkTimes = 0;
@@ -309,11 +317,10 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 	inputComponent->SetMapping("CloseSkill", EKeyCode::VK_I);
 	inputComponent->SetMapping("RemoteSkill", EKeyCode::VK_O);
 	inputComponent->SetMapping("DefendStart", EKeyCode::VK_X);
-	inputComponent->SetMapping("DefendEnd", EKeyCode::VK_X);
 
 
 	inputComponent->BindAction("WalkLeft", EInputType::Holding, [this]() {
-		if (walkLock == 2 || bSitting) return; 
+		if (walkLock == 2 || bSitting || ani->IsPlaying("defend")) return;
 		walkLock = 1;
 		if (bWall)return;
 		if (GetWorldScale().x > 0 && bGround)ani->PlayMontage("turn");
@@ -326,7 +333,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 	inputComponent->BindAction("WalkLeftEnd", EInputType::Released, [this]() {
 		if (walkLock == 1)ani->SetTrigger("leaveWall"); walkLock = 0; });
 	inputComponent->BindAction("WalkRight", EInputType::Holding, [this]() {
-		if (walkLock == 1 || bSitting) return;
+		if (walkLock == 1 || bSitting || ani->IsPlaying("defend")) return;
 		walkLock = 2;
 		if (bWall)return;
 		if (GetWorldScale().x < 0 && bGround)ani->PlayMontage("turn");
@@ -347,6 +354,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		bRushing = false; bRushFlag = false;
 		});
 	inputComponent->BindAction("LookUp", EInputType::Holding, [this]() {
+		if (ani->IsPlaying("defend")) return;
 		if(direction == ECharacterDirection::LookForward)direction = ECharacterDirection::LookUp;
 		if (GetMovementState() == ECharacterMovementState::Standing && lookFlag <= 1.5f)lookFlag += 0.0015f;
 		});
@@ -358,6 +366,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		direction = ECharacterDirection::LookForward; lookFlag = 0;
 		});
 	inputComponent->BindAction("LookDown", EInputType::Holding, [this]() {
+		if (ani->IsPlaying("defend")) return;
 		if (bSitting)ani->PlayMontage("standup");
 		if (direction == ECharacterDirection::LookForward)direction = ECharacterDirection::LookDown;
 		if (GetMovementState() == ECharacterMovementState::Standing && lookFlag <= 1.5f)lookFlag += 0.0015f;
@@ -417,10 +426,10 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 				case ECharacterDirection::LookForward:
 					if (attackFlag == 0)ani->PlayMontage("attack_0");
 					else ani->PlayMontage("attack_1");
-					attackBox->SetLocalPosition(FVector2D(70 * GetWorldScale().x, 0));
+					attackBox->SetLocalPosition(FVector2D(70, 0));
 					break;
 				case ECharacterDirection::LookUp:
-					ani->PlayMontage("attackup"); attackBox->SetLocalPosition(FVector2D(20 * GetWorldScale().x, 0));
+					ani->PlayMontage("attackup"); attackBox->SetLocalPosition(FVector2D(20, 0));
 					break;
 				case ECharacterDirection::LookDown:
 					ani->PlayMontage("attackdown");
@@ -504,15 +513,10 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		else GameModeHelper::PlayFXSound("voice_remoteskill_1");
 		});
 	inputComponent->BindAction("DefendStart", EInputType::Pressed, [this]() {
-		if (bSitting || bWall || !bGround) return;
+		if (bSitting || bWall || !bGround || playerProperty->GetSilk() < 2) return;
+		AddSilk(-2);
 		ani->PlayMontage("defendstart");
 		GameModeHelper::PlayFXSound("sound_swordhit");
-		});
-	inputComponent->BindAction("DefendEnd", EInputType::Released, [this]() {
-		if (ani->IsPlaying("defend") || ani->IsPlaying("defendstart") || ani->IsPlaying("defendattack"))
-		{
-			ani->SetTrigger("defendEnd");
-		}
 		});
 }
 
@@ -689,8 +693,8 @@ void Player::AddSilk(int32 delta)
 {
 	int32 initSilk = playerProperty->GetSilk();
 	int32 realDelta = playerProperty->AddSilk(delta);
-	if (delta < 0 && initSilk == 9)ui->SoulMinus();
-	else if (delta > 0 && playerProperty->GetSilk() == 9)ui->SoulLoad();
+	if (realDelta < 0 && initSilk == 9)ui->SoulMinus();
+	else if (realDelta > 0 && playerProperty->GetSilk() == 9)ui->SoulLoad();
 
 	if (realDelta > 0)
 	{
@@ -735,6 +739,7 @@ void Player::SetFloating(bool enable)
 	rigid->SetMoveable(!enable);
 	rigid->SetVelocity({});
 	EnableInput(!enable);
+	if(!enable)camera->SetSpringArmLength(20);
 }
 
 void Player::Bounce()
@@ -757,7 +762,7 @@ void Player::DieStart()
 	EnableInput(false);
 	particle->SetIsLoop(false);
 	ani->SetNode("die");
-	rigid->SetVelocity({ 0,-20 });
+	rigid->SetMoveable(false);
 	rigid->SetGravityEnabled(false);
 	GameplayStatics::CreateObject<DieParticle>()->AttachTo(this);
 	DieTimer.Bind(3.f, this, &Player::DieEnd);
@@ -768,13 +773,14 @@ void Player::DieStart()
 void Player::DieEnd()
 {
 	ui->BlackInterval(true);
+	rigid->SetMoveable(true);
 	RecoverTimer.Bind(2.f, this, &Player::Recover);
+	GameModeHelper::GetInstance()->MakeEarRinging();
 }
 
 void Player::Recover()
 {
 	EnableInput(true);
-
 	GameplayStatics::OpenLevel("RuinHouse");
 	SetLocalPosition({ 0,920 });
 	bSitting = true; ani->SetNode("sitdown");

@@ -20,10 +20,12 @@ class GameUI :public UserInterface
 	Timer IdleBlink;
 
 	Image* Silk[9];
-	Animation silkidle[9];
+	Animation silkload[9];
+	Animation silkminus[9];
 
 	Image* Soul;
-	Animation soulidle;
+	Animation soulload;
+	Animation soulminus;
 
 	Image* Coin;
 	Text* CoinNum;

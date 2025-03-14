@@ -12,10 +12,13 @@
 
 TearCityLevel::TearCityLevel()
 {
+	GameModeHelper::PlayBGMusic_("tearcity_o");
 	GameMode* gameMode = GameModeHelper::GetInstance();
 	gameMode->RefreshVolume();
 	gameMode->SetVolume(2, gameMode->GetVolume(0));
+	GameModeHelper::PlayBGMusic("tearcity_i");
 	GameplayStatics::CreateObject<LevelTransformer>({ -1050, 875 })->Init("RuinHouse", { 550,900 }, FRect({ -100.f,250.f }, { 100.f,750.f }));
+	GameplayStatics::CreateObject<LevelTransformer>({ 1850, 875 })->Init("BossHouse", { -800,900 }, FRect({ -475.f,-250.f }, { 475.f,690.f }));
 
 	Bg* bg0 = GameplayStatics::CreateObject<Bg>(); bg0->Init("tearcity_0", -30);
 	Bg* bg1 = GameplayStatics::CreateObject<Bg>({ 2500,350 }); bg1->Init("tearcity_1", -20);
@@ -87,10 +90,10 @@ TearCityLevel::TearCityLevel()
 	}
 
 	GameplayStatics::CreateObject<PlatForm>({ -1300,1075 })->Init("tearcity_floor", { 1125,210 }, {});
-	GameplayStatics::CreateObject<PlatForm>({ 1500,1075 })->Init("tearcity_floor", { 1125,210 }, {});
+	GameplayStatics::CreateObject<PlatForm>({ 1500,1075 })->Init("tearcity_floor", { 925,210 }, {-100,0});
 
 	GameplayStatics::CreateObject<PlatForm>({ -1000,250 })->Init("", { 100,1100 }, {});
-	GameplayStatics::CreateObject<PlatForm>({ 1750,250 })->Init("", { 100,1300 }, {});
+	GameplayStatics::CreateObject<PlatForm>({ 1850,250 })->Init("", { 100,1100 }, {});
 
 	GameplayStatics::CreateObject<PlatForm>({ -650,1175 })->Init("", { 200,100 }, {});
 	GameplayStatics::CreateObject<PlatForm>({ 775,1175 })->Init("", { 450,100 }, {});

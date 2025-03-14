@@ -63,27 +63,8 @@ void Enemy::Update(float deltaTime)
 	if (IsDead() && render_death->GetEnabled())
 	{
 		int trans = int(render_death->GetTransparency()) - int(deltaTime * 500);
-		if (trans > 0) { render_death->SetTransparency(trans); render_death->SetLocalScale(GetLocalScale()*0.98f); }
+		if (trans > 0) { render_death->SetTransparency(trans); render_death->SetLocalScale(GetLocalScale() * 0.98f); }
 		else render_death->Deactivate();
-	}
-
-	if (IsDead() && FMath::Abs(rigid->GetVelocity().x) < 0.5f)
-	{
-		rigid->SetMoveable(false);
-		rigid->SetRotatable(false);
-		circle->SetCollisonMode(CollisionMode::None);
-	}
-
-	if (!IsDead() && GetWorldPosition().y > 1080)
-	{ 
-		property->AddHealth(-9999);
-		GameplayStatics::PlayCameraShake(4);
-		render->Blink(0.3f, WHITE, 100);
-		SilkParticle* silk = GameplayStatics::CreateObject<SilkParticle>();
-		silk->AttachTo(this);
-		silk->Init({}, true);
-		rigid->AddImpulse({0,-500}); 
-		Die();
 	}
 }
 
@@ -111,30 +92,29 @@ void Enemy::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 	hurtTimer = 0.1f;
 	Actor* causer = Cast<Actor>(extraInfo.damageCauser);
 	CHECK_PTR(causer)
+	if (AttackBox* box = Cast<AttackBox>(causer))
+	{
+		causer = box->GetOwner();
+		player->AddSilk(1);
+	}
 	FVector2D normal = (GetWorldPosition() - causer->GetWorldPosition()).GetSafeNormal();
 	float delta_x = causer->GetWorldPosition().x - GetWorldPosition().x;
 
-	rigid->AddImpulse({ normal.x * 600,-200 });
 	GameplayStatics::PlayCameraShake(4);
-	render->Blink(0.3f, WHITE, 100);
-	if (Cast<AttackBox>(causer))
-	{
-		player->AddSilk(1);
-	}
+	render->Blink(0.3f, RGB(255, 110, 40));
 
 	if (property->GetHealth() <= 0 && !IsDead())
 	{
 		Die();
-		rigid->SetAngularVelocity(100 * (delta_x > 0 ? 1.f : -1.f));
 	}
 	else
 	{
-		Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D((delta_x < 0 ? 1.f : -1.f) * 300, 0));
+		Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + normal * 250);
 		if (effect)
 		{
-			effect->Init("effect_attack_", 0.02f);
-			effect->SetLocalScale(FVector2D{ delta_x < 0 ? 1.f : -1.f ,1.f }*FMath::RandReal(0.9, 1.3));
-			effect->SetLocalRotation(FMath::RandInt(10, -10));
+			effect->Init("effect_attack_", 0.01f);
+			effect->SetLocalScale(FVector2D::UnitVector * FMath::RandReal(0.9, 1.3));
+			effect->SetLocalRotation(FVector2D::VectorToDegree(normal));
 		}
 	}
 

@@ -26,10 +26,7 @@ Geo::Geo()
 	box->AttachTo(root);
 
 	rigid = ConstructComponent<RigidBody>();
-	/*rigid->SetAngularDrag(0.75f);
-	rigid->SetAngularVelocity(FMath::RandReal(-400,400));*/
 
-	box->OnComponentHit.AddDynamic(this,&Geo::OnHit);
 	box->OnComponentBeginOverlap.AddDynamic(this, &Geo::OnOverlap);
 
 	rotateDelta = 0.005f;
@@ -52,11 +49,6 @@ void Geo::Update(float deltaTime)
 	if (FMath::Abs(GetLocalScale().x) < 0.2)SetLocalScale({ -GetLocalScale().x,1});
 	if (FMath::Abs(GetLocalScale().x) > 1)rotateDelta = -rotateDelta;
 	SetLocalScale(GetLocalScale() + FVector2D(rotateDelta,0));
-}
-
-void Geo::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const FHitResult& hitResult)
-{
-	rigid->SetRotatable(false);
 }
 
 void Geo::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherActor)

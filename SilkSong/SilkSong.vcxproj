@@ -24,6 +24,7 @@
     <ClInclude Include="Source\Engine\Math\Polygon.h" />
     <ClInclude Include="Source\Engine\Physics\Collisions2D.h" />
     <ClInclude Include="Source\Engine\Math\Ray2D.h" />
+    <ClInclude Include="Source\Project\BossLevel.h" />
     <ClInclude Include="Source\Project\DefaultDamageStrategy.h" />
     <ClInclude Include="Source\Engine\Math\Box2D.h" />
     <ClInclude Include="Source\Engine\Math\Transform.h" />
@@ -41,6 +42,7 @@
     <ClInclude Include="Source\Project\PlayerPropertyComponent.h" />
     <ClInclude Include="Source\Project\PropertyCarrier.h" />
     <ClInclude Include="Source\Project\PropertyComponent.h" />
+    <ClInclude Include="Source\Project\RoarEffect.h" />
     <ClInclude Include="Source\Project\RuinHouseLevel.h" />
     <ClInclude Include="Source\Project\SceneUI.h" />
     <ClInclude Include="Source\Engine\Components\WidgetComponent.h" />
@@ -73,6 +75,8 @@
     <ClInclude Include="Source\Project\Player.h" />
     <ClInclude Include="Source\Project\SilkParticle.h" />
     <ClInclude Include="Source\Project\SitParticle.h" />
+    <ClInclude Include="Source\Project\SoulMaster.h" />
+    <ClInclude Include="Source\Project\SoulOrb.h" />
     <ClInclude Include="Source\Project\TearCityLevel.h" />
     <ClInclude Include="Source\Engine\Components\ActorComponent.h" />
     <ClInclude Include="Source\Engine\Components\Animator.h" />
@@ -109,6 +113,7 @@
     <ClCompile Include="Source\Engine\Core\Object.cpp" />
     <ClCompile Include="Source\Engine\Objects\Level.cpp" />
     <ClCompile Include="Source\Engine\Physics\Collisions2D.cpp" />
+    <ClCompile Include="Source\Project\BossLevel.cpp" />
     <ClCompile Include="Source\Project\DamageResponseComponent.cpp" />
     <ClCompile Include="Source\Project\DamageSystem.cpp" />
     <ClCompile Include="Source\Project\DefaultDamageStrategy.cpp" />
@@ -131,6 +136,7 @@
     <ClCompile Include="Source\Project\PlayerPropertyComponent.cpp" />
     <ClCompile Include="Source\Project\Pointer.cpp" />
     <ClCompile Include="Source\Project\PropertyComponent.cpp" />
+    <ClCompile Include="Source\Project\RoarEffect.cpp" />
     <ClCompile Include="Source\Project\RockParticle.cpp" />
     <ClCompile Include="Source\Project\Chest.cpp" />
     <ClCompile Include="Source\Project\Geo.cpp" />
@@ -173,16 +179,13 @@
     <ClCompile Include="Source\Project\SceneUI.cpp" />
     <ClCompile Include="Source\Project\SilkParticle.cpp" />
     <ClCompile Include="Source\Project\SitParticle.cpp" />
+    <ClCompile Include="Source\Project\SoulMaster.cpp" />
+    <ClCompile Include="Source\Project\SoulOrb.cpp" />
     <ClCompile Include="Source\Project\TearCityLevel.cpp" />
     <ClCompile Include="Source\Project\PlayerAnimator.cpp" />
     <ClCompile Include="Source\Project\RainProducer.cpp" />
     <ClCompile Include="Source\Project\VolumeBarUI.cpp" />
     <ClCompile Include="Source\Project\VolumeUI.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
-    <None Include="ClassDiagram2.cd" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

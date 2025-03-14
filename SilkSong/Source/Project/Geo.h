@@ -13,8 +13,6 @@ public:
 	virtual void Update(float deltaTime)override;
 
 protected:
-	void OnHit(class Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const struct FHitResult& hitResult);
-
 	void OnOverlap(class Collider* hitComp, Collider* otherComp, Actor* otherActor);
 
 

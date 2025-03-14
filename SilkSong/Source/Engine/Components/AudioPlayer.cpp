@@ -51,7 +51,8 @@ void AudioPlayer::Play(string name, bool repeat)
 {
 	if (paths.find(name) ==  paths.end())paths.insert(name);
 
-	if(!repeat)mciSendString((string("seek ") + name + string(" to start")).c_str(), 0, 0, 0);
+	if (repeat && IsPlaying(name)) {}
+	else mciSendString((string("seek ") + name + string(" to start")).c_str(), 0, 0, 0);
 	mciSendString((string("play ") + name + (repeat ? string(" repeat") : "")).c_str(), 0, 0, 0);
 
 	if (bSpacial)return;
@@ -78,6 +79,13 @@ void AudioPlayer::Pause(string name)
 void AudioPlayer::Resume(string name)
 {
 	mciSendString((string("resume ") + name).c_str(), 0, 0, 0);
+}
+
+bool AudioPlayer::IsPlaying(std::string name)
+{
+	char statusString[128];
+	mciSendString((string("status ") + name + " mode").c_str(), statusString, sizeof(statusString), NULL);
+	return strcmp(statusString, "playing") == 0;
 }
 
 int32 AudioPlayer::Reflect(int32 x)

@@ -21,6 +21,7 @@ public:
 	AnimationDelegate dieShake;
 	AnimationDelegate leaveStart;
 	AnimationDelegate defendPause;
+	AnimationDelegate defendAttack;
 
 private:
 	Animation idle;
@@ -104,6 +105,7 @@ private:
 	AnimEdge defendstart_to_defend;
 	AnimEdge defend_to_defendend;
 	AnimEdge defendend_to_idle;
+	AnimEdge defendattack_to_idle;
 	AnimEdge idle_to_lowhealth;
 	AnimEdge lowhealth_to_idle;
 };

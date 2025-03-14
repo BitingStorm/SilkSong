@@ -39,8 +39,7 @@ class Animation final :public TimerHandler
 	IMAGE** images = nullptr;//动画帧数组
 	int32 index = 0;//当前帧索引
 	bool bLooping = true;//是否可循环播放
-	
-	AnimationDelegate OnMontageExit;//蒙太奇结束事件（用于记录播放蒙太奇前一个动画，以便于当蒙太奇无后继节点时触发该事件从而恢复前一个动画）
+	bool bReverse = false;//是否反向播放
 	bool bMontage = false;//是否处于蒙太奇播放
 
 	Timer clock;//计时器
@@ -72,8 +71,19 @@ public:
 	//在指定帧处添加动画通知
 	void AddNotification(int32 index, const AnimationDelegate& event) { notifications.insert({ index,event }); }
 
+	//获取是否反向播放
+	bool IsReverse()const { return bReverse; }
+
+	//设置是否反向播放
+	void SetReverse(bool bIsReverse) { bReverse = bIsReverse; }
+
 	AnimationDelegate OnAnimEnter;//进入动画事件
 	AnimationDelegate OnAnimExit;//离开动画事件
+
+private:
+	AnimationDelegate OnMontageExit;//蒙太奇结束事件（用于记录播放蒙太奇前一个动画，以便于当蒙太奇无后继节点时触发该事件从而恢复前一个动画）
+
+	bool exitLock;//动画结束播放锁，确保上一个动画节点OnAnimExit只执行一次，防止无限递归
 };
 
 
@@ -281,12 +291,6 @@ public:
 	//设置播放速度
 	void SetStep(float value) { step = value; }
 
-	//获取是否反向播放
-	bool IsReverse()const { return bReverse; }
-
-	//设置是否反向播放
-	void SetReverse(bool bIsReverse) { bReverse = bIsReverse; }
-
 private:
 	std::unordered_map<std::string, Animation&> animations;
 
@@ -304,6 +308,4 @@ private:
 	IMAGE* currentSprite = nullptr;//当前播放的图像
 
 	float step = 1.f;//播放速度
-
-	bool bReverse = false;//是否反向播放
 };

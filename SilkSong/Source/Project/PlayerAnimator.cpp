@@ -133,7 +133,6 @@ PlayerAnimator::PlayerAnimator()
 	AddParamater("validDownAttack", ParamType::Bool);
 	AddParamater("leaveWall", ParamType::Trigger);
 	AddParamater("lookFlag", ParamType::Integer);
-	AddParamater("defendEnd", ParamType::Trigger);
 	AddParamater("lowHealth", ParamType::Bool);
 }
 
@@ -212,8 +211,8 @@ void PlayerAnimator::BeginPlay()
 	leave_to_fall.Init(leave, fall);
 	defendstart_to_defend.Init(defendstart, defend);
 	defend_to_defendend.Init(defend, defendend);
-	defend_to_defendend.AddCondition(AnimTransition::Trigger{ "defendEnd" });
 	defendend_to_idle.Init(defendend, idle);
+	defendattack_to_idle.Init(defendattack, idle);
 	
 	idle_to_lowhealth.Init(idle, lowhealth);
 	idle_to_lowhealth.AddCondition(AnimTransition::Bool{ "lowHealth",true });
@@ -260,9 +259,12 @@ void PlayerAnimator::BeginPlay()
 		leave.OnAnimExit.Bind([=]() {player->LeaveUp(); });
 		leave.AddNotification(3, leaveStart);
 		wall.OnAnimExit.Bind([=]() {player->LeaveWall(); });
+		/*defendstart.OnAnimEnter.Bind([=]() {player->Defend(true); });
+		defendstart.OnAnimExit.Bind([=]() {player->Defend(false); });*/
 		defend.OnAnimEnter.Bind([=]() {player->Defend(true); });
 		defend.OnAnimExit.Bind([=]() {player->Defend(false); });
-		defendPause.Bind([]() {GameplayStatics::Pause(0.25f); GameplayStatics::PlayCameraShake(7, 5); });
+		defendPause.Bind([=]() {GameplayStatics::Pause(0.25f); GameplayStatics::PlayCameraShake(7, 5); player->AddSilk(3); });
 		defendattack.AddNotification(1, defendPause);
+		defendattack.AddNotification(3, defendAttack);
 	}
 }

@@ -87,7 +87,6 @@ void SpriteRenderer::Update(float deltaTime)
 		}
 	}
 
-
 	/**
 	 * ÉÁ¹â´¦ÀíÂß¼­
 	 **/

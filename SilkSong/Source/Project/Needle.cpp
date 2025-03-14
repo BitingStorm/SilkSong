@@ -28,14 +28,14 @@ void Needle::Update(float deltaTime)
 {
 	Actor::Update(deltaTime);
 
-	float delta = 20 * GetWorldScale().x * deltaTime * 100;
+	float delta = 2000 * deltaTime * GetLocalScale().x;
 	AddPosition({ delta, 0 });
 	distance += delta;
 
-	if (FMath::Abs(distance) > 500)
+	if (distance > 500)
 	{
-		distance = 500 * GetWorldScale().x;
-		SetLocalScale({ -GetLocalScale().x,1 });
+		distance = 500;
+		SetLocalScale({ -1,1 });
 	}
 }
 

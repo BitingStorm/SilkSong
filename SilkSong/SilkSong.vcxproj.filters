@@ -333,6 +333,18 @@
     <ClInclude Include="Source\Engine\Math\Segment2D.h">
       <Filter>Engine\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Project\SoulMaster.h">
+      <Filter>Project\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\BossLevel.h">
+      <Filter>Project\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\SoulOrb.h">
+      <Filter>Project\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\RoarEffect.h">
+      <Filter>Project\Enemies</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Components\ActorComponent.cpp">
@@ -551,10 +563,17 @@
     <ClCompile Include="Source\Engine\Physics\Collisions2D.cpp">
       <Filter>Engine\Physics2D</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
-    <None Include="ClassDiagram2.cd" />
+    <ClCompile Include="Source\Project\SoulMaster.cpp">
+      <Filter>Project\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\BossLevel.cpp">
+      <Filter>Project\Levels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\SoulOrb.cpp">
+      <Filter>Project\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\RoarEffect.cpp">
+      <Filter>Project\Enemies</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

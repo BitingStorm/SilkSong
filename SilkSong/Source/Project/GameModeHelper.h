@@ -4,9 +4,9 @@
 
 class GameModeHelper
 {
-public:
 	static GameMode* gameMode;
 
+public:
 	static GameMode* GetInstance();
 
 	static void ApplyDamage(IDamagable* damageCauser, IDamagable* damagedActor, float baseValue, EDamageType damageType);

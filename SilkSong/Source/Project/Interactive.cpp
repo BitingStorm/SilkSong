@@ -60,8 +60,8 @@ void Interactive::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
 	if (effect)
 	{
-		effect->SetLocalRotation(FMath::RandInt(-15, 15));
-		effect->Init("effect_attack", -0.03f);
+		effect->SetLocalRotation(FMath::RandInt(-50, 0));
+		effect->Init("effect_nailhit", -0.03f);
 		effect->SetLocalScale(FVector2D::UnitVector * FMath::RandReal(0.5f, 1.f));
 	}
 }

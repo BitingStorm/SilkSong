@@ -8,7 +8,7 @@
 LevelTransformer::LevelTransformer()
 {
 	box = ConstructComponent<BoxCollider>();
-	box->SetType(CollisionType::Item);
+	box->SetType(CollisionType::Block);
 	box->AttachTo(root);
 	box->SetSize({ 100,200 });
 	box->OnComponentBeginOverlap.AddDynamic(this, &LevelTransformer::OnBeginOverlap);

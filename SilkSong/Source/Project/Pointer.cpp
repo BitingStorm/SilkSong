@@ -10,19 +10,22 @@ Pointer::Pointer()
 	ani->SetupAttachment(render);
 	render->SetLayer(10);
 
-	effect.Load("pointer");
-	effect.SetInterval(0.03f);
-	effect.SetLooping(false);
+	load.Load("pointer");
+	load.SetInterval(0.03f);
+	load.SetLooping(false);
+	minus.Load("pointer");
+	minus.SetInterval(0.03f);
+	minus.SetReverse(true);
 
 	destroy.Bind([this]() {Destroy(); });
-	effect.AddNotification(0, destroy);
+	minus.AddNotification(0, destroy);
 
-	ani->Insert("idle", effect);
-	ani->SetNode("idle");
+	ani->Insert("load", load);
+	ani->Insert("minus", minus);
+	ani->SetNode("load");
 }
 
 void Pointer::FadeOut()
 {
-	ani->SetReverse(true);
-	effect.SetLooping(true);
+	ani->SetNode("minus");
 }
