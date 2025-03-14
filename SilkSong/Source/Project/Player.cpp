@@ -168,6 +168,7 @@ Player::Player()
 			attackBox->AttachTo(this);
 			attackBox->SetLocalPosition(FVector2D(30, -30));
 			attackBox->SetLocalScale(FVector2D(2.f, 1.5f));
+			attackBox->Init(ECharacterDirection::LookForward, 6);
 		});
 
 	blinkTimes = 0;
@@ -464,17 +465,24 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		});
 	inputComponent->BindAction("Cure", EInputType::Pressed, [this]() {
 		if (bSitting || bWall) return;
-		if (playerProperty->GetSilk() >= 9 && playerProperty->GetHealth() < 5)
+
+		if (playerProperty->GetHealth() < 5)
 		{
-			AddSilk(-9);
-			ani->PlayMontage("cure");   
+			if (playerProperty->GetSilk() >= 9)
+			{
+				AddSilk(-9); AddHealth(3);
+			}
+			else if (playerProperty->GetSilk() >= 4)
+			{
+				AddSilk(-4); AddHealth(1);
+			}
+			ani->PlayMontage("cure");
 			camera->SetSpringArmLength(19); camera->ShakeCamera(5, 2);
 			GameModeHelper::PlayFXSound("voice_cure");
 			GameModeHelper::PlayFXSound("sound_cure");
-			lastFloatTime = GameplayStatics::GetTimeSeconds() + 1.f; 
+			lastFloatTime = GameplayStatics::GetTimeSeconds() + 1.f;
 			SetFloating(true);
 			particle->SetIsLoop(false);
-			AddHealth(3);
 		}
 		});
 	inputComponent->BindAction("Throw", EInputType::Pressed, [this]() {
@@ -787,6 +795,8 @@ void Player::Recover()
 	rigid->SetVelocity({});
 	ui->BlackInterval(false);
 	AddHealth(5);
+	AddSilk(9);
+	AddDart(15);
 }
 
 void Player::SitDown()
@@ -838,6 +848,11 @@ void Player::LeaveWall()
 void Player::Defend(bool enable)
 {
 	damageResponse->SetStrategy(enable ? new DamageStrategy() : new DefaultDamageStrategy());
+}
+
+void Player::Scare(bool enable)
+{
+	enable ? ani->SetNode("scare") : ani->SetNode("idle");
 }
 
 void Player::SpawnWetLandEffect() const

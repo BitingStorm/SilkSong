@@ -62,6 +62,7 @@ private:
 	Animation defend;
 	Animation defendend;
 	Animation defendattack;
+	Animation scare;
 	
 
 	AnimEdge idle_to_walkstart;

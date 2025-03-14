@@ -10,7 +10,7 @@ class AttackBox :public Actor, public IDamagable
 public:
 	AttackBox();
 
-	void Init(ECharacterDirection direction);
+	void Init(ECharacterDirection direction, int32 damage = 3);
 
 	void OnOverlap(class Collider* hitComp, Collider* otherComp, Actor* otherActor);
 
@@ -26,4 +26,5 @@ private:
 	class BoxCollider* box;
 	Timer DestroyTimerHandle;
 	ECharacterDirection direction;
+	int32 damage;
 };

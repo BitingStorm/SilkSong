@@ -45,6 +45,12 @@ void SoulOrb::Update(float deltaTime)
 	{
 		player = Cast<Player>(GameplayStatics::GetController());
 	}
+
+	if (GetOwner())
+	{
+		return;
+	}
+
 	if (player)
 	{
 		rigid->AddImpulse((player->GetWorldPosition() - GetWorldPosition()).GetSafeNormal() * deltaTime * 1000.f);
@@ -57,6 +63,9 @@ void SoulOrb::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor, F
 	{	
 		GameModeHelper::ApplyDamage(this, player, 1, EDamageType::Enemy);
 	}
-	GameplayStatics::PlayCameraShake(7,5);
+	GameplayStatics::PlayCameraShake(7, 5);
+	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
+	effect->Init("effect_soulburst");
+	effect->SetLocalScale(FVector2D(1, 1) + normalImpulse.GetAbs());
 	Destroy();
 }

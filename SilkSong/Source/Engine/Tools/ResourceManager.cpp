@@ -56,6 +56,7 @@ void ResourceManager::Initialize()
 	Load("player_defendstart", "Asset/Animations/Player/DefendStart/", 150, 172, 3);
 	Load("player_defendend", "Asset/Animations/Player/DefendEnd/", 92, 170, 2);
 	Load("player_defendattack", "Asset/Animations/Player/DefendAttack/", { {201,190}, {201,190}, {201,190}, {455,320}, {455,300}, {230,147}, {117,147} });
+	Load("player_scare", "Asset/Animations/Player/Scare.png", 164, 164, 1, 1, 1);
 
 	//Effect
 	Load("effect_dash", "Asset/Animations/Player/DashEffect/", 342, 433, 5);
@@ -79,6 +80,8 @@ void ResourceManager::Initialize()
 	Load("effect_soulmaster_quake", "Asset/Animations/Enemy/SoulMaster/QuakeEffect/", 750, 315, 5);
 	Load("effect_soulmaster_quake_", "Asset/Animations/Enemy/SoulMaster/QuakeEffect_.png", 900, 600, 6, 1, 6);
 	Load("effect_soulorb", "Asset/Animations/SoulOrb.png", 518, 60, 7, 1, 7);
+	Load("effect_soulburst", "Asset/Animations/SoulBurst/", 222, 222, 4);
+	Load("effect_soulspawn", "Asset/Animations/SoulSpawn/", 222, 222, 4);
 
 	//UI
 	Load("inventory_bloodidle", "Asset/Animations/UI/BloodIdle/", 33, 49, 6);
@@ -106,6 +109,7 @@ void ResourceManager::Initialize()
 	Load("soulmaster_startstun", "Asset/Animations/Enemy/SoulMaster/StartStun/", 293, 270, 10);
 	Load("soulmaster_stun", "Asset/Animations/Enemy/SoulMaster/Stun/", 125, 262, 6);
 	Load("soulmaster_transition", "Asset/Animations/Enemy/SoulMaster/Transition/", 180, 246, 3);
+	Load("soulmaster_die", "Asset/Animations/Enemy/SoulMaster/Die/", { {226,146}, {226,146}, {226,146}, {260,135}, {260,135}, {260,135}, {260,135} });
 
 	//Water
 	Load("water_fountain", "Asset/Animations/WaterFalls/", 31, 188, 10);
@@ -129,6 +133,7 @@ void ResourceManager::Initialize()
 	Load("particle_silk", "Asset/Particles/web_particle.png", 46, 183, 4, 4, 1);
 	Load("particle_smoke", "Asset/Particles/hot_spring_smoke.png", 98, 87, 1, 1, 1);
 	Load("particle_fragment", "Asset/Particles/rock_particle.png", 33, 88, 4, 4, 1);
+	Load("particle_quake", "Asset/Particles/quake_particle.png", 36, 144, 4, 4, 1);
 
 	/** 图像 **/
 
@@ -196,6 +201,12 @@ void ResourceManager::Initialize()
 	Load("soul_orb", "Asset/Images/soul_orb.png", 100, 100);
 	Load("roar_effect", "Asset/Images/roar_effect.png", 250, 250);
 	Load("pointer_sit", "Asset/Images/prompt_idle0000.png", 170, 141);
+	Load("wave1", "Asset/Images/Wave/1.png", 70, 87);
+	Load("wave2", "Asset/Images/Wave/2.png", 75, 166);
+	Load("wave3", "Asset/Images/Wave/3.png", 86, 192);
+	Load("wave4", "Asset/Images/Wave/4.png", 64, 125);
+	Load("wave5", "Asset/Images/Wave/5.png", 50, 110);
+	Load("wave6", "Asset/Images/Wave/6.png", 41, 58);
 
 	//UI
 	Load("inventory_item", "Asset/Images/UI/ins_item.png", 60, 60);
@@ -288,6 +299,16 @@ void ResourceManager::Initialize()
 	Load("sound_soulmaster_cast_3", "Asset/Sounds/SoulMaster/cast_3.mp3");
 	Load("startstun", "Asset/Sounds/SoulMaster/startstun.mp3");
 	Load("stun", "Asset/Sounds/SoulMaster/stun.mp3");
+	Load("startdeath", "Asset/Sounds/SoulMaster/startdeath.mp3");
+	Load("death", "Asset/Sounds/SoulMaster/death.mp3");
+	Load("sound_soulmaster_angry_0", "Asset/Sounds/SoulMaster/angry_0.mp3");
+	Load("sound_soulmaster_angry_1", "Asset/Sounds/SoulMaster/angry_1.mp3");
+	Load("sound_soulmaster_angry_2", "Asset/Sounds/SoulMaster/angry_2.mp3");
+	Load("sound_soulmaster_angry_3", "Asset/Sounds/SoulMaster/angry_3.mp3");
+	Load("sound_soulmaster_angry_4", "Asset/Sounds/SoulMaster/angry_4.mp3");
+	Load("sound_soulmaster_angry_5", "Asset/Sounds/SoulMaster/angry_5.mp3");
+	Load("sound_soulmaster_angry_6", "Asset/Sounds/SoulMaster/angry_6.mp3");
+
 
 	/*************
 	 * 字体资源加载

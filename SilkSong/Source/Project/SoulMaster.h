@@ -39,6 +39,7 @@ private:
 	Animation stuntransition;
 	Animation stuntransition_;
 	Animation stun;
+	Animation die;
 
 	AnimEdge turn_to_idle;
 	AnimEdge startteleport_to_endteleport;
@@ -54,16 +55,26 @@ private:
 	AnimEdge stuntransition__to_idle;
 
 	AnimationDelegate requake;
+	bool quakeLock = false;
 
 	Timer RoarTimerHandle;
 	int32 roarTimer;
 	Timer BehaviorTimerHandle;
 	FVector2D moveSpeed = FVector2D::ZeroVector;
 	Timer RecoverTimerHandle;
+	Timer Behavior_1TimerHandle;
+	int32 deathShakeTimer;
+	Timer SummonTimerHandle;
+	Timer DieTimerHandle;
 
 	int32 behaviorFlag = 0;
 	
+	int32 state = 0;
+	int32 behaveTimer = 0;
+
 	void Move();
 
 	void Behave();
+
+	void Behave_1();
 };

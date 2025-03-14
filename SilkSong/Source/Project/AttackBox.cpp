@@ -23,7 +23,7 @@ AttackBox::AttackBox()
 	box->OnComponentEndOverlap.AddDynamic(this, &AttackBox::OnEndOverlap);
 }
 
-void AttackBox::Init(ECharacterDirection direction)
+void AttackBox::Init(ECharacterDirection direction, int32 damage)
 {
 	this->direction = direction;
 	if (direction == ECharacterDirection::LookUp)
@@ -36,6 +36,7 @@ void AttackBox::Init(ECharacterDirection direction)
 		box->SetSize({ 100, 125 });
 		box->AddPosition({ 0, 50 });
 	}
+	this->damage = damage;
 }
 
 
@@ -50,7 +51,7 @@ void AttackBox::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherAc
 			return;
 		}
 		if (direction == ECharacterDirection::LookDown)Cast<Player>(GetOwner())->Bounce();
-		GameModeHelper::ApplyDamage(this, enemy, 3, EDamageType::Player);
+		GameModeHelper::ApplyDamage(this, enemy, this->damage, EDamageType::Player);
 		if (FMath::RandInt(0, 10) > 5)GameModeHelper::PlayFXSound("sound_damage_0");
 		else GameModeHelper::PlayFXSound("sound_damage_1");
 	}

@@ -83,7 +83,7 @@ public:
 private:
 	AnimationDelegate OnMontageExit;//蒙太奇结束事件（用于记录播放蒙太奇前一个动画，以便于当蒙太奇无后继节点时触发该事件从而恢复前一个动画）
 
-	bool exitLock;//动画结束播放锁，确保上一个动画节点OnAnimExit只执行一次，防止无限递归
+	bool exitLock = false;//动画结束播放锁，确保上一个动画节点OnAnimExit只执行一次，防止无限递归
 };
 
 

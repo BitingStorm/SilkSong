@@ -71,6 +71,8 @@ public:
 
 	void Defend(bool enable);
 
+	void Scare(bool enable);
+
 protected:
 	virtual void SetupInputComponent(InputComponent* inputComponent)override;
 

@@ -42,6 +42,7 @@
     <ClInclude Include="Source\Project\PlayerPropertyComponent.h" />
     <ClInclude Include="Source\Project\PropertyCarrier.h" />
     <ClInclude Include="Source\Project\PropertyComponent.h" />
+    <ClInclude Include="Source\Project\QuakeParticle.h" />
     <ClInclude Include="Source\Project\RoarEffect.h" />
     <ClInclude Include="Source\Project\RuinHouseLevel.h" />
     <ClInclude Include="Source\Project\SceneUI.h" />
@@ -77,6 +78,7 @@
     <ClInclude Include="Source\Project\SitParticle.h" />
     <ClInclude Include="Source\Project\SoulMaster.h" />
     <ClInclude Include="Source\Project\SoulOrb.h" />
+    <ClInclude Include="Source\Project\SoulOrbManager.h" />
     <ClInclude Include="Source\Project\TearCityLevel.h" />
     <ClInclude Include="Source\Engine\Components\ActorComponent.h" />
     <ClInclude Include="Source\Engine\Components\Animator.h" />
@@ -108,6 +110,7 @@
     <ClInclude Include="Source\Project\RainProducer.h" />
     <ClInclude Include="Source\Project\VolumeBarUI.h" />
     <ClInclude Include="Source\Project\VolumeUI.h" />
+    <ClInclude Include="Source\Project\Wave.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Core\Object.cpp" />
@@ -136,6 +139,7 @@
     <ClCompile Include="Source\Project\PlayerPropertyComponent.cpp" />
     <ClCompile Include="Source\Project\Pointer.cpp" />
     <ClCompile Include="Source\Project\PropertyComponent.cpp" />
+    <ClCompile Include="Source\Project\QuakeParticle.cpp" />
     <ClCompile Include="Source\Project\RoarEffect.cpp" />
     <ClCompile Include="Source\Project\RockParticle.cpp" />
     <ClCompile Include="Source\Project\Chest.cpp" />
@@ -181,11 +185,13 @@
     <ClCompile Include="Source\Project\SitParticle.cpp" />
     <ClCompile Include="Source\Project\SoulMaster.cpp" />
     <ClCompile Include="Source\Project\SoulOrb.cpp" />
+    <ClCompile Include="Source\Project\SoulOrbManager.cpp" />
     <ClCompile Include="Source\Project\TearCityLevel.cpp" />
     <ClCompile Include="Source\Project\PlayerAnimator.cpp" />
     <ClCompile Include="Source\Project\RainProducer.cpp" />
     <ClCompile Include="Source\Project\VolumeBarUI.cpp" />
     <ClCompile Include="Source\Project\VolumeUI.cpp" />
+    <ClCompile Include="Source\Project\Wave.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

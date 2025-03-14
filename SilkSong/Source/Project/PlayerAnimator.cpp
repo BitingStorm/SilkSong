@@ -83,6 +83,8 @@ PlayerAnimator::PlayerAnimator()
 	defendend.SetInterval(0.1f);
 	defendattack.Load("player_defendattack");
 	defendattack.SetInterval(0.1f);
+	scare.Load("player_scare");
+	scare.SetInterval(0.1f);
 
 	Insert("idle", idle);
 	Insert("walk", walk);
@@ -122,6 +124,7 @@ PlayerAnimator::PlayerAnimator()
 	Insert("defendstart", defendstart);
 	Insert("defendend", defendend);
 	Insert("defendattack", defendattack);
+	Insert("scare", scare);
 	SetNode("idle");
 
 
@@ -250,6 +253,7 @@ void PlayerAnimator::BeginPlay()
 		closeskill.OnAnimExit.Bind([=]() {player->SetFloating(false); });
 		throw_.AddNotification(3, dartSpawn);
 		grab.AddNotification(4, grabFinished);
+		grab.OnAnimExit.Bind([=]() {player->EnableInput(true); });
 		remoteskill.AddNotification(8, needleSpawn);
 		remoteskill.OnAnimExit.Bind([=]() {player->EnableInput(true); });
 		attackdown.AddNotification(2, downAttackSpawn);

@@ -345,6 +345,15 @@
     <ClInclude Include="Source\Project\RoarEffect.h">
       <Filter>Project\Enemies</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Project\SoulOrbManager.h">
+      <Filter>Project\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\QuakeParticle.h">
+      <Filter>Project\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\Wave.h">
+      <Filter>Project\Enemies</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Components\ActorComponent.cpp">
@@ -573,6 +582,15 @@
       <Filter>Project\Items</Filter>
     </ClCompile>
     <ClCompile Include="Source\Project\RoarEffect.cpp">
+      <Filter>Project\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\SoulOrbManager.cpp">
+      <Filter>Project\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\QuakeParticle.cpp">
+      <Filter>Project\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\Wave.cpp">
       <Filter>Project\Enemies</Filter>
     </ClCompile>
   </ItemGroup>
