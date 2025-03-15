@@ -214,7 +214,7 @@ void Player::Update(float deltaTime)
 	Super::Update(deltaTime);
 
 	FVector2D cameraOffset;
-	cameraOffset.x = (GetWorldScale().x == 1.f ? 50.f : -50.f);
+	cameraOffset.x = 50.f;
 	if (GetMovementState() == ECharacterMovementState::Standing)
 	{
 		if (direction == ECharacterDirection::LookDown && lookFlag > 1)
@@ -468,7 +468,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 
 		if (playerProperty->GetHealth() < 5)
 		{
-			if (playerProperty->GetSilk() >= 9)
+			if (playerProperty->GetSilk() >= 9 && playerProperty->GetHealth() < 4)
 			{
 				AddSilk(-9); AddHealth(3);
 			}
@@ -531,6 +531,11 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 
 void Player::OnEnter(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const FHitResult& hitResult)
 {
+	if (GetHealth() <= 0)
+	{
+		return;
+	}
+
 	if (normalImpulse.y < 0)
 	{
 		bGround = true; ani->SetBool("flying", false);
@@ -561,11 +566,16 @@ void Player::OnEnter(Collider* hitComp, Collider* otherComp, Actor* otherActor, 
 
 void Player::OnStay(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const FHitResult& hitResult)
 {
+	if (GetHealth() <= 0)
+	{
+		return;
+	}
+
 	if (normalImpulse.y < 0)
 	{
 		bGround = true; ani->SetBool("flying", false);
 	}
-	else if (normalImpulse.x != 0 && !bWall && !bGround && !bDashing &&
+	else if (normalImpulse.x != 0 && !bWall && !bGround && !bDashing && 
 		((walkLock == 1 && normalImpulse.x == 1) || (walkLock == 2 && normalImpulse.x == -1)) && rigid->GetVelocity().y >= 0)
 	{
 		if (BoxCollider* platform = Cast<BoxCollider>(otherComp))

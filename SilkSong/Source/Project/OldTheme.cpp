@@ -43,7 +43,7 @@ OldTheme::OldTheme()
 	blackRadiantClose->SetSizeRange(0.75, 1.2);
 
 	smoke = ConstructComponent<ParticleSystem>();
-	smoke->SetLocalPosition({ 0,500 });
+	smoke->SetLocalPosition({ 0,400 });
 	smoke->AttachTo(root);
 	smoke->SetCapacity(5);
 	smoke->SetInterval(0.8f);

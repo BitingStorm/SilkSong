@@ -87,6 +87,11 @@ void Collider::SetCollisonMode(CollisionMode mode)
     this->mode = mode;
 }
 
+bool Collider::IsKinematics() const
+{
+    return rigidAttached && rigidAttached->bMoveable;
+}
+
 void Collider::RegisterDontDestroy()
 {
     mainWorld.OverallColliders.insert(this);
@@ -310,16 +315,16 @@ void Collider::collisionAdjustCircleToCircle(Collider* c1, Collider* c2, const F
         return;
     }
 
-    if (c1->rigidAttached && c2->rigidAttached)
+    if (c1->IsKinematics() && c2->IsKinematics())
     {
         c1->GetOwner()->AddPosition(-impactNormal * separationDistance * 0.5f);
         c2->GetOwner()->AddPosition(impactNormal * separationDistance * 0.5f);
     }
-    else if (c1->rigidAttached)
+    else if (c1->IsKinematics())
     {
         c1->GetOwner()->AddPosition(-impactNormal * separationDistance);
     }
-    else if (c2->rigidAttached)
+    else if (c2->IsKinematics())
     {
         c2->GetOwner()->AddPosition(impactNormal * separationDistance);
     }
@@ -344,16 +349,16 @@ void Collider::collisionAdjustCircleToBox(Collider* c1, Collider* c2, const FHit
         return;
     }
 
-    if (c1->rigidAttached && c2->rigidAttached)
+    if (c1->IsKinematics() && c2->IsKinematics())
     {
-        c1->GetOwner()->AddPosition(-impactNormal * separationDistance * 0.5f);
-        c2->GetOwner()->AddPosition(impactNormal * separationDistance * 0.5f);
+        if (c1->rigidAttached->bMoveable)c1->GetOwner()->AddPosition(-impactNormal * separationDistance * 0.5f);
+        if (c2->rigidAttached->bMoveable)c2->GetOwner()->AddPosition(impactNormal * separationDistance * 0.5f);
     }
-    else if (c1->rigidAttached)
+    else if (c1->IsKinematics())
     {
         c1->GetOwner()->AddPosition(-impactNormal * separationDistance);
     }
-    else if (c2->rigidAttached)
+    else if (c2->IsKinematics())
     {
         c2->GetOwner()->AddPosition(impactNormal * separationDistance);
     }
@@ -371,16 +376,16 @@ void Collider::collisionAdjustBoxToBox(Collider* c1, Collider* c2, const FHitRes
         return;
     }
 
-    if (c1->rigidAttached && c2->rigidAttached)
+    if (c1->IsKinematics() && c2->IsKinematics())
     {
         c1->GetOwner()->AddPosition(-impactNormal * separationDistance * 0.5f);
         c2->GetOwner()->AddPosition(impactNormal * separationDistance * 0.5f);
     }
-    else if(c1->rigidAttached)
+    else if(c1->IsKinematics())
     {
         c1->GetOwner()->AddPosition(-impactNormal * separationDistance);
     }
-    else if (c2->rigidAttached)
+    else if (c2->IsKinematics())
     {
         c2->GetOwner()->AddPosition(impactNormal * separationDistance);
     }
@@ -416,9 +421,7 @@ bool CircleCollider::IsMouseOver()
 void CircleCollider::SetRadius(float r)
 {
     radius = FMath::Abs(r); 
-    radius_ini = radius * FMath::InvSqrt(GetWorldScale().x * GetWorldScale().y);
-   
-    radius = radius_ini * FMath::Sqrt(FMath::Abs(GetWorldScale().x * GetWorldScale().y));
+    radius_ini = radius * FMath::InvSqrt(FMath::Abs(GetWorldScale().x * GetWorldScale().y));
 }
 
 
@@ -457,9 +460,6 @@ void BoxCollider::SetSize(FVector2D size)
     this->size = size.GetAbs(); 
     size_ini = size / GetWorldScale();
     size_ini.MakeAbs();
-
-    size = size_ini * GetWorldScale();
-    size.MakeAbs();
 }
 
 

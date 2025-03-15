@@ -55,6 +55,7 @@ private:
 	AnimEdge stuntransition__to_idle;
 
 	AnimationDelegate requake;
+	AnimationDelegate cameraShake;
 	bool quakeLock = false;
 
 	Timer RoarTimerHandle;
@@ -62,6 +63,7 @@ private:
 	Timer BehaviorTimerHandle;
 	FVector2D moveSpeed = FVector2D::ZeroVector;
 	Timer RecoverTimerHandle;
+	int32 stunTimer;
 	Timer Behavior_1TimerHandle;
 	int32 deathShakeTimer;
 	Timer SummonTimerHandle;

@@ -79,9 +79,12 @@ void ResourceManager::Initialize()
 	Load("effect_death", "Asset/Animations/Enemy/DeathHurtEffect/", { {300,250},{450, 375},{450,375} });
 	Load("effect_soulmaster_quake", "Asset/Animations/Enemy/SoulMaster/QuakeEffect/", 750, 315, 5);
 	Load("effect_soulmaster_quake_", "Asset/Animations/Enemy/SoulMaster/QuakeEffect_.png", 900, 600, 6, 1, 6);
-	Load("effect_soulorb", "Asset/Animations/SoulOrb.png", 518, 60, 7, 1, 7);
-	Load("effect_soulburst", "Asset/Animations/SoulBurst/", 222, 222, 4);
-	Load("effect_soulspawn", "Asset/Animations/SoulSpawn/", 222, 222, 4);
+	Load("effect_soulmaster_teleport", "Asset/Animations/Enemy/SoulMaster/TeleportEffect/", { {385,425},{695,1855},{745,2470},{740,2150} });
+	Load("effect_soulorb", "Asset/Animations/Enemy/SoulOrb.png", 518, 60, 7, 1, 7);
+	Load("effect_puff", "Asset/Animations/Enemy/OrangePuff.png", 738, 77, 9, 1, 9);
+	Load("effect_splat", "Asset/Animations/Enemy/DeathSplat/", 430, 345, 7);
+	Load("effect_soulburst", "Asset/Animations/Enemy/SoulBurst/", 222, 222, 4);
+	Load("effect_soulspawn", "Asset/Animations/Enemy/SoulSpawn/", 222, 222, 4);
 
 	//UI
 	Load("inventory_bloodidle", "Asset/Animations/UI/BloodIdle/", 33, 49, 6);
@@ -134,6 +137,8 @@ void ResourceManager::Initialize()
 	Load("particle_smoke", "Asset/Particles/hot_spring_smoke.png", 98, 87, 1, 1, 1);
 	Load("particle_fragment", "Asset/Particles/rock_particle.png", 33, 88, 4, 4, 1);
 	Load("particle_quake", "Asset/Particles/quake_particle.png", 36, 144, 4, 4, 1);
+	Load("particle_spatter", "Asset/Particles/spatter_white.png", 31, 31, 1, 1, 1);
+
 
 	/** Í¼Ïñ **/
 
@@ -173,6 +178,7 @@ void ResourceManager::Initialize()
 	Load("tearcity_environment_17", "Asset/Images/Environment/TearCity/_0019_city_break.png", 63, 329);
 	Load("tearcity_environment_18", "Asset/Images/Environment/TearCity/_0024_city_break.png", 63, 329);
 	Load("tearcity_environment_19", "Asset/Images/Environment/TearCity/_0021_city_break.png", 114, 410);
+	Load("tearcity_fence", "Asset/Images/Environment/TearCity/ruin_layered_0013_f.png", 225, 180);
 
 	Load("tearcity_plat_0", "Asset/Images/PlatForm/TearCity/ruin_plat_float_01.png", 163, 118);
 	Load("tearcity_plat_1", "Asset/Images/PlatForm/TearCity/ruin_plat_float_02.png", 114, 83);
@@ -186,6 +192,7 @@ void ResourceManager::Initialize()
 	Load("chest", "Asset/Images/Chest - atlas0 #087042(1).png", 125, 144);
 	Load("chest_", "Asset/Images/Chest - atlas0 #087042(2).png", 125, 118);
 	Load("chair", "Asset/Images/chair.png", 184, 111);
+	Load("beam", "Asset/Images/GG_beam_straight.png", 225, 300);
 
 	Load("ruinhouse_0", "Asset/Images/BackGround/RuinHouse/ruin_house_BG.jpg", 1000, 580);
 	Load("ruinhouse_1", "Asset/Images/BackGround/RuinHouse/room_ruin_house_FG.png", 1500, 820);
@@ -201,12 +208,12 @@ void ResourceManager::Initialize()
 	Load("soul_orb", "Asset/Images/soul_orb.png", 100, 100);
 	Load("roar_effect", "Asset/Images/roar_effect.png", 250, 250);
 	Load("pointer_sit", "Asset/Images/prompt_idle0000.png", 170, 141);
-	Load("wave1", "Asset/Images/Wave/1.png", 70, 87);
-	Load("wave2", "Asset/Images/Wave/2.png", 75, 166);
-	Load("wave3", "Asset/Images/Wave/3.png", 86, 192);
-	Load("wave4", "Asset/Images/Wave/4.png", 64, 125);
-	Load("wave5", "Asset/Images/Wave/5.png", 50, 110);
-	Load("wave6", "Asset/Images/Wave/6.png", 41, 58);
+	Load("wave1", "Asset/Images/Wave/1.png", 70, 90);
+	Load("wave2", "Asset/Images/Wave/2.png", 80, 170);
+	Load("wave3", "Asset/Images/Wave/3.png", 90, 200);
+	Load("wave4", "Asset/Images/Wave/4.png", 70, 130);
+	Load("wave5", "Asset/Images/Wave/5.png", 60, 120);
+	Load("wave6", "Asset/Images/Wave/6.png", 50, 60);
 
 	//UI
 	Load("inventory_item", "Asset/Images/UI/ins_item.png", 60, 60);
@@ -232,6 +239,7 @@ void ResourceManager::Initialize()
 	Load("tearcity_i", "Asset/Sounds/tearcity_i.mp3");
 	Load("tearcity_o", "Asset/Sounds/tearcity_o.mp3");
 	Load("tearcity_boss", "Asset/Sounds/tearcity_boss.mp3");
+	Load("tearcity_boss_", "Asset/Sounds/tearcity_boss_.mp3");
 	Load("rain", "Asset/Sounds/rain.mp3");
 	Load("menu", "Asset/Sounds/menu.mp3");
 	Load("menu_", "Asset/Sounds/menu_.mp3");
@@ -308,6 +316,10 @@ void ResourceManager::Initialize()
 	Load("sound_soulmaster_angry_4", "Asset/Sounds/SoulMaster/angry_4.mp3");
 	Load("sound_soulmaster_angry_5", "Asset/Sounds/SoulMaster/angry_5.mp3");
 	Load("sound_soulmaster_angry_6", "Asset/Sounds/SoulMaster/angry_6.mp3");
+
+	Load("sound_rumble", "Asset/Sounds/SoulMaster/rumble.mp3");
+	Load("sound_scream", "Asset/Sounds/SoulMaster/scream.mp3");
+	Load("sound_explode", "Asset/Sounds/SoulMaster/explode.mp3");
 
 
 	/*************

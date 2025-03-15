@@ -17,7 +17,7 @@ public:
 
 	int32 AddHealth(int32 delta);
 
-	int32 GetMaxHealth()const { return health; }
+	int32 GetMaxHealth()const { return maxHealth; }
 
 	void SetMaxHealth(int32 max) { maxHealth = max; }
 };

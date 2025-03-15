@@ -24,8 +24,7 @@ void ParticleSystem::Produce()
 	if (pattern == EParticlePattern::Center)
 	{
 		temp.degree = FMath::RandReal(0, 360);
-		float radian = -FMath::DegreeToRadian(FMath::RandReal(scoop.x, scoop.y));
-		unitVector = FVector2D(FMath::Cos(radian), FMath::Sin(radian));
+		unitVector = FVector2D::DegreeToVector(FMath::RandReal(scoop.x, scoop.y));;
 		if (radius != FVector2D::ZeroVector)
 		{
 			temp.position += unitVector * float((FMath::Min(radius.x, radius.y) + FMath::Abs(radius.y - radius.x) * FMath::RandPerc()));
@@ -34,11 +33,13 @@ void ParticleSystem::Produce()
 	}
 	else if (pattern == EParticlePattern::Line)
 	{
-		float radian = -FMath::DegreeToRadian(angle);
-		unitVector = FVector2D(FMath::Cos(radian), FMath::Sin(radian));
-		FVector2D lineVector = FVector2D::RotateVector(90, unitVector);
+		unitVector = FVector2D::DegreeToVector(angle);
+		FVector2D lineVector = FVector2D::RotateVector(-90, unitVector);
 		if (length)temp.position += lineVector * (float)(-length * 0.5f + length * FMath::RandPerc());
-		temp.velocity = FMath::RandReal(minSpeed, maxSpeed) * unitVector;
+		float multi = 1.f;
+		if (twoWay)multi = FMath::RandPerc() > 0.5 ? 1.f : -1.f;
+		if (offset)temp.position += FMath::RandPerc() * offset * multi * unitVector;
+		temp.velocity = FMath::RandReal(minSpeed, maxSpeed) * multi * unitVector;
 	}
 	particles.push_back(temp);
 }
@@ -158,9 +159,10 @@ void ParticleSystem::SetCenter(FVector2D radius, FVector2D scoop)
 	this->radius = radius; this->scoop = scoop;
 }
 
-void ParticleSystem::SetLine(float length, float angle)
+void ParticleSystem::SetLine(float length, float angle, float offset, bool twoWay)
 {
 	this->length = length; this->angle = FMath::NormalizeDegree(angle);
+	this->offset = offset; this->twoWay = twoWay;
 }
 
 void ParticleSystem::RegisterDontDestroy()

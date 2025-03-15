@@ -27,5 +27,5 @@ Pointer::Pointer()
 
 void Pointer::FadeOut()
 {
-	ani->SetNode("minus");
+	if(!ani->IsPlaying("minus"))ani->SetNode("minus");
 }

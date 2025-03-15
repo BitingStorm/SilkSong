@@ -2,10 +2,11 @@
 #include "Objects/Actor.h"
 
 
-class QuakeParticle :public Actor
+class SpatterParticle :public Actor
 {
 public:
-	QuakeParticle();
+	SpatterParticle();
+	void Init(FVector2D start, FVector2D end);
 private:
 	class ParticleSystem* particle;
 	Timer DestroyTimerHandle;

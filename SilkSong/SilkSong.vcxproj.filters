@@ -76,6 +76,9 @@
     <Filter Include="Engine\Math">
       <UniqueIdentifier>{1b0d8621-dd40-4054-87c3-decd5627676c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Enemies\Boss">
+      <UniqueIdentifier>{88b2a1c8-8b01-468c-b9b5-3733e5371f8b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\Components\ActorComponent.h">
@@ -333,26 +336,32 @@
     <ClInclude Include="Source\Engine\Math\Segment2D.h">
       <Filter>Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Project\SoulMaster.h">
-      <Filter>Project\Enemies</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Project\BossLevel.h">
       <Filter>Project\Levels</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Project\SoulOrb.h">
-      <Filter>Project\Items</Filter>
+    <ClInclude Include="Source\Project\QuakeParticle.h">
+      <Filter>Project\Enemies\Boss</Filter>
     </ClInclude>
     <ClInclude Include="Source\Project\RoarEffect.h">
-      <Filter>Project\Enemies</Filter>
+      <Filter>Project\Enemies\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\SoulMaster.h">
+      <Filter>Project\Enemies\Boss</Filter>
     </ClInclude>
     <ClInclude Include="Source\Project\SoulOrbManager.h">
-      <Filter>Project\Enemies</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Project\QuakeParticle.h">
-      <Filter>Project\Enemies</Filter>
+      <Filter>Project\Enemies\Boss</Filter>
     </ClInclude>
     <ClInclude Include="Source\Project\Wave.h">
-      <Filter>Project\Enemies</Filter>
+      <Filter>Project\Enemies\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\SpatterParticle.h">
+      <Filter>Project\Enemies\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\PuffManager.h">
+      <Filter>Project\Enemies\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\SoulOrb.h">
+      <Filter>Project\Enemies\Boss</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -572,26 +581,32 @@
     <ClCompile Include="Source\Engine\Physics\Collisions2D.cpp">
       <Filter>Engine\Physics2D</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Project\SoulMaster.cpp">
-      <Filter>Project\Enemies</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Project\BossLevel.cpp">
       <Filter>Project\Levels</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Project\SoulOrb.cpp">
-      <Filter>Project\Items</Filter>
+    <ClCompile Include="Source\Project\QuakeParticle.cpp">
+      <Filter>Project\Enemies\Boss</Filter>
     </ClCompile>
     <ClCompile Include="Source\Project\RoarEffect.cpp">
-      <Filter>Project\Enemies</Filter>
+      <Filter>Project\Enemies\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\SoulMaster.cpp">
+      <Filter>Project\Enemies\Boss</Filter>
     </ClCompile>
     <ClCompile Include="Source\Project\SoulOrbManager.cpp">
-      <Filter>Project\Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Project\QuakeParticle.cpp">
-      <Filter>Project\Enemies</Filter>
+      <Filter>Project\Enemies\Boss</Filter>
     </ClCompile>
     <ClCompile Include="Source\Project\Wave.cpp">
-      <Filter>Project\Enemies</Filter>
+      <Filter>Project\Enemies\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\SpatterParticle.cpp">
+      <Filter>Project\Enemies\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\SoulOrb.cpp">
+      <Filter>Project\Enemies\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\PuffManager.cpp">
+      <Filter>Project\Enemies\Boss</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

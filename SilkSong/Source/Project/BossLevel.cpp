@@ -31,6 +31,14 @@ BossLevel::BossLevel()
 
 	GameplayStatics::CreateObject<RainProducer>({ -500,-500 });
 
+
+	for (int i = 0; i < 7; i++)
+	{
+		GameplayStatics::CreateObject<Bg>({ -750 + i * 250.f,950.f })->Init("tearcity_fence", -2);
+		Bg* beam = GameplayStatics::CreateObject<Bg>({ -765 + i * 235.f,925.f });
+		beam->Init("beam", -1, false, false); beam->SetLocalScale(FVector2D(1.f, 1.9f - 0.3f * FMath::Abs(i - 3.f)));
+	}
+
 	if (Player* player = GameplayStatics::FindObjectOfClass<Player>())
 	{
 		player->Scare(true);

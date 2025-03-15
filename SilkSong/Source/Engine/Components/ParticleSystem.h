@@ -79,6 +79,8 @@ class ParticleSystem final : public SceneComponent, public LayerInterface, publi
 	/* 线性放射状属性成员 */
 	float length = 1.f; //线性放射长度
 	float angle = 0.f; //线性放射角度
+	float offset = 0.f; //线性放射偏移
+	bool twoWay = false; //线性放射方向
 
 	void Produce(); //产生粒子
 
@@ -144,9 +146,11 @@ public:
 	/**
 	 * @brief 设置线性放射状参数
 	 * @param[in] length			放射线段长度
-	 * @param[in] angle	            线段与水平夹角
+	 * @param[in] angle	            放射方向角度(线段法向)
+	 * @param[in] offset	        放射偏移
+	 * @param[in] twoWay	        是否为双向
 	 **/
-	void SetLine(float length, float angle);
+	void SetLine(float length, float angle, float offset = 0.f, bool twoWay = false);
 
 	virtual void RegisterDontDestroy()override;
 };

@@ -362,7 +362,7 @@ namespace Math
 	template<typename T>
 	FORCEINLINE TVector2<T> TVector2<T>::DegreeToVector(float angle)
 	{
-		float radian = FMath::DegreeToRadian(angle);
+		float radian = -FMath::DegreeToRadian(angle);
 		float fsin = FMath::Sin(radian);
 		float fcos = FMath::Cos(radian);
 		return TVector2<T>(fcos, fsin);

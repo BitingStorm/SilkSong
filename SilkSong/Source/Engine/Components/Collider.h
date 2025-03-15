@@ -87,6 +87,9 @@ public:
 	//设置物理材质
 	void SetPhysicsMaterial(const FPhysicsMaterial& material) { this->material = material; }
 
+	//是否为可运动碰撞体
+	bool IsKinematics()const;
+
 	//获取外接矩形框
 	virtual FRect GetRect() { return rect; }
 

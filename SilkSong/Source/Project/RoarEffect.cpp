@@ -17,7 +17,7 @@ void RoarEffect::Update(float deltaTime)
 
 	SetLocalScale(GetLocalScale() * 1.1f);
 
-	if (GetLocalScale().x > 8)
+	if (GetLocalScale().x > 10)
 	{
 		Destroy();
 	}

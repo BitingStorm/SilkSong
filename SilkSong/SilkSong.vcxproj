@@ -42,6 +42,7 @@
     <ClInclude Include="Source\Project\PlayerPropertyComponent.h" />
     <ClInclude Include="Source\Project\PropertyCarrier.h" />
     <ClInclude Include="Source\Project\PropertyComponent.h" />
+    <ClInclude Include="Source\Project\PuffManager.h" />
     <ClInclude Include="Source\Project\QuakeParticle.h" />
     <ClInclude Include="Source\Project\RoarEffect.h" />
     <ClInclude Include="Source\Project\RuinHouseLevel.h" />
@@ -79,6 +80,7 @@
     <ClInclude Include="Source\Project\SoulMaster.h" />
     <ClInclude Include="Source\Project\SoulOrb.h" />
     <ClInclude Include="Source\Project\SoulOrbManager.h" />
+    <ClInclude Include="Source\Project\SpatterParticle.h" />
     <ClInclude Include="Source\Project\TearCityLevel.h" />
     <ClInclude Include="Source\Engine\Components\ActorComponent.h" />
     <ClInclude Include="Source\Engine\Components\Animator.h" />
@@ -139,6 +141,7 @@
     <ClCompile Include="Source\Project\PlayerPropertyComponent.cpp" />
     <ClCompile Include="Source\Project\Pointer.cpp" />
     <ClCompile Include="Source\Project\PropertyComponent.cpp" />
+    <ClCompile Include="Source\Project\PuffManager.cpp" />
     <ClCompile Include="Source\Project\QuakeParticle.cpp" />
     <ClCompile Include="Source\Project\RoarEffect.cpp" />
     <ClCompile Include="Source\Project\RockParticle.cpp" />
@@ -186,6 +189,7 @@
     <ClCompile Include="Source\Project\SoulMaster.cpp" />
     <ClCompile Include="Source\Project\SoulOrb.cpp" />
     <ClCompile Include="Source\Project\SoulOrbManager.cpp" />
+    <ClCompile Include="Source\Project\SpatterParticle.cpp" />
     <ClCompile Include="Source\Project\TearCityLevel.cpp" />
     <ClCompile Include="Source\Project\PlayerAnimator.cpp" />
     <ClCompile Include="Source\Project\RainProducer.cpp" />

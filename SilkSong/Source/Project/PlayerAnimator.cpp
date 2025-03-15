@@ -236,7 +236,7 @@ void PlayerAnimator::BeginPlay()
 		airdash.OnAnimExit.Bind([=]() {player->EnableInput(true); });
 		airdash.AddNotification(1, dashEffect);
 		cure.OnAnimEnter.Bind([=]() {player->EnableInput(false); });
-		cure.OnAnimExit.Bind([=]() {player->EnableInput(true); player->SetFloating(false); });
+		cure.OnAnimExit.Bind([=]() {player->SetFloating(false); });
 		cure.AddNotification(5, cureEffect);
 		hurt.OnAnimEnter.Bind([=]() {player->EnableInput(false); });
 		hurt.OnAnimExit.Bind([=]() {player->EnableInput(true); });
