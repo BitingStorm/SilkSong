@@ -279,7 +279,7 @@ void Player::Update(float deltaTime)
 	if (bDashing)
 	{
 		SetMaxWalkingSpeed(10000);
-		AddInputX(GetWorldScale().x * (bGround ? 12500 : 10000) * deltaTime, false);
+		AddInputX(GetWorldScale().x * (bGround ? 14000 : 10000) * deltaTime, false);
 		if (GameplayStatics::GetTimeSeconds() - lastDashTime > 0.3f)
 		{
 			bDashing = false; 
@@ -309,6 +309,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 	inputComponent->SetMapping("LookDown", EKeyCode::VK_S);
 	inputComponent->SetMapping("JumpStart", EKeyCode::VK_K);
 	inputComponent->SetMapping("Jumping", EKeyCode::VK_K);
+	inputComponent->SetMapping("JumpEnd", EKeyCode::VK_K);
 	inputComponent->SetMapping("Attack", EKeyCode::VK_J);
 	inputComponent->SetMapping("Evade", EKeyCode::VK_L);
 	inputComponent->SetMapping("Dash", EKeyCode::VK_F);
@@ -381,7 +382,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		if (bGround)
 		{
 			bGround = false; SpawnWetLandEffect();
-			rigid->AddImpulse({ 0,-400 });
+			rigid->AddImpulse({ 0,-600 });
 			if (bRushing)ani->PlayMontage("rushjump");
 			else ani->PlayMontage("jump");
 			lastJumpTime = GameplayStatics::GetTimeSeconds();
@@ -408,9 +409,18 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		});
 	inputComponent->BindAction("Jumping", EInputType::Holding, [this]() {
 		if (bSitting || bWall) return;
-		if (rigid->GetVelocity().y < 0 && GameplayStatics::GetTimeSeconds() - lastJumpTime < 0.19f)
+		if (rigid->GetVelocity().y < 0 && GameplayStatics::GetTimeSeconds() - lastJumpTime < 0.2f)
 		{
-			bGround = false; ani->SetBool("flying", true); rigid->AddImpulse(FVector2D(0, -5.f / jumpFlag));
+			float delta = GameplayStatics::GetTimeSeconds() - lastJumpTime;
+			bGround = false; ani->SetBool("flying", true); 
+			rigid->AddImpulse(FVector2D(0, -(6.5f - FMath::Log(1 + delta < 0.06f ? 0 : FMath::Abs(rigid->GetVelocity().y)) / FMath::Log(10)) / jumpFlag));
+		}
+		});
+	inputComponent->BindAction("JumpEnd", EInputType::Released, [this]() {
+		if (bSitting || bWall) return;
+		if (rigid->GetVelocity().y < 0 && GameplayStatics::GetTimeSeconds() - lastJumpTime < 0.3f)
+		{
+			rigid->SetVelocity(FVector2D(rigid->GetVelocity().x, rigid->GetVelocity().y * 0.25f));
 		}
 		});
 	inputComponent->BindAction("Attack", EInputType::Pressed, [this]() {

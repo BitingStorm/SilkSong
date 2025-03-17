@@ -79,4 +79,6 @@ private:
 	void Behave();
 
 	void Behave_1();
+
+	FVector2D ClampPosX(FVector2D pos);
 };

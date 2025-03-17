@@ -9,7 +9,7 @@ QuakeParticle::QuakeParticle()
 	particle->SetCapacity(40);
 	particle->SetInterval(0);
 	particle->Load("particle_quake");
-	particle->SetMaxSpeed(1500);
+	particle->SetMaxSpeed(1750);
 	particle->SetMinSpeed(1000);
 	particle->SetPattern(EParticlePattern::Center);
 	particle->SetCenter({200,250}, {80,100});

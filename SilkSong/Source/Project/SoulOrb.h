@@ -9,6 +9,8 @@ class SoulOrb :public Actor, public IDamagable
 public:
 	SoulOrb();
 
+	virtual void BeginPlay()override;
+
 	virtual void Update(float deltaTime)override;
 
 	virtual FDamageCauseInfo TakeDamage(IDamagable* damageCauser, float baseValue, EDamageType damageType)override { return{}; }
@@ -28,4 +30,5 @@ protected:
 	Timer SpawnTimerHandle;
 
 	class Player* player;
+	bool moveLock;
 };

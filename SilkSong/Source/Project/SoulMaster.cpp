@@ -15,6 +15,8 @@
 #include "Wave.h"
 #include "SpatterParticle.h"
 #include "PuffManager.h"
+#include "Gate.h"
+#include "Components/Camera.h"
 
 
 SoulMaster::SoulMaster()
@@ -26,7 +28,7 @@ SoulMaster::SoulMaster()
 		if (player)
 		{
 			SetLocalPosition(FVector2D(player->GetWorldPosition().x, 350));
-			SetLocalPosition(GetWorldPosition().ClampAxes(-990, 990));
+			SetLocalPosition(ClampPosX(GetWorldPosition()));
 		}
 		ani->PlayMontage("startquake");
 		if(state == 0)GameModeHelper::PlayFXSound("sound_soulmaster_cast_" + std::to_string(FMath::RandInt(0, 3))); 
@@ -60,7 +62,7 @@ SoulMaster::SoulMaster()
 	endsummon.SetInterval(0.1f);
 	endsummon.SetReverse(true);
 	startquake.Load("soulmaster_startquake");
-	startquake.SetInterval(0.1f);
+	startquake.SetInterval(0.09f);
 	startquake.AddNotification(7, requake);
 	quake.Load("soulmaster_quake");
 	quake.SetInterval(0.1f);
@@ -128,7 +130,7 @@ SoulMaster::SoulMaster()
 
 	rigid->SetMoveable(false);
 
-	circle->SetRadius(90);
+	circle->SetRadius(100);
 
 	roarTimer = 0;
 	deathShakeTimer = 0;
@@ -163,14 +165,16 @@ void SoulMaster::BeginPlay()
 		}
 		}, true);
 
-	SummonTimerHandle.Bind(2.5f, [this]() {
+	SummonTimerHandle.Bind(2.f, [this]() {
 		ani->PlayMontage("startsummon");
-		GameplayStatics::CreateObject<SoulOrb>(GetWorldPosition() - FVector2D(0, 200));
-		Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() - FVector2D(0, 200));
-		effect->Init("effect_soulspawn"); effect->SetLocalScale(FVector2D(1, 1) * 1.5f);
+
+		FVector2D aim = FVector2D(player->GetWorldPosition().x, 1100) + FVector2D::DegreeToVector(90 +
+			FMath::RandReal(30.f, 60.f) * (FMath::RandPerc() > 0.5 ? 1 : -1)) * 600;
+		aim = ClampPosX(aim);
+		GameplayStatics::CreateObject<SoulOrb>(aim);
 		
 		behaveTimer++;
-		if (behaveTimer % 8 == 0)
+		if (behaveTimer % 6 == 0)
 		{
 			behaviorFlag = 2;
 			ani->PlayMontage("startteleport");
@@ -197,6 +201,14 @@ void SoulMaster::Update(float deltaTime)
 		{
 			SetLocalScale(FVector2D(-GetWorldScale().x, 1));
 			ani->PlayMontage("turn");
+		}
+
+		if (ani->IsPlaying("startquake"))
+		{
+			float delta = player->GetWorldPosition().x - GetWorldPosition().x;
+			delta = FMath::Clamp(delta, -200.f, 200.f);
+			SetLocalPosition(FVector2D(FMath::Lerp(GetWorldPosition().x, GetWorldPosition().x + delta, 0.01f), GetWorldPosition().y));
+			SetLocalPosition(ClampPosX(GetWorldPosition()));
 		}
 	}
 
@@ -275,20 +287,39 @@ void SoulMaster::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor
 	{
 		if (normalImpulse.y < 0)
 		{
-			GameplayStatics::PlayCameraShake(15, 5);
+			GameplayStatics::PlayCameraShake(15 + state, 5);
 			GameplayStatics::CreateObject<Effect>(GetWorldPosition() - FVector2D(0, 80))->Init("effect_soulmaster_quake", 0.01f);
 			GameplayStatics::CreateObject<Effect>(GetWorldPosition() - FVector2D(0, 320))->Init("effect_soulmaster_quake_", 0.01f);
-			GameplayStatics::CreateObject<QuakeParticle>(GetWorldPosition() + FVector2D(0, 350));
 
-			FVector2D waves[6] = { {70, 87},{75, 166},{86, 192},{64, 125},{50, 110},{41, 58} };
-			for (int i = 1; i <= 6; i++)
+			if (state == 0)
 			{
-				FVector2D pos(GetWorldPosition().x, 925);
-				Wave* wave = GameplayStatics::CreateObject<Wave>(pos + FVector2D(-100, 80 - waves[i - 1].y * 0.5f));
-				wave->SetLocalScale(FVector2D(-1, 1));
-				wave->Init(i, waves[i - 1]);
-				wave = GameplayStatics::CreateObject<Wave>(pos + FVector2D(100, 80 - waves[i - 1].y * 0.5f));
-				wave->Init(i, waves[i - 1]);
+				GameplayStatics::CreateObject<QuakeParticle>(GetWorldPosition() + FVector2D(0, 350));
+				FVector2D waves[6] = { {70, 87},{75, 166},{86, 192},{64, 125},{50, 110},{41, 58} };
+				for (int i = 1; i <= 6; i++)
+				{
+					FVector2D pos(GetWorldPosition().x, 925);
+					Wave* wave = GameplayStatics::CreateObject<Wave>(pos + FVector2D(-100, 80 - waves[i - 1].y * 0.5f));
+					wave->SetLocalScale(FVector2D(-1, 1));
+					wave->Init(i, waves[i - 1]);
+					wave = GameplayStatics::CreateObject<Wave>(pos + FVector2D(100, 80 - waves[i - 1].y * 0.5f));
+					wave->Init(i, waves[i - 1]);
+				}
+			}
+			else
+			{
+				if (player && FVector2D::Distance(player->GetWorldPosition(), GetWorldPosition()) < 250.f)
+				{
+					GameModeHelper::ApplyDamage(this, player, 1, EDamageType::Enemy);
+				}
+				for (int i = 0; i < 50; i++)
+				{
+					FVector2D unit = FVector2D::DegreeToVector(FMath::RandReal(0, 180));
+					Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(0, 250) + unit * FMath::RandReal(0, 300));
+					effect->Init("effect_soulorb", FMath::RandReal(-0.01f, 0.01f), FMath::RandReal(350, 700) * unit);
+					effect->GetComponentByClass<SpriteRenderer>()->SetLayer(1);
+					effect->SetLocalScale(FVector2D::UnitVector * FMath::RandReal(0.4f, 1.f));
+					effect->SetLocalRotation(FMath::RandReal(0, 360));
+				}
 			}
 		}
 		ani->PlayMontage("startteleport");
@@ -302,7 +333,7 @@ void SoulMaster::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor
 		else
 		{
 			behaveTimer++;
-			if (behaveTimer % 8 == 0)
+			if (behaveTimer % 6 == 0)
 			{
 				behaviorFlag = 1;
 				SummonTimerHandle.Continue();
@@ -336,7 +367,6 @@ void SoulMaster::Die()
 	SummonTimerHandle.Stop();
 	ani->PlayMontage("startstun");
 	GameModeHelper::PlayFXSound("startdeath");
-	GameModeHelper::PlayFXSound("death");
 	moveSpeed = FVector2D::ZeroVector;
 	GameplayStatics::CreateObject<PuffManager>(GetWorldPosition());
 	GameModeHelper::GetInstance()->GetAudioPlayer(0)->Stop("tearcity_boss_");
@@ -344,9 +374,11 @@ void SoulMaster::Die()
 	DieTimerHandle.Bind(7.f, [this]() {
 		ani->SetNode("die"); rigid->SetMoveable(true); circle->SetRadius(50);
 		GameModeHelper::PlayBGMusic_("tearcity_o");
-		GameModeHelper::PlayBGMusic_("tearcity_i");
+		GameModeHelper::PlayBGMusic("tearcity_i");
 		GameplayStatics::PlayCameraShake(12, 4);
 		rigid->AddImpulse({150.f,500.f});
+		GameplayStatics::FindObjectOfClass<Gate>()->Open();
+		player->GetComponentByClass<Camera>()->SetRectFrame(FRect({ -675.f,-250.f }, { 475.f,690.f }));
 		});
 }
 
@@ -365,7 +397,7 @@ void SoulMaster::Move()
 	}
 	if (behaviorFlag != 1)
 	{
-		aim = aim.ClampAxes(-990, 990);
+		aim = ClampPosX(aim);
 		GameplayStatics::CreateObject<SpatterParticle>()->Init(GetWorldPosition(), aim);
 		SetLocalPosition(aim);
 	}
@@ -385,8 +417,6 @@ void SoulMaster::Behave()
 		{
 			ani->PlayMontage("startsummon");
 			GameplayStatics::CreateObject<SoulOrb>(GetWorldPosition() - FVector2D(0, 200));
-			Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() - FVector2D(0, 200));
-			effect->Init("effect_soulspawn"); effect->SetLocalScale(FVector2D(1, 1) * 1.5f);
 			BehaviorTimerHandle.SetDelay(3.f);
 		}
 		else if (behaviorFlag == 2)
@@ -422,9 +452,10 @@ void SoulMaster::Behave_1()
 	GameplayStatics::PlayCameraShake(7, 5);
 	
 	FVector2D aim = player->GetWorldPosition() + FVector2D::DegreeToVector(FMath::RandReal(10.f, 170.f)) * (500 - deathShakeTimer * 10);
-	aim = aim.ClampAxes(-990, 990);
+	aim = ClampPosX(aim);
 	GameplayStatics::CreateObject<SpatterParticle>()->Init(GetWorldPosition(), aim);
 	SetLocalPosition(aim);
+	GameplayStatics::CreateObject<Effect>(aim)->Init("effect_soulmaster_teleport", -0.02f);
 
 	if ((player->GetWorldPosition() - GetWorldPosition()).x * GetWorldScale().x < 0)
 	{
@@ -443,4 +474,10 @@ void SoulMaster::Behave_1()
 		GameModeHelper::PlayFXSound("sound_soulmaster_roar");
 		GameModeHelper::PlayBGMusic("tearcity_boss_");
 	}
+}
+
+FVector2D SoulMaster::ClampPosX(FVector2D pos)
+{
+	pos.x = FMath::Clamp(pos.x, -600.f, 925.f);
+	return pos;
 }

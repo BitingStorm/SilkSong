@@ -18,6 +18,7 @@ class Level;
   ----------------------------------*/
 class LevelManager
 {
+	friend class World;
 public:
 	void Initialize();
 

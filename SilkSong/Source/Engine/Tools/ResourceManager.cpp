@@ -179,6 +179,9 @@ void ResourceManager::Initialize()
 	Load("tearcity_environment_18", "Asset/Images/Environment/TearCity/_0024_city_break.png", 63, 329);
 	Load("tearcity_environment_19", "Asset/Images/Environment/TearCity/_0021_city_break.png", 114, 410);
 	Load("tearcity_fence", "Asset/Images/Environment/TearCity/ruin_layered_0013_f.png", 225, 180);
+	Load("tearcity_roof", "Asset/Images/Environment/TearCity/ruind_bridge_roof_02_r.png", 608, 624);
+	Load("tearcity_window", "Asset/Images/Environment/TearCity/ruind_window_03.png", 500, 400);
+	Load("tearcity_doorbg", "Asset/Images/Environment/TearCity/ruin_add_doorbg_straight.png", 116, 236);
 
 	Load("tearcity_plat_0", "Asset/Images/PlatForm/TearCity/ruin_plat_float_01.png", 163, 118);
 	Load("tearcity_plat_1", "Asset/Images/PlatForm/TearCity/ruin_plat_float_02.png", 114, 83);
@@ -214,6 +217,7 @@ void ResourceManager::Initialize()
 	Load("wave4", "Asset/Images/Wave/4.png", 70, 130);
 	Load("wave5", "Asset/Images/Wave/5.png", 60, 120);
 	Load("wave6", "Asset/Images/Wave/6.png", 50, 60);
+	Load("gate", "Asset/Images/mines_metal_grate_02.png", 57, 269);
 
 	//UI
 	Load("inventory_item", "Asset/Images/UI/ins_item.png", 60, 60);

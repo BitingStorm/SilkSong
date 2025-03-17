@@ -14,8 +14,6 @@ RuinHouseLevel::RuinHouseLevel()
 	gameMode->RefreshVolume();
 	gameMode->SetVolume(2, 0);
 	GameModeHelper::PlayBGMusic("tearcity_i");
-	gameMode->GetAudioPlayer(0)->Stop("tearcity_boss");
-	gameMode->GetAudioPlayer(0)->Stop("tearcity_boss_");
 	GameplayStatics::CreateObject<LevelTransformer>({ 625,900 })->Init("TearCity", {-900,875}, FRect({ -375.f,-1000.f }, { 1225.f,750.f }));
 	Chair* chair = GameplayStatics::CreateObject<Chair>({ 0,950 });
 

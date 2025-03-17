@@ -363,6 +363,9 @@
     <ClInclude Include="Source\Project\SoulOrb.h">
       <Filter>Project\Enemies\Boss</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Project\Gate.h">
+      <Filter>Project\Enemies\Boss</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Components\ActorComponent.cpp">
@@ -606,6 +609,9 @@
       <Filter>Project\Enemies\Boss</Filter>
     </ClCompile>
     <ClCompile Include="Source\Project\PuffManager.cpp">
+      <Filter>Project\Enemies\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\Gate.cpp">
       <Filter>Project\Enemies\Boss</Filter>
     </ClCompile>
   </ItemGroup>

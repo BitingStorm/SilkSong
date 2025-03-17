@@ -43,10 +43,12 @@ void LevelManager::RefreshLevel()
 {
 	if (level_to_delete)
 	{
+		level_to_delete->OnLevelDelete();
 		mainWorld.WipeData();
 		delete level_to_delete;
 		level_to_delete = nullptr;
 		mainWorld.currentLevel = level_to_create();
+		mainWorld.currentLevel->OnLevelLoad();
 		mainWorld.currentLevel->BeginPlay();
 	}
 }

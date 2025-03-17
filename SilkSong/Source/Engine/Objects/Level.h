@@ -8,12 +8,15 @@
 #pragma once
 #include"CoreMinimal.h"
 #include"GameplayStatics.h"
+#include"Tools/Timer.h"
 
+
+DECLARE_NO_PARAM_MULTICAST_DELEGATE_CLASS(LevelEvent)
 
 /*----------------------------------
 			  ÓÎÏ·¹Ø¿¨
   ----------------------------------*/
-class Level :public Object
+class Level :public Object, public TimerHandler
 {
 	friend GameplayStatics;
 
@@ -29,4 +32,7 @@ public:
 	{
 		callback = [this]() {return mainController = GameplayStatics::CreateObject<T>(); };
 	}
+
+	LevelEvent OnLevelLoad;
+	LevelEvent OnLevelDelete;
 };

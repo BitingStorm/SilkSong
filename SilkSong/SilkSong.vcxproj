@@ -37,6 +37,7 @@
     <ClInclude Include="Source\Project\FragmentParticle.h" />
     <ClInclude Include="Source\Project\GameMode.h" />
     <ClInclude Include="Source\Project\GameModeHelper.h" />
+    <ClInclude Include="Source\Project\Gate.h" />
     <ClInclude Include="Source\Project\Interactive.h" />
     <ClInclude Include="Source\Project\LevelTransformer.h" />
     <ClInclude Include="Source\Project\PlayerPropertyComponent.h" />
@@ -128,6 +129,7 @@
     <ClCompile Include="Source\Project\Chair.cpp" />
     <ClCompile Include="Source\Project\DieParticle.cpp" />
     <ClCompile Include="Source\Project\GameModeHelper.cpp" />
+    <ClCompile Include="Source\Project\Gate.cpp" />
     <ClCompile Include="Source\Project\Interactive.cpp" />
     <ClCompile Include="Source\Project\LevelTransformer.cpp" />
     <ClCompile Include="Source\Project\MenuController.cpp" />

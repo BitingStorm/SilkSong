@@ -31,10 +31,26 @@ SoulOrb::SoulOrb()
 
 	SpawnTimerHandle.Bind(0.08f, [this]() {
 		Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D::DegreeToVector(FMath::RandInt(0, 360)) * 30);
-		effect->Init("effect_soulorb", -0.01f);
+		effect->Init("effect_soulorb", FMath::RandReal(-0.01f, 0.01f));
 		effect->SetLocalScale(FVector2D::UnitVector * FMath::RandReal(0.5f, 1.f));
 		effect->SetLocalRotation(FMath::RandInt(0, 360));
-		}, true);
+		
+		if (moveLock && !GetOwner())
+		{
+			moveLock = false;
+			Effect* effect_ = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
+			effect_->Init("effect_soulspawn"); effect_->SetLocalScale(FVector2D(1, 1) * 1.5f);
+		}
+		}, true, 0.4f);
+
+	moveLock = true;
+
+	SetLocalScale(FVector2D::ZeroVector);
+}
+
+void SoulOrb::BeginPlay()
+{
+	Actor::BeginPlay();
 }
 
 void SoulOrb::Update(float deltaTime)
@@ -49,18 +65,19 @@ void SoulOrb::Update(float deltaTime)
 	if (!player)
 	{
 		player = Cast<Player>(GameplayStatics::GetController());
+
 		for (int i = 0; i < 10; i++)
 		{
 			FVector2D unit = FVector2D::DegreeToVector(FMath::RandReal(0, 360));
-			float real = FMath::RandReal(100, 300);
+			float real = FMath::RandReal(100.f, 300.f);
 			Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + unit * real);
-			effect->Init("effect_soulorb", -0.01f, -unit * real);
+			effect->Init("effect_soulorb", -0.02f + real * 0.0001f, -unit * real * 1.2f);
 			effect->SetLocalScale(FVector2D::UnitVector * FMath::RandReal(0.5f, 1.f));
 			effect->SetLocalRotation(FMath::RandReal(0, 360));
 		}
 	}
 
-	if (player)
+	if (player && !moveLock)
 	{
 		rigid->AddImpulse((player->GetWorldPosition() - GetWorldPosition()).GetSafeNormal() * deltaTime * 1000.f);
 	}
@@ -76,13 +93,14 @@ void SoulOrb::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor, F
 	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
 	effect->Init("effect_soulburst");
 	effect->SetLocalScale(FVector2D(1, 1) + normalImpulse.GetAbs());
+	effect->GetComponentByClass<SpriteRenderer>()->SetLayer(1);
 	Destroy();
 
 	for (int i = 0; i < 20; i++)
 	{
 		FVector2D unit = FVector2D::DegreeToVector(FMath::RandReal(0, 360));
-		Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + unit * FMath::RandReal(0, 200));
-		effect->Init("effect_soulorb", -0.01f, FMath::RandReal(100, 300) * unit);
+		Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + unit * FMath::RandReal(0, 100));
+		effect->Init("effect_soulorb", FMath::RandReal(-0.01f, 0.01f), FMath::RandReal(150, 400) * unit);
 		effect->SetLocalScale(FVector2D::UnitVector * FMath::RandReal(0.2f, 0.8f));
 		effect->SetLocalRotation(FMath::RandReal(0, 360));
 	}

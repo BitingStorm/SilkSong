@@ -18,8 +18,8 @@ void LevelTransformer::OnBeginOverlap(Collider* hitComp, Collider* otherComp, Ac
 {
 	if (Cast<Player>(otherActor))
 	{
-		otherActor->SetLocalPosition(aimPos);
 		GameplayStatics::OpenLevel(aimLevel);
+		otherActor->SetLocalPosition(aimPos);
 		if (Player* player = GameplayStatics::FindObjectOfClass<Player>())
 		{
 			player->GetComponentByClass<Camera>()->SetRectFrame(aimRect);

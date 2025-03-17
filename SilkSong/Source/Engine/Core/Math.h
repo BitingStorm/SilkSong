@@ -131,6 +131,12 @@ struct FMath final
 		return expf(value);
 	}
 
+	//以e为底取对数
+	static FORCEINLINE float Log(float value)
+	{
+		return log(value);
+	}
+
 	//计算正弦值
 	static FORCEINLINE float Sin(float value) 
 	{
@@ -182,7 +188,13 @@ struct FMath final
 	}
 
 
-	//计算线性插值
+	/**
+	 * @brief 计算线性插值
+	 * @param[in] a           原数值
+	 * @param[in] b           目标数值
+	 * @param[in] x           参数值
+	 * @return 最终插值
+	 */
 	template <typename T, typename U>
 	static constexpr FORCEINLINE T Lerp(const T& a, const T& b, const U& alpha)
 	{
