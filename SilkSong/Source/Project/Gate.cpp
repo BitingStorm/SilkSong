@@ -8,6 +8,7 @@ Gate::Gate()
 	render = ConstructComponent<SpriteRenderer>();
 	render->AttachTo(root);
 	render->LoadSprite("gate");
+	render->SetLayer(1);
 
 	box = ConstructComponent<BoxCollider>();
 	box->AttachTo(root);

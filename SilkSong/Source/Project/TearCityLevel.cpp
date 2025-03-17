@@ -20,7 +20,7 @@ TearCityLevel::TearCityLevel()
 	gameMode->SetVolume(2, gameMode->GetVolume(0));
 	GameModeHelper::PlayBGMusic("tearcity_i");
 	GameplayStatics::CreateObject<LevelTransformer>({ -1050, 875 })->Init("RuinHouse", { 550,900 }, FRect({ -100.f,250.f }, { 100.f,750.f }));
-	GameplayStatics::CreateObject<LevelTransformer>({ 1850, 875 })->Init("BossHouse", { -1200,900 }, FRect({ -675.f,-250.f }, { 475.f,690.f }));
+	GameplayStatics::CreateObject<LevelTransformer>({ 1850, 875 })->Init("BossHouse", { -1200,900 }, FRect({ -675.f,-250.f }, { 475.f,675.f }));
 
 	Bg* bg0 = GameplayStatics::CreateObject<Bg>(); bg0->Init("tearcity_0", -30);
 	Bg* bg1 = GameplayStatics::CreateObject<Bg>({ 2500,350 }); bg1->Init("tearcity_1", -20);

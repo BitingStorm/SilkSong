@@ -16,7 +16,7 @@ BossLevel::BossLevel()
 	gameMode->RefreshVolume();
 	gameMode->GetAudioPlayer(0)->Pause("tearcity_i");
 	gameMode->GetAudioPlayer(2)->Pause("tearcity_o");
-	GameplayStatics::CreateObject<LevelTransformer>({ -1325,900 })->Init("TearCity", { 1700,875 }, FRect({ -375.f,-1000.f }, { 1225.f,750.f }));
+	GameplayStatics::CreateObject<LevelTransformer>({ -1325,900 })->Init("TearCity", { 1700,875 }, FRect({ -375.f,-1000.f }, { 1225.f,725.f }));
 
 	Bg* bg0 = GameplayStatics::CreateObject<Bg>(); bg0->Init("tearcity_0", -30);
 	Bg* bg1 = GameplayStatics::CreateObject<Bg>({ 0,1000 }); bg1->Init("tearcity_4", -10);

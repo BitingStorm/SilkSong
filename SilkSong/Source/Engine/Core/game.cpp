@@ -19,6 +19,8 @@
 extern int WIN_WIDTH = GetSystemMetrics(SM_CXSCREEN);
 extern int WIN_HEIGHT = GetSystemMetrics(SM_CYSCREEN);
 
+
+
 /*----------------------------------
 			    引擎
   ----------------------------------*/
@@ -29,10 +31,13 @@ public:
 	{
 		WIN_WIDTH = 1200, WIN_HEIGHT = 800;
 		initgraph(WIN_WIDTH, WIN_HEIGHT);
-		MoveWindow(GetHWnd(), (GetSystemMetrics(SM_CXSCREEN) - WIN_WIDTH) / 2, (GetSystemMetrics(SM_CYSCREEN) - WIN_HEIGHT) / 2, 
-			WIN_WIDTH, WIN_HEIGHT, TRUE);
-		/*setaspectratio(float(WIN_WIDTH)/1200,float(WIN_HEIGHT)/800);*/
-
+		
+		SetWindowLong(GetHWnd(), GWL_STYLE, WS_POPUP);
+		SetWindowPos(GetHWnd(), HWND_TOP, 0, 0, WIN_WIDTH, WIN_HEIGHT, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+		MoveWindow(GetHWnd(), (GetSystemMetrics(SM_CXSCREEN) - WIN_WIDTH) / 2, (GetSystemMetrics(SM_CYSCREEN) - WIN_HEIGHT) / 2,
+			WIN_WIDTH, WIN_HEIGHT, FALSE);
+		/*setaspectratio(float(WIN_WIDTH) / 1200, float(WIN_HEIGHT) / 800);*/
+		 
 		//系统Debug绘制参数
 		setlinestyle(PS_SOLID | PS_JOIN_BEVEL);
 		setfillcolor(LIGHTBLUE);
@@ -43,7 +48,6 @@ public:
 		settextstyle(25, 10, "Arial");
 		settextcolor(WHITE);
 	
-
 		BeginBatchDraw();
 
 
@@ -123,9 +127,10 @@ int main()
 
 #endif
 
+
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
-	
 	Engine::Init();
 	timeSetEvent(1, 0, timecallback, 0, TIME_CALLBACK_FUNCTION | TIME_PERIODIC);
 	Engine::Run();

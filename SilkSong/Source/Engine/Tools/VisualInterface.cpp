@@ -56,9 +56,12 @@ void ImageInterface::FilterImage()
 	DWORD* pNewBuf = GetImageBuffer(filter);
 	int num = img->getheight() * img->getwidth();
 
+	if (!pBuf || !pNewBuf || num == 0) return;
+
 	for (int i = 0; i < num; ++i)
 	{
-		if (pBuf[i] >> 24)
+		int32 alpha = pBuf[i] >> 24;
+		if (alpha)
 		{
 			// 获取BGR
 			uint32 pNewBufB = pBuf[i] & 0xFF;
@@ -68,8 +71,8 @@ void ImageInterface::FilterImage()
 			// 将颜色值进行平均化
 			for (auto& filterInfo : filterLayers)
 			{
-				int level = filterInfo.level;
-				if ((pBuf[i] >> 24) < 255)level = (pBuf[i] >> 24) * level >> 8;//使得颜色滤镜从低透明度到高透明度平滑过渡
+				int32 level = filterInfo.level;
+				if (alpha < 255)level = alpha * level >> 8;//使得颜色滤镜从低透明度到高透明度平滑过渡
 				pNewBufB = (pNewBufB * (128 - level) + level * GetBValue(filterInfo.color)) >> 7;
 				pNewBufG = (pNewBufG * (128 - level) + level * GetGValue(filterInfo.color)) >> 7;
 				pNewBufR = (pNewBufR * (128 - level) + level * GetRValue(filterInfo.color)) >> 7;
