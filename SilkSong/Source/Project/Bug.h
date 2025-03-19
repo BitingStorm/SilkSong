@@ -32,7 +32,6 @@ private:
 	AnimEdge appear_to_walk;
 	AnimEdge walk_to_bury;
 	AnimEdge bury_to_appear;
-	AnimEdge walk_to_die;
 
 	class BoxCollider* currentPlatForm;
 	

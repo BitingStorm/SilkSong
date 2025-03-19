@@ -27,6 +27,8 @@ class Actor :public Object, public TimerHandler
 	std::unordered_set<ActorComponent*>components;
 	std::unordered_set<ActorComponent*>::iterator components_iter;//管理组件的遍历以及增删
 
+	bool bDestroyFlag = false;
+
 protected:
 	SceneComponent* const root = nullptr;//场景根组件，赋予场景属性
 

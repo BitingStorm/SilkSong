@@ -110,18 +110,19 @@ class World final
 	/** 场景对象、UI容器 **/
 
 	std::unordered_set<Actor*>GameActors;
-	std::vector<Actor*>GameActors_to_add;
-	std::unordered_set<Actor*>GameActors_to_delete;
+	std::list<Actor*>GameActors_to_add;
+	std::list<Actor*>GameActors_to_delete;
 	std::unordered_set<UserInterface*>GameUIs;
-	std::vector<UserInterface*>GameUIs_to_add;
-	std::unordered_set<UserInterface*>GameUIs_to_delete;
+	std::deque<UserInterface*>GameUIs_to_add;
+	std::deque<UserInterface*>GameUIs_to_delete;
 
 	/** 场景对象、UI、计时器容器（全局） **/
 
 	std::unordered_set<Actor*>OverallGameActors;
-	std::vector<Actor*>OverallGameActors_to_add;
+	std::list<Actor*>OverallGameActors_to_add;
 	std::unordered_set<UserInterface*>OverallGameUIs;
-	std::vector<UserInterface*>OverallGameUIs_to_add;
+	std::deque<UserInterface*>OverallGameUIs_to_add;
+
 	std::unordered_set<LayerInterface*>OverallRenders;
 	std::unordered_set<Collider*>OverallColliders;
 	std::unordered_set<RigidBody*>OverallRigids;

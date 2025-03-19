@@ -14,9 +14,14 @@ void ActorComponent::SetOwner(Actor* owner)
 
 void ActorComponent::Destruct()
 {
+	if (bDestructFlag)
+	{
+		return;
+	}
 	pOwner->UnregisterComponent(this);
 	EndPlay();
 	delete this;
+	bDestructFlag = true;
 }
 
 void ActorComponent::Activate()

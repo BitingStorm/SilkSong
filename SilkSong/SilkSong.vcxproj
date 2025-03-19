@@ -34,12 +34,14 @@
     <ClInclude Include="Source\Project\DamageResponseComponent.h" />
     <ClInclude Include="Source\Project\DamageStrategy.h" />
     <ClInclude Include="Source\Project\DamageSystem.h" />
+    <ClInclude Include="Source\Project\Fly.h" />
     <ClInclude Include="Source\Project\FragmentParticle.h" />
     <ClInclude Include="Source\Project\GameMode.h" />
     <ClInclude Include="Source\Project\GameModeHelper.h" />
     <ClInclude Include="Source\Project\Gate.h" />
     <ClInclude Include="Source\Project\Interactive.h" />
     <ClInclude Include="Source\Project\LevelTransformer.h" />
+    <ClInclude Include="Source\Project\NightMare.h" />
     <ClInclude Include="Source\Project\PlayerPropertyComponent.h" />
     <ClInclude Include="Source\Project\PropertyCarrier.h" />
     <ClInclude Include="Source\Project\PropertyComponent.h" />
@@ -123,6 +125,7 @@
     <ClCompile Include="Source\Project\DamageResponseComponent.cpp" />
     <ClCompile Include="Source\Project\DamageSystem.cpp" />
     <ClCompile Include="Source\Project\DefaultDamageStrategy.cpp" />
+    <ClCompile Include="Source\Project\Fly.cpp" />
     <ClCompile Include="Source\Project\FragmentParticle.cpp" />
     <ClCompile Include="Source\Project\GameMode.cpp" />
     <ClCompile Include="Source\Engine\Components\WidgetComponent.cpp" />
@@ -139,6 +142,7 @@
     <ClCompile Include="Source\Project\MenuUI.cpp" />
     <ClCompile Include="Source\Project\Needle.cpp" />
     <ClCompile Include="Source\Project\NewTheme.cpp" />
+    <ClCompile Include="Source\Project\NightMare.cpp" />
     <ClCompile Include="Source\Project\OldTheme.cpp" />
     <ClCompile Include="Source\Project\PlayerPropertyComponent.cpp" />
     <ClCompile Include="Source\Project\Pointer.cpp" />

@@ -1,5 +1,6 @@
 #include "TearCityLevel.h"
 #include "Bug.h"
+#include "Fly.h"
 #include "PlatForm.h"
 #include "Bg.h"
 #include "Interactive.h"
@@ -103,10 +104,12 @@ TearCityLevel::TearCityLevel()
 
 	GameplayStatics::CreateObject<Chest>({ 0,68 });
 
-	GameplayStatics::CreateObject<Bug>({ 1000,600 });
-	GameplayStatics::CreateObject<Bug>({ 50,850 });
+	GameplayStatics::CreateObject<Bug>({ 1100,890 })->SetLocalScale({ -1.f,1.f });
 	GameplayStatics::CreateObject<Bug>({ 650,300 });
-	GameplayStatics::CreateObject<Bug>({ -500,850 });
+	GameplayStatics::CreateObject<Bug>({ -500,890 });
+
+	GameplayStatics::CreateObject<Fly>({ 0,800 });
+	GameplayStatics::CreateObject<Fly>({ 450,500 })->SetLocalScale({ -1.f,1.f });
 
 	GameplayStatics::CreateObject<RainProducer>({ 500,-500 });
 }

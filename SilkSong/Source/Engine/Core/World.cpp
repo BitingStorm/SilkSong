@@ -68,18 +68,14 @@ void World::Update(float deltaTime)
 
 		for (auto& obj : OverallGameActors_to_add)
 		{
-			auto it = std::find(GameActors_to_add.begin(), GameActors_to_add.end(), obj);
-			if (it != GameActors_to_add.end())
-			{
-				GameActors_to_add.erase(it);
-			}
-			mainWorld.GameActors.erase(obj);
-			mainWorld.OverallGameActors.insert(obj);
+			GameActors.erase(obj);
+			OverallGameActors.insert(obj);
 		}
 		OverallGameActors_to_add.clear();
 
 		for (auto& obj : GameActors_to_delete)
 		{
+			obj->EndPlay();
 			GameActors.erase(obj);
 			OverallGameActors.erase(obj);//全局对象数量很少，不必额外判断obj是否是全局对象以节省时间
 			delete obj;
@@ -101,13 +97,8 @@ void World::Update(float deltaTime)
 
 		for (auto& obj : OverallGameUIs_to_add)
 		{
-			auto it = std::find(GameUIs_to_add.begin(), GameUIs_to_add.end(), obj);
-			if (it != GameUIs_to_add.end())
-			{
-				GameUIs_to_add.erase(it);
-			}
-			mainWorld.GameUIs.erase(obj);
-			mainWorld.OverallGameUIs.insert(obj);
+			GameUIs.erase(obj);
+			OverallGameUIs.insert(obj);
 		}
 		OverallGameUIs_to_add.clear();
 

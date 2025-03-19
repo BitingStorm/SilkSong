@@ -80,13 +80,18 @@ void Actor::UnregisterComponent(ActorComponent* pCom)
 
 void Actor::Destroy()
 {
+	if (bDestroyFlag)
+	{
+		return;
+	}
+
 	if (parent)parent->children.erase(this);
 
 	std::stack<Actor*>objects_to_delete;
 	objects_to_delete.push(this);
-	this->EndPlay();
 
-	while (!objects_to_delete.empty()) {
+	while (!objects_to_delete.empty())
+	{
 		Actor* current_object = objects_to_delete.top();
 		objects_to_delete.pop();
 
@@ -97,9 +102,10 @@ void Actor::Destroy()
 				objects_to_delete.push(child);
 			}
 		}
-		mainWorld.GameActors_to_delete.insert(current_object);
-		current_object->EndPlay();
+		mainWorld.GameActors_to_delete.push_back(current_object);
 	}
+
+	bDestroyFlag = true;
 }
 
 const FVector2D& Actor::GetLocalPosition() const

@@ -37,7 +37,7 @@ Player::Player()
 	ani->SetupAttachment(render);
 
 	box = GetComponentByClass<BoxCollider>();
-	box->SetSize({40,130});
+	box->SetSize({30,130});
 	box->SetLocalPosition({-5,10});
 	box->SetCollisonMode(CollisionMode::Collision);
 	box->SetType(CollisionType::Player);

@@ -33,8 +33,6 @@ Bug::Bug()
 	walk_to_bury.AddCondition(AnimTransition::Bool{ "burying",true });
 	bury_to_appear.Init(bury, appear);
 	bury_to_appear.AddCondition(AnimTransition::Bool{ "burying",false });
-	walk_to_die.Init(walk, die);
-	walk_to_die.AddCondition(AnimTransition::Bool{ "dead",true });
 
 
 	ani->Insert("walk", walk);
@@ -45,7 +43,6 @@ Bug::Bug()
 	ani->SetNode("walk");
 
 	ani->AddParamater("burying", ParamType::Bool);
-	ani->AddParamater("dead", ParamType::Bool);
 
 	StateUpdateTimerHandle.Bind(3.f, [this]() {
 		if (player && rigid->GetVelocity().y == 0 && !IsDead())
@@ -104,7 +101,6 @@ void Bug::Update(float deltaTime)
 	}
 
 	ani->SetBool("burying", bIsBuried);
-	ani->SetBool("dead", IsDead());
 
 	if (bIsBuried || IsDead())return;
 
@@ -184,5 +180,7 @@ void Bug::SpawnGeos()
 void Bug::Die()
 {
 	Super::Die();
+
+	ani->SetNode("die");
 	GameModeHelper::PlayFXSound("sound_bug_die");
 }

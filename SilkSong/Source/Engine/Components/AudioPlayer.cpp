@@ -49,7 +49,7 @@ void AudioPlayer::SetVolume(int32 vol)
 
 void AudioPlayer::Play(string name, bool repeat)
 {
-	if (paths.find(name) ==  paths.end())paths.insert(name);
+	if (paths.find(name) == paths.end())paths.insert(name);
 
 	if (repeat && IsPlaying(name)) {}
 	else mciSendString((string("seek ") + name + string(" to start")).c_str(), 0, 0, 0);

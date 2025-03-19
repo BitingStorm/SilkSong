@@ -40,17 +40,38 @@ SoulOrb::SoulOrb()
 			moveLock = false;
 			Effect* effect_ = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
 			effect_->Init("effect_soulspawn"); effect_->SetLocalScale(FVector2D(1, 1) * 1.5f);
+			render->Activate();
 		}
 		}, true, 0.4f);
 
 	moveLock = true;
 
 	SetLocalScale(FVector2D::ZeroVector);
+
+	render->Deactivate();
 }
 
 void SoulOrb::BeginPlay()
 {
 	Actor::BeginPlay();
+
+	player = Cast<Player>(GameplayStatics::GetController());
+
+	if (GetOwner())
+	{
+		render->Activate();
+		return;
+	}
+
+	for (int i = 0; i < 10; i++)
+	{
+		FVector2D unit = FVector2D::DegreeToVector(FMath::RandReal(0, 360));
+		float real = FMath::RandReal(100.f, 300.f);
+		Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + unit * real);
+		effect->Init("effect_soulorb", -0.02f + real * 0.0001f, -unit * real * 1.2f);
+		effect->SetLocalScale(FVector2D::UnitVector * FMath::RandReal(0.5f, 1.f));
+		effect->SetLocalRotation(FMath::RandReal(0, 360));
+	}
 }
 
 void SoulOrb::Update(float deltaTime)
@@ -60,21 +81,6 @@ void SoulOrb::Update(float deltaTime)
 	if (GetOwner())
 	{
 		return;
-	}
-
-	if (!player)
-	{
-		player = Cast<Player>(GameplayStatics::GetController());
-
-		for (int i = 0; i < 10; i++)
-		{
-			FVector2D unit = FVector2D::DegreeToVector(FMath::RandReal(0, 360));
-			float real = FMath::RandReal(100.f, 300.f);
-			Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + unit * real);
-			effect->Init("effect_soulorb", -0.02f + real * 0.0001f, -unit * real * 1.2f);
-			effect->SetLocalScale(FVector2D::UnitVector * FMath::RandReal(0.5f, 1.f));
-			effect->SetLocalRotation(FMath::RandReal(0, 360));
-		}
 	}
 
 	if (player && !moveLock)

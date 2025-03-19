@@ -22,6 +22,8 @@ class UserInterface : public Object, public TimerHandler
 	std::unordered_set<Widget*>widgets;
 	std::unordered_set<UserInterface*>userInterfaces;
 
+	bool bRemoveFlag = false;
+
 	void BeginPlay()override {}
 	void EndPlay()override {}
 

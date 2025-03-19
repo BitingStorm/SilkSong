@@ -95,6 +95,11 @@ void ResourceManager::Initialize()
 	Load("menu_warning", "Asset/Animations/UI/Warning/", 767, 64, 7);
 
 	//Enemy
+	Load("fly_idle", "Asset/Animations/Enemy/Fly/Idle/", 120, 135, 5);
+	Load("fly_turn", "Asset/Animations/Enemy/Fly/Turn/", 120, 151, 2);
+	Load("fly_die", "Asset/Animations/Enemy/Fly/Die/", 142, 108, 3);
+	Load("fly_startchase", "Asset/Animations/Enemy/Fly/StartChase/", 149, 151, 4);
+	Load("fly_chase", "Asset/Animations/Enemy/Fly/Chase/", 146, 134, 4);
 	Load("bug_walk", "Asset/Animations/Enemy/Bug/Walk/", 90, 84, 4);
 	Load("bug_turn", "Asset/Animations/Enemy/Bug/Turn/", 87, 82, 3);
 	Load("bug_appear", "Asset/Animations/Enemy/Bug/Appear/", 109, 110, 5);
@@ -113,6 +118,9 @@ void ResourceManager::Initialize()
 	Load("soulmaster_stun", "Asset/Animations/Enemy/SoulMaster/Stun/", 125, 262, 6);
 	Load("soulmaster_transition", "Asset/Animations/Enemy/SoulMaster/Transition/", 180, 246, 3);
 	Load("soulmaster_die", "Asset/Animations/Enemy/SoulMaster/Die/", { {226,146}, {226,146}, {226,146}, {260,135}, {260,135}, {260,135}, {260,135} });
+	Load("nightmare_idle", "Asset/Animations/Enemy/NightMare/Idle/", 202, 400, 12);
+	Load("nightmare_bow", "Asset/Animations/Enemy/NightMare/Bow/", 250, 405, 7);
+	
 
 	//Water
 	Load("water_fountain", "Asset/Animations/WaterFalls/", 31, 188, 10);
@@ -302,6 +310,11 @@ void ResourceManager::Initialize()
 	Load("sound_bug_appear", "Asset/Sounds/Bug/appear.mp3");
 	Load("sound_bug_appear_", "Asset/Sounds/Bug/appear_.mp3");
 	Load("sound_bug_die", "Asset/Sounds/Bug/die.mp3");
+
+	//Fly
+	Load("sound_fly_chase_0", "Asset/Sounds/Fly/chase_0.mp3");
+	Load("sound_fly_chase_1", "Asset/Sounds/Fly/chase_1.mp3");
+	Load("sound_fly_die", "Asset/Sounds/Fly/die.mp3");
 
 	//Boss
 	Load("sound_soulmaster_roar", "Asset/Sounds/SoulMaster/roar.mp3");

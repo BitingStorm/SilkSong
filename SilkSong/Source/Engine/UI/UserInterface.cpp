@@ -55,12 +55,17 @@ void UserInterface::HideFromViewport()
 
 void UserInterface::RemoveFromViewport()
 {
+	if (bRemoveFlag)
+	{
+		return;
+	}
 	OnRemovedFromViewport.BroadCast();
-	mainWorld.GameUIs_to_delete.insert(this);
+	mainWorld.GameUIs_to_delete.push_back(this);
 	for (auto& ui : userInterfaces)
 	{
 		ui->RemoveFromViewport();
 	}
+	bRemoveFlag = true;
 }
 
 void UserInterface::AttachTo(UserInterface* aim)

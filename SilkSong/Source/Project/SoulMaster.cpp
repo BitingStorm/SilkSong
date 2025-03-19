@@ -307,7 +307,7 @@ void SoulMaster::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor
 			}
 			else
 			{
-				if (player && FVector2D::Distance(player->GetWorldPosition(), GetWorldPosition()) < 250.f)
+				if (player && FVector2D::Distance(player->GetWorldPosition(), GetWorldPosition()) < 275.f)
 				{
 					GameModeHelper::ApplyDamage(this, player, 1, EDamageType::Enemy);
 				}
