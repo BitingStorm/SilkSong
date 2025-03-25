@@ -49,6 +49,4 @@ protected:
 	Actor* pOwner = nullptr;//处理控制逻辑
 
 	bool bIsEnabled = true;//是否激活
-
-	bool bDestructFlag = false;//删除标记
 };

@@ -43,6 +43,9 @@ namespace Math
 		//绝对值化
 		FORCEINLINE void MakeAbs();
 
+		//归零化, 将绝对值过小的值视作零
+		FORCEINLINE void MakeZero(T tolerance = AE_KINDA_SMALL_NUMBER);
+
 		/**
 		 * @brief 获取单位向量
 		 * @param[in] tolerance 对于待归一化的向量，所能接受其平方和的最小阈值
@@ -272,6 +275,13 @@ namespace Math
 	{
 		x = FMath::Abs(x);
 		y = FMath::Abs(y);
+	}
+
+	template<typename T>
+	FORCEINLINE void TVector2<T>::MakeZero(T tolerance)
+	{
+		x = FMath::Abs(x) < tolerance ? T(0) : x;
+		y = FMath::Abs(y) < tolerance ? T(0) : y;
 	}
 
 	template<typename T>

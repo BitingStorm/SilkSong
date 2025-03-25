@@ -23,6 +23,11 @@ bool InputComponent::IsAnyKeyPressed()
 	}
 }
 
+bool InputComponent::IsKeyPressed(EKeyCode keycode)
+{
+	return GetAsyncKeyState(int(keycode)) & 0x8000;
+}
+
 FVector2D InputComponent::GetMousePosition()
 {
 	return bActive ? mousePos : FVector2D{};

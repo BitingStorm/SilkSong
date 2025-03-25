@@ -24,6 +24,7 @@ public:
 
 private:
 	class BoxCollider* box;
+	Timer AttackTimerHandle;
 	Timer DestroyTimerHandle;
 	ECharacterDirection direction;
 	int32 damage;

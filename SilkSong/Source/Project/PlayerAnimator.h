@@ -40,6 +40,7 @@ private:
 	Animation attackup;
 	Animation attackdown;
 	Animation attackbounce;
+	Animation rushattack;
 	Animation evade;
 	Animation dash;
 	Animation airdash;
@@ -81,8 +82,10 @@ private:
 	AnimEdge attackdown_to_idle;
 	AnimEdge attackdown_to_attackbounce;
 	AnimEdge attackbounce_to_idle;
+	AnimEdge rushattack_to_rush;
 	AnimEdge idle_to_fall;
 	AnimEdge walk_to_fall;
+	AnimEdge rush_to_fall;
 	AnimEdge fall_to_hardland;
 	AnimEdge fall_to_softland;
 	AnimEdge fall_to_idle;

@@ -71,7 +71,7 @@ public:
 
 	void Defend(bool enable);
 
-	void Scare(bool enable);
+	void Scare(bool enable, std::string anim = "");
 
 protected:
 	virtual void SetupInputComponent(InputComponent* inputComponent)override;

@@ -25,4 +25,52 @@ protected:
 private:
 	Animation idle;
 	Animation bow;
+	Animation startteleport;
+	Animation endteleport;
+	Animation startspike;
+	Animation spike;
+	Animation startballoon;
+	Animation balloon;
+	Animation cast;
+	Animation startairdash;
+	Animation airdash;
+	Animation startdash;
+	Animation dash;
+	Animation startslash;
+	Animation slash;
+	Animation startuppercut;
+	Animation uppercut;
+
+	AnimEdge startteleport_to_endteleport;
+	AnimEdge endteleport_to_idle;
+	AnimEdge startspike_to_spike;
+	AnimEdge startballoon_to_balloon;
+	AnimEdge startairdash_to_airdash;
+	AnimEdge startdash_to_dash;
+	AnimEdge startslash_to_slash;
+	AnimEdge slash_to_startuppercut;
+	AnimEdge startuppercut_to_uppercut;
+
+	AnimationDelegate spawnBall;
+
+	class BoxCollider* box;
+
+	Timer BowTimerHandle;
+	Timer BehaviorTimerHandle;
+	Timer TeleportTimerHandle;
+	Timer CastTimerHandle;
+	Timer BalloonTimerHandle;
+	int32 balloonSpawnFlag = 0;
+	int32 castTimer = 0;
+	int32 behaviorFlag = 0;
+
+	int32 stunTimer;
+
+	void Move();
+
+	void Behave();
+
+	void SpawnBall();
+
+	FVector2D ClampPosX(FVector2D pos);
 };

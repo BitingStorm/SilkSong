@@ -102,7 +102,7 @@ void Actor::Destroy()
 				objects_to_delete.push(child);
 			}
 		}
-		mainWorld.GameActors_to_delete.push_back(current_object);
+		mainWorld.GameActors_to_delete.insert(current_object);
 	}
 
 	bDestroyFlag = true;

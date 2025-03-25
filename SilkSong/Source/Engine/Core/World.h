@@ -111,10 +111,10 @@ class World final
 
 	std::unordered_set<Actor*>GameActors;
 	std::list<Actor*>GameActors_to_add;
-	std::list<Actor*>GameActors_to_delete;
+	std::unordered_set<Actor*>GameActors_to_delete;
 	std::unordered_set<UserInterface*>GameUIs;
 	std::deque<UserInterface*>GameUIs_to_add;
-	std::deque<UserInterface*>GameUIs_to_delete;
+	std::unordered_set<UserInterface*>GameUIs_to_delete;
 
 	/** 场景对象、UI、计时器容器（全局） **/
 

@@ -60,7 +60,7 @@ void UserInterface::RemoveFromViewport()
 		return;
 	}
 	OnRemovedFromViewport.BroadCast();
-	mainWorld.GameUIs_to_delete.push_back(this);
+	mainWorld.GameUIs_to_delete.insert(this);
 	for (auto& ui : userInterfaces)
 	{
 		ui->RemoveFromViewport();

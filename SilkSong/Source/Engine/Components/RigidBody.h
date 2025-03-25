@@ -78,5 +78,5 @@ private:
 	std::unordered_set<Collider*> colliders;
 
 	//ÔË¶¯Ä£Äâ
-	void RestrictVelocity(FVector2D impactNormal, const FPhysicsMaterial& material, RigidBody* another = nullptr);
+	void RestrictVelocity(FVector2D impactNormal, const FPhysicsMaterial& material, RigidBody* another = nullptr, bool isStay = false);
 };

@@ -65,7 +65,7 @@ void RigidBody::PreciseUpdate(float deltaTime)
 		{
 			if (another->mode != CollisionMode::Collision)continue;
 			FHitResult hitResult = collider->CollisionHit(another);
-			RestrictVelocity(-hitResult.ImpactNormal, FPhysicsMaterial::Combine(collider->material, another->material), another->rigidAttached);
+			RestrictVelocity(-hitResult.ImpactNormal, FPhysicsMaterial::Combine(collider->material, another->material), another->rigidAttached, true);
 		}
 	}
 
@@ -78,7 +78,7 @@ void RigidBody::RegisterDontDestroy()
 	mainWorld.OverallRigids.insert(this);
 }
 
-void RigidBody::RestrictVelocity(FVector2D impactNormal, const FPhysicsMaterial& material, RigidBody* another)
+void RigidBody::RestrictVelocity(FVector2D impactNormal, const FPhysicsMaterial& material, RigidBody* another, bool isStay)
 {
 	FVector2D tangentVector = { impactNormal.y, -impactNormal.x };
 
@@ -97,7 +97,7 @@ void RigidBody::RestrictVelocity(FVector2D impactNormal, const FPhysicsMaterial&
 		{
 			float multiplier = 1.f - normalVelocity.Size() * friction * FMath::InvSqrt(tangentVelocity.SizeSquared());
 			multiplier = FMath::Clamp(multiplier, 0.0f, 1.0f);
-			velocity = tangentVelocity * multiplier - bounciness * normalVelocity;
+			velocity = tangentVelocity * multiplier - bounciness * (isStay ? FVector2D::ZeroVector : normalVelocity);
 		}
 		return;
 	}

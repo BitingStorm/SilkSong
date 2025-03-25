@@ -14,12 +14,12 @@ Animated::Animated()
 void Animated::Init(std::string name, float delay, int layer)
 {
 	idle.Load(name);
-	idle.SetIndex(FMath::RandInt(0,9));
+	idle.SetIndex(FMath::RandInt(0, 9));
 	idle.SetInterval(delay);
 
 	ani->Insert("idle", idle);
 	ani->SetNode("idle");
 
 	render->SetLayer(layer);
-	render->SetLocalScale(FVector2D(1, 1) + FVector2D(0.05, 0)*layer);
+	render->SetLocalScale(FVector2D(1, 1) + FVector2D(0.05, 0) * layer);
 }

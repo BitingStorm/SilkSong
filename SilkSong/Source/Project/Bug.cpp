@@ -121,7 +121,7 @@ void Bug::Update(float deltaTime)
 			&& delta * GetLocalScale().x > 0)
 		{
 			rigid->SetVelocity(-rigid->GetVelocity());
-			AddPosition(rigid->GetVelocity() * deltaTime);
+			AddPosition(rigid->GetVelocity() * deltaTime * 2);
 			SetLocalScale({ -GetLocalScale().x,GetLocalScale().y });
 			ani->PlayMontage("turn");
 		}

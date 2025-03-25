@@ -98,6 +98,10 @@ struct FMath final
 	//快速取开根的倒数
 	static FORCEINLINE float InvSqrt(float inValue)
 	{
+		if (inValue == 0.f)
+		{
+			return 0.f;
+		}
 		const __m128 One = _mm_set_ss(1.0f);
 		const __m128 Y0 = _mm_set_ss(inValue);
 		const __m128 X0 = _mm_sqrt_ss(Y0);

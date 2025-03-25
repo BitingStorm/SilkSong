@@ -45,7 +45,7 @@ Player::Player()
 
 	hurtBox = ConstructComponent<BoxCollider>();
 	hurtBox->AttachTo(root);
-	hurtBox->SetSize({ 30,100 });
+	hurtBox->SetSize({ 36,110 });
 	hurtBox->SetLocalPosition({ -5,10 });
 	hurtBox->SetType(CollisionType::HurtBox);
 
@@ -254,16 +254,18 @@ void Player::Update(float deltaTime)
 
 	if (GetMovementState() != ECharacterMovementState::Running)
 	{
-		GameModeHelper::GetInstance()->GetAudioPlayer(0)->Stop("sound_swim");
-		GameModeHelper::GetInstance()->GetAudioPlayer(0)->Stop("sound_waterwalk");
+		GameModeHelper::GetInstance()->GetAudioPlayer(1)->Stop("sound_swim");
+		GameModeHelper::GetInstance()->GetAudioPlayer(1)->Stop("sound_waterwalk");
+		GameModeHelper::GetInstance()->GetAudioPlayer(1)->Stop("sound_rush");
 	}
 
 	ani->SetFloat("walkingSpeed", FMath::Abs(rigid->GetVelocity().x));
 	ani->SetFloat("landingSpeed", -1.f);
 	ani->SetFloat("fallingSpeed", rigid->GetVelocity().y);
-	if (GetHealth() > 1 || IsAnyKeyPressed())
-	{ 
-		ani->SetBool("lowHealth", false); 
+	if (GetHealth() > 1 || rigid->GetVelocity() != FVector2D::ZeroVector 
+		|| !ani->IsPlaying("lowhealth") || direction != ECharacterDirection::LookForward)
+	{
+		ani->SetBool("lowHealth", false);
 	}
 
 	if (bEvading)
@@ -435,9 +437,17 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 			switch (direction)
 			{
 				case ECharacterDirection::LookForward:
-					if (attackFlag == 0)ani->PlayMontage("attack_0");
-					else ani->PlayMontage("attack_1");
-					attackBox->SetLocalPosition(FVector2D(70, 0));
+					if (bRushing && FMath::Abs(rigid->GetVelocity().x) > 500.f)
+					{
+						ani->PlayMontage("rushattack");
+						attackBox->SetLocalPosition(FVector2D(110, 0));
+					}
+					else
+					{
+						if (attackFlag == 0)ani->PlayMontage("attack_0");
+						else ani->PlayMontage("attack_1");
+						attackBox->SetLocalPosition(FVector2D(60, 0));
+					}
 					break;
 				case ECharacterDirection::LookUp:
 					ani->PlayMontage("attackup"); attackBox->SetLocalPosition(FVector2D(20, 0));
@@ -485,6 +495,10 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 			else if (playerProperty->GetSilk() >= 4)
 			{
 				AddSilk(-4); AddHealth(1);
+			}
+			else
+			{
+				return;
 			}
 			ani->PlayMontage("cure");
 			camera->SetSpringArmLength(19); camera->ShakeCamera(5, 2);
@@ -534,7 +548,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		if (bSitting || bWall || !bGround || playerProperty->GetSilk() < 2) return;
 		AddSilk(-2);
 		ani->PlayMontage("defendstart");
-		GameModeHelper::PlayFXSound("sound_swordhit");
+		GameModeHelper::PlayFXSound("sound_defend");
 		});
 }
 
@@ -546,7 +560,7 @@ void Player::OnEnter(Collider* hitComp, Collider* otherComp, Actor* otherActor, 
 		return;
 	}
 
-	if (normalImpulse.y < 0)
+	if (normalImpulse.y < 0 && rigid->GetVelocity().y > 0)
 	{
 		bGround = true; ani->SetBool("flying", false);
 		ani->SetFloat("landingSpeed", rigid->GetVelocity().y);
@@ -560,7 +574,7 @@ void Player::OnEnter(Collider* hitComp, Collider* otherComp, Actor* otherActor, 
 	{
 		if (BoxCollider* platform = Cast<BoxCollider>(otherComp))
 		{
-			float delta_y = platform->GetWorldPosition().y - platform->GetSize().y * 0.5f - (GetWorldPosition().y + box->GetSize().y * 0.5f);
+			float delta_y = platform->GetWorldPosition().y - platform->GetSize().y * 0.5f - (box->GetWorldPosition().y + box->GetSize().y * 0.5f);
 			if (delta_y > -box->GetSize().y)
 			{
 				rigid->SetGravityEnabled(false);
@@ -585,13 +599,13 @@ void Player::OnStay(Collider* hitComp, Collider* otherComp, Actor* otherActor, F
 	{
 		bGround = true; ani->SetBool("flying", false);
 	}
-	else if (normalImpulse.x != 0 && !bWall && !bGround && !bDashing && 
+	else if (normalImpulse.x != 0 && !bWall && !bGround && !bDashing &&
 		((walkLock == 1 && normalImpulse.x == 1) || (walkLock == 2 && normalImpulse.x == -1)) && rigid->GetVelocity().y >= 0)
 	{
 		if (BoxCollider* platform = Cast<BoxCollider>(otherComp))
 		{
-			if (platform->GetWorldPosition().y - platform->GetSize().y * 0.5f < GetWorldPosition().y - box->GetSize().y * 0.5f
-				&& platform->GetWorldPosition().y + platform->GetSize().y * 0.5f > GetWorldPosition().y + box->GetSize().y * 0.5f)
+			if (platform->GetWorldPosition().y - platform->GetSize().y * 0.5f < box->GetWorldPosition().y - box->GetSize().y * 0.5f
+				&& platform->GetWorldPosition().y + platform->GetSize().y * 0.5f > box->GetWorldPosition().y + box->GetSize().y * 0.5f)
 			{
 				bWall = true;
 				ani->SetNode("wall");
@@ -630,7 +644,7 @@ void Player::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 	if (extraInfo.realValue == 0)
 	{
 		ani->PlayMontage("defendattack");
-		GameModeHelper::PlayFXSound("sound_defend");
+		GameModeHelper::PlayFXSound("sound_counter");
 		Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(0.f, 35.f));
 		effect->Init("effect_counter");
 		effect->SetLocalScale(GetWorldScale());
@@ -817,6 +831,7 @@ void Player::Recover()
 	AddHealth(5);
 	AddSilk(9);
 	AddDart(15);
+	camera->SetRectFrame(FRect({ -100.f,250.f }, { 100.f,750.f }));
 }
 
 void Player::SitDown()
@@ -830,7 +845,7 @@ void Player::SitDown()
 		particle->SetIsLoop(false);
 		SetLocalPosition(chair->GetWorldPosition() - FVector2D{ 0,30 });
 		bSitting = true; ani->SetNode("sitdown"); blinkTimes = 1;
-		GameModeHelper::PlayFXSound("sound_heal"); ui->WhiteBlink(3);
+		GameModeHelper::PlayFXSound("sound_rest"); ui->WhiteBlink(3);
 		GameplayStatics::CreateObject<SitParticle>(GetWorldPosition() + FVector2D(0, 45));
 		Effect* effect = GameplayStatics::CreateObject<Effect>(FVector2D(-20, 0));
 		effect->Init("effect_sit", -0.02f);
@@ -870,9 +885,9 @@ void Player::Defend(bool enable)
 	damageResponse->SetStrategy(enable ? new DamageStrategy() : new DefaultDamageStrategy());
 }
 
-void Player::Scare(bool enable)
+void Player::Scare(bool enable, std::string anim)
 {
-	enable ? ani->SetNode("scare") : ani->SetNode("idle");
+	enable ? ani->SetNode(anim) : ani->SetNode("idle");
 }
 
 void Player::SpawnWetLandEffect() const

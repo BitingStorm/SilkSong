@@ -75,12 +75,13 @@ MenuUI::MenuUI()
 			Effect* effect = GameplayStatics::CreateObject<Effect>(pos);
 			effect->SetLocalScale(FVector2D(0.75, 0.75));
 			effect->Init("menuhit", -0.03f);
-			GameModeHelper::PlayFXSound("sound_button_confirm");
 			startFlag = i + 1;
 			for (auto& obj : GameplayStatics::FindObjectsOfClass<Pointer>())
 			{
 				obj->FadeOut();
 			}
+			if (i == 0) GameModeHelper::PlayFXSound("sound_save");
+			GameModeHelper::PlayFXSound("sound_button_confirm");
 			});
 
 		Options[i] = AddWidget<Text>();

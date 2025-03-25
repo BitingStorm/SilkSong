@@ -28,6 +28,7 @@ protected:
 	Animator* ani;
 	Animation idle;
 	Timer SpawnTimerHandle;
+	Timer EndTimerHandle;
 
 	class Player* player;
 	bool moveLock;

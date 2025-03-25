@@ -48,9 +48,11 @@ void ImageInterface::FilterImage()
 {
 	if (!sprite)return;
 
-	IMAGE* img = copy ? copy : sprite;
+	IMAGE* img = (copy && angle) ? copy : sprite;
 	if (!filter)filter = new IMAGE(img->getwidth(), img->getheight());
 	filter->Resize(img->getwidth(), img->getheight());
+
+	if (!filter) return;
 
 	const DWORD* pBuf = GetImageBuffer(img);
 	DWORD* pNewBuf = GetImageBuffer(filter);

@@ -28,6 +28,7 @@ Geo::Geo()
 	rigid = ConstructComponent<RigidBody>();
 
 	box->OnComponentBeginOverlap.AddDynamic(this, &Geo::OnOverlap);
+	box->OnComponentHit.AddDynamic(this, &Geo::OnHit);
 
 	rotateDelta = 0.005f;
 }
@@ -63,6 +64,14 @@ void Geo::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherActor)
 		effect->SetLocalScale(FVector2D(1, 1) * FMath::RandReal(1.25f + FMath::Sqrt(float(price)) * 0.1f, 1.5f + FMath::Sqrt(float(price)) * 0.1f));
 		effect->SetLocalRotation(FMath::RandReal(-20, 20));
 		effect->AttachTo(player);
-		GameModeHelper::PlayFXSound("sound_geo");
+		GameModeHelper::PlayFXSound("sound_geo_" + std::to_string(FMath::RandInt(0, 1)));
+	}
+}
+
+void Geo::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor, FVector2D normalImpulse, const FHitResult& hitResult)
+{
+	if (normalImpulse.y < 0)
+	{
+		GameModeHelper::PlayFXSound("sound_geo_hitground_" + std::to_string(FMath::RandInt(0, 1)));
 	}
 }

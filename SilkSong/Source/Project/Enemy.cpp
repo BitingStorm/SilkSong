@@ -47,6 +47,11 @@ void Enemy::BeginPlay()
 	Super::BeginPlay();
 
 	circle->OnComponentBeginOverlap.AddDynamic(this, &Enemy::OnOverlap);
+
+	if (!player)
+	{
+		player = GameplayStatics::FindObjectOfClass<Player>();
+	}
 }
 
 void Enemy::Update(float deltaTime)

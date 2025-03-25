@@ -14,4 +14,3 @@ public:
 	Timer ShakeTimerHandle;
 	int32 shakeTimer = 0;
 };
-

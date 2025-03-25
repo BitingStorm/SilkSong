@@ -79,6 +79,12 @@
     <Filter Include="Project\Enemies\Boss">
       <UniqueIdentifier>{88b2a1c8-8b01-468c-b9b5-3733e5371f8b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\Enemies\Boss\NightMare">
+      <UniqueIdentifier>{89cf8a3c-2471-4e80-a19e-9af0f3553d8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Enemies\Boss\SoulMaster">
+      <UniqueIdentifier>{40482fb9-44e7-480f-86b6-8938948355af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\Components\ActorComponent.h">
@@ -339,28 +345,7 @@
     <ClInclude Include="Source\Project\BossLevel.h">
       <Filter>Project\Levels</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Project\QuakeParticle.h">
-      <Filter>Project\Enemies\Boss</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Project\RoarEffect.h">
-      <Filter>Project\Enemies\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Project\SoulMaster.h">
-      <Filter>Project\Enemies\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Project\SoulOrbManager.h">
-      <Filter>Project\Enemies\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Project\Wave.h">
-      <Filter>Project\Enemies\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Project\SpatterParticle.h">
-      <Filter>Project\Enemies\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Project\PuffManager.h">
-      <Filter>Project\Enemies\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Project\SoulOrb.h">
       <Filter>Project\Enemies\Boss</Filter>
     </ClInclude>
     <ClInclude Include="Source\Project\Gate.h">
@@ -369,8 +354,53 @@
     <ClInclude Include="Source\Project\Fly.h">
       <Filter>Project\Enemies</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Project\GrimmLevel.h">
+      <Filter>Project\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\Torch.h">
+      <Filter>Project\Items</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Project\NightMare.h">
+      <Filter>Project\Enemies\Boss\NightMare</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\PuffManager.h">
       <Filter>Project\Enemies\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\QuakeParticle.h">
+      <Filter>Project\Enemies\Boss\SoulMaster</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\SoulMaster.h">
+      <Filter>Project\Enemies\Boss\SoulMaster</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\SoulOrb.h">
+      <Filter>Project\Enemies\Boss\SoulMaster</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\SoulOrbManager.h">
+      <Filter>Project\Enemies\Boss\SoulMaster</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\SpatterParticle.h">
+      <Filter>Project\Enemies\Boss\SoulMaster</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\Wave.h">
+      <Filter>Project\Enemies\Boss\SoulMaster</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\Spike.h">
+      <Filter>Project\Enemies\Boss\NightMare</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\GrimmSmoke.h">
+      <Filter>Project\Enemies\Boss\NightMare</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\FireBat.h">
+      <Filter>Project\Enemies\Boss\NightMare</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\FireBall.h">
+      <Filter>Project\Enemies\Boss\NightMare</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\SkyFire.h">
+      <Filter>Project\Enemies\Boss\NightMare</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\Brumm.h">
+      <Filter>Project\Enemies</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -593,28 +623,7 @@
     <ClCompile Include="Source\Project\BossLevel.cpp">
       <Filter>Project\Levels</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Project\QuakeParticle.cpp">
-      <Filter>Project\Enemies\Boss</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Project\RoarEffect.cpp">
-      <Filter>Project\Enemies\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Project\SoulMaster.cpp">
-      <Filter>Project\Enemies\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Project\SoulOrbManager.cpp">
-      <Filter>Project\Enemies\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Project\Wave.cpp">
-      <Filter>Project\Enemies\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Project\SpatterParticle.cpp">
-      <Filter>Project\Enemies\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Project\SoulOrb.cpp">
-      <Filter>Project\Enemies\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Project\PuffManager.cpp">
       <Filter>Project\Enemies\Boss</Filter>
     </ClCompile>
     <ClCompile Include="Source\Project\Gate.cpp">
@@ -623,7 +632,52 @@
     <ClCompile Include="Source\Project\Fly.cpp">
       <Filter>Project\Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Project\GrimmLevel.cpp">
+      <Filter>Project\Levels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\Torch.cpp">
+      <Filter>Project\Items</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Project\NightMare.cpp">
+      <Filter>Project\Enemies\Boss\NightMare</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\PuffManager.cpp">
+      <Filter>Project\Enemies\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\QuakeParticle.cpp">
+      <Filter>Project\Enemies\Boss\SoulMaster</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\SoulMaster.cpp">
+      <Filter>Project\Enemies\Boss\SoulMaster</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\SoulOrb.cpp">
+      <Filter>Project\Enemies\Boss\SoulMaster</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\SoulOrbManager.cpp">
+      <Filter>Project\Enemies\Boss\SoulMaster</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\SpatterParticle.cpp">
+      <Filter>Project\Enemies\Boss\SoulMaster</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\Wave.cpp">
+      <Filter>Project\Enemies\Boss\SoulMaster</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\Spike.cpp">
+      <Filter>Project\Enemies\Boss\NightMare</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\GrimmSmoke.cpp">
+      <Filter>Project\Enemies\Boss\NightMare</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\FireBat.cpp">
+      <Filter>Project\Enemies\Boss\NightMare</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\FireBall.cpp">
+      <Filter>Project\Enemies\Boss\NightMare</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\SkyFire.cpp">
+      <Filter>Project\Enemies\Boss\NightMare</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\Brumm.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

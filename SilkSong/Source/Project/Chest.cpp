@@ -92,7 +92,7 @@ void Chest::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 		else geo->Init("25geo", 25);
 	}
 	GameplayStatics::PlayCameraShake(5);
-	GameModeHelper::PlayFXSound("sound_blockhit");
+	GameModeHelper::PlayFXSound("sound_geo_rockhit_" + std::to_string(FMath::RandInt(0, 2)));
 
 	if (property->GetHealth() <= 0)
 	{

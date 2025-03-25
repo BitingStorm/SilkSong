@@ -1,8 +1,7 @@
 #include "PlayerAnimator.h"
 #include "Player.h"
 #include "GameplayStatics.h"
-#include "Components/AudioPlayer.h"
-
+#include "GameModeHelper.h"
 
 
 PlayerAnimator::PlayerAnimator()
@@ -39,6 +38,8 @@ PlayerAnimator::PlayerAnimator()
 	attackdown.SetInterval(0.06f);
 	attackbounce.Load("player_attackbounce");
 	attackbounce.SetInterval(0.05f);
+	rushattack.Load("player_rushattack");
+	rushattack.SetInterval(0.03f);
 	evade.Load("player_evade");
 	evade.SetInterval(0.08f);
 	dash.Load("player_dash", { 0,10 });
@@ -83,7 +84,7 @@ PlayerAnimator::PlayerAnimator()
 	defendend.SetInterval(0.1f);
 	defendattack.Load("player_defendattack");
 	defendattack.SetInterval(0.1f);
-	scare.Load("player_scare");
+	scare.Load("player_scare", { 0,5.f });
 	scare.SetInterval(0.1f);
 
 	Insert("idle", idle);
@@ -101,6 +102,7 @@ PlayerAnimator::PlayerAnimator()
 	Insert("attackup", attackup);
 	Insert("attackdown", attackdown);
 	Insert("attackbounce", attackbounce);
+	Insert("rushattack", rushattack);
 	Insert("softland", softland);
 	Insert("evade", evade);
 	Insert("dash", dash);
@@ -166,6 +168,7 @@ void PlayerAnimator::BeginPlay()
 	attackdown_to_attackbounce.Init(attackdown, attackbounce);
 	attackdown_to_attackbounce.AddCondition(AnimTransition::Bool{ "validDownAttack",true });
 	attackbounce_to_idle.Init(attackbounce, idle);
+	rushattack_to_rush.Init(rushattack, rush);
 	jump_to_fall.Init(jump, fall);
 	rushjump_to_fall.Init(rushjump, fall);
 	evade_to_idle.Init(evade, idle);
@@ -198,6 +201,8 @@ void PlayerAnimator::BeginPlay()
 
 	walk_to_fall.Init(walk, fall);
 	walk_to_fall.AddCondition(AnimTransition::Bool{ "flying",true });
+	rush_to_fall.Init(rush, fall);
+	rush_to_fall.AddCondition(AnimTransition::Bool{ "flying",true });
 
 	fall_to_hardland.Init(fall, hardland);
 	fall_to_hardland.AddCondition(AnimTransition::Float{ "landingSpeed",1200.f,TransitionComparison::Greater });
@@ -242,14 +247,25 @@ void PlayerAnimator::BeginPlay()
 		hurt.OnAnimExit.Bind([=]() {player->EnableInput(true); });
 		hurtPause.Bind([]() {GameplayStatics::Pause(0.25f); GameplayStatics::PlayCameraShake(7, 5); });
 		hurt.AddNotification(1, hurtPause);
-		walk.OnAnimEnter.Bind([=]() {
-			AudioPlayer* audio = player->GetComponentByClass<AudioPlayer>();
-			if (!audio)return;
-			if (player->GetWorldPosition().y > 1000)audio->Play("sound_swim", true);
-			else audio->Play("sound_waterwalk", true);
+		walk.OnAnimEnter.Bind([=]() 
+			{
+				if (player->GetWorldPosition().y > 1000)GameModeHelper::GetInstance()->GetAudioPlayer(1)->Play("sound_swim", true);
+				else GameModeHelper::GetInstance()->GetAudioPlayer(1)->Play("sound_waterwalk", true);
 			});
 		walk.AddNotification(2, wetWalkEffect);
 		walk.AddNotification(6, wetWalkEffect);
+		rush.OnAnimEnter.Bind([=]()
+			{
+				if (player->GetWorldPosition().y > 1000)return;
+				GameModeHelper::GetInstance()->GetAudioPlayer(1)->Stop("sound_waterwalk");
+				GameModeHelper::GetInstance()->GetAudioPlayer(1)->Play("sound_rush", true);
+			});
+		rush.OnAnimExit.Bind([=]()
+			{
+				GameModeHelper::GetInstance()->GetAudioPlayer(1)->Stop("sound_rush");
+			});
+		rush.AddNotification(3, wetWalkEffect);
+		rush.AddNotification(7, wetWalkEffect);
 		closeskill.OnAnimExit.Bind([=]() {player->SetFloating(false); });
 		throw_.AddNotification(3, dartSpawn);
 		grab.AddNotification(4, grabFinished);
@@ -263,8 +279,6 @@ void PlayerAnimator::BeginPlay()
 		leave.OnAnimExit.Bind([=]() {player->LeaveUp(); });
 		leave.AddNotification(3, leaveStart);
 		wall.OnAnimExit.Bind([=]() {player->LeaveWall(); });
-		/*defendstart.OnAnimEnter.Bind([=]() {player->Defend(true); });
-		defendstart.OnAnimExit.Bind([=]() {player->Defend(false); });*/
 		defend.OnAnimEnter.Bind([=]() {player->Defend(true); });
 		defend.OnAnimExit.Bind([=]() {player->Defend(false); });
 		defendPause.Bind([=]() {GameplayStatics::Pause(0.25f); GameplayStatics::PlayCameraShake(7, 5); player->AddSilk(3); });

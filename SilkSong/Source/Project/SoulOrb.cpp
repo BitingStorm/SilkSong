@@ -17,14 +17,13 @@ SoulOrb::SoulOrb()
 	render->LoadSprite("soul_orb");
 
 	rigid = ConstructComponent<RigidBody>();
-	rigid->SetLinearDrag(0.5f);
+	rigid->SetLinearDrag(0.7f);
 	rigid->SetGravityEnabled(false);
 
 	circle = ConstructComponent<CircleCollider>();
 	circle->AttachTo(root);
 	circle->SetCollisonMode(CollisionMode::Collision);
 	circle->SetType(CollisionType::Bullet);
-	circle->SetPhysicsMaterial(FPhysicsMaterial(0.5f, 0.5f));
 	circle->SetRadius(30);
 
 	circle->OnComponentHit.AddDynamic(this, &SoulOrb::OnHit);
@@ -63,6 +62,8 @@ void SoulOrb::BeginPlay()
 		return;
 	}
 
+	EndTimerHandle.Bind(3.5f, [this]() {OnHit(nullptr, nullptr, nullptr, FVector2D::UnitVector, {});});
+
 	for (int i = 0; i < 10; i++)
 	{
 		FVector2D unit = FVector2D::DegreeToVector(FMath::RandReal(0, 360));
@@ -85,7 +86,7 @@ void SoulOrb::Update(float deltaTime)
 
 	if (player && !moveLock)
 	{
-		rigid->AddImpulse((player->GetWorldPosition() - GetWorldPosition()).GetSafeNormal() * deltaTime * 1000.f);
+		rigid->AddImpulse((player->GetWorldPosition() - GetWorldPosition()).GetSafeNormal() * deltaTime * 1400.f);
 	}
 }
 

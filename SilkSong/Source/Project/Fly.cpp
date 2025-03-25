@@ -17,9 +17,9 @@ Fly::Fly()
 	turn.Load("fly_turn");
 	turn.SetInterval(0.1f);
 	startchase.Load("fly_startchase");
-	startchase.SetInterval(0.1f);
+	startchase.SetInterval(0.08f);
 	chase.Load("fly_chase");
-	chase.SetInterval(0.1f);
+	chase.SetInterval(0.08f);
 	die.Load("fly_die");
 	die.SetInterval(0.1f);
 	die.SetLooping(false);
@@ -113,11 +113,12 @@ void Fly::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 	CHECK_PTR(causer)
 		FVector2D normal = (GetWorldPosition() - causer->GetWorldPosition()).GetSafeNormal();
 	float delta_x = causer->GetWorldPosition().x - GetWorldPosition().x;
+	normal.x = FMath::Clamp(normal.x, 0.2f, 1.f);
 
 	rigid->AddImpulse(normal * 350.f);
 	if (property->GetHealth() <= 0)
 	{
-		rigid->SetAngularVelocity(100 * (delta_x > 0 ? 1.f : -1.f) * GetWorldScale().x);
+		rigid->SetAngularVelocity(200 * (delta_x > 0 ? 1.f : -1.f) * GetWorldScale().x);
 	}
 }
 

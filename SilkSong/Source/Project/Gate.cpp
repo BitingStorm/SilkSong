@@ -1,6 +1,7 @@
 #include "Gate.h"
 #include "Components/Collider.h"
 #include "Components/SpriteRenderer.h"
+#include "GameModeHelper.h"
 
 
 Gate::Gate()
@@ -14,6 +15,7 @@ Gate::Gate()
 	box->AttachTo(root);
 	box->SetType(CollisionType::Block);
 	box->SetSize({ 50,250 });
+	box->SetCollisonMode(CollisionMode::Collision);
 }
 
 void Gate::Update(float deltaTime)
@@ -24,12 +26,12 @@ void Gate::Update(float deltaTime)
 
 void Gate::Open()
 {
-	box->SetCollisonMode(CollisionMode::None);
 	AddPosition({ 0,-200 });
+	GameModeHelper::PlayFXSound("sound_gate_open");
 }
 
 void Gate::Close()
 {
-	box->SetCollisonMode(CollisionMode::Collision);
 	AddPosition({ 0,200 });
+	GameModeHelper::PlayFXSound("sound_gate_close");
 }

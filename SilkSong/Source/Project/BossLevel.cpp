@@ -10,6 +10,7 @@
 #include "Components/Camera.h"
 
 
+
 BossLevel::BossLevel()
 {
 	GameMode* gameMode = GameModeHelper::GetInstance();
@@ -27,7 +28,7 @@ BossLevel::BossLevel()
 	GameplayStatics::CreateObject<Bg>({ -785,890 })->Init("tearcity_doorbg", -1);
 	GameplayStatics::CreateObject<Gate>({ -780,690 });
 
-	PlatForm* plat = GameplayStatics::CreateObject<PlatForm>({ 0,1075 }); plat->Init("tearcity_glassfloor", { 1500,154 }, {});
+	GameplayStatics::CreateObject<PlatForm>({ 0,1075 })->Init("tearcity_glassfloor", { 1500,154 }, {});
 	GameplayStatics::CreateObject<PlatForm>({ -1265,1030 })->Init("tearcity_additions", { 346,64 }, {});
 	GameplayStatics::CreateObject<PlatForm>({ -925,1030 })->Init("tearcity_additions", { 346,64 }, {});
 	GameplayStatics::CreateObject<PlatForm>({ 925,1030 })->Init("tearcity_additions", { 346,64 }, {});
@@ -74,7 +75,7 @@ void BossLevel::Update(float deltaTime)
 			{ 
 				master = GameplayStatics::CreateObject<SoulMaster>({ 200,600 });
 				GameModeHelper::PlayBGMusic("tearcity_boss"); 
-				player->Scare(true);
+				player->Scare(true, "scare");
 				player->EnableInput(false);
 				player->GetComponentByClass<Camera>()->SetRectFrame(FRect({ -400.f,-250.f }, { 475.f,690.f }));
 				ShakeTimerHandle.Stop();

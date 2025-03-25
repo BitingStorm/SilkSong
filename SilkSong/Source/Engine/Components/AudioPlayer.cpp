@@ -11,7 +11,7 @@ AudioPlayer::~AudioPlayer()
 {
 	for (auto& obj : paths)
 	{
-		mciSendString((string("close ") + obj).c_str(), 0, 0, 0);
+		mciSendString((string("stop ") + obj).c_str(), 0, 0, 0);
 	}
 }
 

@@ -93,6 +93,9 @@ public:
 	//是否有任何按键被按下
 	static bool IsAnyKeyPressed();
 
+	//某按键是否被按下
+	static bool IsKeyPressed(EKeyCode keycode);
+
 	//获取鼠标屏幕坐标
 	static FVector2D GetMousePosition();
 	

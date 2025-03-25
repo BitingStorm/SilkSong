@@ -50,6 +50,9 @@ public:
 	//是否有任何按键被按下
 	bool IsAnyKeyPressed() const;
 
+	//是否有按键被按下
+	bool IsKeyPressed(EKeyCode keycode) const;
+
 	/**
 	 * @brief 获取鼠标所处位置物体的信息（该物体必须拥有碰撞体）
 	 * @return  FHitResult 世界坐标系下鼠标所处位置最顶层的物体信息

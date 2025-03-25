@@ -14,10 +14,12 @@ AttackBox::AttackBox()
 {
 	box = ConstructComponent<BoxCollider>();
 	box->AttachTo(root);
-	box->SetSize({ 200,150 });
+	box->SetSize({ 220,150 });
 	box->SetType(CollisionType::HurtBox);
+	box->SetCollisonMode(CollisionMode::None);
 
-	DestroyTimerHandle.Bind(0.05f, [this]() {Destroy(); }, false);
+	AttackTimerHandle.Bind(0.03f, [this]() {box->SetCollisonMode(CollisionMode::Trigger); }, false);
+	DestroyTimerHandle.Bind(0.08f, [this]() {Destroy(); }, false);
 
 	box->OnComponentBeginOverlap.AddDynamic(this, &AttackBox::OnOverlap);
 	box->OnComponentEndOverlap.AddDynamic(this, &AttackBox::OnEndOverlap);
@@ -28,13 +30,13 @@ void AttackBox::Init(ECharacterDirection direction, int32 damage)
 	this->direction = direction;
 	if (direction == ECharacterDirection::LookUp)
 	{
-		box->SetSize({ 100, 200 });
-		box->AddPosition({ 0, -50 });
+		box->SetSize({ 100, 220 });
+		box->AddPosition({ 0, -70 });
 	}
 	else if (direction == ECharacterDirection::LookDown)
 	{
-		box->SetSize({ 100, 125 });
-		box->AddPosition({ 0, 50 });
+		box->SetSize({ 75, 130 });
+		box->AddPosition({ 0, 65 });
 	}
 	this->damage = damage;
 }

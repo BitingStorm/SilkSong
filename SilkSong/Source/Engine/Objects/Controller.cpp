@@ -51,6 +51,11 @@ bool Controller::IsAnyKeyPressed() const
 	return InputComponent::IsAnyKeyPressed();
 }
 
+bool Controller::IsKeyPressed(EKeyCode keycode) const
+{
+	return InputComponent::IsKeyPressed(keycode);
+}
+
 FHitResult Controller::GetHitResultUnderCursor() const
 {
 	FVector2D pos = GetCursorPosition();

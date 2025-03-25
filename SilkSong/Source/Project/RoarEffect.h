@@ -10,6 +10,8 @@ public:
 
 	virtual void Update(float deltaTime)override;
 
+	void SetWhite();
+
 protected:
 	class SpriteRenderer* render;
 };

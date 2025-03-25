@@ -22,3 +22,8 @@ void RoarEffect::Update(float deltaTime)
 		Destroy();
 	}
 }
+
+void RoarEffect::SetWhite()
+{
+	render->LoadSprite("roar_effect_white");
+}

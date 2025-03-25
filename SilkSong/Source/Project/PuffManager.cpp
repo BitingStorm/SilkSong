@@ -6,9 +6,9 @@
 PuffManager::PuffManager()
 {
 	SpawnTimerHandle.Bind(0.02f, [this]() {
-		if (spawnTimer == 0)
+		if (spawnTimer == 25)
 		{
-			GameModeHelper::PlayFXSound("sound_rumble");
+			GameModeHelper::PlayFXSound("sound_boss_gushing");
 		}
 		Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
 		effect->Init("effect_puff", 0, FMath::RandReal(200 + spawnTimer * 2, 300 + spawnTimer * 3) * FVector2D::DegreeToVector(FMath::RandReal(0, 360)));
@@ -30,8 +30,6 @@ PuffManager::PuffManager()
 			}
 			GameplayStatics::CreateObject<Effect>(GetWorldPosition())->Init("effect_splat");
 		Destroy(); 
-		GameModeHelper::PlayFXSound("sound_rumble");
 		GameModeHelper::PlayFXSound("sound_explode");
-		GameModeHelper::PlayFXSound("sound_scream");
 		}, false);
 }

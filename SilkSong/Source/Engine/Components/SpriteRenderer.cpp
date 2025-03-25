@@ -37,7 +37,7 @@ void SpriteRenderer::Render()
 
 	float multi_w = FMath::Abs(GetWorldScale().x) * multi_sa, multi_h = FMath::Abs(GetWorldScale().y) * multi_sa;
 
-	IMAGE* img = copy ? copy : sprite;
+	IMAGE* img = (copy && angle) ? copy : sprite;
 	if (filterLayers.size() > 0 && filter)img = filter;
 
 	float draw_x = pos.x - multi_w * img->getwidth() * 0.5f, draw_y = pos.y - multi_h * img->getheight() * 0.5f;
@@ -74,7 +74,7 @@ void SpriteRenderer::Update(float deltaTime)
 	/**
 	 * Í¼Ïñ±ä»»´¦ÀíÂß¼­
 	 **/
-	IMAGE* img = copy ? copy : sprite;
+	IMAGE* img = (copy && angle) ? copy : sprite;
 	spriteInfo.size = FIntVector2(img->getwidth(), img->getheight());
 	
 	if (GetWorldRotation() != angle)
@@ -108,7 +108,7 @@ void SpriteRenderer::Blink(float duration, COLORREF color, int32 level)
 		blinkFlag = true; isBlinking = true;
 		blinkFilter = { color, level,1 };
 		transistionLevel = float(level);
-		transistionCoefficient = 2 * transistionLevel / duration; 
+		transistionCoefficient = 2 * transistionLevel / duration;
 		if (!recoverTimerHandle)recoverTimerHandle = new Timer;
 		recoverTimerHandle->Bind(duration / 2, [this]() {blinkFlag = false; });
 	}

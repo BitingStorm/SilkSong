@@ -11,6 +11,7 @@
 #include "MenuLevel.h"
 #include "RuinHouseLevel.h"
 #include "BossLevel.h"
+#include "GrimmLevel.h"
 
 
 void LevelManager::Initialize()
@@ -22,6 +23,7 @@ void LevelManager::Initialize()
 	AddLevel<TearCityLevel>("TearCity");
 	AddLevel<RuinHouseLevel>("RuinHouse");
 	AddLevel<BossLevel>("BossHouse");
+	AddLevel<GrimmLevel>("GrimmTent");
 	SetDefaultLevel("Menu");
 
 //*********                             **********
