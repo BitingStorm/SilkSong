@@ -142,6 +142,9 @@ void ResourceManager::Initialize()
 	Load("nightmare_slash", "Asset/Animations/Enemy/NightMare/Slash/", { {506,280}, {418,294}, {495,274}, {380,306}, {380,306}, {380,306} });
 	Load("nightmare_startuppercut", "Asset/Animations/Enemy/NightMare/StartUpperCut/", 330, 248, 3);
 	Load("nightmare_uppercut", "Asset/Animations/Enemy/NightMare/UpperCut/", 254, 500, 2);
+	Load("nightmare_stun", "Asset/Animations/Enemy/NightMare/Stun/", { {184,286}, {184,286}, {386,390}, {386,390}, {386,390}, {301,279}, {301,279} });
+	Load("nightmare_fly", "Asset/Animations/Enemy/NightMare/Fly/", 113, 126, 3);
+	Load("nightmare_die", "Asset/Animations/Enemy/NightMare/Die/", 189, 282, 3);
 
 
 	//Water
@@ -314,6 +317,7 @@ void ResourceManager::Initialize()
 	Load("grimmtent", "Asset/Sounds/grimmtent.mp3");
 	Load("nightmare", "Asset/Sounds/nightmare.mp3");
 	Load("bossdefeat", "Asset/Sounds/bossdefeat.mp3");
+	Load("bossdefeat_", "Asset/Sounds/bossdefeat_.mp3");
 	Load("accordion", "Asset/Sounds/accordion.mp3");
 
 	//Player
@@ -431,6 +435,11 @@ void ResourceManager::Initialize()
 	Load("sound_skyflame", "Asset/Sounds/NightMare/sky_flame.mp3");
 	Load("sound_sword_0", "Asset/Sounds/NightMare/sword_0.mp3");
 	Load("sound_sword_1", "Asset/Sounds/NightMare/sword_1.mp3");
+	Load("sound_nightmare_explode", "Asset/Sounds/NightMare/explode_into_bats.mp3");
+	Load("sound_nightmare_circling", "Asset/Sounds/NightMare/bats_circling.mp3");
+	Load("sound_nightmare_appear", "Asset/Sounds/NightMare/appear.mp3");
+	Load("sound_nightmare_reform", "Asset/Sounds/NightMare/bats_reform.mp3");
+	Load("sound_nightmare_defeat", "Asset/Sounds/NightMare/defeat.mp3");
 
 
 	Load("sound_boss_gushing", "Asset/Sounds/boss_gushing.mp3");

@@ -86,6 +86,7 @@
     <ClInclude Include="Source\Project\SilkParticle.h" />
     <ClInclude Include="Source\Project\SitParticle.h" />
     <ClInclude Include="Source\Project\SkyFire.h" />
+    <ClInclude Include="Source\Project\SmokeParticle.h" />
     <ClInclude Include="Source\Project\SoulMaster.h" />
     <ClInclude Include="Source\Project\SoulOrb.h" />
     <ClInclude Include="Source\Project\SoulOrbManager.h" />
@@ -206,6 +207,7 @@
     <ClCompile Include="Source\Project\SilkParticle.cpp" />
     <ClCompile Include="Source\Project\SitParticle.cpp" />
     <ClCompile Include="Source\Project\SkyFire.cpp" />
+    <ClCompile Include="Source\Project\SmokeParticle.cpp" />
     <ClCompile Include="Source\Project\SoulMaster.cpp" />
     <ClCompile Include="Source\Project\SoulOrb.cpp" />
     <ClCompile Include="Source\Project\SoulOrbManager.cpp" />

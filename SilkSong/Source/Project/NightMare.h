@@ -40,6 +40,9 @@ private:
 	Animation slash;
 	Animation startuppercut;
 	Animation uppercut;
+	Animation stun;
+	Animation fly;
+	Animation die;
 
 	AnimEdge startteleport_to_endteleport;
 	AnimEdge endteleport_to_idle;
@@ -50,8 +53,10 @@ private:
 	AnimEdge startslash_to_slash;
 	AnimEdge slash_to_startuppercut;
 	AnimEdge startuppercut_to_uppercut;
+	AnimEdge stun_to_fly;
 
 	AnimationDelegate spawnBall;
+	AnimationDelegate dieShake;
 
 	class BoxCollider* box;
 
@@ -60,11 +65,14 @@ private:
 	Timer TeleportTimerHandle;
 	Timer CastTimerHandle;
 	Timer BalloonTimerHandle;
+	Timer RecoverTimerHandle;
+	Timer DieTimerHandle;
 	int32 balloonSpawnFlag = 0;
 	int32 castTimer = 0;
 	int32 behaviorFlag = 0;
 
 	int32 stunTimer;
+	int32 balloonTimer;
 
 	void Move();
 

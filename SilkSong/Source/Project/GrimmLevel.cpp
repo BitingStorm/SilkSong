@@ -30,8 +30,7 @@ GrimmLevel::GrimmLevel()
 	GameplayStatics::CreateObject<PlatForm>({ -300,300 })->Init("", { 100,400 }, {});
 
 
-	GameplayStatics::CreateObject<Bg>({ -1600,300 }, 0.f, { 1.2f, 1.2f })->Init("grimmtent_bg", -4, true);
-	GameplayStatics::CreateObject<Bg>({ -450,300 }, 0.f, { -1.f, 1.f })->Init("grimmtent_bg", -5, true); 
+	GameplayStatics::CreateObject<Bg>({ -1050,300 }, 0.f, { -1.f, 1.f })->Init("grimmtent_bg", -5, true); 
 	GameplayStatics::CreateObject<Bg>({ 1350,800 })->Init("grimmtent_extrance");
 	GameplayStatics::CreateObject<Bg>({ 1400,820 })->Init("grimmtent_extrance_front", 5, false, false);
 	GameplayStatics::CreateObject<Bg>({ 1330,875 })->Init("grimmtent_extrance_light", 2, false, false);
@@ -93,6 +92,7 @@ GrimmLevel::GrimmLevel()
 		gameMode->GetAudioPlayer(0)->Stop("grimmtent");
 		gameMode->GetAudioPlayer(0)->Stop("nightmare");
 		gameMode->GetAudioPlayer(1)->Stop("sound_nightmare_fireballs");
+		gameMode->GetAudioPlayer(1)->Stop("sound_nightmare_circling");
 		});
 }
 

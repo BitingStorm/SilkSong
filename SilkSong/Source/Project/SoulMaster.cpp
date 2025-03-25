@@ -256,7 +256,7 @@ void SoulMaster::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 		RecoverTimerHandle.Continue();
 		RecoverTimerHandle.Bind(4.f, [this]() {ani->SetTrigger("recover"); BehaviorTimerHandle.Continue(); });
 		moveSpeed = FVector2D::ZeroVector;
-		GameplayStatics::PlayCameraShake(7);
+		GameplayStatics::PlayCameraShake(7, 5);
 	}
 
 	//½øÈë¶þ½×¶Î
