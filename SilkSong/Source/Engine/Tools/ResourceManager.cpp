@@ -145,6 +145,7 @@ void ResourceManager::Initialize()
 	Load("nightmare_stun", "Asset/Animations/Enemy/NightMare/Stun/", { {184,286}, {184,286}, {386,390}, {386,390}, {386,390}, {301,279}, {301,279} });
 	Load("nightmare_fly", "Asset/Animations/Enemy/NightMare/Fly/", 113, 126, 3);
 	Load("nightmare_die", "Asset/Animations/Enemy/NightMare/Die/", 189, 282, 3);
+	Load("nightmare_scream", "Asset/Animations/Enemy/NightMare/Scream/", 308, 262, 3);
 
 
 	//Water
@@ -440,6 +441,8 @@ void ResourceManager::Initialize()
 	Load("sound_nightmare_appear", "Asset/Sounds/NightMare/appear.mp3");
 	Load("sound_nightmare_reform", "Asset/Sounds/NightMare/bats_reform.mp3");
 	Load("sound_nightmare_defeat", "Asset/Sounds/NightMare/defeat.mp3");
+	Load("sound_nightmare_scream", "Asset/Sounds/NightMare/scream.mp3");
+	Load("sound_nightmare_deflate", "Asset/Sounds/NightMare/balloon_deflate.mp3");
 
 
 	Load("sound_boss_gushing", "Asset/Sounds/boss_gushing.mp3");

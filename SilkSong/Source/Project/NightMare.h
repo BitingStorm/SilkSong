@@ -43,6 +43,7 @@ private:
 	Animation stun;
 	Animation fly;
 	Animation die;
+	Animation scream;
 
 	AnimEdge startteleport_to_endteleport;
 	AnimEdge endteleport_to_idle;

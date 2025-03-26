@@ -21,7 +21,7 @@ SkyFire::SkyFire()
 	particle = ConstructComponent<ParticleSystem>();
 	particle->AttachTo(root);
 	particle->SetCapacity(10);
-	particle->SetInterval(0.03);
+	particle->SetInterval(0.02);
 	particle->Load("particle_flame_i");
 	particle->SetPattern(EParticlePattern::Line);
 	particle->SetLine(10, 0);
@@ -32,7 +32,7 @@ SkyFire::SkyFire()
 	particle_ = ConstructComponent<ParticleSystem>();
 	particle_->AttachTo(root);
 	particle_->SetCapacity(10);
-	particle_->SetInterval(0.03);
+	particle_->SetInterval(0.02);
 	particle_->Load("particle_flame_o");
 	particle->SetPattern(EParticlePattern::Line);
 	particle->SetLine(20, 0, 10, true);

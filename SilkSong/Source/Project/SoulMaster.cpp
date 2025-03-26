@@ -167,7 +167,7 @@ void SoulMaster::BeginPlay()
 
 	SummonTimerHandle.Bind(2.f, [this]() {
 		ani->PlayMontage("startsummon");
-
+		GameModeHelper::PlayFXSound("sound_soulmaster_slash");
 		FVector2D aim = FVector2D(player->GetWorldPosition().x, 1100) + FVector2D::DegreeToVector(90 +
 			FMath::RandReal(30.f, 60.f) * (FMath::RandPerc() > 0.5 ? 1 : -1)) * 600;
 		aim = ClampPosX(aim);
@@ -372,7 +372,8 @@ void SoulMaster::Die()
 	GameplayStatics::CreateObject<PuffManager>(GetWorldPosition());
 	GameModeHelper::GetInstance()->GetAudioPlayer(0)->Stop("tearcity_boss_");
 
-	DieTimerHandle.Bind(7.f, [this]() {
+	DieTimerHandle.Bind(7.f, [this]() 
+		{
 		ani->SetNode("die"); rigid->SetMoveable(true); circle->SetRadius(50);
 		GameModeHelper::GetInstance()->GetAudioPlayer(0)->Play("bossdefeat");
 		GameplayStatics::PlayCameraShake(12, 4);

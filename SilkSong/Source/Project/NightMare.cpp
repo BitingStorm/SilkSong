@@ -138,7 +138,8 @@ NightMare::NightMare()
 	die.SetInterval(0.08f);
 	dieShake.Bind([]() {GameplayStatics::PlayCameraShake(4, 3); });
 	die.AddNotification(1, dieShake);
-
+	scream.Load("nightmare_scream", {0,35});
+	scream.SetInterval(0.08f);
 
 	startteleport_to_endteleport.Init(startteleport, endteleport);
 	endteleport_to_idle.Init(endteleport, idle);
@@ -171,6 +172,7 @@ NightMare::NightMare()
 	ani->Insert("stun", stun);
 	ani->Insert("fly", fly);
 	ani->Insert("die", die);
+	ani->Insert("scream", scream);
 	ani->SetNode("endteleport");
 
 	render_death->SetTransparency(100);
@@ -189,7 +191,6 @@ void NightMare::BeginPlay()
 
 	BowTimerHandle.Bind(3.f, [this]() {
 		ani->SetNode("bow");
-		behaviorFlag = FMath::RandInt(1, 4);
 		GameModeHelper::PlayBGMusic("nightmare");
 		if (player)
 		{
@@ -200,7 +201,7 @@ void NightMare::BeginPlay()
 
 	BehaviorTimerHandle.Bind(4.f, [this]() {
 		ani->SetNode("startteleport");
-		behaviorFlag = FMath::RandInt(1, 4);
+		if(behaviorFlag != 5) behaviorFlag = FMath::RandInt(1, 4);
 		}, true, 5.5f);
 
 	CastTimerHandle.Bind(0.3f, [this]() {
@@ -257,6 +258,20 @@ void NightMare::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 	if (!extraInfo.bIsValid)
 	{
 		return;
+	}
+
+	//–π∆¯
+	if (ani->IsPlaying("balloon"))
+	{
+		GameModeHelper::PlayFXSound("sound_nightmare_deflate");
+	}
+
+	//º§≈≠
+	if (ani->IsPlaying("bow"))
+	{
+		ani->SetNode("scream");
+		behaviorFlag = 5;
+		GameModeHelper::PlayFXSound("sound_nightmare_scream");
 	}
 
 	//¥Ú‘Œ
@@ -405,6 +420,7 @@ void NightMare::Behave()
 		BehaviorTimerHandle.SetDelay(7.f);
 		GameplayStatics::CreateObject<RoarEffect>(GetWorldPosition())->SetWhite();
 		BalloonTimerHandle.Continue();
+		behaviorFlag = 1;
 	}
 	else if (behaviorFlag == 6)
 	{
