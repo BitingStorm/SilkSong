@@ -56,6 +56,7 @@ private:
 
 	AnimationDelegate requake;
 	AnimationDelegate cameraShake;
+	AnimationDelegate stunPause;
 	bool quakeLock = false;
 
 	Timer RoarTimerHandle;

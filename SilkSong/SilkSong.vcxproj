@@ -52,6 +52,7 @@
     <ClInclude Include="Source\Project\PropertyComponent.h" />
     <ClInclude Include="Source\Project\PuffManager.h" />
     <ClInclude Include="Source\Project\QuakeParticle.h" />
+    <ClInclude Include="Source\Project\RedShade.h" />
     <ClInclude Include="Source\Project\RoarEffect.h" />
     <ClInclude Include="Source\Project\RuinHouseLevel.h" />
     <ClInclude Include="Source\Project\SceneUI.h" />
@@ -163,6 +164,7 @@
     <ClCompile Include="Source\Project\PropertyComponent.cpp" />
     <ClCompile Include="Source\Project\PuffManager.cpp" />
     <ClCompile Include="Source\Project\QuakeParticle.cpp" />
+    <ClCompile Include="Source\Project\RedShade.cpp" />
     <ClCompile Include="Source\Project\RoarEffect.cpp" />
     <ClCompile Include="Source\Project\RockParticle.cpp" />
     <ClCompile Include="Source\Project\Chest.cpp" />

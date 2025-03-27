@@ -17,6 +17,8 @@
 #include "Gate.h"
 #include "Components/Camera.h"
 #include "SmokeParticle.h"
+#include "RedShade.h"
+#include "Bg.h"
 
 
 NightMare::NightMare()
@@ -31,7 +33,28 @@ NightMare::NightMare()
 	rigid->SetGravityEnabled(false);
 	rigid->SetMass(10000);
 	rigid->SetLinearDrag(0);
+	beam = GameplayStatics::CreateObject<Bg>({ -1350, 600 }, 15);
+	beam->Init("grimmtent_beam");
 
+
+	fingerout.Load("nightmare_fingerstretch");
+	fingerout.SetInterval(0.08f);
+	fingerclick.Load("nightmare_fingerclick");
+	fingerclick.SetInterval(0.08f);
+	fingerclick.OnAnimExit.Bind([this]() 
+		{
+			GameModeHelper::PlayFXSound("sound_nightmare_click");
+			GameplayStatics::CreateObject<RedShade>({ -1000,600 });
+			beam->Destroy();
+		});
+	fingerin.Load("nightmare_fingerstretch");
+	fingerin.SetInterval(0.08f);
+	fingerin.SetReverse(true);
+	fingerEnd.Bind([this]() {ani->SetNode("idle"); render_->Deactivate(); ani_->Deactivate(); });
+	fingerin.AddNotification(1, fingerEnd);
+
+	stand.Load("nightmare_stand");
+	stand.SetInterval(0.07f);
 	idle.Load("nightmare_idle");
 	idle.SetInterval(0.08f);
 	bow.Load("nightmare_bow");
@@ -132,6 +155,8 @@ NightMare::NightMare()
 	uppercut.OnAnimExit.Bind([this]() {rigid->SetVelocity({}); });
 	stun.Load("nightmare_stun");
 	stun.SetInterval(0.08f);
+	stunPause.Bind([]() {GameplayStatics::Pause(0.25f); GameplayStatics::PlayCameraShake(7, 5); });
+	stun.AddNotification(1, stunPause);
 	fly.Load("nightmare_fly");
 	fly.SetInterval(0.08f);
 	die.Load("nightmare_die");
@@ -141,8 +166,10 @@ NightMare::NightMare()
 	scream.Load("nightmare_scream", {0,35});
 	scream.SetInterval(0.08f);
 
+	fingerout_to_fingerclick.Init(fingerout, fingerclick);
+	fingerclick_to_fingerin.Init(fingerclick, fingerin);
 	startteleport_to_endteleport.Init(startteleport, endteleport);
-	endteleport_to_idle.Init(endteleport, idle);
+	endteleport_to_stand.Init(endteleport, stand);
 	startspike_to_spike.Init(startspike, spike);
 	startballoon_to_balloon.Init(startballoon, balloon);
 	startairdash_to_airdash.Init(startairdash, airdash);
@@ -152,6 +179,17 @@ NightMare::NightMare()
 	startuppercut_to_uppercut.Init(startuppercut, uppercut);
 	stun_to_fly.Init(stun, fly);
 
+	render_ = ConstructComponent<SpriteRenderer>();
+	render_->AttachTo(root);
+	render_->SetLocalPosition({ 70, -15 });
+
+	ani_ = ConstructComponent<Animator>();
+	ani_->SetupAttachment(render_);
+	ani_->Insert("fingerout", fingerout);
+	ani_->Insert("fingerclick", fingerclick);
+	ani_->Insert("fingerin", fingerin);
+
+	ani->Insert("stand", stand);
 	ani->Insert("idle", idle);
 	ani->Insert("bow", bow);
 	ani->Insert("startteleport", startteleport);
@@ -189,7 +227,9 @@ void NightMare::BeginPlay()
 	box->OnComponentHit.AddDynamic(this, &NightMare::OnHit);
 	circle->OnComponentHit.AddDynamic(this, &NightMare::OnHit);
 
-	BowTimerHandle.Bind(3.f, [this]() {
+	ClickTimerHandle.Bind(2.f, [this]() {ani_->SetNode("fingerout"); });
+
+	BowTimerHandle.Bind(5.f, [this]() {
 		ani->SetNode("bow");
 		GameModeHelper::PlayBGMusic("nightmare");
 		if (player)
@@ -202,7 +242,7 @@ void NightMare::BeginPlay()
 	BehaviorTimerHandle.Bind(4.f, [this]() {
 		ani->SetNode("startteleport");
 		if(behaviorFlag != 5) behaviorFlag = FMath::RandInt(1, 4);
-		}, true, 5.5f);
+		}, true, 7.5f);
 
 	CastTimerHandle.Bind(0.3f, [this]() {
 		if (++castTimer > 6)return;
@@ -282,7 +322,6 @@ void NightMare::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 		GameModeHelper::PlayFXSound("sound_nightmare_explode");
 		GameModeHelper::PlayFXSound("sound_boss_stun");
 		GameModeHelper::GetInstance()->GetAudioPlayer(1)->Play("sound_nightmare_circling", true);
-		GameplayStatics::Pause(0.2f);
 		BehaviorTimerHandle.Stop();
 		RecoverTimerHandle.Bind(5.f, [this]() {
 		    BehaviorTimerHandle.Continue(); BehaviorTimerHandle.Reset();
@@ -295,7 +334,6 @@ void NightMare::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 			ani->SetNode("startteleport");
 			render_death->Deactivate();
 			});
-		GameplayStatics::PlayCameraShake(7, 5);
 		rigid->AddImpulse((FVector2D(-1000, 600) - GetWorldPosition()).GetSafeNormal() * 10000 * 500);
 		box->SetCollisonMode(CollisionMode::None);
 		circle->SetLocalPosition({ 0,0 });
@@ -369,7 +407,7 @@ void NightMare::Move()
 	switch (behaviorFlag)
 	{
 	case 0: break;
-	case 1: aim = FVector2D(FMath::RandReal(-1400, -600), 850); break;
+	case 1: aim = FVector2D(GetWorldPosition().x + (FMath::RandPerc() > 0.5 ? 1 : -1) * FMath::RandReal(100, 500), 850); break;
 	case 2: aim = FVector2D(-350 * direction - 950, 850); break;
 	case 3: aim = FVector2D(-500 * direction - 950, 850); break;
 	case 4: aim = FVector2D(-400 * direction - 950, 400); break;

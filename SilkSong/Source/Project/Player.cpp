@@ -281,7 +281,7 @@ void Player::Update(float deltaTime)
 	if (bDashing)
 	{
 		SetMaxWalkingSpeed(10000);
-		AddInputX(GetWorldScale().x * (bGround ? 14000 : 10000) * deltaTime, false);
+		AddInputX(GetWorldScale().x * (bGround ? 14000 : 9000) * deltaTime, false);
 		if (GameplayStatics::GetTimeSeconds() - lastDashTime > 0.3f)
 		{
 			bDashing = false; 

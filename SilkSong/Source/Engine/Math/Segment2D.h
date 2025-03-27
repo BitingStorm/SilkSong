@@ -90,6 +90,30 @@ namespace Math
 				return ray2.origin;
 			}
 		}
-	};
 
+		//判断是否与另一个线段相交
+		bool Intersects(const TSegment2<T>& segment) const
+		{
+			TVector2<T> axis1(-ray1.direction.y, ray1.direction.x);
+			axis1.Normalize();
+			T A = TVector2<T>::DotProduct(ray1.origin, axis);
+			T minB = FMath::Min(TVector2<T>::DotProduct(segment.ray1.origin, axis), TVector2<T>::DotProduct(segment.ray2.origin, axis));
+			T maxB = FMath::Max(TVector2<T>::DotProduct(segment.ray1.origin, axis), TVector2<T>::DotProduct(segment.ray2.origin, axis));
+			if (A > maxB || minB > A)
+			{
+				return false;
+			}
+
+			TVector2<T> axis2(-segment.ray1.direction.y, segment.ray1.direction.x);
+			axis2.Normalize();
+			T minA = FMath::Min(TVector2<T>::DotProduct(ray1.origin, axis), TVector2<T>::DotProduct(ray2.origin, axis));
+			T maxA = FMath::Max(TVector2<T>::DotProduct(ray1.origin, axis), TVector2<T>::DotProduct(ray2.origin, axis));
+			T B = TVector2<T>::DotProduct(segment.ray1.origin, axis);
+			if (minA > B || B > maxA)
+			{
+				return false;
+			}
+
+		}
+	};
 }

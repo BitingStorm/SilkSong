@@ -23,6 +23,10 @@ protected:
 	virtual void Die()override;
 
 private:
+	Animation fingerout;
+	Animation fingerclick;
+	Animation fingerin;
+	Animation stand;
 	Animation idle;
 	Animation bow;
 	Animation startteleport;
@@ -45,8 +49,10 @@ private:
 	Animation die;
 	Animation scream;
 
+	AnimEdge fingerout_to_fingerclick;
+	AnimEdge fingerclick_to_fingerin;
 	AnimEdge startteleport_to_endteleport;
-	AnimEdge endteleport_to_idle;
+	AnimEdge endteleport_to_stand;
 	AnimEdge startspike_to_spike;
 	AnimEdge startballoon_to_balloon;
 	AnimEdge startairdash_to_airdash;
@@ -58,9 +64,15 @@ private:
 
 	AnimationDelegate spawnBall;
 	AnimationDelegate dieShake;
+	AnimationDelegate stunPause;
+	AnimationDelegate fingerEnd;
 
 	class BoxCollider* box;
+	Animator* ani_;
+	class SpriteRenderer* render_;
+	class Bg* beam;
 
+	Timer ClickTimerHandle;
 	Timer BowTimerHandle;
 	Timer BehaviorTimerHandle;
 	Timer TeleportTimerHandle;

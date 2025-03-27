@@ -7,7 +7,7 @@
 
 #pragma once
 #include"Box2D.h" 
-#include"Ray2D.h"
+#include"Circle.h" 
 #include<vector>
 
 
@@ -139,6 +139,9 @@ namespace Math
 		//尝试与另一个多边形相交，并存储相关信息
 		FORCEINLINE bool Intersects(const TPolygon<T>& other, float& depth, TVector2<T>& normal, TVector2<T>& point) const;
 
+		//尝试与另一个圆形相交，并存储相关信息
+		FORCEINLINE bool Intersects(const TCircle<T>& other, float& depth, TVector2<T>& normal, TVector2<T>& point) const;
+
 		//判断多边形是否为凸多边形
 		static FORCEINLINE bool IsConvex(const std::vector<TVector2<T>>& vts);
 
@@ -250,6 +253,12 @@ namespace Math
 			}
 			return false;
 		}
+	}
+
+	template<typename T>
+	FORCEINLINE bool TPolygon<T>::Intersects(const TCircle<T>& other, float& depth, TVector2<T>& normal, TVector2<T>& point) const
+	{
+		return false;
 	}
 
 	template<typename T>

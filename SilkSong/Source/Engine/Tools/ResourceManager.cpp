@@ -146,7 +146,9 @@ void ResourceManager::Initialize()
 	Load("nightmare_fly", "Asset/Animations/Enemy/NightMare/Fly/", 113, 126, 3);
 	Load("nightmare_die", "Asset/Animations/Enemy/NightMare/Die/", 189, 282, 3);
 	Load("nightmare_scream", "Asset/Animations/Enemy/NightMare/Scream/", 308, 262, 3);
-
+	Load("nightmare_fingerstretch", "Asset/Animations/Enemy/NightMare/FingerStretch/", 90, 97, 6);
+	Load("nightmare_fingerclick", "Asset/Animations/Enemy/NightMare/FingerClick/", { {90,97}, {90,97}, {111,86}, {111,86}, {111,86} });
+	Load("nightmare_stand", "Asset/Animations/Enemy/NightMare/Stand/", 163, 320, 12);
 
 	//Water
 	Load("water_fountain", "Asset/Animations/WaterFalls/", 31, 188, 10);
@@ -266,6 +268,7 @@ void ResourceManager::Initialize()
 	Load("grimmtent_stand", "Asset/Images/Environment/GrimmTents/Grimm_Main_tent_0004_8.png", 499, 301);
 	Load("grimmtent_pole", "Asset/Images/Environment/GrimmTents/Grimm_Main_tent_0005_7.png", 65, 458);
 	Load("grimmtent_flag", "Asset/Images/Environment/GrimmTents/Grimm_Main_tent_0000_12.png", 100, 525);
+	Load("grimmtent_beam", "Asset/Images/Environment/GrimmTents/grimm_beam.png", 300, 800);
 
 	
 	//Others
@@ -294,6 +297,7 @@ void ResourceManager::Initialize()
 	Load("inventory_coin", "Asset/Images/UI/InventoryCoin.png", 47, 48);
 	Load("black", "Asset/Images/UI/mask_black.png", WIN_WIDTH + 12, WIN_HEIGHT + 8);
 	Load("white", "Asset/Images/UI/mask_white.png", WIN_WIDTH, WIN_HEIGHT);
+	Load("red", "Asset/Images/UI/mask_red.png", WIN_WIDTH, WIN_HEIGHT);
 	Load("bar_white", "Asset/Images/UI/bar_white.png", 198, 3);
 	Load("low_health", "Asset/Images/UI/vignette_low_health.png", WIN_WIDTH, WIN_HEIGHT);
 	Load("inventory_ins1", "Asset/Images/UI/ins_1.png", 72, 72);
@@ -443,6 +447,7 @@ void ResourceManager::Initialize()
 	Load("sound_nightmare_defeat", "Asset/Sounds/NightMare/defeat.mp3");
 	Load("sound_nightmare_scream", "Asset/Sounds/NightMare/scream.mp3");
 	Load("sound_nightmare_deflate", "Asset/Sounds/NightMare/balloon_deflate.mp3");
+	Load("sound_nightmare_click", "Asset/Sounds/NightMare/click.mp3");
 
 
 	Load("sound_boss_gushing", "Asset/Sounds/boss_gushing.mp3");

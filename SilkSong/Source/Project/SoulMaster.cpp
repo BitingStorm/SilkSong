@@ -76,6 +76,8 @@ SoulMaster::SoulMaster()
 	dash.OnAnimExit.Bind([this]() {moveSpeed = FVector2D::ZeroVector; });
 	startstun.Load("soulmaster_startstun");
 	startstun.SetInterval(0.1f);
+	stunPause.Bind([]() {GameplayStatics::Pause(0.25f); GameplayStatics::PlayCameraShake(7, 5); });
+	startstun.AddNotification(1, stunPause);
 	stun.Load("soulmaster_stun");
 	stun.SetInterval(0.1f);
 	stun.OnAnimEnter.Bind([]() {GameModeHelper::PlayFXSound("stun"); });
@@ -251,12 +253,10 @@ void SoulMaster::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 		ani->PlayMontage("startstun");
 		GameModeHelper::PlayFXSound("startstun");
 		GameModeHelper::PlayFXSound("sound_boss_stun");
-		GameplayStatics::Pause(0.2f);
 		BehaviorTimerHandle.Stop();
 		RecoverTimerHandle.Continue();
 		RecoverTimerHandle.Bind(4.f, [this]() {ani->SetTrigger("recover"); BehaviorTimerHandle.Continue(); });
 		moveSpeed = FVector2D::ZeroVector;
-		GameplayStatics::PlayCameraShake(7, 5);
 	}
 
 	//½øÈë¶þ½×¶Î

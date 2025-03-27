@@ -86,4 +86,5 @@ void FireBall::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor, 
 	GameplayStatics::PlayCameraShake(4, 10);
 	particle->SetIsLoop(false);
 	bShrinking = true;
+	circle->SetCollisonMode(CollisionMode::None);
 }
