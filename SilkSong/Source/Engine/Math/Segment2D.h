@@ -23,7 +23,7 @@ namespace Math
 			ray2 = TRay2<T>();
 		}
 
-		TSegment2(const &TVector2<T>p1, const& TVector2<T>p2)
+		TSegment2(const TVector2<T>& p1, const TVector2<T>& p2)
 		{
 			ray1 = TRay2<T>(p1, p2 - p1);
 			ray2 = TRay2<T>(p2, p1 - p2);
@@ -92,28 +92,24 @@ namespace Math
 		}
 
 		//判断是否与另一个线段相交
-		bool Intersects(const TSegment2<T>& segment) const
+		bool Intersects(const TSegment2<T>& segment, TVector2<T>& point) const
 		{
-			TVector2<T> axis1(-ray1.direction.y, ray1.direction.x);
-			axis1.Normalize();
-			T A = TVector2<T>::DotProduct(ray1.origin, axis);
-			T minB = FMath::Min(TVector2<T>::DotProduct(segment.ray1.origin, axis), TVector2<T>::DotProduct(segment.ray2.origin, axis));
-			T maxB = FMath::Max(TVector2<T>::DotProduct(segment.ray1.origin, axis), TVector2<T>::DotProduct(segment.ray2.origin, axis));
-			if (A > maxB || minB > A)
-			{
-				return false;
-			}
+			T x1 = ray1.origin.x, y1 = ray1.origin.y;
+			T x2 = ray2.origin.x, y2 = ray2.origin.y;
+			T x3 = segment.ray1.origin.x, y3 = segment.ray1.origin.y;
+			T x4 = segment.ray2.origin.x, y4 = segment.ray2.origin.y;
 
-			TVector2<T> axis2(-segment.ray1.direction.y, segment.ray1.direction.x);
-			axis2.Normalize();
-			T minA = FMath::Min(TVector2<T>::DotProduct(ray1.origin, axis), TVector2<T>::DotProduct(ray2.origin, axis));
-			T maxA = FMath::Max(TVector2<T>::DotProduct(ray1.origin, axis), TVector2<T>::DotProduct(ray2.origin, axis));
-			T B = TVector2<T>::DotProduct(segment.ray1.origin, axis);
-			if (minA > B || B > maxA)
-			{
-				return false;
-			}
+			double det = (x2 - x1) * (y4 - y3) - (y2 - y1) * (x4 - x3);
+			if (FMath::Abs(det) < AE_SMALL_NUMBER) return false; 
 
+			double t = ((x3 - x1) * (y4 - y3) - (y3 - y1) * (x4 - x3)) / det;
+			double s = ((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1)) / det;
+
+			if (t < 0 || t > 1 || s < 0 || s > 1) return false; 
+
+			point.x = x1 + t * (x2 - x1);
+			point.y = y1 + t * (y2 - y1);
+			return true;
 		}
 	};
 }

@@ -271,8 +271,8 @@ void Player::Update(float deltaTime)
 	if (bEvading)
 	{
 		SetMaxWalkingSpeed(3000);
-		AddInputX(-GetWorldScale().x * 3000 * deltaTime, false);
-		if (GameplayStatics::GetTimeSeconds() - lastEvadeTime > 0.35f)
+		AddInputX(-GetWorldScale().x * 3500 * deltaTime, false);
+		if (GameplayStatics::GetTimeSeconds() - lastEvadeTime > 0.3f)
 		{
 			bEvading = false; 
 		}
@@ -281,7 +281,7 @@ void Player::Update(float deltaTime)
 	if (bDashing)
 	{
 		SetMaxWalkingSpeed(10000);
-		AddInputX(GetWorldScale().x * (bGround ? 14000 : 9000) * deltaTime, false);
+		AddInputX(GetWorldScale().x * (bGround ? 10000 : 9000) * deltaTime, false);
 		if (GameplayStatics::GetTimeSeconds() - lastDashTime > 0.3f)
 		{
 			bDashing = false; 
@@ -398,7 +398,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		else if (bWall)
 		{
 			AddPosition(FVector2D(GetWorldScale().x * 10.f, -10.f));
-			rigid->AddImpulse(FVector2D(GetWorldScale().x * 500, -500)); 
+			rigid->AddImpulse(FVector2D(GetWorldScale().x * 500, -600)); 
 			ani->PlayMontage("jump");
 			lastJumpTime = GameplayStatics::GetTimeSeconds();
 			int32 jumpNum = FMath::RandInt(0, 12);
@@ -415,14 +415,14 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		{
 			float delta = GameplayStatics::GetTimeSeconds() - lastJumpTime;
 			bGround = false; ani->SetBool("flying", true); 
-			rigid->AddImpulse(FVector2D(0, -(6.5f - FMath::Log(1 + delta < 0.06f ? 0 : FMath::Abs(rigid->GetVelocity().y)) / FMath::Log(10)) / jumpFlag));
+			rigid->AddImpulse(FVector2D(0, -(6.25f - FMath::Log(1 + delta < 0.06f ? 0 : FMath::Abs(rigid->GetVelocity().y)) / FMath::Log(10)) / jumpFlag));
 		}
 		});
 	inputComponent->BindAction("JumpEnd", EInputType::Released, [this]() {
 		if (bSitting || bWall) return;
 		if (rigid->GetVelocity().y < 0 && GameplayStatics::GetTimeSeconds() - lastJumpTime < 0.3f)
 		{
-			rigid->SetVelocity(FVector2D(rigid->GetVelocity().x, rigid->GetVelocity().y * 0.25f));
+			rigid->SetVelocity(FVector2D(rigid->GetVelocity().x, -rigid->GetVelocity().y * 0.1f));
 		}
 		});
 	inputComponent->BindAction("Attack", EInputType::Pressed, [this]() {

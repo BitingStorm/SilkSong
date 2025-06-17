@@ -30,18 +30,18 @@ void CollisionManager::Initialize()
 
 CollisionManager::CollisionManager()
 {
-	collisionMap.insert({ int(CollisionType::Default) * 101 + int(CollisionType::Default) });
+	collisionMap.insert({ int(CollisionType::Default) * 32 + int(CollisionType::Default) });
 }
 
 
 bool CollisionManager::FindMapping(CollisionType type1, CollisionType type2)
 {
-	int result = int(type1) * 101 + int(type2);
+	int result = int(type1) * 32 + int(type2);
 	return collisionMap.find(result)!= collisionMap.end();
 }
 
 void CollisionManager::AddMapping(CollisionType type1, CollisionType type2)
 {
-	int result = int(type1) * 101 + int(type2);
+	int result = int(type1) * 32 + int(type2);
 	collisionMap.insert(result);
 }

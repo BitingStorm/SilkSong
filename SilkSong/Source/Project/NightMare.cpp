@@ -93,14 +93,14 @@ NightMare::NightMare()
 		circle->SetCollisonMode(CollisionMode::Collision); box->SetCollisonMode(CollisionMode::Collision); Behave(); 
 		});
 	endteleport.SetReverse(true);
-	startspike.Load("nightmare_startspike");
+	startspike.Load("nightmare_startspike", { 0,10 });
 	startspike.SetInterval(0.08f);
-	spike.Load("nightmare_spike");
+	spike.Load("nightmare_spike", { 0,10 });
 	spike.SetInterval(0.08f);
 	startballoon.Load("nightmare_startballoon");
 	startballoon.SetInterval(0.1f);
 	balloon.Load("nightmare_balloon");
-	balloon.SetInterval(0.08f);
+	balloon.SetInterval(0.07f);
 	balloon.OnAnimEnter.Bind([this]() {
 		GameModeHelper::GetInstance()->GetAudioPlayer(1)->Play("sound_nightmare_fireballs", true);
 		});
@@ -277,7 +277,7 @@ void NightMare::Update(float deltaTime)
 	{
 		rigid->SetVelocity(rigid->GetVelocity() * 0.98f);
 
-		if (rigid->GetVelocity().Size() < 50)
+		if (rigid->GetVelocity().Size() < 100)
 		{
 			if (FVector2D::Distance(FVector2D(-1000, 600), GetWorldPosition()) > 200)
 			{
@@ -355,9 +355,9 @@ void NightMare::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor,
 		{
 			render->Deactivate();
 			GameplayStatics::PlayCameraShake(10, 5);
-			for (int i = 0; i < 6; i++)
+			for (int i = 0; i < 5; i++)
 			{
-				GameplayStatics::CreateObject<SkyFire>(GetWorldPosition())->Init(FVector2D(-2.5f + i, 1.5f) * 400);
+				GameplayStatics::CreateObject<SkyFire>(GetWorldPosition())->Init(FVector2D(-2.f + i, 1.5f) * 400);
 			}
 			GameModeHelper::PlayFXSound("sound_skyflame");
 		}
@@ -408,7 +408,7 @@ void NightMare::Move()
 	{
 	case 0: break;
 	case 1: aim = FVector2D(GetWorldPosition().x + (FMath::RandPerc() > 0.5 ? 1 : -1) * FMath::RandReal(100, 500), 850); break;
-	case 2: aim = FVector2D(-350 * direction - 950, 850); break;
+	case 2: aim = FVector2D(-400 * direction - 950, 850); break;
 	case 3: aim = FVector2D(-500 * direction - 950, 850); break;
 	case 4: aim = FVector2D(-400 * direction - 950, 400); break;
 	case 5: aim = FVector2D(-1000, 600); break;

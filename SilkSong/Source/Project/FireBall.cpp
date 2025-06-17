@@ -31,7 +31,7 @@ FireBall::FireBall()
 	circle->AttachTo(root);
 	circle->SetCollisonMode(CollisionMode::Collision);
 	circle->SetType(CollisionType::Bullet);
-	circle->SetRadius(20);
+	circle->SetRadius(16);
 
 	circle->OnComponentHit.AddDynamic(this, &FireBall::OnHit);
 
@@ -58,7 +58,7 @@ void FireBall::Update(float deltaTime)
 {
 	Actor::Update(deltaTime);
 
-	rigid->AddImpulse(FVector2D(deltaTime * direction * 500.f, 0));
+	rigid->AddImpulse(FVector2D(deltaTime * direction * 600.f, 0));
 
 	if (bShrinking)
 	{

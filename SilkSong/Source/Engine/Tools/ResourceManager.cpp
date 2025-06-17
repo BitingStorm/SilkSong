@@ -89,7 +89,7 @@ void ResourceManager::Initialize()
 	Load("effect_pillar", "Asset/Animations/Enemy/NightMare/Pillar/", 203, 710, 6);
 	Load("effect_flame_particle", "Asset/Animations/Enemy/NightMare/Grimm_flame_ball_particle.png", 51, 17, 3, 1, 3);
 	Load("effect_nightmare_cast", "Asset/Animations/Enemy/NightMare/CastEffect/", { {154,170},{278,742},{298,988},{296,860} });
-	Load("effect_fireball", "Asset/Animations/Enemy/NightMare/FireBall/", 75, 75, 8);
+	Load("effect_fireball", "Asset/Animations/Enemy/NightMare/FireBall/", 65, 65, 8);
 
 	//UI
 	Load("inventory_bloodidle", "Asset/Animations/UI/BloodIdle/", 33, 49, 6);

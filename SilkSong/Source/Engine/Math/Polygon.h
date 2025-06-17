@@ -8,6 +8,7 @@
 #pragma once
 #include"Box2D.h" 
 #include"Circle.h" 
+#include"Segment2D.h"
 #include<vector>
 
 
@@ -244,11 +245,39 @@ namespace Math
 		}
 		else//是否存在一个顶点处于另一多边形内
 		{
-			for (auto& point : other.vertices)
+			int n = vertices.size();
+			for (auto& p : other.vertices)
 			{
-				if (IsInside(point))
+				if (IsInside(p))
 				{
+					point = p;
+
+					TSegment2<T> aimSegment;
+					T aimDist = T(0);
+					for (int i = 0, j = n - 1; i < n; j = i++)
+					{
+						TSegment2<T> segment = TSegment2<T>(vertices[i], vertices[j]);
+						if (segment.Dist(point) < aimDist)
+						{
+							aimSegment = segment;
+						}
+					}
+					depth = aimSegment.Dist(point);
+					normal = TVector2<T>(point - aimSegment.ClosestPoint(point));
 					return true;
+				}
+			}
+			for (int i = 0, j = n - 1; i < n; j = i++)
+			{
+				TSegment2<T> segment1(vertices[i], vertices[j]);
+				int m = other.vertices.size();
+				for (int a = 0, b = m - 1; a < m; b = a++)
+				{
+					TSegment2<T> segment2(vertices[a], vertices[b]);
+					if (segment1.Intersects(segment2, point))
+					{
+						return true;
+					}
 				}
 			}
 			return false;
@@ -258,16 +287,47 @@ namespace Math
 	template<typename T>
 	FORCEINLINE bool TPolygon<T>::Intersects(const TCircle<T>& other, float& depth, TVector2<T>& normal, TVector2<T>& point) const
 	{
+		size_t n = vertices.size();
+		for (int i = 0, j = n - 1; i < n; j = i++)
+		{
+			TVector2<T> edge = vertices[i] - vertices[j];
+			TVector2<T> axis(-edge.y, edge.x);
+			axis.Normalize();
+
+			T minA = TVector2<T>::DotProduct(vertices[0], axis);
+			T maxA = minA;
+			for (int i = 1; i < n; i++)
+			{
+				T proj = TVector2<T>::DotProduct(vertices[i], axis);
+
+				if (proj < minA) minA = proj;
+				if (proj > maxA) maxA = proj;
+			}
+
+			T minB = TVector2<T>::DotProduct(other.center, axis) - other.radius;
+			T maxB = minB + other.radius * 2;
+
+			if (minA >= maxB || minB >= maxA)
+			{
+				return false;
+			}
+
+			float axisDepth = FMath::Min(maxB - minA, maxA - minB);
+			if (axisDepth < depth)
+			{
+				depth = axisDepth;
+				normal = TVector2<T>::DotProduct(normal, other.center - mean) > 0 ? axis : -axis;
+			}
+		}
 		return false;
 	}
 
 	template<typename T>
 	FORCEINLINE bool TPolygon<T>::IsConvex(const std::vector<TVector2<T>>& vts)
-	{
+	{ 
 		if (vts.size() < 3)return false;
 
-		bool isPositive;
-		isPositive = TVector2<T>::CrossProduct(vts.back() - vts[0], vts[0] - vts[1]) > 0;
+		bool isPositive = TVector2<T>::CrossProduct(vts.back() - vts[0], vts[0] - vts[1]) > 0;
 		for (size_t i = 1; i < vts.size() - 1; ++i)
 		{
 			if ((TVector2<T>::CrossProduct(vts[i - 1] - vts[i], vts[i] - vts[i + 1]) > 0) ^ isPositive)

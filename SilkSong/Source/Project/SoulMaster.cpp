@@ -151,11 +151,11 @@ void SoulMaster::BeginPlay()
 		behaviorFlag = FMath::RandInt(0, 4);
 		}, true, 5.f);
 
-	RoarTimerHandle.Bind(0.25f, [this]() {
+	RoarTimerHandle.Bind(0.2f, [this]() {
 		GameplayStatics::PlayCameraShake(7, 5);
 		GameplayStatics::CreateObject<RoarEffect>(GetWorldPosition());
 		roarTimer++;
-		if (roarTimer > 12)
+		if (roarTimer > 15)
 		{
 			RoarTimerHandle.Stop();
 			ani->SetNode("idle");

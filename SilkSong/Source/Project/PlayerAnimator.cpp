@@ -41,7 +41,7 @@ PlayerAnimator::PlayerAnimator()
 	rushattack.Load("player_rushattack");
 	rushattack.SetInterval(0.03f);
 	evade.Load("player_evade");
-	evade.SetInterval(0.08f);
+	evade.SetInterval(0.07f);
 	dash.Load("player_dash", { 0,10 });
 	dash.SetInterval(0.06f);
 	airdash.Load("player_airdash");
@@ -51,7 +51,7 @@ PlayerAnimator::PlayerAnimator()
 	hurt.Load("player_hurt");
 	hurt.SetInterval(0.08f);
 	throw_.Load("player_throw");
-	throw_.SetInterval(0.06f);
+	throw_.SetInterval(0.05f);
 	grab.Load("player_grab");
 	grab.SetInterval(0.07f);
 	_closeskill.Load("player__closeskill");
@@ -236,7 +236,7 @@ void PlayerAnimator::BeginPlay()
 		evade.OnAnimExit.Bind([=]() {player->EnableInput(true); });
 		dash.OnAnimEnter.Bind([=]() {player->EnableInput(false); });
 		dash.OnAnimExit.Bind([=]() {player->EnableInput(true); });
-		dash.AddNotification(2, dashEffect);
+		dash.AddNotification(1, dashEffect);
 		airdash.OnAnimEnter.Bind([=]() {player->EnableInput(false); });
 		airdash.OnAnimExit.Bind([=]() {player->EnableInput(true); });
 		airdash.AddNotification(1, dashEffect);

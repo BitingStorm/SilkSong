@@ -41,7 +41,7 @@ void ArtyEngine::Characters::SetCharacters(std::string text, int size, LPCTSTR t
 
 void ArtyEngine::Characters::PrintCharacters(FVector2D pos, CharactersPattern pattern)
 {
-	settextstyle(6*size,3*size,type);
+	settextstyle(6 * size, 3 * size, type);
 	settextcolor(BLACK);
 	int pat = 1;
 	switch (pattern)
@@ -348,7 +348,7 @@ void Text::Update()
 void Text::Render()
 {
 	if (uiPattern == UIPattern::None)return;
-	texts.PrintCharacters(GetScreenPosition()-size*0.5f, textPattern);
+	texts.PrintCharacters(GetScreenPosition() - size * 0.5f, textPattern);
 }
 
 

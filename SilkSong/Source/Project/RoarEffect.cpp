@@ -15,7 +15,7 @@ void RoarEffect::Update(float deltaTime)
 {
 	Actor::Update(deltaTime);
 
-	SetLocalScale(GetLocalScale() * 1.1f);
+	SetLocalScale(GetLocalScale() * 1.2f);
 
 	if (GetLocalScale().x > 10)
 	{
