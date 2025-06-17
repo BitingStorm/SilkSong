@@ -6,7 +6,7 @@
 
 
 #pragma once
-#include <unordered_set>
+#include <unordered_map>
 
 //************************************************
 //*********       用户需编辑部分          **********
@@ -41,10 +41,12 @@ public:
 
 	void Initialize();
 
-	bool FindMapping(CollisionType type1, CollisionType type2);
+	bool LayerMaskJudge(int layerMask1, CollisionType type2);
+
+	int FindMapping(CollisionType type);
 
 private:
-	std::unordered_set<int>collisionMap;
+	std::unordered_map<CollisionType, int>layerMaskMap;
 
 	void AddMapping(CollisionType type1, CollisionType type2);
 };

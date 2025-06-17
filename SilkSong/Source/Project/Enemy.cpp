@@ -35,6 +35,7 @@ Enemy::Enemy()
 	circle->SetRadius(40);
 	circle->SetType(CollisionType::Enemy);
 	circle->SetCollisonMode(CollisionMode::Collision);
+	rigid->SetAngularDrag(0.5f);
 
 	damageResponse = ConstructComponent<DamageResponseComponent>();
 	property = ConstructComponent<PropertyComponent>();
@@ -57,6 +58,11 @@ void Enemy::BeginPlay()
 void Enemy::Update(float deltaTime)
 {
     Super::Update(deltaTime);
+
+	if (IsDead() && rigid->GetVelocity().Equals(FVector2D::ZeroVector))
+	{
+		rigid->SetRotatable(false);
+	}
 
 	hurtTimer -= deltaTime;
 
@@ -164,6 +170,8 @@ void Enemy::Die()
 	
 	circle->OnComponentBeginOverlap.RemoveDynamic(this, &Enemy::OnOverlap);
 	circle->SetPhysicsMaterial(FPhysicsMaterial(0.6f,0.6f));
+	circle->SetCollisionResponseToType(CollisionType::Dart, false);
+	rigid->SetGravity(1960.f);
 
 	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
 	if (effect)effect->Init("effect_death");

@@ -81,13 +81,6 @@ void Bug::Update(float deltaTime)
 {
 	Super::Update(deltaTime);
 
-	if (IsDead() && FMath::Abs(rigid->GetVelocity().x) < 0.5f)
-	{
-		rigid->SetMoveable(false);
-		rigid->SetRotatable(false);
-		circle->SetCollisonMode(CollisionMode::None);
-	}
-
 	if (!IsDead() && GetWorldPosition().y > 1080)
 	{
 		property->AddHealth(-9999);

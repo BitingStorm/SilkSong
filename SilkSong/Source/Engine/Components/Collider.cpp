@@ -78,6 +78,17 @@ const std::vector<Actor*>& Collider::GetCollisions(CollisionType type)
     return aims;
 }
 
+void Collider::SetType(CollisionType type)
+{
+    this->type = type;
+    layerMask = mainWorld.collisionManager->FindMapping(type);
+}
+
+void Collider::SetCollisionResponseToType(CollisionType aimType, bool enable)
+{
+    enable ? layerMask |= (1 << int(aimType)) : layerMask &= ~(1 << int(aimType));
+}
+
 void Collider::SetCollisonMode(CollisionMode mode)
 {
     if (mode == CollisionMode::None && this->mode != CollisionMode::None)
@@ -130,7 +141,8 @@ void Collider::Clear()
 
 void Collider::Insert(Collider* another)
 {
-    if (mainWorld.collisionManager->FindMapping(this->type, another->type)
+    if (mainWorld.collisionManager->LayerMaskJudge(this->layerMask, another->type)
+        && mainWorld.collisionManager->LayerMaskJudge(another->layerMask, this->type)
         && collisions.find(another) == collisions.end() && CollisionJudge(another))
     {
         collisions.insert(another); another->collisions.insert(this);
@@ -139,10 +151,16 @@ void Collider::Insert(Collider* another)
             FHitResult hitResult = CollisionHit(another);
             OnComponentHit.BroadCast(this, another, another->pOwner, -hitResult.ImpactNormal, hitResult);
             another->OnComponentHit.BroadCast(another, this, pOwner, hitResult.ImpactNormal, { hitResult.ImpactPoint,-hitResult.ImpactNormal,pOwner,this });
+            
             if (rigidAttached)
             {
                 rigidAttached->RestrictVelocity(-hitResult.ImpactNormal, FPhysicsMaterial::Combine(this->material, another->material), another->rigidAttached);
             }
+            else if (another->rigidAttached)
+            {
+                another->rigidAttached->RestrictVelocity(hitResult.ImpactNormal, FPhysicsMaterial::Combine(this->material, another->material), rigidAttached);
+            }
+            
             CollisionAdjust(another, hitResult);
         }
         else
@@ -157,7 +175,7 @@ void Collider::Erase()
     collisions_to_erase.clear();
     for (auto& another : collisions)
     {
-        if (!CollisionJudge(another))
+        if (!CollisionJudge(another) || !mainWorld.collisionManager->LayerMaskJudge(this->layerMask, another->type))
         {
             another->collisions.erase(this); collisions_to_erase.push_back(another);
             OnComponentEndOverlap.BroadCast(this, another, another->pOwner);  another->OnComponentEndOverlap.BroadCast(another, this, pOwner);

@@ -65,7 +65,14 @@ public:
 
 	/** 碰撞类型 **/
 	CollisionType GetType()const { return type; }
-	void SetType(CollisionType type) { this->type = type; }
+	void SetType(CollisionType type);
+
+	/**
+	 * @brief 设置碰撞响应到相应碰撞类型
+	 * @param[in] aimType			  目标碰撞类型
+	 * @param[in] enable              是否启用碰撞响应
+	 **/
+	void SetCollisionResponseToType(CollisionType aimType, bool enable);
 
 	/** 碰撞标签 **/
 	std::string GetTag()const { return collisionTag; }
@@ -116,6 +123,7 @@ protected:
 
 private:
 	int32 layer = 0;
+	int32 layerMask = 1;
 	CollisionType type = CollisionType::Default;
 	CollisionMode mode = CollisionMode::Trigger;
 	std::string collisionTag;

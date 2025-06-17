@@ -278,11 +278,6 @@ void SoulMaster::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor
 {
 	if (IsDead())
 	{
-		if (otherComp->GetType() == CollisionType::Block && normalImpulse.y < 0)
-		{
-			circle->SetCollisonMode(CollisionMode::None);
-			rigid->SetMoveable(false);
-		}
 		return;
 	}
 
@@ -364,6 +359,7 @@ void SoulMaster::Die()
 {
 	Super::Die();
 
+	circle->SetCollisionResponseToType(CollisionType::Dart, false);
 	SummonTimerHandle.Stop();
 	ani->PlayMontage("startstun");
 	GameModeHelper::PlayFXSound("startdeath");

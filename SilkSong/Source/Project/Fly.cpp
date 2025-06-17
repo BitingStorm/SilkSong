@@ -58,13 +58,6 @@ void Fly::Update(float deltaTime)
 {
 	Super::Update(deltaTime);
 
-	if (IsDead() && FMath::Abs(rigid->GetVelocity().x) < 0.5f)
-	{
-		rigid->SetMoveable(false);
-		rigid->SetRotatable(false);
-		circle->SetCollisonMode(CollisionMode::None);
-	}
-
 	if (!IsDead() && GetWorldPosition().y > 1080)
 	{
 		property->AddHealth(-9999);
@@ -113,7 +106,7 @@ void Fly::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 	CHECK_PTR(causer)
 		FVector2D normal = (GetWorldPosition() - causer->GetWorldPosition()).GetSafeNormal();
 	float delta_x = causer->GetWorldPosition().x - GetWorldPosition().x;
-	normal.x = FMath::Clamp(normal.x, 0.2f, 1.f);
+	normal.y = FMath::Clamp(normal.y, -0.2f, -1.f);
 
 	rigid->AddImpulse(normal * 350.f);
 	if (property->GetHealth() <= 0)
