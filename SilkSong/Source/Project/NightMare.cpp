@@ -102,10 +102,14 @@ NightMare::NightMare()
 	balloon.Load("nightmare_balloon");
 	balloon.SetInterval(0.07f);
 	balloon.OnAnimEnter.Bind([this]() {
-		GameModeHelper::GetInstance()->GetAudioPlayer(1)->Play("sound_nightmare_fireballs", true);
+		GameMode* gameMode = GameModeHelper::GetInstance();
+		gameMode->SetVolume(2, gameMode->GetVolume(0));
+		gameMode->GetAudioPlayer(1)->Play("sound_nightmare_fireballs", true);
 		});
 	balloon.OnAnimExit.Bind([this]() {
-		GameModeHelper::GetInstance()->GetAudioPlayer(1)->Stop("sound_nightmare_fireballs");
+		GameMode* gameMode = GameModeHelper::GetInstance();
+		gameMode->SetVolume(2, 0);
+		gameMode->GetAudioPlayer(1)->Stop("sound_nightmare_fireballs");
 		BalloonTimerHandle.Stop();
 		});
 	spawnBall.Bind(this, &NightMare::SpawnBall);
@@ -118,7 +122,7 @@ NightMare::NightMare()
 	airdash.Load("nightmare_airdash");
 	airdash.SetInterval(0.08f);
 	airdash.OnAnimEnter.Bind([this]() {
-		rigid->AddImpulse(FVector2D(-GetWorldScale().x, 1) * 10000 * 2000);
+		rigid->AddImpulse(FVector2D(-GetWorldScale().x, 1) * 10000 * 2500);
 		box->SetSize({ 40,120 }); SetLocalRotation(-45.f);
 		GameplayStatics::CreateObject<Effect>(GetWorldPosition(), GetWorldScale().x < 0 ? -45.f : -135.f)->Init("effect_dash");
 		GameModeHelper::PlayFXSound("sound_nightmare_airdash");
@@ -130,17 +134,17 @@ NightMare::NightMare()
 	dash.SetInterval(0.08f);
 	dash.SetLooping(false);
 	dash.OnAnimEnter.Bind([this]() {
-		rigid->AddImpulse(FVector2D(-GetWorldScale().x * 0.75f, 0) * 10000 * 2000);
+		rigid->AddImpulse(FVector2D(-GetWorldScale().x * 0.75f, 0) * 10000 * 2500);
 		GameplayStatics::CreateObject<Effect>(GetWorldPosition() - FVector2D(0, 25), 0, GetWorldScale())->Init("effect_dash_", -0.02f);
 		GameModeHelper::PlayFXSound("sound_nightmare_dash");
 		});
 	dash.OnAnimExit.Bind([this]() {rigid->SetVelocity({});});
 	startslash.Load("nightmare_startslash");
-	startslash.SetInterval(0.08f);
+	startslash.SetInterval(0.07f);
 	slash.Load("nightmare_slash");
-	slash.SetInterval(0.08f);
+	slash.SetInterval(0.07f);
 	slash.OnAnimEnter.Bind([this]() {
-		rigid->AddImpulse(FVector2D(-GetWorldScale().x, 1) * 10000 * 1250);	GameModeHelper::PlayFXSound("sound_sword_0");
+		rigid->AddImpulse(FVector2D(-GetWorldScale().x, 1) * 10000 * 1500);	GameModeHelper::PlayFXSound("sound_sword_0");
 		});
 	slash.OnAnimExit.Bind([this]() {rigid->SetVelocity({}); });
 	startuppercut.Load("nightmare_startuppercut");
@@ -149,7 +153,7 @@ NightMare::NightMare()
 	uppercut.SetInterval(0.08f);
 	uppercut.SetLooping(false);
 	uppercut.OnAnimEnter.Bind([this]() {
-		rigid->AddImpulse(FVector2D(-GetWorldScale().x * 0.5f, -1) * 10000 * 2000);
+		rigid->AddImpulse(FVector2D(-GetWorldScale().x * 0.5f, -1) * 10000 * 2750);
 		GameModeHelper::PlayFXSound("sound_nightmare_uppercut"); GameModeHelper::PlayFXSound("sound_sword_1");
 		});
 	uppercut.OnAnimExit.Bind([this]() {rigid->SetVelocity({}); });
@@ -232,6 +236,7 @@ void NightMare::BeginPlay()
 	BowTimerHandle.Bind(5.f, [this]() {
 		ani->SetNode("bow");
 		GameModeHelper::PlayBGMusic("nightmare");
+		GameModeHelper::PlayBGMusic_("nightmare_");
 		if (player)
 		{
 			player->Scare(false);
@@ -393,6 +398,7 @@ void NightMare::Die()
 	GameModeHelper::PlayFXSound("sound_boss_finalhit");
 	GameplayStatics::CreateObject<SmokeParticle>(GetWorldPosition());
 	GameModeHelper::GetInstance()->GetAudioPlayer(0)->Stop("nightmare");
+	GameModeHelper::GetInstance()->GetAudioPlayer(2)->Stop("nightmare_");
 
 	DieTimerHandle.Bind(5.5f, [this]() {
 		ani->SetNode("startteleport"); behaviorFlag = 6;
@@ -455,7 +461,7 @@ void NightMare::Behave()
 	{
 		ani->PlayMontage("startballoon");
 		GameModeHelper::PlayFXSound("sound_nightmare_cast_2");
-		BehaviorTimerHandle.SetDelay(7.f);
+		BehaviorTimerHandle.SetDelay(9.f);
 		GameplayStatics::CreateObject<RoarEffect>(GetWorldPosition())->SetWhite();
 		BalloonTimerHandle.Continue();
 		behaviorFlag = 1;
@@ -475,6 +481,12 @@ void NightMare::SpawnBall()
 {
 	balloonSpawnFlag = (balloonSpawnFlag + 1) % 3;
 	float speed = FMath::RandReal(200, 300);
+
+	if (BehaviorTimerHandle.GetDelay() > 8)
+	{
+		return;
+	}
+
 	if (balloonSpawnFlag == 0)
 	{
 		FVector2D unit = FVector2D::DegreeToVector(65);

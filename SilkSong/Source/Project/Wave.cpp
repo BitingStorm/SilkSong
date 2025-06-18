@@ -22,7 +22,7 @@ void Wave::Update(float deltaTime)
 {
 	Actor::Update(deltaTime);
 
-	AddPosition(FVector2D(GetWorldScale().x * (index + 12) * deltaTime * 50, 0));
+	AddPosition(FVector2D(GetWorldScale().x * (index + 12) * deltaTime * 60, 0));
 
 	if (FMath::Abs(GetWorldPosition().x) > 1200)
 	{

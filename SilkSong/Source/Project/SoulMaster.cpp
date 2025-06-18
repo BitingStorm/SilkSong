@@ -27,7 +27,7 @@ SoulMaster::SoulMaster()
 		if (FMath::RandInt(0, 100) > 30)return;
 		if (player)
 		{
-			SetLocalPosition(FVector2D(player->GetWorldPosition().x, 350));
+			SetLocalPosition(FVector2D(player->GetWorldPosition().x, 450));
 			SetLocalPosition(ClampPosX(GetWorldPosition()));
 		}
 		ani->PlayMontage("startquake");
@@ -43,7 +43,7 @@ SoulMaster::SoulMaster()
 	turn.Load("soulmaster_turn");
 	turn.SetInterval(0.1f);
 	startteleport.Load("soulmaster_teleport");
-	startteleport.SetInterval(0.05f);
+	startteleport.SetInterval(0.04f);
 	startteleport.OnAnimEnter.Bind([this]() {circle->SetCollisonMode(CollisionMode::None); });
 	startteleport.OnAnimExit.Bind([this]() 
 		{
@@ -51,7 +51,7 @@ SoulMaster::SoulMaster()
 			GameplayStatics::CreateObject<Effect>(GetWorldPosition())->Init("effect_soulmaster_teleport", -0.02f);
 		});
 	endteleport.Load("soulmaster_teleport");
-	endteleport.SetInterval(0.06f);
+	endteleport.SetInterval(0.04f);
 	endteleport.SetReverse(true);
 	endteleport.OnAnimExit.Bind([this]() {circle->SetCollisonMode(CollisionMode::Collision); Behave(); });
 	startsummon.Load("soulmaster_startsummon");
@@ -209,7 +209,7 @@ void SoulMaster::Update(float deltaTime)
 		{
 			float delta = player->GetWorldPosition().x - GetWorldPosition().x;
 			delta = FMath::Clamp(delta, -200.f, 200.f);
-			SetLocalPosition(FVector2D(FMath::Lerp(GetWorldPosition().x, GetWorldPosition().x + delta, 0.01f), GetWorldPosition().y));
+			SetLocalPosition(FVector2D(FMath::Lerp(GetWorldPosition().x, GetWorldPosition().x + delta, 0.01f), FMath::Lerp(GetWorldPosition().y, 400.f, 0.02f)));
 			SetLocalPosition(ClampPosX(GetWorldPosition()));
 		}
 	}
@@ -387,7 +387,7 @@ void SoulMaster::Move()
 	case 0: aim = FVector2D(player->GetWorldPosition().x, 1100) + FVector2D::DegreeToVector(90 + 
 		FMath::RandReal(30.f, 60.f) * (FMath::RandPerc() > 0.5 ? 1 : -1)) * 600; break;
 	case 1: break;
-	case 2: aim = FVector2D(player->GetWorldPosition().x, 350); break;
+	case 2: aim = FVector2D(player->GetWorldPosition().x, 450); break;
 	case 3: aim = FVector2D(-800 * GetWorldScale().x, 850); break;
 	case 4: aim = FVector2D(-600 * GetWorldScale().x + 100.f, 600); break;
 	default:break;
@@ -450,6 +450,7 @@ void SoulMaster::Behave_1()
 	}
 	GameplayStatics::PlayCameraShake(7, 5);
 	
+	GameModeHelper::PlayFXSound("sound_soulmaster_teleport");
 	FVector2D aim = player->GetWorldPosition() + FVector2D::DegreeToVector(FMath::RandReal(10.f, 170.f)) * (500 - deathShakeTimer * 10);
 	aim = ClampPosX(aim);
 	GameplayStatics::CreateObject<SpatterParticle>()->Init(GetWorldPosition(), aim);

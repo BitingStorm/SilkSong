@@ -78,6 +78,7 @@ GrimmLevel::GrimmLevel()
 		GameMode* gameMode = GameModeHelper::GetInstance();
 		gameMode->GetAudioPlayer(0)->Stop("grimmtent");
 		gameMode->GetAudioPlayer(0)->Stop("nightmare");
+		gameMode->GetAudioPlayer(2)->Stop("nightmare_");
 		gameMode->GetAudioPlayer(1)->Stop("sound_nightmare_fireballs");
 		gameMode->GetAudioPlayer(1)->Stop("sound_nightmare_circling");
 		});

@@ -27,7 +27,7 @@ PlayerAnimator::PlayerAnimator()
 	hardland.Load("player_hardland");
 	hardland.SetInterval(0.15f);
 	softland.Load("player_softland");
-	softland.SetInterval(0.12f);
+	softland.SetInterval(0.11f);
 	attack_0.Load("player_attack_0", { 0,10 });
 	attack_0.SetInterval(0.06f);
 	attack_1.Load("player_attack_1", { 0,10 });
@@ -55,11 +55,11 @@ PlayerAnimator::PlayerAnimator()
 	grab.Load("player_grab");
 	grab.SetInterval(0.07f);
 	_closeskill.Load("player__closeskill");
-	_closeskill.SetInterval(0.06f);
+	_closeskill.SetInterval(0.05f);
 	closeskill.Load("player_closeskill");
-	closeskill.SetInterval(0.06f);
+	closeskill.SetInterval(0.05f);
 	remoteskill.Load("player_remoteskill", {0,5});
-    remoteskill.SetInterval(0.08f);
+    remoteskill.SetInterval(0.06f);
 	die.Load("player_die");
 	die.SetInterval(0.08f);
 	lowhealth.Load("player_lowhealth", { 0,5 });
@@ -209,7 +209,7 @@ void PlayerAnimator::BeginPlay()
 
 	fall_to_softland.Init(fall, softland);
 	fall_to_softland.AddCondition(AnimTransition::Float{ "landingSpeed",1200.f,TransitionComparison::LessEqual });
-	fall_to_softland.AddCondition(AnimTransition::Float{ "landingSpeed",500.f,TransitionComparison::Greater });
+	fall_to_softland.AddCondition(AnimTransition::Float{ "landingSpeed",700.f,TransitionComparison::Greater });
 	fall_to_softland.AddCondition(AnimTransition::Float{ "walkingSpeed",100.f,TransitionComparison::Less });
 
 	fall_to_idle.Init(fall, idle);

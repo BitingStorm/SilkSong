@@ -290,7 +290,7 @@ void Player::Update(float deltaTime)
 		}
 	}
 
-	if (bFloating && GameplayStatics::GetTimeSeconds() - lastFloatTime > 1.5f)
+	if (bFloating && GameplayStatics::GetTimeSeconds() - lastFloatTime > 1.2f)
 	{
 		ani->SetTrigger("floatingEnd");
 	}
@@ -332,7 +332,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		{
 			SetMaxWalkingSpeed(bRushing ? 700.f : 400.f);
 		}		
-		AddInputX(-2.5, !bWall);
+		AddInputX(-3.f, !bWall);
 		});
 	inputComponent->BindAction("WalkLeftEnd", EInputType::Released, [this]() {
 		if (walkLock == 1)ani->SetTrigger("leaveWall"); walkLock = 0; });
@@ -345,7 +345,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		{
 			SetMaxWalkingSpeed(bRushing ? 700.f : 400.f);
 		}
-		AddInputX(2.5, !bWall);
+		AddInputX(3.f, !bWall);
 		});
 	inputComponent->BindAction("WalkRightEnd", EInputType::Released, [this]() {
 		if (walkLock == 2)ani->SetTrigger("leaveWall"); walkLock = 0; });
@@ -398,7 +398,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		else if (bWall)
 		{
 			AddPosition(FVector2D(GetWorldScale().x * 10.f, -10.f));
-			rigid->AddImpulse(FVector2D(GetWorldScale().x * 500, -600)); 
+			rigid->AddImpulse(FVector2D(GetWorldScale().x * 500, -650)); 
 			ani->PlayMontage("jump");
 			lastJumpTime = GameplayStatics::GetTimeSeconds();
 			int32 jumpNum = FMath::RandInt(0, 12);
@@ -415,7 +415,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		{
 			float delta = GameplayStatics::GetTimeSeconds() - lastJumpTime;
 			bGround = false; ani->SetBool("flying", true); 
-			rigid->AddImpulse(FVector2D(0, -(6.25f - FMath::Log(1 + delta < 0.06f ? 0 : FMath::Abs(rigid->GetVelocity().y)) / FMath::Log(10)) / jumpFlag));
+			rigid->AddImpulse(FVector2D(0, -(6.2f - FMath::Log(1 + delta < 0.06f ? 0 : FMath::Abs(rigid->GetVelocity().y)) / FMath::Log(10)) / jumpFlag));
 		}
 		});
 	inputComponent->BindAction("JumpEnd", EInputType::Released, [this]() {
@@ -567,7 +567,7 @@ void Player::OnEnter(Collider* hitComp, Collider* otherComp, Actor* otherActor, 
 		SpawnWetLandEffect();
 		if (GetWorldPosition().y > 1000)GameModeHelper::PlayFXSound("sound_waterland");
 		if (rigid->GetVelocity().y > 1200)GameModeHelper::PlayFXSound("sound_hardland");
-		else if(rigid->GetVelocity().y > 500)GameModeHelper::PlayFXSound("sound_softland");
+		else if(rigid->GetVelocity().y > 700)GameModeHelper::PlayFXSound("sound_softland");
 		else GameModeHelper::PlayFXSound("sound_land");
 	}
 	else if (normalImpulse.x != 0 && GetWorldScale().x == -normalImpulse.x)

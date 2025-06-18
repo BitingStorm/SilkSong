@@ -321,6 +321,7 @@ void ResourceManager::Initialize()
 	Load("menu_", "Asset/Sounds/menu_.mp3");
 	Load("grimmtent", "Asset/Sounds/grimmtent.mp3");
 	Load("nightmare", "Asset/Sounds/nightmare.mp3");
+	Load("nightmare_", "Asset/Sounds/nightmare_.mp3");
 	Load("bossdefeat", "Asset/Sounds/bossdefeat.mp3");
 	Load("bossdefeat_", "Asset/Sounds/bossdefeat_.mp3");
 	Load("accordion", "Asset/Sounds/accordion.mp3");

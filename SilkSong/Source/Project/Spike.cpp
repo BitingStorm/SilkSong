@@ -22,7 +22,7 @@ Spike::Spike()
 	ani->SetupAttachment(render);
 
 	idle.Load("spike_idle");
-	idle.SetInterval(0.1f);
+	idle.SetInterval(0.05f);
 	idle.SetLooping(false);
 	idle.OnAnimEnter.Bind([this]() {
 		GameplayStatics::PlayCameraShake(7, 5);
@@ -37,12 +37,12 @@ Spike::Spike()
 		GameModeHelper::PlayFXSound("sound_spike_shrivelback");
 		});
 	ready.Load("spike_ready", { 0,275.f });
-	ready.SetInterval(0.08f);
+	ready.SetInterval(0.05f);
 	ready.SetLooping(false);
 	start.Load("spike_start", { 0,167.f });
-	start.SetInterval(0.08f);
+	start.SetInterval(0.05f);
 	end.Load("spike_end", { 0,81.f });
-	end.SetInterval(0.08f);
+	end.SetInterval(0.05f);
 	destroy.Bind([this]() {Destroy(); });
 	end.AddNotification(0, destroy);
 
@@ -54,7 +54,7 @@ Spike::Spike()
 	ani->Insert("end", end);
 	ani->SetNode("ready");
 
-	AttackTimerHandle.Bind(0.5f, [this]() {ani->SetNode("start"); });
+	AttackTimerHandle.Bind(0.6f, [this]() {ani->SetNode("start"); });
 }
 
 void Spike::Update(float deltaTime)
