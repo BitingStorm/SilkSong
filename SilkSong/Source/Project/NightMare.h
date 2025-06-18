@@ -40,6 +40,7 @@ private:
 	Animation airdash;
 	Animation startdash;
 	Animation dash;
+	Animation enddash;
 	Animation startslash;
 	Animation slash;
 	Animation startuppercut;
@@ -57,6 +58,7 @@ private:
 	AnimEdge startballoon_to_balloon;
 	AnimEdge startairdash_to_airdash;
 	AnimEdge startdash_to_dash;
+	AnimEdge dash_to_enddash;
 	AnimEdge startslash_to_slash;
 	AnimEdge slash_to_startuppercut;
 	AnimEdge startuppercut_to_uppercut;
@@ -71,6 +73,9 @@ private:
 	Animator* ani_;
 	class SpriteRenderer* render_;
 	class Bg* beam;
+
+	Timer RoarTimerHandle;
+	int32 roarTimer;
 
 	Timer ClickTimerHandle;
 	Timer BowTimerHandle;

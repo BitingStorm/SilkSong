@@ -17,6 +17,7 @@
 #include "PuffManager.h"
 #include "Gate.h"
 #include "Components/Camera.h"
+#include "BossNameUI.h"
 
 
 SoulMaster::SoulMaster()
@@ -190,6 +191,10 @@ void SoulMaster::BeginPlay()
 	GameModeHelper::PlayFXSound("sound_soulmaster_roar");
 
 	SetLocalScale({ -1,1 });
+
+	BossNameUI* ui = GameplayStatics::CreateUI<BossNameUI>();
+	ui->InitName("MASTER", "S O U L");
+	ui->AddToViewport();
 }
 
 void SoulMaster::Update(float deltaTime)

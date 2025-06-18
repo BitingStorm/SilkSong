@@ -403,6 +403,34 @@ void ImageToolkit::GaussianFilter(IMAGE* srcImg, IMAGE* dstImg, int32 radius)
 	delete[] temp;
 }
 
+void ImageToolkit::OutText(int x, int y, LPCTSTR str, BYTE alpha, COLORREF color, int size, LPCTSTR style)
+{
+	IMAGE img;
+	SetWorkingImage(&img);
+
+	setbkmode(TRANSPARENT);
+	settextstyle(6 * size, 3 * size, style);
+	settextcolor(color);
+
+	int w = textwidth(str), h = textheight(str);
+	img.Resize(w, h);
+	outtextxy(0, 0, str);
+
+	SetWorkingImage();
+
+	DWORD* pMem = GetImageBuffer(&img);
+	for (int i = 0; i < img.getwidth(); i++)
+	{
+		for (int j = 0; j < img.getheight(); j++)
+		{
+			int xy = j * img.getwidth() + i;
+			if (pMem[xy] != 0) pMem[xy] = SET_ALPHA(pMem[xy], alpha);
+		}
+	}
+
+	AlphaBlend(GetImageHDC(), x, y, w, h, GetImageHDC(&img), 0, 0, w, h, { AC_SRC_OVER,0,alpha,AC_SRC_ALPHA });
+}
+
 void ImageToolkit::ApplyGaussianFilterOnScreen()
 {
 	if (!bIsGaussianFilterOn)return;

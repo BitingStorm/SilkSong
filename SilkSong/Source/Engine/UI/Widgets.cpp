@@ -18,40 +18,48 @@ std::unordered_map<std::string, COLORREF>ArtyEngine::Characters::TextColorMap =
 	{"$h",CYAN}/*ÇàÉ«*/,{"$i",BROWN}/*ºÖÉ«*/
 };
 
-void ArtyEngine::Characters::SetCharacters(std::string text, int size, LPCTSTR type)
+void ArtyEngine::Characters::SetCharacters(std::string text, int size, LPCTSTR style)
 {
-	row = 1, column = 0;
-	int temp = 0;
+	row = 1;
+	maxWidth = 0;
+	std::string temp;
 	for (int i = 0; i < text.length(); ++i)
 	{
-		if (text[i] == '\n') { row++, column = temp > column ? temp : column, temp = 0; }
+		if (text[i] == '\n') 
+		{ 
+			++row;
+			int width = textwidth(temp.c_str());
+			maxWidth = width > maxWidth ? width : maxWidth;
+			temp.clear();
+		}
 		else if (text[i] == '$' && (uint64)i + 1 < text.length())
 		{
 			std::string buf = "$" + text[i + 1];
 			if (TextColorMap.find(buf) != TextColorMap.end())++i;
-			else --temp;
+			else temp.push_back(text[i]);
 		}
-		else ++temp;
+		else temp.push_back(text[i]);
 	}
-	column = temp>column?temp:column;
+	int width = textwidth(temp.c_str());
+	maxWidth = width > maxWidth ? width : maxWidth;
+
 	this->texts = text;
 	this->size = size;
-	this->type = type;
+	this->style = style;
 }
 
-void ArtyEngine::Characters::PrintCharacters(FVector2D pos, CharactersPattern pattern)
+void ArtyEngine::Characters::PrintCharacters(FVector2D pos, BYTE alpha, CharactersPattern pattern)
 {
-	settextstyle(6 * size, 3 * size, type);
-	settextcolor(BLACK);
 	int pat = 1;
 	switch (pattern)
 	{
 	case CharactersPattern::Left:pat = 0; break;
-	case CharactersPattern::Middle:pat = 1;break;
+	case CharactersPattern::Middle:pat = 1; break;
 	case CharactersPattern::Right:pat = 2; break;
 	default:pat = 1;break;
 	}
 
+	COLORREF color = WHITE;
 
 	std::string temp;
 	int r = 0;
@@ -59,7 +67,8 @@ void ArtyEngine::Characters::PrintCharacters(FVector2D pos, CharactersPattern pa
 	{
 		if (texts[i] == '\n')
 		{
-			outtextxy((int)pos.x + (GetWidth() - int(temp.size()) * 3 * size) * pat / 2, (int)pos.y + r * 6 * size, temp.c_str());
+			settextstyle(6 * size, 3 * size, style);
+			ImageToolkit::OutText((int)pos.x + (GetWidth() - textwidth(temp.c_str())) * pat / 2, (int)pos.y + r * 6 * size, temp.c_str(), alpha, color, size, style);
 			temp.clear(), ++r;
 		}
 		else if (texts[i] == '$' && (uint64)i + 1 < texts.length())
@@ -67,15 +76,17 @@ void ArtyEngine::Characters::PrintCharacters(FVector2D pos, CharactersPattern pa
 			std::string buf = "$" + std::string(1, texts[++i]);
 			if (TextColorMap.find(buf) != TextColorMap.end())
 			{
-				settextcolor(TextColorMap[buf]);
+				color = TextColorMap[buf];
 			}
 			else temp.push_back(texts[i]);
 		}
-		else temp.push_back(texts[i]);
+		else
+		{
+			temp.push_back(texts[i]);
+		}
 	}
-	outtextxy((int)pos.x + (GetWidth() - int(temp.size()) * 3 * size) * pat / 2, (int)pos.y + r * 6 * size, temp.c_str());
-
-	settextcolor(BLACK);
+	settextstyle(6 * size, 3 * size, style);
+	ImageToolkit::OutText((int)pos.x + (GetWidth() - textwidth(temp.c_str())) * pat / 2, (int)pos.y + r * 6 * size, temp.c_str(), alpha, color, size, style);
 }
 
 
@@ -299,7 +310,7 @@ void Panel::AdjustMemberSizeToUnit(Widget* member)
 
 void HorizontalPanel::AdjustMemberPosition(Widget* member, int32 index)
 {
-	if(index<0)return;
+	if (index < 0)return;
 	FVector2D pos = FVector2D(index * (unitSize.x + spacing), 0) + FVector2D(unitSize.x, unitSize.y)*0.5f;
 	member->SetRelativePosition(pos);
 }
@@ -311,7 +322,7 @@ FVector2D HorizontalPanel::GetSize() const
 
 void VerticalPanel::AdjustMemberPosition(Widget* member, int32 index)
 {
-	if (index<0)return;
+	if (index < 0)return;
 	FVector2D pos = FVector2D(0, index * (unitSize.y + spacing));
 	member->SetRelativePosition(pos);
 }
@@ -323,7 +334,7 @@ FVector2D VerticalPanel::GetSize() const
 
 void GridPanel::AdjustMemberPosition(Widget* member, int32 index)
 {
-	if (index<0)return;
+	if (index < 0)return;
 	FVector2D pos = FVector2D((index % column) * (unitSize.x + spacingX), (index / column) * (unitSize.y + spacingY));
 	member->SetRelativePosition(pos);
 }
@@ -347,8 +358,13 @@ void Text::Update()
 
 void Text::Render()
 {
-	if (uiPattern == UIPattern::None)return;
-	texts.PrintCharacters(GetScreenPosition() - size * 0.5f, textPattern);
+	if (uiPattern == UIPattern::None || alpha == 0)return;
+	texts.PrintCharacters(GetScreenPosition() - size * 0.5f, alpha, textPattern);
+}
+
+void Text::SetAlpha(BYTE alpha)
+{
+	alpha = FMath::Clamp(alpha, BYTE(0), BYTE(255)); this->alpha = alpha;
 }
 
 

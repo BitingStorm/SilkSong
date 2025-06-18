@@ -43,6 +43,13 @@ public:
 		music_->SetVolume(volumes[2] / 2);
 	}
 
+	void MakeEarRinging_()
+	{
+		bEarRinging = true;
+		music->SetVolume(volumes[0] / 2);
+		music_->SetVolume(volumes[2] / 2);
+	}
+
 	void RefreshVolume()
 	{
 		bEarRinging = false;

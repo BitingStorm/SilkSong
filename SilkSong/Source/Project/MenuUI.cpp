@@ -89,11 +89,8 @@ MenuUI::MenuUI()
 		Options[i]->SetLayoutPattern(LayoutPattern::Center);
 		Options[i]->SetLayer(10);
 		Options[i]->SetPattern(CharactersPattern::Middle);
-		Options[i]->SetRelativePosition(FVector2D(-4, 2));
+		Options[i]->SetRelativePosition(FVector2D(0, 2));
 	}
-	Options[2]->SetRelativePosition(FVector2D(-8, 2));
-	Options[3]->SetRelativePosition(FVector2D(-12, 2));
-
 
 	Options[0]->SetText("$0START GAME", 5, "Trajan Pro");
 	Options[1]->SetText("$0OPTIONS", 5, "Trajan Pro");

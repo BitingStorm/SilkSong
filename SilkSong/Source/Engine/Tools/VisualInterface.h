@@ -164,6 +164,11 @@ public:
 	//高斯滤波(模糊且抗锯齿。但较为耗時，慎用)
 	static void GaussianFilter(IMAGE* srcImg, IMAGE* dstImg, int32 radius);
 
+	/** 其他 **/
+	
+	//绘制透明文字
+	static void OutText(int x, int y, LPCTSTR str, BYTE alpha, COLORREF color, int size, LPCTSTR style);
+
 private:
 	//对整个屏幕施加高斯滤波
 	static void ApplyGaussianFilterOnScreen();

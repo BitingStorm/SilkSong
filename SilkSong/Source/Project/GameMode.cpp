@@ -25,7 +25,7 @@ void GameMode::Update(float deltaTime)
 	{
 		timer += deltaTime;
 		music->SetVolume(volumes[0] * (timer + 0.5f));
-		sound->SetVolume(volumes[1] * (timer + 0.5f));
+		if(sound->GetVolume() < volumes[1])sound->SetVolume(volumes[1] * (timer + 0.5f));
 		music_->SetVolume(volumes[2] * (timer + 0.5f));
 		if (timer >= 0.5f)
 		{

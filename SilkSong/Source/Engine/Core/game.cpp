@@ -41,7 +41,7 @@ public:
 		//系统Debug绘制参数
 		setlinestyle(PS_SOLID | PS_JOIN_BEVEL);
 		setfillcolor(LIGHTBLUE);
-		setlinecolor(LIGHTBLUE);
+		setlinecolor(BLACK);
 		
 		//系统文字参数
 		setbkmode(TRANSPARENT);

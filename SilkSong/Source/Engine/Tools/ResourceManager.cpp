@@ -137,7 +137,7 @@ void ResourceManager::Initialize()
 	Load("nightmare_startairdash", "Asset/Animations/Enemy/NightMare/StartAirDash/", 217, 345, 7);
 	Load("nightmare_airdash", "Asset/Animations/Enemy/NightMare/AirDash/", 137, 336, 3);
 	Load("nightmare_startdash", "Asset/Animations/Enemy/NightMare/StartDash/", 330, 246, 4);
-	Load("nightmare_dash", "Asset/Animations/Enemy/NightMare/Dash/", 569, 208, 4);
+	Load("nightmare_dash", "Asset/Animations/Enemy/NightMare/Dash/", 569, 208, 3);
 	Load("nightmare_startslash", "Asset/Animations/Enemy/NightMare/StartSlash/", 226, 296, 4);
 	Load("nightmare_slash", "Asset/Animations/Enemy/NightMare/Slash/", { {506,280}, {418,294}, {495,274}, {380,306}, {380,306}, {380,306} });
 	Load("nightmare_startuppercut", "Asset/Animations/Enemy/NightMare/StartUpperCut/", 330, 248, 3);

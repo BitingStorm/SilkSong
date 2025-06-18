@@ -408,6 +408,9 @@
     <ClInclude Include="Source\Project\RedShade.h">
       <Filter>Project\Enemies\Boss\NightMare</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Project\BossNameUI.h">
+      <Filter>Project\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Components\ActorComponent.cpp">
@@ -691,6 +694,9 @@
     </ClCompile>
     <ClCompile Include="Source\Project\RedShade.cpp">
       <Filter>Project\Enemies\Boss\NightMare</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\BossNameUI.cpp">
+      <Filter>Project\Game</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

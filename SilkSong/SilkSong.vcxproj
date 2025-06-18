@@ -25,6 +25,7 @@
     <ClInclude Include="Source\Engine\Physics\Collisions2D.h" />
     <ClInclude Include="Source\Engine\Math\Ray2D.h" />
     <ClInclude Include="Source\Project\BossLevel.h" />
+    <ClInclude Include="Source\Project\BossNameUI.h" />
     <ClInclude Include="Source\Project\Brumm.h" />
     <ClInclude Include="Source\Project\DefaultDamageStrategy.h" />
     <ClInclude Include="Source\Engine\Math\Box2D.h" />
@@ -132,6 +133,7 @@
     <ClCompile Include="Source\Engine\Objects\Level.cpp" />
     <ClCompile Include="Source\Engine\Physics\Collisions2D.cpp" />
     <ClCompile Include="Source\Project\BossLevel.cpp" />
+    <ClCompile Include="Source\Project\BossNameUI.cpp" />
     <ClCompile Include="Source\Project\Brumm.cpp" />
     <ClCompile Include="Source\Project\DamageResponseComponent.cpp" />
     <ClCompile Include="Source\Project\DamageSystem.cpp" />

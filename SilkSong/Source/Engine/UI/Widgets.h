@@ -25,19 +25,19 @@ namespace ArtyEngine
 	class Characters
 	{
 		int32 row = 1;
-		int32 column = 0;
+		int32 maxWidth = 0;
 		std::string texts = "";
 		int size = 3;
-		LPCTSTR type = "楷体";
+		LPCTSTR style = "楷体";
 
 		//颜色映射表
 		static std::unordered_map<std::string, COLORREF> TextColorMap;
 	public:
-		int GetWidth() const { return column * size * 3; }
+		int GetWidth() const { return maxWidth; }
 		int GetHeight() const { return row * size * 6; }
 
-		void SetCharacters(std::string text, int size = 3, LPCTSTR type = "楷体");
-		void PrintCharacters(FVector2D pos, CharactersPattern pattern = CharactersPattern::Middle);
+		void SetCharacters(std::string text, int size = 3, LPCTSTR style = "楷体");
+		void PrintCharacters(FVector2D pos, BYTE alpha = 255, CharactersPattern pattern = CharactersPattern::Middle);
 	};
 }
 
@@ -217,6 +217,7 @@ protected:
 	ArtyEngine::Characters texts;
 	CharactersPattern textPattern;
 	std::string* bindedText = nullptr;
+	BYTE alpha = 255;
 public:
 	Text() :textPattern(CharactersPattern::Middle) {}
 
@@ -225,7 +226,9 @@ public:
 	virtual void Render()override;
 
 	void SetPattern(CharactersPattern pattern) { textPattern = pattern; }
-	void SetText(std::string te, int si = 3, LPCTSTR ty = "楷体") { texts.SetCharacters(te, si, ty); }
+	BYTE GetAlpha()const { return alpha; }
+	void SetAlpha(BYTE alpha);
+	void SetText(std::string te, int si = 3, LPCTSTR st = "楷体") { texts.SetCharacters(te, si, st); }
 	void BindText(std::string& origin) { bindedText = &origin; }
 };
 
