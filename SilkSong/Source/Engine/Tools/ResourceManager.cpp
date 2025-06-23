@@ -45,13 +45,16 @@ void ResourceManager::Initialize()
 	Load("player_closeskill", "Asset/Animations/Player/CloseDisSkill/", 179, 152, 7);
 	Load("player_remoteskill", "Asset/Animations/Player/RemoteDisSkill/", { {215,162},{215,162},{215,162},{215,162},{215,162},{215,162},{215,162},{215,162},
 		{118,141},{118,141},{118,141},{118,141},{118,141},{118,141},{185,142},{185,142},{185,142},{185,142},{185,142},{185,142} });
+	Load("player_rapidskill", "Asset/Animations/Player/RapidSkill/", { {166,156},{177,148},{109,121},{103,133},{183,144},{174,148} });
 	Load("player_lowhealth", "Asset/Animations/Player/LowHealth/", 164, 164, 6);
 	Load("player_die", "Asset/Animations/Player/Die/", 146, 119, 4);
 	Load("player_sitdown", "Asset/Animations/Player/SitDown.png", 170, 159, 1, 1, 1);
 	Load("player_standup", "Asset/Animations/Player/StandUp.png", 177, 186, 1, 1, 1);
 	Load("player_lookdown", "Asset/Animations/Player/LookDown.png", 142, 169, 1, 1, 1);
 	Load("player_lookup", "Asset/Animations/Player/LookUp.png", 149, 122, 1, 1, 1);
-	Load("player_leave", "Asset/Animations/Player/Leave/", 304, 199, 8);
+	Load("player_leavestart", "Asset/Animations/Player/LeaveStart/", 304, 199, 3);
+	Load("player_leave", "Asset/Animations/Player/Leave/", 304, 199, 5);
+	Load("player_leaveend", "Asset/Animations/Player/LeaveEnd/", { {208,102}, {174,148} });
 	Load("player_wall", "Asset/Animations/Player/Wall.png", 100, 175, 1, 1, 1);
 	Load("player_defend", "Asset/Animations/Player/Defend/", 158, 120, 4);
 	Load("player_defendstart", "Asset/Animations/Player/DefendStart/", 150, 172, 3);
@@ -74,6 +77,7 @@ void ResourceManager::Initialize()
 	Load("effect_closeskill", "Asset/Animations/Player/CloseSkillEffect/", 425, 450, 9);
 	Load("effect_throw", "Asset/Animations/Player/ThrowEffect/", 278, 133, 3);
 	Load("effect_remoteskill", "Asset/Animations/Player/RemoteSkillEffect/", 900, 40, 6);
+	Load("effect_rapidskill", "Asset/Animations/Player/RapidSkillEffect/", { {267,127},{373,161},{354,161} });
 	Load("effect_geo", "Asset/Animations/Player/GeoEffect/", { {50,24},{39,32},{81,26},{100,30} });
 	Load("effect_sit", "Asset/Animations/Player/SitEffect/", 1059, 500, 4);
 	Load("effect_leave", "Asset/Animations/Player/LeaveEffect/", 440, 115, 7);
@@ -144,6 +148,7 @@ void ResourceManager::Initialize()
 	Load("nightmare_uppercut", "Asset/Animations/Enemy/NightMare/UpperCut/", 254, 500, 2);
 	Load("nightmare_stun", "Asset/Animations/Enemy/NightMare/Stun/", { {184,286}, {184,286}, {386,390}, {386,390}, {386,390}, {301,279}, {301,279} });
 	Load("nightmare_fly", "Asset/Animations/Enemy/NightMare/Fly/", 113, 126, 3);
+	Load("nightmare_turn", "Asset/Animations/Enemy/NightMare/Turn/", 130, 128, 2);
 	Load("nightmare_die", "Asset/Animations/Enemy/NightMare/Die/", 189, 282, 3);
 	Load("nightmare_scream", "Asset/Animations/Enemy/NightMare/Scream/", 308, 262, 3);
 	Load("nightmare_fingerstretch", "Asset/Animations/Enemy/NightMare/FingerStretch/", 90, 97, 6);
@@ -455,6 +460,10 @@ void ResourceManager::Initialize()
 	Load("sound_boss_stun", "Asset/Sounds/boss_stun.mp3");
 	Load("sound_boss_finalhit", "Asset/Sounds/boss_finalhit.mp3");
 
+	/*************
+	 * 视频资源加载
+	 *************/
+	Load("video_start", L"Asset/Videos/start.avi");
 
 	/*************
 	 * 字体资源加载
@@ -481,6 +490,11 @@ IMAGE* ResourceManager::Fetch(std::string name)
 ArtyEngine::FAnimationResource ResourceManager::FetchAnimation(std::string name)
 {
 	return animationPool[name];
+}
+
+std::wstring ResourceManager::FetchVideo(std::string name)
+{
+	return videoPool[name];
 }
 
 
@@ -552,6 +566,11 @@ void ResourceManager::Load(std::string name, std::string path)
 {
 	std::string file = std::string("open ") + path + std::string(" alias ") + name;
 	mciSendString(file.c_str(), NULL, 0, NULL);
+}
+
+void ResourceManager::Load(std::string name, std::wstring pszFileName)
+{
+	videoPool[name] = pszFileName;
 }
 
 void ResourceManager::LoadText(std::string path)

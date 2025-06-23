@@ -411,6 +411,15 @@
     <ClInclude Include="Source\Project\BossNameUI.h">
       <Filter>Project\Game</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Engine\Components\VideoPlayer.h">
+      <Filter>Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\Movie.h">
+      <Filter>Project\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\StartLevel.h">
+      <Filter>Project\Levels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Components\ActorComponent.cpp">
@@ -697,6 +706,15 @@
     </ClCompile>
     <ClCompile Include="Source\Project\BossNameUI.cpp">
       <Filter>Project\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Components\VideoPlayer.cpp">
+      <Filter>Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\Movie.cpp">
+      <Filter>Project\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\StartLevel.cpp">
+      <Filter>Project\Levels</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

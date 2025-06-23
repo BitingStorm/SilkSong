@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Engine\Components\VideoPlayer.h" />
     <ClInclude Include="Source\Engine\Math\Segment2D.h" />
     <ClInclude Include="Source\Engine\Math\Circle.h" />
     <ClInclude Include="Source\Engine\Math\Polygon.h" />
@@ -47,6 +48,7 @@
     <ClInclude Include="Source\Project\GrimmSmoke.h" />
     <ClInclude Include="Source\Project\Interactive.h" />
     <ClInclude Include="Source\Project\LevelTransformer.h" />
+    <ClInclude Include="Source\Project\Movie.h" />
     <ClInclude Include="Source\Project\NightMare.h" />
     <ClInclude Include="Source\Project\PlayerPropertyComponent.h" />
     <ClInclude Include="Source\Project\PropertyCarrier.h" />
@@ -94,6 +96,7 @@
     <ClInclude Include="Source\Project\SoulOrbManager.h" />
     <ClInclude Include="Source\Project\SpatterParticle.h" />
     <ClInclude Include="Source\Project\Spike.h" />
+    <ClInclude Include="Source\Project\StartLevel.h" />
     <ClInclude Include="Source\Project\TearCityLevel.h" />
     <ClInclude Include="Source\Engine\Components\ActorComponent.h" />
     <ClInclude Include="Source\Engine\Components\Animator.h" />
@@ -129,6 +132,7 @@
     <ClInclude Include="Source\Project\Wave.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Engine\Components\VideoPlayer.cpp" />
     <ClCompile Include="Source\Engine\Core\Object.cpp" />
     <ClCompile Include="Source\Engine\Objects\Level.cpp" />
     <ClCompile Include="Source\Engine\Physics\Collisions2D.cpp" />
@@ -157,6 +161,7 @@
     <ClCompile Include="Source\Project\CloseSkillBox.cpp" />
     <ClCompile Include="Source\Project\Dart.cpp" />
     <ClCompile Include="Source\Project\MenuUI.cpp" />
+    <ClCompile Include="Source\Project\Movie.cpp" />
     <ClCompile Include="Source\Project\Needle.cpp" />
     <ClCompile Include="Source\Project\NewTheme.cpp" />
     <ClCompile Include="Source\Project\NightMare.cpp" />
@@ -217,6 +222,7 @@
     <ClCompile Include="Source\Project\SoulOrbManager.cpp" />
     <ClCompile Include="Source\Project\SpatterParticle.cpp" />
     <ClCompile Include="Source\Project\Spike.cpp" />
+    <ClCompile Include="Source\Project\StartLevel.cpp" />
     <ClCompile Include="Source\Project\TearCityLevel.cpp" />
     <ClCompile Include="Source\Project\PlayerAnimator.cpp" />
     <ClCompile Include="Source\Project\RainProducer.cpp" />

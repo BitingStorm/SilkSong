@@ -22,21 +22,48 @@ Needle::Needle()
 	box->OnComponentBeginOverlap.AddDynamic(this, &Needle::OnOverlap);
 
 	distance = 0;
+	direction = 0;
+	absDistance = 0;
+	bIsRapid = false;
 }
 
 void Needle::Update(float deltaTime)
 {
 	Actor::Update(deltaTime);
 
-	float delta = 2500 * deltaTime * GetLocalScale().x;
+	if (direction == 0)
+	{
+		direction = GetLocalScale().x;
+	}
+
+	float delta = (bIsRapid ? 5000 : 3000) * deltaTime * direction;
 	AddPosition({ delta, 0 });
 	distance += delta;
+	absDistance += FMath::Abs(delta);
 
-	if (distance > 625)
+	if (FMath::Abs(distance) > (bIsRapid ? 300 : 750))
 	{
-		distance = 625;
-		SetLocalScale({ -1,1 });
+		distance = (bIsRapid ? 300 : 750) * direction;
+		if (bIsRapid)
+		{
+			box->SetCollisonMode(CollisionMode::None);
+		}
+		else
+		{
+			SetLocalScale({ -1,1 });
+		}
+		direction = -direction;
 	}
+
+	if (absDistance > (bIsRapid ? 600 : 1500))
+	{
+		Destroy();
+	}
+}
+
+void Needle::Init(bool rapid)
+{
+	bIsRapid = rapid; if (rapid)box->SetSize({ 150,100 });
 }
 
 void Needle::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherActor)
@@ -47,7 +74,7 @@ void Needle::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherActor
 		{
 			return;
 		}
-		GameModeHelper::ApplyDamage(this, enemy, 3, EDamageType::Player);
+		GameModeHelper::ApplyDamage(this, enemy, bIsRapid ? 8 : 5, EDamageType::Player);
 		GameModeHelper::PlayFXSound("sound_damage_1");
 	}
 	else if (Chest* chest = Cast<Chest>(otherActor))

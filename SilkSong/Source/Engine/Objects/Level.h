@@ -25,6 +25,8 @@ class Level :public Object, public TimerHandler
 	std::function<void()> callback;
 
 public:
+	Level();
+
 	virtual void BeginPlay()override;
 
 	template<typename T>

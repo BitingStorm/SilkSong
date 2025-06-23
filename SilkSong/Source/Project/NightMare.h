@@ -47,6 +47,7 @@ private:
 	Animation uppercut;
 	Animation stun;
 	Animation fly;
+	Animation turn;
 	Animation die;
 	Animation scream;
 
@@ -63,6 +64,7 @@ private:
 	AnimEdge slash_to_startuppercut;
 	AnimEdge startuppercut_to_uppercut;
 	AnimEdge stun_to_fly;
+	AnimEdge turn_to_fly;
 
 	AnimationDelegate spawnBall;
 	AnimationDelegate dieShake;

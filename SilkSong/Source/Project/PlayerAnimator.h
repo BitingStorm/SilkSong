@@ -16,6 +16,7 @@ public:
 	AnimationDelegate hurtPause;
 	AnimationDelegate dartSpawn;
 	AnimationDelegate needleSpawn;
+	AnimationDelegate needleSpawn_;
 	AnimationDelegate grabFinished;
 	AnimationDelegate downAttackSpawn;
 	AnimationDelegate dieShake;
@@ -51,6 +52,7 @@ private:
 	Animation _closeskill;
 	Animation closeskill;
 	Animation remoteskill;
+	Animation rapidskill;
 	Animation die;
 	Animation lowhealth;
 	Animation sitdown;
@@ -58,6 +60,8 @@ private:
 	Animation lookdown;
 	Animation lookup;
 	Animation leave;
+	Animation leavestart;
+	Animation leaveend;
 	Animation wall;
 	Animation defendstart;
 	Animation defend;
@@ -99,8 +103,11 @@ private:
 	AnimEdge _closeskill_to_closeskill;
 	AnimEdge closeskill_to_idle;
 	AnimEdge remoteskill_to_idle;
+	AnimEdge rapidskill_to_idle;
 	AnimEdge standup_to_idle;
-	AnimEdge leave_to_fall;
+	AnimEdge leavestart_to_leave;
+	AnimEdge leave_to_leaveend;
+	AnimEdge leaveend_to_fall;
 	AnimEdge wall_to_idle;
 	AnimEdge idle_to_lookup;
 	AnimEdge lookup_to_idle;

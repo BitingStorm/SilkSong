@@ -35,7 +35,7 @@ void AttackBox::Init(ECharacterDirection direction, int32 damage)
 	}
 	else if (direction == ECharacterDirection::LookDown)
 	{
-		box->SetSize({ 75, 130 });
+		box->SetSize({ 100, 150 });
 		box->AddPosition({ 0, 65 });
 	}
 	this->damage = damage;

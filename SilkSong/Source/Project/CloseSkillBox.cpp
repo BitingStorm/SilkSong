@@ -15,7 +15,7 @@ CloseSkillBox::CloseSkillBox()
 	ani = ConstructComponent<Animator>();
 	ani->SetupAttachment(render);
 	effect.Load("effect_closeskill");
-	effect.SetInterval(0.06f);
+	effect.SetInterval(0.04f);
 	ani->Insert("idle", effect);
 	ani->SetNode("idle");
 
@@ -27,7 +27,7 @@ CloseSkillBox::CloseSkillBox()
 
 
 	DestroyTimerHandle.Bind(1.f, [this]() {Destroy(); }, false);
-	AttackTimerHandle.Bind(0.18f, [this]() {
+	AttackTimerHandle.Bind(0.15, [this]() {
 		std::vector<Actor*> enemies = circle->GetCollisions(CollisionType::Enemy);
 		for (auto& obj : enemies)
 		{

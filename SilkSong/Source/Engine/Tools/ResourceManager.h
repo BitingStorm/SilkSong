@@ -33,11 +33,13 @@ public:
 
 	IMAGE* Fetch(std::string name);
 	ArtyEngine::FAnimationResource FetchAnimation(std::string name);
+    std::wstring FetchVideo(std::string name);
 
 private:
 	std::unordered_map<std::string, IMAGE*>imagePool;
 	std::unordered_map<std::string, ArtyEngine::FAnimationResource>animationPool;
 	std::unordered_map<std::string, std::string>audioPool;
+	std::unordered_map<std::string, std::wstring>videoPool;
 
 	/**
 	 * @brief 加载单张图像资源
@@ -79,6 +81,9 @@ private:
 
 	//加载音频媒体资源
 	void Load(std::string name, std::string path);
+
+	//加载视频资源
+	void Load(std::string name, std::wstring pszFileName);
 
 	//加载字体资源
 	void LoadText(std::string path);

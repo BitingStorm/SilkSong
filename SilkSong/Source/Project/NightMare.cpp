@@ -62,11 +62,11 @@ NightMare::NightMare()
 	bow.SetInterval(0.08f);
 	bow.SetLooping(false);
 	startteleport.Load("nightmare_teleport");
-	startteleport.SetInterval(0.05f);
+	startteleport.SetInterval(0.04f);
 	startteleport.OnAnimEnter.Bind([this]() {
 		circle->SetCollisonMode(CollisionMode::None); box->SetCollisonMode(CollisionMode::None); box->SetSize({ 40,220 });
-		GameModeHelper::PlayFXSound("sound_nightmare_teleportin"); GameplayStatics::PlayCameraShake(5, 5);
-		GameplayStatics::CreateObject<Effect>(GetWorldPosition())->Init("effect_pillar", -0.02f);
+		GameModeHelper::PlayFXSound("sound_nightmare_teleportout");  GameplayStatics::PlayCameraShake(5, 5);
+		GameplayStatics::CreateObject<Effect>(GetWorldPosition())->Init("effect_pillar", -0.03f);
 		});
 	startteleport.OnAnimExit.Bind([this](){
 		if (!player)return; 
@@ -80,15 +80,15 @@ NightMare::NightMare()
 		GameplayStatics::CreateObject<GrimmSmoke>(GetWorldPosition() + FVector2D(0.f, 100.f)); Move();
 		});
 	endteleport.Load("nightmare_teleport");
-	endteleport.SetInterval(0.05f);
+	endteleport.SetInterval(0.04f);
 	endteleport.OnAnimEnter.Bind([this]() {
 		ani->Deactivate(); render->Deactivate();
 		TeleportTimerHandle.Bind(0.5f, [this]() {
+			GameModeHelper::PlayFXSound("sound_nightmare_teleportin");
 			ani->Activate(); render->Activate(); GameplayStatics::PlayCameraShake(5, 5);
 			GameplayStatics::CreateObject<GrimmSmoke>(GetWorldPosition() + FVector2D(0.f, 100.f));
 			GameplayStatics::CreateObject<Effect>(GetWorldPosition())->Init("effect_pillar", -0.02f);
 			});
-		GameModeHelper::PlayFXSound("sound_nightmare_teleportout"); 
 		});
 	endteleport.OnAnimExit.Bind([this]() { 
 		circle->SetCollisonMode(CollisionMode::Collision); box->SetCollisonMode(CollisionMode::Collision); Behave(); 
@@ -166,7 +166,9 @@ NightMare::NightMare()
 	stunPause.Bind([]() {GameplayStatics::Pause(0.25f); GameplayStatics::PlayCameraShake(7, 5); });
 	stun.AddNotification(1, stunPause);
 	fly.Load("nightmare_fly");
-	fly.SetInterval(0.07f);
+	fly.SetInterval(0.06f);
+	turn.Load("nightmare_turn");
+	turn.SetInterval(0.06f);
 	die.Load("nightmare_die");
 	die.SetInterval(0.07f);
 	dieShake.Bind([]() {GameplayStatics::PlayCameraShake(4, 3); });
@@ -219,6 +221,7 @@ NightMare::NightMare()
 	ani->Insert("uppercut", uppercut);
 	ani->Insert("stun", stun);
 	ani->Insert("fly", fly);
+	ani->Insert("turn", turn);
 	ani->Insert("die", die);
 	ani->Insert("scream", scream);
 	ani->SetNode("endteleport");
@@ -260,7 +263,7 @@ void NightMare::BeginPlay()
 
 	CastTimerHandle.Bind(0.3f, [this]() {
 		if (++castTimer > 6)return;
-		if(castTimer == 3 || castTimer == 5 || castTimer == 6)
+		if (castTimer == 3 || castTimer == 5 || castTimer == 6)
 		GameplayStatics::CreateObject<FireBat>(GetWorldPosition() + FVector2D(0, FMath::RandReal(0, 50)), 0, FVector2D(-GetWorldScale().x, 1));
 		}, true);
 	castTimer = 6;
@@ -289,18 +292,21 @@ void NightMare::Update(float deltaTime)
 
 	if (ani->IsPlaying("fly"))
 	{
-		rigid->SetVelocity(rigid->GetVelocity() * 0.98f);
+		rigid->SetVelocity(rigid->GetVelocity() * 0.975f);
 
 		if (rigid->GetVelocity().Size() < 100)
 		{
 			if (FVector2D::Distance(FVector2D(-1000, 600), GetWorldPosition()) > 200)
 			{
-				rigid->AddImpulse((FVector2D(-1000, 600) - GetWorldPosition()).GetSafeNormal() * 10000 * 500);
+				rigid->AddImpulse((FVector2D(-1000, 600) - GetWorldPosition()).GetSafeNormal() * 10000 * 750);
 			}
 			else
 			{
-				rigid->AddImpulse(FVector2D::DegreeToVector(FMath::RandReal(0, 360)) * 10000 * 500);
+				rigid->AddImpulse(FVector2D::DegreeToVector(FMath::RandReal(0, 360)) * 10000 * 750);
 			}
+
+			ani->PlayMontage("turn");
+			SetLocalScale(FVector2D(-GetLocalScale().x, 1));
 		}
 	}
 }
@@ -352,6 +358,8 @@ void NightMare::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 		GameModeHelper::GetInstance()->GetAudioPlayer(1)->Play("sound_nightmare_circling", true);
 		BehaviorTimerHandle.Stop();
 		GameModeHelper::GetInstance()->MakeEarRinging_();
+		circle->OnComponentBeginOverlap.RemoveDynamic(Cast<Enemy>(this), &Enemy::OnOverlap);
+		castTimer = 6;
 
 		RecoverTimerHandle.Bind(5.f, [this]() {
 		    BehaviorTimerHandle.Continue(); BehaviorTimerHandle.Reset();
@@ -364,6 +372,7 @@ void NightMare::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 			ani->SetNode("startteleport");
 			render_death->Deactivate();
 			GameModeHelper::GetInstance()->RefreshVolume();
+			circle->OnComponentBeginOverlap.AddDynamic(Cast<Enemy>(this), &Enemy::OnOverlap);
 			});
 		rigid->AddImpulse((FVector2D(-1000, 600) - GetWorldPosition()).GetSafeNormal() * 10000 * 500);
 		box->SetCollisonMode(CollisionMode::None);
@@ -386,10 +395,11 @@ void NightMare::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor,
 		{
 			render->Deactivate();
 			GameplayStatics::PlayCameraShake(10, 5);
-			for (int i = 0; i < 5; i++)
-			{
-				GameplayStatics::CreateObject<SkyFire>(GetWorldPosition())->Init(FVector2D(-2.f + i, 1.5f) * 400);
-			}
+			GameplayStatics::CreateObject<SkyFire>(GetWorldPosition())->Init(FVector2D(-1000, 400));
+			GameplayStatics::CreateObject<SkyFire>(GetWorldPosition())->Init(FVector2D(-500, 400));
+			GameplayStatics::CreateObject<SkyFire>(GetWorldPosition())->Init(FVector2D(0, 400));
+			GameplayStatics::CreateObject<SkyFire>(GetWorldPosition())->Init(FVector2D(500, 400));
+			GameplayStatics::CreateObject<SkyFire>(GetWorldPosition())->Init(FVector2D(1000, 400));
 			GameModeHelper::PlayFXSound("sound_skyflame");
 		}
 	}

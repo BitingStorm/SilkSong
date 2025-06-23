@@ -14,9 +14,9 @@ GrimmSmoke::GrimmSmoke()
 	particle->SetPattern(EParticlePattern::Center);
 	particle->SetCenter({ 50,250 }, { 50,130 });
 	particle->SetFadingInTime(0.1f);
-	particle->SetFadingOutTime(0.45f);
+	particle->SetFadingOutTime(0.4f);
 	particle->SetGravity(-98.f);
-	particle->SetLifeCycle(0.65f);
+	particle->SetLifeCycle(0.6f);
 	particle->SetIsLoop(false);
 	particle->SetLayer(3);
 

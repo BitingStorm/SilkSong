@@ -40,9 +40,9 @@ Spike::Spike()
 	ready.SetInterval(0.05f);
 	ready.SetLooping(false);
 	start.Load("spike_start", { 0,167.f });
-	start.SetInterval(0.05f);
+	start.SetInterval(0.04f);
 	end.Load("spike_end", { 0,81.f });
-	end.SetInterval(0.05f);
+	end.SetInterval(0.04f);
 	destroy.Bind([this]() {Destroy(); });
 	end.AddNotification(0, destroy);
 

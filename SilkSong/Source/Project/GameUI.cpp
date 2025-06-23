@@ -56,7 +56,7 @@ GameUI::GameUI()
 	CoinNum = AddWidget<Text>();
 	CoinNum->AttachTo(Coin);
 	CoinNum->SetLayoutPattern(LayoutPattern::RightMiddle);
-	CoinNum->SetRelativePosition(FVector2D(15, 0));
+	CoinNum->SetRelativePosition(FVector2D(25, 0));
 	CoinNum->SetSize(FVector2D(100, 50));
 	CoinNum->SetLayer(12);
 	CoinNum->SetPattern(CharactersPattern::Left);

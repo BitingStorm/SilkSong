@@ -2,6 +2,11 @@
 #include "Objects/Controller.h"
 
 
+Level::Level()
+{
+    callback = [this]() {return mainController = GameplayStatics::CreateObject<Controller>(); };
+}
+
 void Level::BeginPlay()
 {
     for (auto& obj : mainWorld.OverallGameActors)

@@ -107,7 +107,6 @@ Player::Player()
 	ani->dashEffect.Bind([this]()
 		{
 			Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() - FVector2D(GetWorldScale().x * 150, 0));
-			if (!effect)return;
 			if (bGround)
 			{
 				effect->Init("effect_dash"); effect->SetLocalScale(GetWorldScale());
@@ -126,7 +125,6 @@ Player::Player()
 	ani->wetWalkEffect.Bind([this]()
 		{
 			Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(0, 60));
-			if (!effect)return;
 			effect->Init("effect_wetwalk");
 			effect->SetLocalScale(GetWorldScale() * FMath::RandReal(0.8f, 1.1f));
 		});
@@ -135,7 +133,6 @@ Player::Player()
 			Dart* dart = GameplayStatics::CreateObject<Dart>(GetWorldPosition());
 			if (dart)dart->Init(GetWorldScale().x < 0);
 			Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
-			if (!effect)return;
 			effect->Init("effect_throw", -0.01f); effect->SetLocalScale(GetLocalScale());
 			effect->AddPosition({GetLocalScale().x * 50,0});
 			AddDart(-1);
@@ -144,11 +141,24 @@ Player::Player()
 		{
 			Needle* needle = GameplayStatics::CreateObject<Needle>({ -500,0 });
 			Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
-			if (!effect || !needle)return;
 			needle->AttachTo(effect);
 			effect->Init("effect_remoteskill"); effect->SetLocalScale(GetLocalScale());
 			effect->AddPosition({ GetLocalScale().x * 500,25 });
 			GameModeHelper::PlayFXSound("sound_remoteskill");
+		});
+	ani->needleSpawn_.Bind([this]()
+		{
+			Needle* needle = GameplayStatics::CreateObject<Needle>(GetWorldPosition() + FVector2D(0, 10));
+			needle->Init(true);
+			needle->SetLocalScale(GetWorldScale());
+			Effect* effect = GameplayStatics::CreateObject<Effect>();
+			effect->AttachTo(needle);
+			effect->Init("effect_rapidskill", -0.05f);
+
+			effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() - FVector2D(0, 20));
+			effect->Init("effect_remoteskill", -0.06f); effect->SetLocalScale(FVector2D(GetLocalScale().x * 0.5f, 1));
+			effect->AddPosition({ GetLocalScale().x * 150,25 });
+			GameModeHelper::PlayFXSound("sound_hardattack");
 		});
 	ani->grabFinished.Bind(this, &Player::Grab);
 	ani->downAttackSpawn.Bind([this]()
@@ -156,10 +166,12 @@ Player::Player()
 			AttackBox* attackBox = GameplayStatics::CreateObject<AttackBox>();
 			attackBox->AttachTo(this);
 			attackBox->SetLocalPosition(FVector2D(70, 35));
+			attackBox->Init(ECharacterDirection::LookDown);
 		});
 	ani->leaveStart.Bind([this]()
 		{
-			rigid->SetVelocity({ GetWorldScale().x * 840, -630 });
+			rigid->SetVelocity({ GetWorldScale().x * 1500, -1200 });
+			EnableInput(false); rigid->SetGravityEnabled(false);
 		});
 	ani->defendAttack.Bind([this]()
 		{
@@ -189,6 +201,7 @@ void Player::BeginPlay()
 				if (--blinkTimes == 0 && !bSitting)
 				{
 					hurtBox->SetCollisonMode(CollisionMode::Trigger);
+					box->SetCollisionResponseToType(CollisionType::Bullet, true);
 					GameModeHelper::GetInstance()->RefreshVolume();
 					if (playerProperty->GetHealth() != 1)particle->SetIsLoop(false);
 				}
@@ -271,8 +284,8 @@ void Player::Update(float deltaTime)
 	if (bEvading)
 	{
 		SetMaxWalkingSpeed(3000);
-		AddInputX(-GetWorldScale().x * 3500 * deltaTime, false);
-		if (GameplayStatics::GetTimeSeconds() - lastEvadeTime > 0.3f)
+		AddInputX(-GetWorldScale().x * 4500 * deltaTime, false);
+		if (GameplayStatics::GetTimeSeconds() - lastEvadeTime > 0.25f)
 		{
 			bEvading = false; 
 		}
@@ -280,9 +293,9 @@ void Player::Update(float deltaTime)
 
 	if (bDashing)
 	{
-		SetMaxWalkingSpeed(10000);
-		AddInputX(GetWorldScale().x * (bGround ? 10000 : 9000) * deltaTime, false);
-		if (GameplayStatics::GetTimeSeconds() - lastDashTime > 0.3f)
+		SetMaxWalkingSpeed(11000);
+		AddInputX(GetWorldScale().x * (bGround ? 11000 : 10000) * deltaTime, false);
+		if (GameplayStatics::GetTimeSeconds() - lastDashTime > 0.25f)
 		{
 			bDashing = false; 
 			rigid->SetGravityEnabled(true);
@@ -320,6 +333,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 	inputComponent->SetMapping("Leave", EKeyCode::VK_O);
 	inputComponent->SetMapping("CloseSkill", EKeyCode::VK_I);
 	inputComponent->SetMapping("RemoteSkill", EKeyCode::VK_O);
+	inputComponent->SetMapping("RapidSkill", EKeyCode::VK_U);
 	inputComponent->SetMapping("DefendStart", EKeyCode::VK_X);
 
 
@@ -455,7 +469,8 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 				case ECharacterDirection::LookDown:
 					ani->PlayMontage("attackdown");
 					rigid->SetVelocity({}); ani->SetBool("validDownAttack", false);
-					rigid->AddImpulse({ 475 * GetWorldScale().x, 725 });
+					rigid->AddImpulse({ 500 * GetWorldScale().x, 775 });
+					attackBox->GetComponentByClass<Collider>()->SetCollisonMode(CollisionMode::None);
 					break;
 			}
 			attackBox->Init(direction);
@@ -519,13 +534,12 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		});
 	inputComponent->BindAction("Leave", EInputType::Pressed, [this]() {
 		if (bSitting || bWall) return;
-		if (playerProperty->GetSilk() < 3 || bGround)return; AddSilk(-3); EnableInput(false);
-		lastThrowTime = GameplayStatics::GetTimeSeconds();
-		ani->PlayMontage("leave"); 
+		if (playerProperty->GetSilk() < 3 || bGround)return; AddSilk(-3); 
+		ani->PlayMontage("leavestart"); 
 		GameModeHelper::PlayFXSound("sound_leave");
-		rigid->SetGravityEnabled(false);rigid->SetVelocity({});
+		EnableInput(false); rigid->SetGravityEnabled(false); rigid->SetVelocity({});
 		GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(GetLocalScale().x > 0 ? 200 : -200, -150),
-			(GetLocalScale().x > 0 ? -150 : -30))->Init("effect_leave", -0.02f);
+			(GetLocalScale().x > 0 ? -150 : -30))->Init("effect_leave", -0.05f);
 		});
 	inputComponent->BindAction("CloseSkill", EInputType::Pressed, [this]() {
 		if (bSitting || bWall) return;
@@ -543,6 +557,12 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		ani->PlayMontage("remoteskill");
 		if (FMath::RandInt(0, 10) > 5)GameModeHelper::PlayFXSound("voice_remoteskill_0");
 		else GameModeHelper::PlayFXSound("voice_remoteskill_1");
+		});
+	inputComponent->BindAction("RapidSkill", EInputType::Pressed, [this]() {
+		if (bSitting || bWall) return;
+		if (playerProperty->GetSilk() < 3)return; AddSilk(-3); 
+		lastFloatTime = GameplayStatics::GetTimeSeconds() + 1; SetFloating(true);
+		ani->PlayMontage("rapidskill");
 		});
 	inputComponent->BindAction("DefendStart", EInputType::Pressed, [this]() {
 		if (bSitting || bWall || !bGround || playerProperty->GetSilk() < 2) return;
@@ -670,6 +690,7 @@ void Player::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 	CHECK_PTR(causer)
 	rigid->AddImpulse({ (GetWorldPosition() - causer->GetWorldPosition()).GetSafeNormal().x * 200,-200 });
 	hurtBox->SetCollisonMode(CollisionMode::None);
+	box->SetCollisionResponseToType(CollisionType::Bullet, false);
 
 	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
 	effect->Init("effect_hurt");
@@ -788,7 +809,7 @@ void Player::Bounce()
 {
 	ani->SetBool("validDownAttack",true);
 	rigid->SetVelocity({});
-	rigid->AddImpulse({ GetWorldScale().x * 420,-660 });
+	rigid->AddImpulse({ GetWorldScale().x * 450,-700 });
 }
 
 void Player::Grab()
@@ -893,7 +914,6 @@ void Player::Scare(bool enable, std::string anim)
 void Player::SpawnWetLandEffect() const
 {
 	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(0, 55));
-	if (!effect)return;
 	effect->Init("effect_wetland");
 	effect->SetLocalScale(GetWorldScale());
 }

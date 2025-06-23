@@ -5,16 +5,16 @@
 
 PuffManager::PuffManager()
 {
-	SpawnTimerHandle.Bind(0.02f, [this]() {
-		if (spawnTimer == 25)
+	SpawnTimerHandle.Bind(0.015f, [this]() {
+		if (spawnTimer == 20)
 		{
 			GameModeHelper::PlayFXSound("sound_boss_gushing");
 		}
 		Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
-		effect->Init("effect_puff", 0, FMath::RandReal(200 + spawnTimer * 2, 300 + spawnTimer * 3) * FVector2D::DegreeToVector(FMath::RandReal(0, 360)));
+		effect->Init("effect_puff", -0.01f, FMath::RandReal(300 + spawnTimer * 3, 400 + spawnTimer * 4) * FVector2D::DegreeToVector(FMath::RandReal(0, 360)));
 		effect->SetLocalScale(FVector2D::UnitVector * FMath::RandReal(0.5f, 1.5f));
 		spawnTimer++;
-		if (spawnTimer > 200)
+		if (spawnTimer > 235)
 		{
 			SpawnTimerHandle.Stop();
 		}

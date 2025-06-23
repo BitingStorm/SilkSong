@@ -160,6 +160,11 @@ void World::ProcessCollisions(float deltaTime)
 
 void World::Render()
 {
+	if (videoLock)
+	{
+		return;
+	}
+
 	cleardevice();
 
 	for (auto& obj : GameRenderers) obj->Render();

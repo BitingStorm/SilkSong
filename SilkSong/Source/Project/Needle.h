@@ -16,11 +16,16 @@ public:
 
 	virtual void ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)override {}
 
+	void Init(bool rapid);
+
 protected:
 	void OnOverlap(class Collider* hitComp, Collider* otherComp, Actor* otherActor);
 
 	class SpriteRenderer* render;
 	class BoxCollider* box;
 
+	float absDistance;
 	float distance;
+	float direction;
+	bool bIsRapid;
 };

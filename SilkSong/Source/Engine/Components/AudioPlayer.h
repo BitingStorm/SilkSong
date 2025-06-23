@@ -10,9 +10,9 @@
 
 
  /*----------------------------------
-			  媒体播放器
+			   媒体播放器
    ----------------------------------*/
-class AudioPlayer final:public SceneComponent
+class AudioPlayer final :public SceneComponent
 {
 	DEFINE_SUPER(SceneComponent)
 

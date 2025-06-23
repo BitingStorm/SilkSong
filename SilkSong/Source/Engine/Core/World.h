@@ -36,6 +36,7 @@ class CircleCollider;
 class BoxCollider;
 class Controller;
 class AudioPlayer;
+class VideoPlayer;
 class TimerHandler;
 class Level;
 class RigidBody;
@@ -87,10 +88,13 @@ class World final
 	friend Sector;
 	friend LevelManager;
 	friend AudioPlayer;
+	friend VideoPlayer;
 	friend TimerHandler;
 	friend Level;
 
 	std::mutex updateMutex;//»¥³âËø
+
+	bool videoLock = false;//ÊÓÆµËø
 
 	ResourceManager* resourcePool = nullptr;//×ÊÔ´³Ø
 
