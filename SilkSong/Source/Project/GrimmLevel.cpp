@@ -74,7 +74,7 @@ GrimmLevel::GrimmLevel()
 		this->player = player;
 	}
 
-	OnLevelDelete.Add([this]() {
+	OnLevelDelete.AddLambda([this]() {
 		GameMode* gameMode = GameModeHelper::GetInstance();
 		gameMode->GetAudioPlayer(0)->Stop("grimmtent");
 		gameMode->GetAudioPlayer(0)->Stop("nightmare");

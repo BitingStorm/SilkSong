@@ -13,7 +13,7 @@
 #include "RuinHouseLevel.h"
 #include "BossLevel.h"
 #include "GrimmLevel.h"
-
+#include "MossHole.h"
 
 void LevelManager::Initialize()
 {
@@ -26,6 +26,7 @@ void LevelManager::Initialize()
 	AddLevel<RuinHouseLevel>("RuinHouse");
 	AddLevel<BossLevel>("BossHouse");
 	AddLevel<GrimmLevel>("GrimmTent");
+	AddLevel<MossHoleLevel>("MossHole");
 	SetDefaultLevel("Menu");
 
 //*********                             **********

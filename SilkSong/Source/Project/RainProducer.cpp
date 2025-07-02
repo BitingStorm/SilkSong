@@ -6,7 +6,7 @@ RainProducer::RainProducer()
 {
 	particle = ConstructComponent<ParticleSystem>();
 	particle->AttachTo(root);
-	particle->SetCapacity(60);
+	particle->SetCapacity(75);
 	particle->SetInterval(0.008f);
 	particle->Load("rain_bg");
 	particle->SetMaxSpeed(3500);
@@ -14,7 +14,7 @@ RainProducer::RainProducer()
 	particle->SetPattern(EParticlePattern::Line);
 	particle->SetLine(2250,-90);
 	particle->SetLayer(-5);
-	particle->SetLifeCycle(0.5f);
+	particle->SetLifeCycle(0.6f);
 	particle->SetLocalScale({ 0.75f,0.5f });
 
 	particle_ = ConstructComponent<ParticleSystem>();

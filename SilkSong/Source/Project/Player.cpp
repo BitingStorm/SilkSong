@@ -51,7 +51,7 @@ Player::Player()
 
 	rigid = GetComponentByClass<RigidBody>();
 	rigid->SetLinearDrag(0.07f);
-	rigid->SetGravity(1960);
+	rigid->SetGravity(2250);
 
 	camera = GetComponentByClass<Camera>();
 	camera->SetDistanceThreshold(100);
@@ -125,7 +125,7 @@ Player::Player()
 	ani->wetWalkEffect.Bind([this]()
 		{
 			Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(0, 60));
-			effect->Init("effect_wetwalk");
+			effect->Init("effect_wetwalk", -0.01f);
 			effect->SetLocalScale(GetWorldScale() * FMath::RandReal(0.8f, 1.1f));
 		});
 	ani->dartSpawn.Bind([this]()
@@ -133,7 +133,7 @@ Player::Player()
 			Dart* dart = GameplayStatics::CreateObject<Dart>(GetWorldPosition());
 			if (dart)dart->Init(GetWorldScale().x < 0);
 			Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
-			effect->Init("effect_throw", -0.01f); effect->SetLocalScale(GetLocalScale());
+			effect->Init("effect_throw", -0.02f); effect->SetLocalScale(GetLocalScale());
 			effect->AddPosition({GetLocalScale().x * 50,0});
 			AddDart(-1);
 		});
@@ -160,7 +160,17 @@ Player::Player()
 			effect->AddPosition({ GetLocalScale().x * 150,25 });
 			GameModeHelper::PlayFXSound("sound_hardattack");
 		});
-	ani->grabFinished.Bind(this, &Player::Grab);
+	ani->grabStart.Bind([this]()
+		{
+			rigid->SetVelocity({ 0,-500 + 5.f * (climbY > 0 ? 0 : climbY) });
+		});
+	ani->grabFinished.Bind([this]()
+		{
+			EnableInput(true);
+			rigid->SetGravityEnabled(true);
+			rigid->SetVelocity({ GetWorldScale().x * 75,0 });
+			box->SetPhysicsMaterial(FPhysicsMaterial(0.1f, 0));
+		});
 	ani->downAttackSpawn.Bind([this]()
 		{
 			AttackBox* attackBox = GameplayStatics::CreateObject<AttackBox>();
@@ -293,9 +303,9 @@ void Player::Update(float deltaTime)
 
 	if (bDashing)
 	{
-		SetMaxWalkingSpeed(11000);
-		AddInputX(GetWorldScale().x * (bGround ? 11000 : 10000) * deltaTime, false);
-		if (GameplayStatics::GetTimeSeconds() - lastDashTime > 0.25f)
+		SetMaxWalkingSpeed(15000);
+		AddInputX(GetWorldScale().x * (bGround ? 17500 : 17000) * deltaTime, false);
+		if (GameplayStatics::GetTimeSeconds() - lastDashTime > 0.2f)
 		{
 			bDashing = false; 
 			rigid->SetGravityEnabled(true);
@@ -342,7 +352,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		walkLock = 1;
 		if (bWall)return;
 		if (GetWorldScale().x > 0 && bGround)ani->PlayMontage("turn");
-		if (!bDashing && !bEvading)
+		if (!bDashing && !bEvading && !ani->IsPlaying("attackdown"))
 		{
 			SetMaxWalkingSpeed(bRushing ? 700.f : 400.f);
 		}		
@@ -355,7 +365,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		walkLock = 2;
 		if (bWall)return;
 		if (GetWorldScale().x < 0 && bGround)ani->PlayMontage("turn");
-		if (!bDashing && !bEvading)
+		if (!bDashing && !bEvading && !ani->IsPlaying("attackdown"))
 		{
 			SetMaxWalkingSpeed(bRushing ? 700.f : 400.f);
 		}
@@ -398,7 +408,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		if (bGround)
 		{
 			bGround = false; SpawnWetLandEffect();
-			rigid->AddImpulse({ 0,-600 });
+			rigid->AddImpulse({ 0,-750 });
 			if (bRushing)ani->PlayMontage("rushjump");
 			else ani->PlayMontage("jump");
 			lastJumpTime = GameplayStatics::GetTimeSeconds();
@@ -429,14 +439,14 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		{
 			float delta = GameplayStatics::GetTimeSeconds() - lastJumpTime;
 			bGround = false; ani->SetBool("flying", true); 
-			rigid->AddImpulse(FVector2D(0, -(6.2f - FMath::Log(1 + delta < 0.06f ? 0 : FMath::Abs(rigid->GetVelocity().y)) / FMath::Log(10)) / jumpFlag));
+			rigid->AddImpulse(FVector2D(0, -(6.f - FMath::Log(1 + delta < 0.06f ? 0 : FMath::Abs(rigid->GetVelocity().y)) / FMath::Log(10)) / jumpFlag));
 		}
 		});
 	inputComponent->BindAction("JumpEnd", EInputType::Released, [this]() {
 		if (bSitting || bWall) return;
 		if (rigid->GetVelocity().y < 0 && GameplayStatics::GetTimeSeconds() - lastJumpTime < 0.3f)
 		{
-			rigid->SetVelocity(FVector2D(rigid->GetVelocity().x, -rigid->GetVelocity().y * 0.1f));
+			rigid->SetVelocity(FVector2D(rigid->GetVelocity().x, -rigid->GetVelocity().y * 0.05f));
 		}
 		});
 	inputComponent->BindAction("Attack", EInputType::Pressed, [this]() {
@@ -469,8 +479,12 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 				case ECharacterDirection::LookDown:
 					ani->PlayMontage("attackdown");
 					rigid->SetVelocity({}); ani->SetBool("validDownAttack", false);
-					rigid->AddImpulse({ 500 * GetWorldScale().x, 775 });
+					rigid->AddImpulse({ 900 * GetWorldScale().x, 850 });
 					attackBox->GetComponentByClass<Collider>()->SetCollisonMode(CollisionMode::None);
+					SetMaxWalkingSpeed(3000.f);
+					Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
+					effect->Init("effect_throw", -0.02f); effect->SetLocalScale(GetLocalScale());
+					effect->SetLocalRotation(-45.f);
 					break;
 			}
 			attackBox->Init(direction);
@@ -586,7 +600,7 @@ void Player::OnEnter(Collider* hitComp, Collider* otherComp, Actor* otherActor, 
 		ani->SetFloat("landingSpeed", rigid->GetVelocity().y);
 		SpawnWetLandEffect();
 		if (GetWorldPosition().y > 1000)GameModeHelper::PlayFXSound("sound_waterland");
-		if (rigid->GetVelocity().y > 1200)GameModeHelper::PlayFXSound("sound_hardland");
+		if (rigid->GetVelocity().y > 1350)GameModeHelper::PlayFXSound("sound_hardland");
 		else if(rigid->GetVelocity().y > 700)GameModeHelper::PlayFXSound("sound_softland");
 		else GameModeHelper::PlayFXSound("sound_land");
 	}
@@ -597,12 +611,19 @@ void Player::OnEnter(Collider* hitComp, Collider* otherComp, Actor* otherActor, 
 			float delta_y = platform->GetWorldPosition().y - platform->GetSize().y * 0.5f - (box->GetWorldPosition().y + box->GetSize().y * 0.5f);
 			if (delta_y > -box->GetSize().y)
 			{
+				climbY = delta_y;
 				rigid->SetGravityEnabled(false);
 				box->SetPhysicsMaterial({});
-				rigid->SetVelocity({ 0,3.75f * (delta_y > 0 ? 0 : delta_y) - 100.f });
+				rigid->SetVelocity({});
 				ani->PlayMontage("grab");
 				GameModeHelper::PlayFXSound("sound_claw");
 				EnableInput(false);
+
+				Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
+				effect->Init("effect_throw", -0.02f); effect->SetLocalScale(GetLocalScale() * 0.6f);
+				effect->AddPosition({ -GetLocalScale().x * 35,80 + delta_y });
+				effect->SetLocalRotation(-35.f);
+				effect->GetComponentByClass<SpriteRenderer>()->SetLayer(1);
 			}
 		}
 	}
@@ -805,19 +826,20 @@ void Player::SetFloating(bool enable)
 	if(!enable)camera->SetSpringArmLength(20);
 }
 
+void Player::FinishDownAttack()
+{
+	if (!ani->GetBool("validDownAttack"))
+	{
+		rigid->SetVelocity(FVector2D(0, rigid->GetVelocity().y * 0.35f));
+		SetMaxWalkingSpeed(400.f);
+	}
+}
+
 void Player::Bounce()
 {
 	ani->SetBool("validDownAttack",true);
 	rigid->SetVelocity({});
 	rigid->AddImpulse({ GetWorldScale().x * 450,-700 });
-}
-
-void Player::Grab()
-{
-	EnableInput(true);
-	rigid->SetGravityEnabled(true);
-	rigid->SetVelocity({ GetWorldScale().x * 75,0 });
-	box->SetPhysicsMaterial(FPhysicsMaterial(0.1f, 0));
 }
 
 void Player::DieStart()

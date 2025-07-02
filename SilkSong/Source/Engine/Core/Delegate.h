@@ -5,8 +5,10 @@
  **/
 
 #pragma once
-#include <vector>
+#include <unordered_map>
 #include <functional>
+#include <string>
+#include "Macro.h"
 
 
 /*----------------------------------
@@ -43,30 +45,34 @@ public:
 template<typename... Args>
 class MulticastDelegate
 {
-    std::vector<std::function<void(Args...)>> callbacks;
+    std::unordered_map<std::string, std::function<void(Args...)>> callbackMap;
 
 public:
-    void Add(std::function<void(Args...)> callback); 
+    bool Contains(std::string name);
+
+    void Add(std::function<void(Args...)> callback, std::string name);
 
     template<typename T>
-    void Add(T* obj, void(T::* func)(Args...))
+    void Add(T* obj, void(T::* func)(Args...), std::string name)
     {
         std::function<void(Args...)> callback = [=](Args... args) { (obj->*func)(args...); };
-        Add(callback);
+        Add(callback, name);
     }
 
-    void Remove(std::function<void(Args...)> callback);
-
+    void Remove(std::function<void(Args...)> callback, std::string name);
+              
     template<typename T>
-    void Remove(T* obj, void(T::* func)(Args...))
+    void Remove(T* obj, void(T::* func)(Args...), std::string name)
     {
         std::function<void(Args...)> callback = [=](Args... args) { (obj->*func)(args...); };
-        Remove(callback);
+        Remove(callback, name);
     }
+
+    void Clear();
 
     void BroadCast(Args... args);
 
-    void operator()(Args... args){BroadCast(args...);}
+    void operator()(Args... args) { BroadCast(args...); }
 };
 
 
@@ -80,12 +86,10 @@ public:
 #define DECLARE_MULTI_PARAM_MULTICAST_DELEGATE_CLASS(Name, ...) typedef MulticastDelegate<__VA_ARGS__> Name;
 #define DECLARE_NO_PARAM_MULTICAST_DELEGATE_CLASS(Name) typedef MulticastDelegate<> Name;
 
-#define AddDynamic(obj, func) Add(obj, func)
-#define RemoveDynamic(obj, func) Remove(obj, func)
-#define AddLambda(callback) Add(callback)
-#define RemoveLambda(callback) Remove(callback)
-
-
+#define AddDynamic(obj, func) Add(obj, func, #func)
+#define RemoveDynamic(obj, func) Remove(obj, func, #func)
+#define AddLambda(func) Add(func, #func)
+#define RemoveLambda(func) Remove(func, #func)
 
 
 
@@ -103,35 +107,46 @@ inline R UnicastDelegate<R, Args...>::Execute(Args ...args)
 }
 
 template<typename ...Args>
-inline void MulticastDelegate<Args...>::Add(std::function<void(Args...)> callback)
+inline bool MulticastDelegate<Args...>::Contains(std::string name)
 {
-    for (auto it = callbacks.begin(); it != callbacks.end(); ++it)
-    {
-        if (it->target_type() == callback.target_type() && it->target<void(Args...)>() == callback.target<void(Args...)>())
-        {
-            return;
-        }
-    }
-    callbacks.push_back(callback);
+    return callbackMap.find(name) != callbackMap.end();
 }
 
 template<typename ...Args>
-inline void MulticastDelegate<Args...>::Remove(std::function<void(Args...)> callback)
+inline void MulticastDelegate<Args...>::Add(std::function<void(Args...)> callback, std::string name)
 {
-    for (auto it = callbacks.begin(); it != callbacks.end(); ++it)
+    /*CHECK_PTR(callback)*/
+
+    if (Contains(name))
     {
-        if (it->target<void(Args...)>() == callback.target<void(Args...)>())
-        {
-            callbacks.erase(it); break;
-        }
+        return;
     }
+    callbackMap.insert({ name, callback });
+}
+
+template<typename ...Args>
+inline void MulticastDelegate<Args...>::Remove(std::function<void(Args...)> callback, std::string name)
+{
+    /*CHECK_PTR(callback)*/
+    
+    if (!Contains(name))
+    {
+        return;
+    }
+    callbackMap.erase(name);
+}
+
+template<typename ...Args>
+inline void MulticastDelegate<Args...>::Clear()
+{
+    callbackMap.clear();
 }
 
 template<typename ...Args>
 inline void MulticastDelegate<Args...>::BroadCast(Args ...args)
 {
-    for (auto& callback : callbacks)
+    for (auto& callback : callbackMap)
     {
-        callback(args...);
+        callback.second(args...);
     }
 }

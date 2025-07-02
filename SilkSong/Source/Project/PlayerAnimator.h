@@ -17,6 +17,7 @@ public:
 	AnimationDelegate dartSpawn;
 	AnimationDelegate needleSpawn;
 	AnimationDelegate needleSpawn_;
+	AnimationDelegate grabStart;
 	AnimationDelegate grabFinished;
 	AnimationDelegate downAttackSpawn;
 	AnimationDelegate dieShake;
@@ -78,10 +79,12 @@ private:
 	AnimEdge walkend_to_idle;
 	AnimEdge jump_to_fall;
 	AnimEdge rushjump_to_fall;
-	AnimEdge hardland_to_idle;
+	AnimEdge hardland_to_softland;
 	AnimEdge softland_to_idle;
 	AnimEdge attack_0_to_idle;
 	AnimEdge attack_1_to_idle;
+	AnimEdge attack_0_to_softland;
+	AnimEdge attack_1_to_softland;
 	AnimEdge attackup_to_idle;
 	AnimEdge attackdown_to_idle;
 	AnimEdge attackdown_to_attackbounce;

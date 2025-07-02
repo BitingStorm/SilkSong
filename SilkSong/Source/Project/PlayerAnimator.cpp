@@ -7,33 +7,33 @@
 PlayerAnimator::PlayerAnimator()
 {
 	idle.Load("player_idle");
-	idle.SetInterval(0.1f);
+	idle.SetInterval(0.085f);
 	walk.Load("player_walk");
-	walk.SetInterval(0.1f);
+	walk.SetInterval(0.085f);
 	walkstart.Load("player_walkstart");
 	walkstart.SetInterval(0.04f);
 	walkend.Load("player_walkend");
 	walkend.SetInterval(0.06f);
 	rush.Load("player_rush", { 0,15 });
-	rush.SetInterval(0.08f);
+	rush.SetInterval(0.075f);
 	turn.Load("player_turn");
 	turn.SetInterval(0.08f);
 	jump.Load("player_jump");
-	jump.SetInterval(0.08f);
+	jump.SetInterval(0.07f);
 	rushjump.Load("player_rushjump");
 	rushjump.SetInterval(0.04f);
 	fall.Load("player_fall");
-	fall.SetInterval(0.1f);
+	fall.SetInterval(0.08f);
 	hardland.Load("player_hardland");
-	hardland.SetInterval(0.15f);
+	hardland.SetInterval(0.09f);
 	softland.Load("player_softland");
-	softland.SetInterval(0.11f);
+	softland.SetInterval(0.05f);
 	attack_0.Load("player_attack_0", { 0,10 });
-	attack_0.SetInterval(0.06f);
+	attack_0.SetInterval(0.04f);
 	attack_1.Load("player_attack_1", { 0,10 });
-	attack_1.SetInterval(0.06f);
+	attack_1.SetInterval(0.04f);
 	attackup.Load("player_attackup");
-	attackup.SetInterval(0.06f);
+	attackup.SetInterval(0.05f);
 	attackdown.Load("player_attackdown");
 	attackdown.SetInterval(0.05f);
 	attackbounce.Load("player_attackbounce");
@@ -53,7 +53,7 @@ PlayerAnimator::PlayerAnimator()
 	throw_.Load("player_throw");
 	throw_.SetInterval(0.05f);
 	grab.Load("player_grab");
-	grab.SetInterval(0.07f);
+	grab.SetInterval(0.06f);
 	_closeskill.Load("player__closeskill");
 	_closeskill.SetInterval(0.05f);
 	closeskill.Load("player_closeskill");
@@ -167,10 +167,16 @@ void PlayerAnimator::BeginPlay()
 	walkstart_to_walk.Init(walkstart, walk);
 	walkend_to_idle.Init(walkend, idle);
 
-	hardland_to_idle.Init(hardland, idle);
+	hardland_to_softland.Init(hardland, softland);
 	softland_to_idle.Init(softland, idle);
 	attack_0_to_idle.Init(attack_0, idle);
 	attack_1_to_idle.Init(attack_1, idle);
+	attack_0_to_softland.Init(attack_0, softland);
+	attack_0_to_softland.AddCondition(AnimTransition::Bool{ "flying",false });
+	attack_0_to_softland.AddCondition(AnimTransition::Float{ "walkingSpeed",10.f,TransitionComparison::Less });
+	attack_1_to_softland.Init(attack_1, softland);
+	attack_1_to_softland.AddCondition(AnimTransition::Bool{ "flying",false });
+	attack_1_to_softland.AddCondition(AnimTransition::Float{ "walkingSpeed",10.f,TransitionComparison::Less });
 	attackup_to_idle.Init(attackup, idle);
 	attackdown_to_idle.Init(attackdown, idle);
 	attackdown_to_idle.AddCondition(AnimTransition::Bool{ "validDownAttack",false });
@@ -215,10 +221,10 @@ void PlayerAnimator::BeginPlay()
 	rush_to_fall.AddCondition(AnimTransition::Bool{ "flying",true });
 
 	fall_to_hardland.Init(fall, hardland);
-	fall_to_hardland.AddCondition(AnimTransition::Float{ "landingSpeed",1200.f,TransitionComparison::Greater });
+	fall_to_hardland.AddCondition(AnimTransition::Float{ "landingSpeed",1350.f,TransitionComparison::Greater });
 
 	fall_to_softland.Init(fall, softland);
-	fall_to_softland.AddCondition(AnimTransition::Float{ "landingSpeed",1200.f,TransitionComparison::LessEqual });
+	fall_to_softland.AddCondition(AnimTransition::Float{ "landingSpeed",1350.f,TransitionComparison::LessEqual });
 	fall_to_softland.AddCondition(AnimTransition::Float{ "landingSpeed",700.f,TransitionComparison::Greater });
 	fall_to_softland.AddCondition(AnimTransition::Float{ "walkingSpeed",100.f,TransitionComparison::Less });
 
@@ -280,13 +286,15 @@ void PlayerAnimator::BeginPlay()
 		rush.AddNotification(7, wetWalkEffect);
 		closeskill.OnAnimExit.Bind([=]() {player->SetFloating(false); });
 		throw_.AddNotification(3, dartSpawn);
-		grab.AddNotification(4, grabFinished);
+		grab.AddNotification(3, grabStart);
+		grab.AddNotification(5, grabFinished);
 		grab.OnAnimExit.Bind([=]() {player->EnableInput(true); });
 		remoteskill.AddNotification(8, needleSpawn);
 		remoteskill.OnAnimExit.Bind([=]() {player->EnableInput(true); });
 		rapidskill.AddNotification(2, needleSpawn_);
 		rapidskill.OnAnimExit.Bind([=]() {player->SetFloating(false); });
 		attackdown.AddNotification(1, downAttackSpawn);
+		attackdown.OnAnimExit.Bind([=]() {player->FinishDownAttack(); });
 		standup.OnAnimExit.Bind([=]() {player->StandUp(); });
 		dieShake.Bind([]() {GameplayStatics::PlayCameraShake(5, 2); });
 		die.AddNotification(1, dieShake);

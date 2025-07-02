@@ -51,9 +51,9 @@ public:
 
 	void SetFloating(bool enable);
 
-	void Bounce();
+	void FinishDownAttack();
 
-	void Grab();
+	void Bounce();
 
 	void DieStart();
 
@@ -118,6 +118,7 @@ private:
 	int32 walkLock;
 	int32 jumpFlag;
 	ECharacterDirection direction;
+	float climbY;
 
 	void SpawnWetLandEffect() const;
 };

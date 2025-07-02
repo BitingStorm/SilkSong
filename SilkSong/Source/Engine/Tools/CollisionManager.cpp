@@ -9,7 +9,7 @@ void CollisionManager::Initialize()
 	/** 
 	 * 碰撞表建立(默认情况下的碰撞响应关系) 
 	 **/
-	AddMapping(CollisionType::HurtBox,CollisionType::Enemy);
+	AddMapping(CollisionType::HurtBox, CollisionType::Enemy);
 	AddMapping(CollisionType::Player, CollisionType::Block);
 	AddMapping(CollisionType::Enemy, CollisionType::Block);
 	AddMapping(CollisionType::Item, CollisionType::Block);

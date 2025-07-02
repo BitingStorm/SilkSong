@@ -25,10 +25,10 @@ void ResourceManager::Initialize()
 	Load("player_rushjump", "Asset/Animations/Player/RushJump/", { {171,115},{204,144},{198,180},{186,183},{186,192},{195,195},
 		{198,183},{124,182},{140,171},{146,168},{198,180},{104,168},{108,168},{143,163} });
 	Load("player_fall", "Asset/Animations/Player/Fall/", 132, 168, 4);
-	Load("player_softland", "Asset/Animations/Player/SoftLand/", 152, 166, 3);
+	Load("player_softland", "Asset/Animations/Player/SoftLand/", { {152,166},{152,166},{152,166},{137,161},{147,160} });
 	Load("player_hardland", "Asset/Animations/Player/HardLand/", 164, 152, 4);
-	Load("player_attack_0", "Asset/Animations/Player/Attack_0/", { {122,162},{364,183},{321,178},{300,178},{174,144} });
-	Load("player_attack_1", "Asset/Animations/Player/Attack_1/", { {122,162},{315,156},{321,159},{321,159},{174,144} });
+	Load("player_attack_0", "Asset/Animations/Player/Attack_0/", { {122,162},{364,183},{321,178},{300,178},{174,144},{152,166} });
+	Load("player_attack_1", "Asset/Animations/Player/Attack_1/", { {122,162},{315,156},{321,159},{321,159},{174,144},{152,166} });
 	Load("player_attackup", "Asset/Animations/Player/AttackUp/", { {160,188},{184,389},{184,222},{184,269},{152,168} });
 	Load("player_attackdown", "Asset/Animations/Player/AttackDown/", { {111,193},{103,196},{250,263},{225,225},{192,143} });
 	Load("player_rushattack", "Asset/Animations/Player/RushAttack/", { {166,156},{155,176},{180,176},{300,164},{339,164},{400,120},{400,121},{109,121},{174,148} });
@@ -69,7 +69,7 @@ void ResourceManager::Initialize()
 	Load("effect_hurt_", "Asset/Animations/Player/HurtEffect_/", 308, 270, 7);
 	Load("effect_wetland", "Asset/Animations/Player/WetLandEffect/", 115, 34, 5);
 	Load("effect_wetwalk", "Asset/Animations/Player/WetWalkEffect/whitesplash.png", 250, 50, 5, 1, 5);
-	Load("effect_darthit", "Asset/Animations/Player/DartHitEffect.png", 348, 215, 4, 1, 4);
+	Load("effect_darthit", "Asset/Animations/Player/DartHitEffect.png", 348, 300, 4, 1, 4);
 	Load("effect_nailhit", "Asset/Animations/Player/NailHitEffect/", { {425,240},{495,290},{568,283} });
 	Load("effect_attack", "Asset/Animations/Player/AttackEffect/", { {630,52},{532,55},{338,34},{138,17} });
 	Load("effect_attack_", "Asset/Animations/Player/AttackEffect_/", 375, 160, 3);
@@ -275,7 +275,8 @@ void ResourceManager::Initialize()
 	Load("grimmtent_flag", "Asset/Images/Environment/GrimmTents/Grimm_Main_tent_0000_12.png", 100, 525);
 	Load("grimmtent_beam", "Asset/Images/Environment/GrimmTents/grimm_beam.png", 300, 800);
 
-	
+	Load("mosshole_0", "Asset/Images/BackGround/MossHole/0.png", 1900, 856);
+
 	//Others
 	Load("player_light", "Asset/Images/grimm_fader.png", 600, 500);
 	Load("death_light", "Asset/Images/dead_light_fader.png", 600, 600);
@@ -330,6 +331,7 @@ void ResourceManager::Initialize()
 	Load("bossdefeat", "Asset/Sounds/bossdefeat.mp3");
 	Load("bossdefeat_", "Asset/Sounds/bossdefeat_.mp3");
 	Load("accordion", "Asset/Sounds/accordion.mp3");
+	Load("mossgrotto", "Asset/Sounds/mossgrotto.mp3");
 
 	//Player
 	Load("sound_waterwalk", "Asset/Sounds/Player/waterwalk.mp3");

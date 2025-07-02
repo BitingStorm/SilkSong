@@ -8,10 +8,10 @@ Movie::Movie()
 	player = ConstructComponent<VideoPlayer>();
 	player->AttachTo(root);
 
-	player->AddPosition({0, -1});
+	player->AddPosition({0, -5});
 	player->SetRect(FRect({}, WIN_WIDTH, WIN_HEIGHT - 50));
 	player->Load("video_start");
 	player->Play();
 
-	player->OnVideoEnd.AddLambda([]() {GameplayStatics::OpenLevel("RuinHouse"); });
+	player->OnVideoEnd.AddLambda([]() {GameplayStatics::OpenLevel("MossHole"); });
 }

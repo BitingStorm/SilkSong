@@ -8,6 +8,8 @@ class MenuController :public Controller
 {
 	DEFINE_SUPER(Controller)
 
+	friend class MenuUI;
+
 	class ParticleSystem* whiteRadiant;
 	class OldTheme* oldTheme;
 	class NewTheme* newTheme;

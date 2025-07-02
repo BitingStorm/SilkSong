@@ -175,7 +175,8 @@ void Collider::Erase()
     collisions_to_erase.clear();
     for (auto& another : collisions)
     {
-        if (!CollisionJudge(another) || !mainWorld.collisionManager->LayerMaskJudge(this->layerMask, another->type))
+        if (!CollisionJudge(another) || !mainWorld.collisionManager->LayerMaskJudge(this->layerMask, another->type)
+            || !mainWorld.collisionManager->LayerMaskJudge(another->layerMask, this->type))
         {
             another->collisions.erase(this); collisions_to_erase.push_back(another);
             OnComponentEndOverlap.BroadCast(this, another, another->pOwner);  another->OnComponentEndOverlap.BroadCast(another, this, pOwner);

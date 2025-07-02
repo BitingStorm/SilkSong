@@ -48,6 +48,7 @@
     <ClInclude Include="Source\Project\GrimmSmoke.h" />
     <ClInclude Include="Source\Project\Interactive.h" />
     <ClInclude Include="Source\Project\LevelTransformer.h" />
+    <ClInclude Include="Source\Project\MossHole.h" />
     <ClInclude Include="Source\Project\Movie.h" />
     <ClInclude Include="Source\Project\NightMare.h" />
     <ClInclude Include="Source\Project\PlayerPropertyComponent.h" />
@@ -161,6 +162,7 @@
     <ClCompile Include="Source\Project\CloseSkillBox.cpp" />
     <ClCompile Include="Source\Project\Dart.cpp" />
     <ClCompile Include="Source\Project\MenuUI.cpp" />
+    <ClCompile Include="Source\Project\MossHole.cpp" />
     <ClCompile Include="Source\Project\Movie.cpp" />
     <ClCompile Include="Source\Project\Needle.cpp" />
     <ClCompile Include="Source\Project\NewTheme.cpp" />

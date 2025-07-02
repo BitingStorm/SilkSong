@@ -52,7 +52,7 @@ BossLevel::BossLevel()
 		this->player = player;
 	}
 
-	OnLevelDelete.Add([]() {
+	OnLevelDelete.AddLambda([]() {
 		GameMode* gameMode = GameModeHelper::GetInstance();
 		gameMode->GetAudioPlayer(0)->Stop("tearcity_boss");
 		gameMode->GetAudioPlayer(0)->Stop("tearcity_boss_");
