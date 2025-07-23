@@ -15,6 +15,8 @@ void ParticleSystem::Produce()
 	temp.alpha =  alpha;
 	temp.maxSize = FMath::RandReal(sizeRange.x, sizeRange.y);
 	temp.size = temp.maxSize;
+	temp.angularSpeed = FMath::RandReal(angularSpeedRange.x, angularSpeedRange.y);
+
 	if (fadingInTime > 0)
 	{
 		fadingType == EParticleFadingType::FadeInAndOut ? temp.alpha = 0 : temp.size = 0;
@@ -90,6 +92,7 @@ void ParticleSystem::Update(float deltaTime)
 	{
 		if(graivity)each.velocity.y += graivity * deltaTime;
 		each.position += each.velocity * deltaTime;
+		each.degree += each.angularSpeed * deltaTime;
 		if (fadingOutTime > 0 && duration<float>(steady_clock::now() - each.lastTime).count()
 			>= lifeCycle - fadingOutTime)
 		{

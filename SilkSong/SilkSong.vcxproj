@@ -47,10 +47,13 @@
     <ClInclude Include="Source\Project\GrimmLevel.h" />
     <ClInclude Include="Source\Project\GrimmSmoke.h" />
     <ClInclude Include="Source\Project\Interactive.h" />
+    <ClInclude Include="Source\Project\LeafParticle.h" />
     <ClInclude Include="Source\Project\LevelTransformer.h" />
+    <ClInclude Include="Source\Project\MossFloor.h" />
     <ClInclude Include="Source\Project\MossHole.h" />
     <ClInclude Include="Source\Project\Movie.h" />
     <ClInclude Include="Source\Project\NightMare.h" />
+    <ClInclude Include="Source\Project\Plant.h" />
     <ClInclude Include="Source\Project\PlayerPropertyComponent.h" />
     <ClInclude Include="Source\Project\PropertyCarrier.h" />
     <ClInclude Include="Source\Project\PropertyComponent.h" />
@@ -59,6 +62,7 @@
     <ClInclude Include="Source\Project\RedShade.h" />
     <ClInclude Include="Source\Project\RoarEffect.h" />
     <ClInclude Include="Source\Project\RuinHouseLevel.h" />
+    <ClInclude Include="Source\Project\SceneTitleUI.h" />
     <ClInclude Include="Source\Project\SceneUI.h" />
     <ClInclude Include="Source\Engine\Components\WidgetComponent.h" />
     <ClInclude Include="Source\Project\Chair.h" />
@@ -135,6 +139,7 @@
   <ItemGroup>
     <ClCompile Include="Source\Engine\Components\VideoPlayer.cpp" />
     <ClCompile Include="Source\Engine\Core\Object.cpp" />
+    <ClCompile Include="Source\Engine\Core\Struct.cpp" />
     <ClCompile Include="Source\Engine\Objects\Level.cpp" />
     <ClCompile Include="Source\Engine\Physics\Collisions2D.cpp" />
     <ClCompile Include="Source\Project\BossLevel.cpp" />
@@ -156,18 +161,21 @@
     <ClCompile Include="Source\Project\GrimmLevel.cpp" />
     <ClCompile Include="Source\Project\GrimmSmoke.cpp" />
     <ClCompile Include="Source\Project\Interactive.cpp" />
+    <ClCompile Include="Source\Project\LeafParticle.cpp" />
     <ClCompile Include="Source\Project\LevelTransformer.cpp" />
     <ClCompile Include="Source\Project\MenuController.cpp" />
     <ClCompile Include="Source\Project\MenuLevel.cpp" />
     <ClCompile Include="Source\Project\CloseSkillBox.cpp" />
     <ClCompile Include="Source\Project\Dart.cpp" />
     <ClCompile Include="Source\Project\MenuUI.cpp" />
+    <ClCompile Include="Source\Project\MossFloor.cpp" />
     <ClCompile Include="Source\Project\MossHole.cpp" />
     <ClCompile Include="Source\Project\Movie.cpp" />
     <ClCompile Include="Source\Project\Needle.cpp" />
     <ClCompile Include="Source\Project\NewTheme.cpp" />
     <ClCompile Include="Source\Project\NightMare.cpp" />
     <ClCompile Include="Source\Project\OldTheme.cpp" />
+    <ClCompile Include="Source\Project\Plant.cpp" />
     <ClCompile Include="Source\Project\PlayerPropertyComponent.cpp" />
     <ClCompile Include="Source\Project\Pointer.cpp" />
     <ClCompile Include="Source\Project\PropertyComponent.cpp" />
@@ -214,6 +222,7 @@
     <ClCompile Include="Source\Engine\UI\UserInterface.cpp" />
     <ClCompile Include="Source\Engine\UI\Widgets.cpp" />
     <ClCompile Include="Source\Project\RuinHouseLevel.cpp" />
+    <ClCompile Include="Source\Project\SceneTitleUI.cpp" />
     <ClCompile Include="Source\Project\SceneUI.cpp" />
     <ClCompile Include="Source\Project\SilkParticle.cpp" />
     <ClCompile Include="Source\Project\SitParticle.cpp" />

@@ -37,10 +37,10 @@ NewTheme::NewTheme()
 	particles[3]->SetLine(1000, 65);
 
 	Bg* bg = GameplayStatics::CreateObject<Bg>({ 0,0 });
-	bg->Init("menu_1");
+	bg->Init("menu_1", -1, -1);
 	bg->AttachTo(this);
 
 	bg = GameplayStatics::CreateObject<Bg>({ 150,25 });
-	bg->Init("menu_2", 6);
+	bg->Init("menu_2", 6, 6);
 	bg->AttachTo(this);
 }

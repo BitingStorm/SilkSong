@@ -19,13 +19,13 @@ BossLevel::BossLevel()
 	gameMode->GetAudioPlayer(2)->Pause("tearcity_o");
 	GameplayStatics::CreateObject<LevelTransformer>({ -1325,900 })->Init("TearCity", { 1700,875 }, FRect({ -375.f,-1000.f }, { 1225.f,725.f }));
 
-	Bg* bg0 = GameplayStatics::CreateObject<Bg>(); bg0->Init("tearcity_0", -30);
-	Bg* bg1 = GameplayStatics::CreateObject<Bg>({ 0,1000 }); bg1->Init("tearcity_4", -10);
-	Bg* bg2 = GameplayStatics::CreateObject<Bg>({ -1200,600 }); bg2->Init("tearcity_2", -15);
-	Bg* bg3 = GameplayStatics::CreateObject<Bg>({ 1000,1300 }); bg3->Init("tearcity_5", -20);
-	GameplayStatics::CreateObject<Bg>({ -1000,500 })->Init("tearcity_roof", 2, false, false);
-	GameplayStatics::CreateObject<Bg>({ -1075,800 })->Init("tearcity_window", -2);
-	GameplayStatics::CreateObject<Bg>({ -785,890 })->Init("tearcity_doorbg", -1);
+	Bg* bg0 = GameplayStatics::CreateObject<Bg>(); bg0->Init("tearcity_0", -30, -30);
+	Bg* bg1 = GameplayStatics::CreateObject<Bg>({ 0,1000 }); bg1->Init("tearcity_4", -10, -10);
+	Bg* bg2 = GameplayStatics::CreateObject<Bg>({ -1200,600 }); bg2->Init("tearcity_2", -15, -15);
+	Bg* bg3 = GameplayStatics::CreateObject<Bg>({ 1000,1300 }); bg3->Init("tearcity_5", -20, -20);
+	GameplayStatics::CreateObject<Bg>({ -1000,500 })->Init("tearcity_roof", 2);
+	GameplayStatics::CreateObject<Bg>({ -1075,800 })->Init("tearcity_window", -2, -2);
+	GameplayStatics::CreateObject<Bg>({ -785,890 })->Init("tearcity_doorbg", -1, -1);
 	GameplayStatics::CreateObject<Gate>({ -780,690 });
 
 	GameplayStatics::CreateObject<PlatForm>({ 0,1075 })->Init("tearcity_glassfloor", { 1500,154 }, {});
@@ -37,14 +37,14 @@ BossLevel::BossLevel()
 	GameplayStatics::CreateObject<PlatForm>({ 1100,500 })->Init("", { 100,1400 }, {});
 	GameplayStatics::CreateObject<PlatForm>({ -775,730 })->Init("", { 100,110 }, {});
 
-	GameplayStatics::CreateObject<RainProducer>({ -500,-500 });
+	GameplayStatics::CreateObject<RainProducer>({ -200,-500 });
 
 
 	for (int i = 0; i < 7; i++)
 	{
-		GameplayStatics::CreateObject<Bg>({ -750 + i * 250.f,950.f })->Init("tearcity_fence", -3);
+		GameplayStatics::CreateObject<Bg>({ -750 + i * 250.f,950.f })->Init("tearcity_fence", -3, -3);
 		Bg* beam = GameplayStatics::CreateObject<Bg>({ -765 + i * 235.f,925.f });
-		beam->Init("beam", -1, false, false); beam->SetLocalScale(FVector2D(1.f, 1.9f - 0.3f * FMath::Abs(i - 3.f)));
+		beam->Init("beam", -1); beam->SetLocalScale(FVector2D(1.f, 1.9f - 0.3f * FMath::Abs(i - 3.f)));
 	}
 
 	if (Player* player = GameplayStatics::FindObjectOfClass<Player>())

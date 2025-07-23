@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <functional>
 #include <string>
-#include "Macro.h"
+
 
 
 /*----------------------------------
@@ -115,8 +115,6 @@ inline bool MulticastDelegate<Args...>::Contains(std::string name)
 template<typename ...Args>
 inline void MulticastDelegate<Args...>::Add(std::function<void(Args...)> callback, std::string name)
 {
-    /*CHECK_PTR(callback)*/
-
     if (Contains(name))
     {
         return;
@@ -127,8 +125,6 @@ inline void MulticastDelegate<Args...>::Add(std::function<void(Args...)> callbac
 template<typename ...Args>
 inline void MulticastDelegate<Args...>::Remove(std::function<void(Args...)> callback, std::string name)
 {
-    /*CHECK_PTR(callback)*/
-    
     if (!Contains(name))
     {
         return;

@@ -18,6 +18,7 @@ SilkParticle::SilkParticle()
 	silk->SetIsLoop(false);
 	silk->SetLifeCycle(1.f);
 	silk->SetSizeRange(0.4f, 0.8f);
+	silk->SetAngularSpeed(50.f, 150.f);
 
 	DestroyTimerHandle.Bind(1.25f, [this]() {Destroy(); }, false);
 }

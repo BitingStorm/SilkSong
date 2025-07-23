@@ -9,62 +9,62 @@ GameUI::GameUI()
 	White->AttachTo(rootCanvas);
 	White->SetLayoutPattern(LayoutPattern::Center);
 	White->LoadSprite("white");
-	White->SetLayer(9);
+	White->SetLayer(19);
 	White->SetTransparency(0);
 
 	LowHealth = AddWidget<Image>();
 	LowHealth->AttachTo(rootCanvas);
 	LowHealth->SetLayoutPattern(LayoutPattern::Center);
 	LowHealth->LoadSprite("low_health");
-	LowHealth->SetLayer(9);
+	LowHealth->SetLayer(19);
 	LowHealth->SetTransparency(0);
 
 	Black = AddWidget<Image>();
 	Black->AttachTo(rootCanvas);
 	Black->SetLayoutPattern(LayoutPattern::Center);
 	Black->LoadSprite("black");
-	Black->SetLayer(20);
+	Black->SetLayer(30);
 	Black->SetTransparency(0);
 
 	SoulContainer = AddWidget<Image>();
 	SoulContainer->AttachTo(rootCanvas);
 	SoulContainer->SetRelativePosition(FVector2D(100, 75));
 	SoulContainer->LoadSprite("inventory_ins1");
-	SoulContainer->SetLayer(11);
+	SoulContainer->SetLayer(21);
 
 	SoulContainer_ = AddWidget<Image>();
 	SoulContainer_->AttachTo(SoulContainer);
 	SoulContainer_->SetLayoutPattern(LayoutPattern::RightMiddle);
 	SoulContainer_->SetRelativePosition(FVector2D(75, 0));
 	SoulContainer_->LoadSprite("inventory_ins2");
-	SoulContainer_->SetLayer(10);
+	SoulContainer_->SetLayer(20);
 
 	SilkContainer = AddWidget<Image>();
 	SilkContainer->AttachTo(SoulContainer);
 	SilkContainer->SetLayoutPattern(LayoutPattern::MiddleBottom);
 	SilkContainer->SetRelativePosition(FVector2D(25, 35));
 	SilkContainer->LoadSprite("inventory_ins3");
-	SilkContainer->SetLayer(11);
+	SilkContainer->SetLayer(21);
 
 	Coin = AddWidget<Image>();
 	Coin->AttachTo(SoulContainer);
 	Coin->SetLayoutPattern(LayoutPattern::MiddleBottom);
 	Coin->SetRelativePosition(FVector2D(0, 100));
 	Coin->LoadSprite("inventory_coin");
-	Coin->SetLayer(12);
+	Coin->SetLayer(22);
 
 	CoinNum = AddWidget<Text>();
 	CoinNum->AttachTo(Coin);
 	CoinNum->SetLayoutPattern(LayoutPattern::RightMiddle);
 	CoinNum->SetRelativePosition(FVector2D(25, 0));
 	CoinNum->SetSize(FVector2D(100, 50));
-	CoinNum->SetLayer(12);
+	CoinNum->SetLayer(22);
 	CoinNum->SetPattern(CharactersPattern::Left);
 
 	ItemSector = AddWidget<Sector>();
 	ItemSector->AttachTo(SilkContainer);
 	ItemSector->SetRelativePosition(FVector2D(100, 0));
-	ItemSector->SetLayer(12);
+	ItemSector->SetLayer(22);
 	ItemSector->SetLayoutPattern(LayoutPattern::Center);
 	ItemSector->LoadSectorFrontPicture("inventory_item");
 	ItemSector->LoadSectorBackPicture("inventory_item_");
@@ -75,7 +75,7 @@ GameUI::GameUI()
 	Dart->SetRelativePosition(FVector2D(4, 0));
 	Dart->SetSize(FVector2D(47, 48));
 	Dart->LoadSprite("dart");
-	Dart->SetLayer(12);
+	Dart->SetLayer(22);
 	
 	for (int i = 0; i < 5; i++)
 	{
@@ -92,8 +92,8 @@ GameUI::GameUI()
 		Health[i] = AddWidget<Image>();
 		Health[i]->AttachTo(SoulContainer);
 		Health[i]->SetLayoutPattern(LayoutPattern::RightMiddle);
-		Health[i]->SetRelativePosition(FVector2D(45 * i+35, 0));
-		Health[i]->SetLayer(12);
+		Health[i]->SetRelativePosition(FVector2D(45 * i + 35, 0));
+		Health[i]->SetLayer(22);
 
 		Health[i]->EnableAnimControl();
 		Animator* ani = Health[i]->GetAnimator();
@@ -126,7 +126,7 @@ GameUI::GameUI()
 		Silk[i]->AttachTo(SilkContainer);
 		Silk[i]->SetLayoutPattern(LayoutPattern::LeftMiddle);
 		Silk[i]->SetRelativePosition(FVector2D(8 * i + 21, 0));
-		Silk[i]->SetLayer(12);
+		Silk[i]->SetLayer(22);
 
 		Silk[i]->EnableAnimControl();
 		Animator* ani = Silk[i]->GetAnimator();
@@ -147,7 +147,7 @@ GameUI::GameUI()
 	Soul->AttachTo(SoulContainer);
 	Soul->SetLayoutPattern(LayoutPattern::Center);
 	Soul->SetRelativePosition(FVector2D(0, 0));
-	Soul->SetLayer(12);
+	Soul->SetLayer(22);
 
 	Soul->EnableAnimControl();
 	Animator* ani = Soul->GetAnimator();

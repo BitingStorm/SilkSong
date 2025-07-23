@@ -47,6 +47,11 @@ void GameplayStatics::OpenLevel(std::string levelName)
     mainWorld.levelManager->SetDefaultLevel(levelName);
 }
 
+Level* GameplayStatics::GetCurrentLevel()
+{
+    return mainWorld.currentLevel;
+}
+
 void GameplayStatics::QuitGame()
 {
     std::exit(0);

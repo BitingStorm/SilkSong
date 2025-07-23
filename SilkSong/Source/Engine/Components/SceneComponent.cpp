@@ -14,13 +14,14 @@ void SceneComponent::process_Destruct()
 	ActorComponent::Destruct();
 }
 
-void SceneComponent::AttachTo(SceneComponent* par)
+void SceneComponent::AttachTo(SceneComponent* par, FAttachmentTransformRules rule)
 {
 	if (par)
 	{
 		par->children.insert(this);
 		parent = par;
 		SetOwner(par->pOwner);
+		transformRule = rule;
 	}
 }
 
@@ -45,6 +46,11 @@ void SceneComponent::Destruct()
 
 FVector2D SceneComponent::GetWorldPosition() const
 {
+	if (transformRule.LocationRule == EAttachmentRule::KeepWorld)
+	{
+		return GetLocalPosition();
+	}
+
 	if (parent)
 	{
 		return parent->GetWorldPosition() + FVector2D::RotateVector(parent->GetWorldRotation(), GetLocalPosition() * parent->GetWorldScale());
@@ -58,6 +64,11 @@ FVector2D SceneComponent::GetWorldPosition() const
 
 float SceneComponent::GetWorldRotation() const
 {
+	if (transformRule.RotationRule == EAttachmentRule::KeepWorld)
+	{
+		return GetLocalRotation();
+	}
+
 	if (parent)
 	{
 		return parent->GetWorldRotation() + GetLocalRotation();
@@ -71,7 +82,12 @@ float SceneComponent::GetWorldRotation() const
 
 FVector2D SceneComponent::GetWorldScale() const
 {
-	if (parent)
+	if (transformRule.ScaleRule == EAttachmentRule::KeepWorld)
+	{
+		return GetLocalScale();
+	}
+
+	if (parent && transformRule.ScaleRule == EAttachmentRule::KeepRelative)
 	{
 		return parent->GetWorldScale() * GetLocalScale();
 	}

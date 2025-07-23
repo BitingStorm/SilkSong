@@ -279,9 +279,6 @@
     <ClInclude Include="Source\Project\PropertyCarrier.h">
       <Filter>Project\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Project\PlatForm.h">
-      <Filter>Project\Game</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Project\SceneUI.h">
       <Filter>Project\Game</Filter>
     </ClInclude>
@@ -422,6 +419,21 @@
     </ClInclude>
     <ClInclude Include="Source\Project\MossHole.h">
       <Filter>Project\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\MossFloor.h">
+      <Filter>Project\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\Plant.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\PlatForm.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\LeafParticle.h">
+      <Filter>Project\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\SceneTitleUI.h">
+      <Filter>Project\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -599,9 +611,6 @@
     <ClCompile Include="Source\Project\PlayerPropertyComponent.cpp">
       <Filter>Project\Components\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Project\PlatForm.cpp">
-      <Filter>Project\Game</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Project\SceneUI.cpp">
       <Filter>Project\Game</Filter>
     </ClCompile>
@@ -721,6 +730,24 @@
     </ClCompile>
     <ClCompile Include="Source\Project\MossHole.cpp">
       <Filter>Project\Levels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\MossFloor.cpp">
+      <Filter>Project\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Core\Struct.cpp">
+      <Filter>Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\PlatForm.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\Plant.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\LeafParticle.cpp">
+      <Filter>Project\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\SceneTitleUI.cpp">
+      <Filter>Project\Game</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

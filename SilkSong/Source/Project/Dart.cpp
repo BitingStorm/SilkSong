@@ -27,7 +27,7 @@ Dart::Dart()
 	circle->SetCollisonMode(CollisionMode::Collision);
 	circle->SetType(CollisionType::Dart);
 	circle->SetPhysicsMaterial(FPhysicsMaterial(0.5f, 0.5f));
-	circle->SetRadius(36);
+	circle->SetRadius(33);
 
 	rigid = ConstructComponent<RigidBody>();
 	rigid->SetAngularDrag(0.5f);

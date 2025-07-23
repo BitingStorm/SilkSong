@@ -25,7 +25,12 @@ using FTransform = Math::TTransform<float>;
 
 
 /* 材质结合方式 */
-enum class ECombinePattern :unsigned char { Min, Mid, Max };
+enum class ECombinePattern :uint8 
+{ 
+	Smaller, 
+	Mean, 
+	Bigger 
+};
 
 /* 物理材质类 */
 struct FPhysicsMaterial
@@ -36,19 +41,22 @@ struct FPhysicsMaterial
 	FPhysicsMaterial(float friction, float bounciness)
 		:friction(friction), bounciness(bounciness) {}
 
-	//物理材质结合效果
-	static FORCEINLINE FPhysicsMaterial Combine(const FPhysicsMaterial& m1, const FPhysicsMaterial& m2, ECombinePattern pattern = ECombinePattern::Mid)
+	FPhysicsMaterial operator+(const FPhysicsMaterial& another)
 	{
-		if (pattern == ECombinePattern::Mid)
-		{
-			return FPhysicsMaterial((m1.friction + m2.friction) * 0.5f, (m1.bounciness + m2.bounciness) * 0.5f);
-		}
-		else
-		{
-			return pattern == ECombinePattern::Min ? FPhysicsMaterial(FMath::Min(m1.friction, m2.friction), FMath::Min(m1.bounciness, m2.bounciness))
-				: FPhysicsMaterial(FMath::Max(m1.friction, m2.friction), FMath::Max(m1.bounciness, m2.bounciness));
-		}
+		return FPhysicsMaterial(friction + another.friction, bounciness + another.bounciness);
 	}
+
+	FPhysicsMaterial operator*(float multi)
+	{
+		return FPhysicsMaterial(friction * multi, bounciness * multi);
+	}
+
+	//物理材质结合效果
+	static FPhysicsMaterial Combine(
+		const FPhysicsMaterial& m1, 
+		const FPhysicsMaterial& m2, 
+		ECombinePattern pattern = ECombinePattern::Mean
+	);
 };
 
 
@@ -67,4 +75,39 @@ struct FHitResult
 	FHitResult() :ImpactPoint(0, 0), ImpactNormal(0, 0), HitObject(nullptr), HitComponent(nullptr) {}
 	FHitResult(const FVector2D& impactPoint, const FVector2D& impactNormal, Actor* hitObject, ActorComponent* hitComponent)
 		:ImpactPoint(impactPoint), ImpactNormal(impactNormal), HitObject(hitObject), HitComponent(hitComponent) {}
+};
+
+
+/* 绑定方式 */
+enum class EAttachmentRule :uint8 
+{
+	KeepRelative,
+	KeepWorld
+};
+
+/* 绑定变换规则 */
+struct FAttachmentTransformRules
+{
+	EAttachmentRule LocationRule;
+	EAttachmentRule RotationRule;
+	EAttachmentRule ScaleRule;
+	
+	FAttachmentTransformRules()
+	{
+		LocationRule = EAttachmentRule::KeepRelative;
+		RotationRule = EAttachmentRule::KeepRelative;
+		ScaleRule = EAttachmentRule::KeepRelative;
+	}
+
+	FAttachmentTransformRules(EAttachmentRule Location, EAttachmentRule Rotation, EAttachmentRule Scale)
+		: LocationRule(Location), RotationRule(Rotation), ScaleRule(Scale) {}
+
+	//保持相对变换，父对象变换会作用于子对象变换
+	static FAttachmentTransformRules KeepRelativeTransform;
+	
+	//保持世界绝对变换，子对象依旧保持独立的变换
+	static FAttachmentTransformRules KeepWorldTransform;
+	
+	//仅对位置保持相对变换
+	static FAttachmentTransformRules KeepRelativeOnlyForLocation;
 };

@@ -193,7 +193,7 @@ void SoulMaster::BeginPlay()
 	SetLocalScale({ -1,1 });
 
 	BossNameUI* ui = GameplayStatics::CreateUI<BossNameUI>();
-	ui->InitName("MASTER", "S O U L");
+	ui->InitName("$1MASTER", "S O U L");
 	ui->AddToViewport();
 }
 
@@ -214,7 +214,7 @@ void SoulMaster::Update(float deltaTime)
 		{
 			float delta = player->GetWorldPosition().x - GetWorldPosition().x;
 			delta = FMath::Clamp(delta, -200.f, 200.f);
-			SetLocalPosition(FVector2D(FMath::Lerp(GetWorldPosition().x, GetWorldPosition().x + delta, 0.01f), FMath::Lerp(GetWorldPosition().y, 400.f, 0.02f)));
+			SetLocalPosition(FVector2D(FMath::Lerp(GetWorldPosition().x, GetWorldPosition().x + delta, 0.01f), FMath::Lerp(GetWorldPosition().y, 350.f, 0.02f)));
 			SetLocalPosition(ClampPosX(GetWorldPosition()));
 		}
 	}

@@ -9,6 +9,7 @@
 #include "PlayerPropertyComponent.h"
 #include "GameplayStatics.h"
 #include "GameModeHelper.h"
+#include "Objects/Level.h"
 
 #include "PlayerAnimator.h"
 #include "Effect.h"
@@ -27,8 +28,9 @@ Player::Player()
 {
 	render = GetComponentByClass<SpriteRenderer>();
 	render->SetLayer(1);
+	
 	render_light = ConstructComponent<SpriteRenderer>();
-	render_light->AttachTo(root);
+	render_light->AttachTo(root, FAttachmentTransformRules::KeepRelativeOnlyForLocation);
 	render_light->LoadSprite("player_light");
 	render_light->SetLayer(0);
 	render_light->SetTransparency(75);
@@ -168,7 +170,7 @@ Player::Player()
 		{
 			EnableInput(true);
 			rigid->SetGravityEnabled(true);
-			rigid->SetVelocity({ GetWorldScale().x * 75,0 });
+			rigid->SetVelocity({ GetWorldScale().x * 100,0 });
 			box->SetPhysicsMaterial(FPhysicsMaterial(0.1f, 0));
 		});
 	ani->downAttackSpawn.Bind([this]()
@@ -199,8 +201,15 @@ Player::Player()
 void Player::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	SetLocalPosition({ 0,900 });
+
+	if (GameplayStatics::GetCurrentLevel()->GetLevelName() == "RuinHouse")
+	{
+		SetLocalPosition({ 0,900 });
+	}
+	else
+	{
+		SetLocalPosition({ 250,250 });
+	}
 
 	BlinkTimer.Bind(0.2f, [this]()
 		{

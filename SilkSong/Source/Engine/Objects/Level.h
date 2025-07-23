@@ -19,15 +19,19 @@ DECLARE_NO_PARAM_MULTICAST_DELEGATE_CLASS(LevelEvent)
 class Level :public Object, public TimerHandler
 {
 	friend GameplayStatics;
+	friend class LevelManager;
 
 	class Controller* mainController = nullptr;
 
 	std::function<void()> callback;
 
+	std::string levelName;
 public:
 	Level();
 
 	virtual void BeginPlay()override;
+
+	std::string GetLevelName() const { return levelName; }
 
 	template<typename T>
 	void SetDefaultController()

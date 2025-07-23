@@ -20,6 +20,8 @@ Interactive::Interactive()
 
 	damageResponse = ConstructComponent<DamageResponseComponent>();
 	damageResponse->SetStrategy(new DamageStrategy());
+
+	flag = false;
 }
 
 void Interactive::Update(float deltaTime)

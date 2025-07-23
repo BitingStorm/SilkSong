@@ -33,6 +33,7 @@ namespace ArtyEngine
 		FVector2D position;//粒子坐标
 		int32 index = 0; //当前帧索引
 		FVector2D velocity; //速度
+		float angularSpeed; //角速度
 		time_point<steady_clock>lastTime;//粒子创建时间
 		float alpha = 255.f; //透明度
 		float size = 1.f;//大小
@@ -55,6 +56,7 @@ class ParticleSystem final : public SceneComponent, public LayerInterface, publi
 
 	float maxSpeed = 1.f; //粒子最大初速度
 	float minSpeed = 1.f; //粒子最小初速度
+	FVector2D angularSpeedRange = {}; //角速度大小范围
 	float graivity = 9.8f; //重力加速度
 
 	float lifeCycle = 1.f; //粒子生命周期
@@ -104,6 +106,13 @@ public:
 
 	//设置粒子发射最小初速度
 	void SetMinSpeed(float speed) { this->minSpeed = speed; }
+
+	/**
+	 * @brief 设置粒子角速度范围
+	 * @param[in] lower			    最小转速
+	 * @param[in] upper				最大转速
+	 **/
+	void SetAngularSpeed(float lower, float upper) { this->angularSpeedRange = FVector2D(lower, upper); }
 
 	//设置粒子重力
 	void SetGravity(float graivity) { this->graivity = graivity; }

@@ -35,7 +35,7 @@ NightMare::NightMare()
 	rigid->SetMass(10000);
 	rigid->SetLinearDrag(0);
 	beam = GameplayStatics::CreateObject<Bg>({ -1350, 600 }, 15);
-	beam->Init("grimmtent_beam");
+	beam->Init("grimmtent_beam", -1, -1);
 
 
 	fingerout.Load("nightmare_fingerstretch");
@@ -252,7 +252,7 @@ void NightMare::BeginPlay()
 			player->EnableInput(true);
 		}
 		BossNameUI* ui = GameplayStatics::CreateUI<BossNameUI>();
-		ui->InitName("GRIMM", "T R O U P E   M A S T E R");
+		ui->InitName("$1GRIMM", "T R O U P E   M A S T E R");
 		ui->AddToViewport();
 		});
 

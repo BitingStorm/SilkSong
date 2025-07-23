@@ -49,6 +49,9 @@ public:
 	//加载地图
 	static void OpenLevel(std::string levelName);
 
+	//获取当前层级
+	static class Level* GetCurrentLevel();
+
 	//退出游戏
 	static void QuitGame();
 

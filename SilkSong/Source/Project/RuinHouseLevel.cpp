@@ -23,8 +23,8 @@ RuinHouseLevel::RuinHouseLevel()
 	Chair* chair = GameplayStatics::CreateObject<Chair>({ 0,950 });
 
 
-	GameplayStatics::CreateObject<Bg>({ 0,700 })->Init("ruinhouse_0", -5);
-	GameplayStatics::CreateObject<Bg>({ 0,700 })->Init("ruinhouse_1", 5, false, false);
+	GameplayStatics::CreateObject<Bg>({ 0,725 })->Init("ruinhouse_0", -5, -5);
+	GameplayStatics::CreateObject<Bg>({ 0,700 })->Init("ruinhouse_1", 5);
 
 	GameplayStatics::CreateObject<PlatForm>({ 0,1100 })->Init("", { 1200,200 }, {});
 

@@ -60,6 +60,6 @@ OldTheme::OldTheme()
 	smoke->SetSizeRange(0.5, 1.5);
 
 	Bg* bg = GameplayStatics::CreateObject<Bg>({ 0,-25 });
-	bg->Init("menu_0");
+	bg->Init("menu_0", -1, -1);
 	bg->AttachTo(this);
 }

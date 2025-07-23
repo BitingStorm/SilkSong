@@ -132,6 +132,10 @@ IMAGE* ImageInterface::LoadSprite(std::string name)
 	{
 		spriteInfo.endLoc = { sprite->getwidth(), sprite->getheight() };
 	}
+	else
+	{
+		std::cerr << "sprite doesn't exit!" << std::endl;
+	}
 	return sprite;
 }
 

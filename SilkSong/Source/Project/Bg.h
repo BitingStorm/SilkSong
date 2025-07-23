@@ -9,7 +9,7 @@ public:
 
 	virtual void Update(float deltaTime)override;
 
-	void Init(std::string path, int layer = -1, bool blur = false, bool adjust = true);
+	void Init(std::string path, int layer = -1, int moveLayer = 0, bool blur = false, float k = 1.05);
 
 protected:
 	class SpriteRenderer* render;
@@ -18,5 +18,7 @@ protected:
 
 	class Player* player;
 
-	bool bAdjust;
+	int32 moveLayer;
+
+	float k;
 };

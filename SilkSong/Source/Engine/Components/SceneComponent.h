@@ -18,12 +18,13 @@ class SceneComponent : public ActorComponent
 	FTransform transform_local;
 	std::unordered_set<SceneComponent*>children;
 	SceneComponent* parent = nullptr;//处理场景属性关系，便于增删
+	FAttachmentTransformRules transformRule;
 
 	void process_Destruct();
 
 public:
 	//设置所属组件
-	void AttachTo(SceneComponent* par);
+	void AttachTo(SceneComponent* par, FAttachmentTransformRules rule = FAttachmentTransformRules::KeepRelativeTransform);
 
 	//解除所属组件
 	void DetachFrom(SceneComponent* par);

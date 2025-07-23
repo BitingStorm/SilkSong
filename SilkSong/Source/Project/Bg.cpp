@@ -7,19 +7,20 @@
 Bg::Bg()
 {
 	render = ConstructComponent<SpriteRenderer>();
-	SetRootComponent(render);
-	bAdjust = true;
+	render->AttachTo(root);
+	moveLayer = 0;
 }
 
 void Bg::Update(float deltaTime)
 {
 	Actor::Update(deltaTime);
-	if (!bAdjust)return;
+
+	if (!moveLayer)return;
 
 	if (player)
 	{
 		if ((player->GetCameraPos() - InitPos).Size() < 0.5f)return;
-		SetLocalPosition(player->GetCameraPos() - (player->GetCameraPos() - InitPos) * pow(1.05, render->GetLayer()));
+		SetLocalPosition(player->GetCameraPos() - (player->GetCameraPos() - InitPos) * pow(k, moveLayer));
 	}
 	else
 	{
@@ -27,14 +28,15 @@ void Bg::Update(float deltaTime)
 	}
 }
 
-void Bg::Init(std::string path, int layer, bool blur, bool adjust)
+void Bg::Init(std::string path, int layer, int moveLayer, bool blur, float k)
 {
-	bAdjust = adjust;
 	render->LoadSprite(path);
 	render->SetLayer(layer);
 	InitPos = GetWorldPosition();
+	this->moveLayer = moveLayer;
+	this->k = k;
 	if (blur && layer < 0)
 	{
-		render->GaussianBlur(-layer + 2);
+		render->GaussianBlur(-layer + 1);
 	}
 }

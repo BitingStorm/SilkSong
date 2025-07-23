@@ -23,6 +23,7 @@ class Actor :public Object, public TimerHandler
 
 	std::unordered_set<Actor*>children;
 	Actor* parent = nullptr;//处理场景属性关系 并且 便于增删
+	FAttachmentTransformRules transformRule;
 
 	std::unordered_set<ActorComponent*>components;
 	std::unordered_set<ActorComponent*>::iterator components_iter;//管理组件的遍历以及增删
@@ -50,7 +51,7 @@ public:
 	void SetRootComponent(SceneComponent* newRoot);
 
 	//设置所属对象
-	void AttachTo(Actor* par);
+	void AttachTo(Actor* par, FAttachmentTransformRules rule = FAttachmentTransformRules::KeepRelativeTransform);
 
 	//解除所属对象
 	void DetachFrom(Actor* par);

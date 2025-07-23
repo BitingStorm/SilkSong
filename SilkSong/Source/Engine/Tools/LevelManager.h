@@ -9,8 +9,7 @@
 #include <unordered_map>
 #include <string>
 #include <functional>
-
-class Level;
+#include "Objects/Level.h"
 
 
 /*----------------------------------
@@ -39,5 +38,14 @@ private:
 template<class T>
 inline void LevelManager::AddLevel(std::string levelName)
 {
-	levelMap.insert({ levelName,[]() { return new T(); } });
+	levelMap.insert({ levelName,[=]() { 
+		T* level = new T();
+		if (Level* pLevel = Cast<Level>(level))
+		{
+			pLevel->levelName = levelName;
+			return level;
+		}
+		std::cerr << "inValid Level!" << std::endl;
+		return level; 
+		} });
 }
