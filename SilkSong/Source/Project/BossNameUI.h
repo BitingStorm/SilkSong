@@ -1,11 +1,11 @@
 #pragma once
-#include "UI/UserInterface.h"
+#include "RichTextUI.h"
 
 
 class BossNameUI :public UserInterface
 {
-	Text* text_;
-	Text* text;
+	RichTextUI* text_;
+	RichTextUI* text;
 
 	int32 flag = 1;
 	float alpha = 0;

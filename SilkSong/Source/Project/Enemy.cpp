@@ -14,7 +14,6 @@
 #include "AttackBox.h"
 
 
-
 Enemy::Enemy()
 {
 	render = ConstructComponent<SpriteRenderer>();
@@ -58,6 +57,18 @@ void Enemy::BeginPlay()
 void Enemy::Update(float deltaTime)
 {
     Super::Update(deltaTime);
+
+	if (!IsDead() && GetWorldPosition().y > 1080 && GameplayStatics::GetCurrentLevelName() == "TearCity")
+	{
+		property->AddHealth(-9999);
+		GameplayStatics::PlayCameraShake(4);
+		render->Blink(0.3f, WHITE, 100);
+		SilkParticle* silk = GameplayStatics::CreateObject<SilkParticle>();
+		silk->AttachTo(this);
+		silk->Init({}, true);
+		rigid->AddImpulse({ 0,-500 });
+		Die();
+	}
 
 	if (IsDead() && rigid->GetVelocity().Equals(FVector2D::ZeroVector))
 	{
@@ -131,14 +142,14 @@ void Enemy::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 
 	SilkParticle* silk = GameplayStatics::CreateObject<SilkParticle>();
 	silk->AttachTo(this);
-	silk->Init(normal, IsDead());
+	silk->Init(FVector2D(normal.x, -FMath::Abs(normal.y)), IsDead());
 
 	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
 	if (effect)
 	{
 		effect->SetLocalRotation(FMath::RandInt(-15, 15) + FVector2D::VectorToDegree(normal));
 		effect->Init("effect_attack", -0.03f);
-		effect->SetLocalScale(FVector2D{ delta_x < 0 ? 1.f : -1.f ,1.f }*FMath::RandReal(1, 1.5));
+		effect->SetLocalScale(FVector2D{ delta_x < 0 ? 1.f : -1.f ,1.f } * FMath::RandReal(1, 1.5));
 	}
 }
 

@@ -5,7 +5,6 @@
 class MossHoleLevel :public Level
 {
 	class Player* player;
-	class SceneTitleUI* ui;
 public:
 	MossHoleLevel();
 

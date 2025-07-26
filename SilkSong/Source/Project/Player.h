@@ -73,6 +73,8 @@ public:
 
 	void Scare(bool enable, std::string anim = "");
 
+	bool IsSwimming() const;
+
 protected:
 	virtual void SetupInputComponent(InputComponent* inputComponent)override;
 

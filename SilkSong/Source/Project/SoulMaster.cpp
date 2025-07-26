@@ -193,7 +193,7 @@ void SoulMaster::BeginPlay()
 	SetLocalScale({ -1,1 });
 
 	BossNameUI* ui = GameplayStatics::CreateUI<BossNameUI>();
-	ui->InitName("$1MASTER", "S O U L");
+	ui->InitName("MASTER", "S O U L");
 	ui->AddToViewport();
 }
 

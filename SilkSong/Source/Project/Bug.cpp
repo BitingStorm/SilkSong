@@ -47,7 +47,7 @@ Bug::Bug()
 	StateUpdateTimerHandle.Bind(3.f, [this]() {
 		if (player && rigid->GetVelocity().y == 0 && !IsDead())
 		{
-			if (FVector2D::Distance(player->GetWorldPosition(), GetWorldPosition()) > 350 &&
+			if (FVector2D::Distance(player->GetWorldPosition(), GetWorldPosition()) > 350 && currentPlatForm &&
 				FMath::Abs(circle->GetWorldPosition().x - currentPlatForm->GetWorldPosition().x) < currentPlatForm->GetSize().x * 0.5f - 25)
 			{
 				bIsBuried = true;
@@ -80,18 +80,6 @@ void Bug::BeginPlay()
 void Bug::Update(float deltaTime)
 {
 	Super::Update(deltaTime);
-
-	if (!IsDead() && GetWorldPosition().y > 1080)
-	{
-		property->AddHealth(-9999);
-		GameplayStatics::PlayCameraShake(4);
-		render->Blink(0.3f, WHITE, 100);
-		SilkParticle* silk = GameplayStatics::CreateObject<SilkParticle>();
-		silk->AttachTo(this);
-		silk->Init({}, true);
-		rigid->AddImpulse({ 0,-500 });
-		Die();
-	}
 
 	ani->SetBool("burying", bIsBuried);
 

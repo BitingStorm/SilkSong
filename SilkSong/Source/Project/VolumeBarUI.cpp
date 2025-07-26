@@ -4,21 +4,17 @@
 #include "Objects/Controller.h"
 
 
-std::string Texts[2] = { "$0MUSIC VOLUME:","$0SOUND VOLUME:" };
+std::string Texts[2] = { "MUSIC  VOLUME :","SOUND  VOLUME :" };
 
 
 VolumeBarUI::VolumeBarUI()
 {
-	VolumeText = AddWidget<Text>();
-	VolumeText->AttachTo(rootCanvas);
-	VolumeText->SetLayoutPattern(LayoutPattern::MiddleTop);
-	VolumeText->SetRelativePosition(FVector2D(-150, 250));
-	VolumeText->SetLayer(10);
+	VolumeText = GameplayStatics::CreateUI<RichTextUI>();
+	VolumeText->AttachTo(this);
 
 	VolumeBar = AddWidget<Bar>();
-	VolumeBar->AttachTo(VolumeText);
-	VolumeBar->SetLayoutPattern(LayoutPattern::RightMiddle);
-	VolumeBar->SetRelativePosition(FVector2D(200, 0));
+	VolumeBar->AttachTo(rootCanvas);
+	VolumeBar->SetLayoutPattern(LayoutPattern::Center);
 	VolumeBar->LoadBarBackPicture("white");
 	VolumeBar->LoadBarFrontPicture("bar_white");
 	VolumeBar->SetSize({ 200.f,5.f });
@@ -42,8 +38,9 @@ VolumeBarUI::VolumeBarUI()
 
 void VolumeBarUI::Init(int32 i)
 {
-	VolumeText->SetRelativePosition(FVector2D(-150, 250 + i * 100));
-	VolumeText->SetText(Texts[i], 5, "Trajan Pro");
+	VolumeText->SetText(Texts[i], 5);
+	VolumeText->SetPosition(FVector2D(-175, -150 + i * 100));
+	VolumeBar->SetRelativePosition(FVector2D(165, -150 + i * 100));
 	index = i;
 
 	float delta_x = float(GameModeHelper::GetInstance()->GetVolume(index)) / 5 - 100;
@@ -67,5 +64,5 @@ void VolumeBarUI::Update(float deltaTime)
 		mode->SetVolume(index, 5 * delta_x);
 	}
 	VolumeBar->SetPercentage(float(mode->GetVolume(index)) / 1000.f);
-	VolumeNumber->SetText("$0" + std::to_string(mode->GetVolume(index) / 100), 5, "Trajan Pro");
+	VolumeNumber->SetText(std::to_string(mode->GetVolume(index) / 100), 5, "Trajan Pro");
 }

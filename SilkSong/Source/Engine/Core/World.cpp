@@ -190,6 +190,7 @@ void World::Input()
 
 void World::Debug()
 {
+	setlinestyle(PS_SOLID | PS_JOIN_BEVEL);
 #ifdef _DEBUG
 	for (auto& obj : GameColliders)
 		obj->DrawDebugLine();

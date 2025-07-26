@@ -7,7 +7,7 @@
 #include "Components/Camera.h"
 #include "Animated.h"
 #include "Plant.h"
-#include "SceneTitleUI.h"
+#include "LevelTransformer.h"
 
 
 MossHoleLevel::MossHoleLevel()
@@ -19,7 +19,7 @@ MossHoleLevel::MossHoleLevel()
 	GameModeHelper::PlayBGMusic("stream");
 	GameModeHelper::PlayBGMusic("cicadachirp");
 	
-
+	GameplayStatics::CreateObject<LevelTransformer>({ -1850,550 })->Init("MossHole_0", { 2400,875 }, FRect({ -2000.f,650.f }, { 1900.f,750.f }));
 	GameplayStatics::CreateObject<Bg>({ 100,650 })->Init("mosshole_0", -20, -13);
 	GameplayStatics::CreateObject<Bg>({ -1300,600 })->Init("mosshole_bg_0", -5);
 	GameplayStatics::CreateObject<Bg>({ 300,875 })->Init("mosshole_bg_1", -2);
@@ -229,13 +229,6 @@ void MossHoleLevel::Update(float deltaTime)
 	if (!player)
 	{
 		player = Cast<Player>(GameplayStatics::GetController());
-	}
-	
-	if (!ui && player->GetWorldPosition().x < 0)
-	{
-		ui = GameplayStatics::CreateUI<SceneTitleUI>();
-		ui->AddToViewport();
-		GameModeHelper::PlayBGMusic("mossgrotto");
 	}
 
 	Camera* camera = player->GetComponentByClass<Camera>();

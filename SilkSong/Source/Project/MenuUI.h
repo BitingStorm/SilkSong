@@ -1,5 +1,5 @@
 #pragma once
-#include "UI/UserInterface.h"
+#include "RichTextUI.h"
 
 class Pointer;
 
@@ -11,7 +11,7 @@ class MenuUI :public UserInterface
 	Image* Black;
 
 	Text* Edition;
-	Text* Options[5];
+	RichTextUI* Options[5];
 	Button* Buttons[5];
 
 	int32 startFlag = 0;

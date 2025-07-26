@@ -50,7 +50,7 @@ public:
 	static void OpenLevel(std::string levelName);
 
 	//获取当前层级
-	static class Level* GetCurrentLevel();
+	static std::string GetCurrentLevelName();
 
 	//退出游戏
 	static void QuitGame();

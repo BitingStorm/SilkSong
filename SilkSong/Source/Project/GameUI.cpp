@@ -196,7 +196,7 @@ void GameUI::Update(float deltaTime)
 		if (Black->GetTransparency() > 0)Black->SetTransparency(Black->GetTransparency() - 5);
 	}
 
-	CoinNum->SetText("$0" + std::to_string(player->GetGeo()), 5, "Trajan Pro");
+	CoinNum->SetText(std::to_string(player->GetGeo()), 5, "Trajan Pro");
 
 	ItemSector->SetPercentage(float(player->GetDart())/15);
 }

@@ -252,7 +252,7 @@ void NightMare::BeginPlay()
 			player->EnableInput(true);
 		}
 		BossNameUI* ui = GameplayStatics::CreateUI<BossNameUI>();
-		ui->InitName("$1GRIMM", "T R O U P E   M A S T E R");
+		ui->InitName("GRIMM", "T R O U P E   M A S T E R");
 		ui->AddToViewport();
 		});
 

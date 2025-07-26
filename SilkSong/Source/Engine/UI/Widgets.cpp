@@ -20,6 +20,7 @@ std::unordered_map<std::string, COLORREF>ArtyEngine::Characters::TextColorMap =
 
 void ArtyEngine::Characters::SetCharacters(std::string text, int size, LPCTSTR style)
 {
+	settextstyle(6 * size, 3 * size, style);
 	row = 1;
 	maxWidth = 0;
 	std::string temp;
@@ -59,7 +60,8 @@ void ArtyEngine::Characters::PrintCharacters(FVector2D pos, BYTE alpha, Characte
 	default:pat = 1;break;
 	}
 
-	COLORREF color = WHITE;
+	COLORREF color = RGB(245, 245, 245);
+	settextstyle(6 * size, 3 * size, style);
 
 	std::string temp;
 	int r = 0;
@@ -67,16 +69,16 @@ void ArtyEngine::Characters::PrintCharacters(FVector2D pos, BYTE alpha, Characte
 	{
 		if (texts[i] == '\n')
 		{
-			settextstyle(6 * size, 3 * size, style);
 			ImageToolkit::OutText((int)pos.x + (GetWidth() - textwidth(temp.c_str())) * pat / 2, (int)pos.y + r * 6 * size, temp.c_str(), alpha, color, size, style);
 			temp.clear(), ++r;
 		}
 		else if (texts[i] == '$' && (uint64)i + 1 < texts.length())
 		{
-			std::string buf = "$" + std::string(1, texts[++i]);
+			std::string buf = "$" + std::string(1, texts[i + 1]);
 			if (TextColorMap.find(buf) != TextColorMap.end())
 			{
 				color = TextColorMap[buf];
+				++i;
 			}
 			else temp.push_back(texts[i]);
 		}
@@ -85,8 +87,23 @@ void ArtyEngine::Characters::PrintCharacters(FVector2D pos, BYTE alpha, Characte
 			temp.push_back(texts[i]);
 		}
 	}
-	settextstyle(6 * size, 3 * size, style);
 	ImageToolkit::OutText((int)pos.x + (GetWidth() - textwidth(temp.c_str())) * pat / 2, (int)pos.y + r * 6 * size, temp.c_str(), alpha, color, size, style);
+}
+
+int TextHelper::GetTextWidth(Text* text)
+{
+	return text->texts.GetWidth();
+}
+
+int TextHelper::GetTextHeight(Text* text)
+{
+	return text->texts.GetHeight();
+}
+
+int TextHelper::GetWidthOfOneLetter(int size, LPCTSTR style, char letter)
+{
+	settextstyle(6 * size, 3 * size, style);
+	return textwidth(letter);
 }
 
 
@@ -365,6 +382,11 @@ void Text::Render()
 void Text::SetAlpha(BYTE alpha)
 {
 	alpha = FMath::Clamp(alpha, BYTE(0), BYTE(255)); this->alpha = alpha;
+}
+
+void Text::SetText(std::string te, int si, LPCTSTR st)
+{
+	texts.SetCharacters(te, si, st); 
 }
 
 

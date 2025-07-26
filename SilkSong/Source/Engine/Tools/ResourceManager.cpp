@@ -162,6 +162,7 @@ void ResourceManager::Initialize()
 	Load("water_stream", "Asset/Animations/Stream/", 32, 700, 6);
 	Load("water_top", "Asset/Animations/WaterTop/", 343, 48, 9);
 	Load("rain_land", "Asset/Animations/RainLand/", 120, 20, 6);
+	Load("lake_top", "Asset/Animations/LakeTop/", 370, 30, 31);
 
 	//Plants
 	Load("grass_0", "Asset/Animations/Plants/grass_0/", 133, 155, 24);
@@ -205,6 +206,7 @@ void ResourceManager::Initialize()
 	Load("particle_flame_i", "Asset/Particles/wispy_flame_particle_i.png", 102, 510, 5, 5, 1);
 	Load("particle_flame_o", "Asset/Particles/wispy_flame_particle_o.png", 204, 1020, 5, 5, 1);
 	Load("particle_leaf", "Asset/Particles/falling_leaf_particles.png", 32, 96, 3, 3, 1);
+	Load("particle_bubble", "Asset/Particles/bubble_01.png", 20, 20, 1, 1, 1);
 
 	/** Í¼Ïñ **/
 
@@ -248,7 +250,6 @@ void ResourceManager::Initialize()
 	Load("tearcity_roof", "Asset/Images/Environment/TearCity/ruind_bridge_roof_02_r.png", 608, 624);
 	Load("tearcity_window", "Asset/Images/Environment/TearCity/ruind_window_03.png", 500, 400);
 	Load("tearcity_doorbg", "Asset/Images/Environment/TearCity/ruin_add_doorbg_straight.png", 116, 236);
-
 	Load("tearcity_plat_0", "Asset/Images/PlatForm/TearCity/ruin_plat_float_01.png", 163, 118);
 	Load("tearcity_plat_1", "Asset/Images/PlatForm/TearCity/ruin_plat_float_02.png", 114, 83);
 	Load("tearcity_plat_2", "Asset/Images/PlatForm/TearCity/ruin_plat_float_03.png", 111, 100);
@@ -265,6 +266,7 @@ void ResourceManager::Initialize()
 
 	Load("ruinhouse_0", "Asset/Images/BackGround/RuinHouse/ruin_house_BG.jpg", 1000, 580);
 	Load("ruinhouse_1", "Asset/Images/BackGround/RuinHouse/room_ruin_house_FG.png", 1500, 820);
+
 
 	Load("grimmtent_bg", "Asset/Images/Environment/GrimmTents/sleep_grimm_bg.png", 320, 526);
 	Load("grimmtent_extrance", "Asset/Images/Environment/GrimmTents/Main_tent_entrance.png", 248, 462);
@@ -289,29 +291,47 @@ void ResourceManager::Initialize()
 	Load("grimmtent_flag", "Asset/Images/Environment/GrimmTents/Grimm_Main_tent_0000_12.png", 100, 525);
 	Load("grimmtent_beam", "Asset/Images/Environment/GrimmTents/grimm_beam.png", 300, 800);
 
-	Load("mosshole_0", "Asset/Images/BackGround/MossHole/0.png", 1450, 800);
+
+	Load("mosshole_0", "Asset/Images/BackGround/MossHole/0.png", 1450, 870);
+	Load("mosshole_1", "Asset/Images/BackGround/MossHole/1.png", 2255, 585);
+	Load("mosshole_2", "Asset/Images/BackGround/MossHole/2.png", 2500, 700);
+	Load("mosshole_3", "Asset/Images/BackGround/MossHole/3.png", 2100, 800);
 	Load("mosshole_bg_0", "Asset/Images/BackGround/MossHole/backboard.png", 1200, 650);
 	Load("mosshole_bg_1", "Asset/Images/Environment/MossHole/ball.png", 500, 340);
 	Load("mosshole_environment_0", "Asset/Images/Environment/MossHole/fung_bg_rocks_full_01.png", 510, 372);
-	Load("mosshole_environment_1", "Asset/Images/Environment/MossHole/fung_bg_rocks_full_02.png", 510, 350);
+	Load("mosshole_environment_1", "Asset/Images/Environment/MossHole/fung_bg_rocks_full_02.png", 510, 400);
 	Load("mosshole_environment_2", "Asset/Images/Environment/MossHole/fung_new_0084_c.png", 434, 265);
 	Load("mosshole_environment_3", "Asset/Images/Environment/MossHole/fung_new_0089_a.png", 434, 265);
+	Load("mosshole_environment_4", "Asset/Images/Environment/MossHole/fung_bg_rocks_full_03.png", 475, 650);
+	Load("mosshole_environment_5", "Asset/Images/Environment/MossHole/fung_bg_rocks_full_04.png", 1050, 960);
 	Load("mosshole_vine_0", "Asset/Images/Environment/MossHole/fung_new_0094_Layer-263.png", 120, 450);
 	Load("mosshole_vine_1", "Asset/Images/Environment/MossHole/fung_new_0095_Layer-262.png", 90, 450);
 	Load("mosshole_vine_2", "Asset/Images/Environment/MossHole/fung_new_0096_Layer-261.png", 94, 500);
 	Load("mosshole_vine_3", "Asset/Images/Environment/MossHole/fung_new_0116_Layer-266.png", 80, 400);
 	Load("mosshole_vine_4", "Asset/Images/Environment/MossHole/fung_new_0112_Layer-270.png", 70, 400);
 	Load("mosshole_deep_mask", "Asset/Images/Environment/MossHole/deep_msk.png", 600, 200);
+	Load("mosshole_fung_mask_01", "Asset/Images/Environment/MossHole/fung_mask_01.png", 860, 400);
+	Load("mosshole_fung_mask_02", "Asset/Images/Environment/MossHole/fung_mask_02.png", 675, 300);
+	Load("mosshole_fung_mask_04", "Asset/Images/Environment/MossHole/fung_mask_04.png", 675, 405);
+	Load("mosshole_msk_angle_stalactites", "Asset/Images/Environment/MossHole/msk_angle_stalactites.png", 566, 405);
 	Load("mosshole_shadow_0", "Asset/Images/Environment/MossHole/Fung_FG_Silhouettes_0004_fv5.png", 226, 222);
 	Load("mosshole_shadow_1", "Asset/Images/Environment/MossHole/fung_new_0144_Layer-224.png", 250, 725);
 	Load("mosshole_shadow_2", "Asset/Images/Environment/MossHole/fung_new_0141_Layer-226.png", 350, 875);
 	Load("mosshole_shadow_3", "Asset/Images/Environment/MossHole/fung_new_0143_Layer-225.png", 297, 690);
+	Load("mosshole_shadow_4", "Asset/Images/Environment/MossHole/one_way_fung.png", 479, 430);
+	Load("mosshole_shadow_5", "Asset/Images/Environment/MossHole/fg_acid_leaf.png", 360, 380);
+	Load("mosshole_shadow_6", "Asset/Images/Environment/MossHole/fung_FG_hanging_01.png", 340, 437);
+	Load("mosshole_fung_new_0106_Layer-254-copy", "Asset/Images/Environment/MossHole/fung_new_0106_Layer-254-copy.png", 100, 332);
+	Load("mosshole_fung_new_0104_Layer-254-copy-3", "Asset/Images/Environment/MossHole/fung_new_0104_Layer-254-copy-3.png", 230, 278);
+	Load("mosshole_fung_new_0105_Layer-254-copy-2", "Asset/Images/Environment/MossHole/fung_new_0105_Layer-254-copy-2.png", 72, 266);
 	Load("mosshole_ground_0", "Asset/Images/Environment/MossHole/floor_stone_01.png", 301, 21);
 	Load("mosshole_ground_1", "Asset/Images/Environment/MossHole/floor_stone_02.png", 120, 18);
 	Load("mosshole_ground_2", "Asset/Images/Environment/MossHole/floor_layered_0003_01.png", 285, 48);
 	Load("mosshole_ground_3", "Asset/Images/Environment/MossHole/floor_layered_0002_02.png", 301, 48);
 	Load("mosshole_ground_4", "Asset/Images/Environment/MossHole/floor_layered_0001_03.png", 288, 44);
 	Load("mosshole_ground_5", "Asset/Images/Environment/MossHole/floor_layered_0000_04.png", 233, 41);
+	Load("mosshole_ground_6", "Asset/Images/Environment/MossHole/floor_layered_0004_01.png", 323, 70);
+	Load("mosshole_Slug_Shrine_0001_a", "Asset/Images/Environment/MossHole/Slug_Shrine_0001_a.png", 800, 100);
 	Load("mosshole_floor_0", "Asset/Images/Environment/MossHole/fungd_wall_rock_03_0000_a.png", 225, 75);
 	Load("mosshole_floor_1", "Asset/Images/Environment/MossHole/fungd_wall_rock_03_0001_a.png", 130, 75);
 	Load("mosshole_floor_2", "Asset/Images/Environment/MossHole/fungd_wall_rock_03_0000_b.png", 225, 73);
@@ -323,6 +343,12 @@ void ResourceManager::Initialize()
 	Load("mosshole_roof_0", "Asset/Images/Environment/MossHole/fung_big_roof_0000_a.png", 1075, 400);
 	Load("mosshole_roof_1", "Asset/Images/Environment/MossHole/fung_big_roof_0004_a.png", 932, 532);
 	Load("mosshole_cave_light", "Asset/Images/Environment/MossHole/cave_light.png", 400, 400);
+	Load("mosshole_lake_light", "Asset/Images/Environment/MossHole/lake_light.png", 1200, 200);
+	Load("mosshole_plat_6", "Asset/Images/PlatForm/MossHole/fung_plat_float_06.png", 325, 100);
+	Load("mosshole_plat_7", "Asset/Images/PlatForm/MossHole/fung_plat_float_07.png", 121, 99);
+	Load("mosshole_plat_8", "Asset/Images/PlatForm/MossHole/fung_plat_float_08.png", 132, 96);
+	Load("mosshole_plat_9", "Asset/Images/PlatForm/MossHole/fung_plat_float_09.png", 183, 107);
+	Load("mosshole_lake", "Asset/Images/Environment/MossHole/lake_water.png", 1200, 200);
 
 	//Others
 	Load("player_light", "Asset/Images/grimm_fader.png", 600, 500);

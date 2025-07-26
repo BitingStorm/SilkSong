@@ -37,7 +37,7 @@ PlayerAnimator::PlayerAnimator()
 	attackdown.Load("player_attackdown");
 	attackdown.SetInterval(0.05f);
 	attackbounce.Load("player_attackbounce");
-	attackbounce.SetInterval(0.05f);
+	attackbounce.SetInterval(0.04f);
 	rushattack.Load("player_rushattack");
 	rushattack.SetInterval(0.03f);
 	evade.Load("player_evade");
@@ -267,14 +267,20 @@ void PlayerAnimator::BeginPlay()
 		hurt.AddNotification(1, hurtPause);
 		walk.OnAnimEnter.Bind([=]() 
 			{
-				if (player->GetWorldPosition().y > 1000)GameModeHelper::GetInstance()->GetAudioPlayer(1)->Play("sound_swim", true);
+				if (player->IsSwimming())
+				{
+					GameModeHelper::GetInstance()->GetAudioPlayer(1)->Play("sound_swim", true);
+				}
 				else GameModeHelper::GetInstance()->GetAudioPlayer(1)->Play("sound_waterwalk", true);
 			});
 		walk.AddNotification(2, wetWalkEffect);
 		walk.AddNotification(6, wetWalkEffect);
 		rush.OnAnimEnter.Bind([=]()
 			{
-				if (player->GetWorldPosition().y > 1000)return;
+				if (player->IsSwimming())
+				{
+					return;
+				}
 				GameModeHelper::GetInstance()->GetAudioPlayer(1)->Stop("sound_waterwalk");
 				GameModeHelper::GetInstance()->GetAudioPlayer(1)->Play("sound_rush", true);
 			});

@@ -9,17 +9,15 @@
 
 VolumeUI::VolumeUI()
 {
-	Title = AddWidget<Text>();
-	Title->AttachTo(rootCanvas);
-	Title->SetLayoutPattern(LayoutPattern::MiddleTop);
-	Title->SetRelativePosition(FVector2D(0, 100));
-	Title->SetLayer(10);
-	Title->SetText("$0AUDIO", 7, "Trajan Pro");
+	Title = GameplayStatics::CreateUI<RichTextUI>();
+	Title->AttachTo(this);
+	Title->SetText("AUDIO", 7);
+	Title->SetPosition(FVector2D(0, -300));
 
 	Warning = AddWidget<Image>();
-	Warning->AttachTo(Title);
-	Warning->SetLayoutPattern(LayoutPattern::MiddleBottom);
-	Warning->SetRelativePosition(FVector2D(0, 50));
+	Warning->AttachTo(rootCanvas);
+	Warning->SetLayoutPattern(LayoutPattern::Center);
+	Warning->SetRelativePosition(FVector2D(0, -225));
 	Warning->SetLayer(10);
 	Warning->EnableAnimControl();
 	idle.Load("menu_warning");
@@ -40,12 +38,10 @@ VolumeUI::VolumeUI()
 	Back->SetSize({ 100,50 });
 	Back->SetLayer(11);
 
-	BackText = AddWidget<Text>();
-	BackText->AttachTo(Back);
-	BackText->SetLayoutPattern(LayoutPattern::Center);
-	BackText->SetRelativePosition(FVector2D(0, 0));
-	BackText->SetLayer(10);
-	BackText->SetText("$0BACK", 5, "Trajan Pro");
+	BackText = GameplayStatics::CreateUI<RichTextUI>();
+	BackText->AttachTo(this);
+	BackText->SetText("BACK", 5);
+	BackText->SetPosition(FVector2D(0, 300));
 
 
 	Back->OnMouseHoverBegin.AddLambda([this]() {

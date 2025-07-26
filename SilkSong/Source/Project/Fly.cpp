@@ -58,18 +58,6 @@ void Fly::Update(float deltaTime)
 {
 	Super::Update(deltaTime);
 
-	if (!IsDead() && GetWorldPosition().y > 1080)
-	{
-		property->AddHealth(-9999);
-		GameplayStatics::PlayCameraShake(4);
-		render->Blink(0.3f, WHITE, 100);
-		SilkParticle* silk = GameplayStatics::CreateObject<SilkParticle>();
-		silk->AttachTo(this);
-		silk->Init({}, true);
-		rigid->AddImpulse({ 0,-500 });
-		Die();
-	}
-
 	if (IsDead() || !player)return;
 
 	if (FVector2D::Distance(player->GetWorldPosition(), GetWorldPosition()) < 400)

@@ -9,7 +9,6 @@
 #include "PlayerPropertyComponent.h"
 #include "GameplayStatics.h"
 #include "GameModeHelper.h"
-#include "Objects/Level.h"
 
 #include "PlayerAnimator.h"
 #include "Effect.h"
@@ -202,7 +201,7 @@ void Player::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (GameplayStatics::GetCurrentLevel()->GetLevelName() == "RuinHouse")
+	if (GameplayStatics::GetCurrentLevelName() == "RuinHouse")
 	{
 		SetLocalPosition({ 0,900 });
 	}
@@ -434,7 +433,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 			rigid->AddImpulse(FVector2D(GetWorldScale().x * 500, -650)); 
 			ani->PlayMontage("jump");
 			lastJumpTime = GameplayStatics::GetTimeSeconds();
-			int32 jumpNum = FMath::RandInt(0, 12);
+			int32 jumpNum = FMath::RandInt(0, 15);
 			if (jumpNum < 2)GameModeHelper::PlayFXSound("voice_jump_0");
 			else if (jumpNum < 4)GameModeHelper::PlayFXSound("voice_jump_1");
 			else if (jumpNum < 6)GameModeHelper::PlayFXSound("voice_jump_2");
@@ -505,7 +504,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		{ 
 			ani->PlayMontage("evade"); bEvading = true; lastEvadeTime = GameplayStatics::GetTimeSeconds(); 
 			GameModeHelper::PlayFXSound("sound_evade");
-			int32 jumpNum = FMath::RandInt(0, 8);
+			int32 jumpNum = FMath::RandInt(0, 10);
 			if (jumpNum < 3)GameModeHelper::PlayFXSound("sound_evade_0");
 			else if (jumpNum < 5)GameModeHelper::PlayFXSound("sound_evade_1");
 		}
@@ -553,7 +552,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		lastThrowTime = GameplayStatics::GetTimeSeconds();
 		ani->PlayMontage("throw"); 
 		GameModeHelper::PlayFXSound("sound_throw");
-		if (FMath::RandInt(0, 10) > 5)GameModeHelper::PlayFXSound("voice_throw");
+		if (FMath::RandInt(0, 10) > 6)GameModeHelper::PlayFXSound("voice_throw");
 		});
 	inputComponent->BindAction("Leave", EInputType::Pressed, [this]() {
 		if (bSitting || bWall) return;
@@ -608,10 +607,16 @@ void Player::OnEnter(Collider* hitComp, Collider* otherComp, Actor* otherActor, 
 		bGround = true; ani->SetBool("flying", false);
 		ani->SetFloat("landingSpeed", rigid->GetVelocity().y);
 		SpawnWetLandEffect();
-		if (GetWorldPosition().y > 1000)GameModeHelper::PlayFXSound("sound_waterland");
-		if (rigid->GetVelocity().y > 1350)GameModeHelper::PlayFXSound("sound_hardland");
-		else if(rigid->GetVelocity().y > 700)GameModeHelper::PlayFXSound("sound_softland");
-		else GameModeHelper::PlayFXSound("sound_land");
+		if (IsSwimming())
+		{
+			GameModeHelper::PlayFXSound("sound_waterland");
+		}
+		else
+		{
+			if (rigid->GetVelocity().y > 1350)GameModeHelper::PlayFXSound("sound_hardland");
+			else if (rigid->GetVelocity().y > 700)GameModeHelper::PlayFXSound("sound_softland");
+			else GameModeHelper::PlayFXSound("sound_land");
+		}
 	}
 	else if (normalImpulse.x != 0 && GetWorldScale().x == -normalImpulse.x)
 	{
@@ -940,6 +945,12 @@ void Player::Defend(bool enable)
 void Player::Scare(bool enable, std::string anim)
 {
 	enable ? ani->SetNode(anim) : ani->SetNode("idle");
+}
+
+bool Player::IsSwimming() const
+{
+	return (GameplayStatics::GetCurrentLevelName() == "TearCity" && GetWorldPosition().y > 1000) ||
+		(GameplayStatics::GetCurrentLevelName() == "MossHole_0" && GetWorldPosition().x < -1200.f && GetWorldPosition().y > 1000);
 }
 
 void Player::SpawnWetLandEffect() const

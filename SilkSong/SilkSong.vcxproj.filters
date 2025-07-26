@@ -435,6 +435,15 @@
     <ClInclude Include="Source\Project\SceneTitleUI.h">
       <Filter>Project\Game</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Project\MossHole_0.h">
+      <Filter>Project\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\RichTextUI.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\BubbleProducer.h">
+      <Filter>Project\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Components\ActorComponent.cpp">
@@ -747,6 +756,15 @@
       <Filter>Project\Player</Filter>
     </ClCompile>
     <ClCompile Include="Source\Project\SceneTitleUI.cpp">
+      <Filter>Project\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\MossHole_0.cpp">
+      <Filter>Project\Levels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\RichTextUI.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\BubbleProducer.cpp">
       <Filter>Project\Game</Filter>
     </ClCompile>
   </ItemGroup>

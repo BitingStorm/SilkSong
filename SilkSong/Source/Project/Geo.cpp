@@ -47,9 +47,16 @@ void Geo::Update(float deltaTime)
 {
 	Actor::Update(deltaTime);
 
-	if (FMath::Abs(GetLocalScale().x) < 0.2)SetLocalScale({ -GetLocalScale().x,1});
-	if (FMath::Abs(GetLocalScale().x) > 1)rotateDelta = -rotateDelta;
-	SetLocalScale(GetLocalScale() + FVector2D(rotateDelta,0));
+	if (FMath::Abs(GetLocalScale().x) < 0.2)
+	{
+		SetLocalScale({ GetLocalScale().x > 0 ? -0.2f : 0.2f, 1.f });
+	}
+	else if (FMath::Abs(GetLocalScale().x) > 1)
+	{
+		rotateDelta = -rotateDelta;
+		SetLocalScale({ GetLocalScale().x > 0 ? 1.f : -1.f, 1.f });
+	}
+	SetLocalScale(GetLocalScale() + FVector2D(rotateDelta * deltaTime * 100.f, 0));
 }
 
 void Geo::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherActor)

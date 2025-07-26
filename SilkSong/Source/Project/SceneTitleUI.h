@@ -1,10 +1,11 @@
 #pragma once
-#include "UI/UserInterface.h"
+#include "RichTextUI.h"
 #include "Components/Animator.h"
 
 class SceneTitleUI :public UserInterface
 {
-	Text* Title;
+	RichTextUI* Title_;
+	RichTextUI* Title;
 	Image* Top;
 	Image* Bottom;
 	Animation topStart;

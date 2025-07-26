@@ -27,7 +27,7 @@ namespace ArtyEngine
 		int32 row = 1;
 		int32 maxWidth = 0;
 		std::string texts = "";
-		int size = 3;
+		int32 size = 3;
 		LPCTSTR style = "楷体";
 
 		//颜色映射表
@@ -38,8 +38,24 @@ namespace ArtyEngine
 
 		void SetCharacters(std::string text, int size = 3, LPCTSTR style = "楷体");
 		void PrintCharacters(FVector2D pos, BYTE alpha = 255, CharactersPattern pattern = CharactersPattern::Middle);
+		std::string GetText() const { return texts; }
 	};
 }
+
+class Text;
+
+/*----------------------------------
+			  文字工具
+  ----------------------------------*/
+class TextHelper final
+{
+public:
+	static int GetTextWidth(Text* text);
+
+	static int GetTextHeight(Text* text);
+
+	static int GetWidthOfOneLetter(int size, LPCTSTR style, char letter);
+};
 
 
 
@@ -213,11 +229,13 @@ public:
   ----------------------------------*/
 class Text :public Widget
 {
+	friend TextHelper;
 protected:
 	ArtyEngine::Characters texts;
 	CharactersPattern textPattern;
 	std::string* bindedText = nullptr;
 	BYTE alpha = 255;
+	
 public:
 	Text() :textPattern(CharactersPattern::Middle) {}
 
@@ -228,8 +246,9 @@ public:
 	void SetPattern(CharactersPattern pattern) { textPattern = pattern; }
 	BYTE GetAlpha()const { return alpha; }
 	void SetAlpha(BYTE alpha);
-	void SetText(std::string te, int si = 3, LPCTSTR st = "楷体") { texts.SetCharacters(te, si, st); }
+	void SetText(std::string te, int si = 3, LPCTSTR st = "楷体");
 	void BindText(std::string& origin) { bindedText = &origin; }
+	std::string GetText() const { return texts.GetText(); }
 };
 
 

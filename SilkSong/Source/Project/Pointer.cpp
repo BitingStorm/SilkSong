@@ -11,10 +11,10 @@ Pointer::Pointer()
 	render->SetLayer(10);
 
 	load.Load("pointer");
-	load.SetInterval(0.03f);
+	load.SetInterval(0.02f);
 	load.SetLooping(false);
 	minus.Load("pointer");
-	minus.SetInterval(0.03f);
+	minus.SetInterval(0.02f);
 	minus.SetReverse(true);
 
 	destroy.Bind([this]() {Destroy(); });

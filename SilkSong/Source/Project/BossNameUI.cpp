@@ -1,19 +1,16 @@
 #include "BossNameUI.h"
+#include "GameplayStatics.h"
 
 BossNameUI::BossNameUI()
 {
-	text_ = AddWidget<Text>();
-	text_->AttachTo(rootCanvas);
-	text_->SetLayoutPattern(LayoutPattern::LeftBottom);
-	text_->SetRelativePosition(FVector2D(200, -125));
-	text_->SetLayer(8);
+	text_ = GameplayStatics::CreateUI<RichTextUI>();
+	text_->AttachTo(this);
+	text_->AddToViewport();
 	text_->SetAlpha(0);
 
-	text = AddWidget<Text>();
-	text->AttachTo(text_);
-	text->SetLayoutPattern(LayoutPattern::Center);
-	text->SetRelativePosition(FVector2D(0, 40));
-	text->SetLayer(8);
+	text = GameplayStatics::CreateUI<RichTextUI>();
+	text->AttachTo(this);
+	text->AddToViewport();
 	text->SetAlpha(0);
 
 	FadingTimerHandle.Bind(5.f, [this]() { flag = -1; });
@@ -31,6 +28,8 @@ void BossNameUI::Update(float deltaTime)
 
 void BossNameUI::InitName(std::string name, std::string name_)
 {
-	text_->SetText(name_, 4, "Trajan Pro");
-	text->SetText(name, 9, "Trajan Pro");
+	text_->SetText(name_, 4);
+	text->SetText(name, 9);
+	text_->SetPosition(FVector2D(-400, 260));
+	text->SetPosition(FVector2D(-400, 300));
 }

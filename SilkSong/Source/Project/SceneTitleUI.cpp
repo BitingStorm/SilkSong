@@ -1,20 +1,25 @@
 #include "SceneTitleUI.h"
-
+#include "GameplayStatics.h"
 
 SceneTitleUI::SceneTitleUI()
 {
-	Title = AddWidget<Text>();
-	Title->AttachTo(rootCanvas);
-	Title->SetLayoutPattern(LayoutPattern::Center);
-	Title->SetRelativePosition(FVector2D(0, -200));
-	Title->SetLayer(31);
+	Title = GameplayStatics::CreateUI<RichTextUI>();
+	Title->AttachTo(this);
+	Title->SetText("GROTTO", 12);
+	Title->SetPosition(FVector2D(0, -150));
 	Title->SetAlpha(0);
-	Title->SetText("$1MOSS GROTTO", 10, "Trajan Pro");
+
+	Title_ = GameplayStatics::CreateUI<RichTextUI>();
+	Title_->AttachTo(this);
+	Title_->SetText("M O S S", 5);
+	Title_->SetPosition(FVector2D(0, -200));
+	Title_->SetAlpha(0);
+	
 
 	Top = AddWidget<Image>();
-	Top->AttachTo(Title);
-	Top->SetLayoutPattern(LayoutPattern::MiddleBottom);
-	Top->SetRelativePosition(FVector2D(0, -100));
+	Top->AttachTo(rootCanvas);
+	Top->SetLayoutPattern(LayoutPattern::Center);
+	Top->SetRelativePosition(FVector2D(0, -250));
 	Top->SetLayer(30);
 	Top->EnableAnimControl();
 	topStart.Load("title_top");
@@ -33,9 +38,9 @@ SceneTitleUI::SceneTitleUI()
 	}
 
 	Bottom = AddWidget<Image>();
-	Bottom->AttachTo(Title);
-	Bottom->SetLayoutPattern(LayoutPattern::MiddleBottom);
-	Bottom->SetRelativePosition(FVector2D(0, 65));
+	Bottom->AttachTo(rootCanvas);
+	Bottom->SetLayoutPattern(LayoutPattern::Center);
+	Bottom->SetRelativePosition(FVector2D(0, -65));
 	Bottom->SetLayer(30);
 	Bottom->EnableAnimControl();
 	bottomStart.Load("title_bottom");
@@ -74,4 +79,5 @@ void SceneTitleUI::Update(float deltaTime)
 		RemoveFromViewport();
 	}
 	Title->SetAlpha(timer);
+	Title_->SetAlpha(timer);
 }

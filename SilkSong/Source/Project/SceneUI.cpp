@@ -15,5 +15,5 @@ SceneUI::SceneUI()
 	text->SetSize(FVector2D(75, 25));
 	text->SetRelativePosition(FVector2D(0, -15));
 	text->SetLayer(8);
-	text->SetText("$0REST", 5, "Trajan Pro");
+	text->SetText("REST", 5, "Trajan Pro");
 }

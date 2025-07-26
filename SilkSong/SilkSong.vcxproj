@@ -28,6 +28,7 @@
     <ClInclude Include="Source\Project\BossLevel.h" />
     <ClInclude Include="Source\Project\BossNameUI.h" />
     <ClInclude Include="Source\Project\Brumm.h" />
+    <ClInclude Include="Source\Project\BubbleProducer.h" />
     <ClInclude Include="Source\Project\DefaultDamageStrategy.h" />
     <ClInclude Include="Source\Engine\Math\Box2D.h" />
     <ClInclude Include="Source\Engine\Math\Transform.h" />
@@ -51,6 +52,7 @@
     <ClInclude Include="Source\Project\LevelTransformer.h" />
     <ClInclude Include="Source\Project\MossFloor.h" />
     <ClInclude Include="Source\Project\MossHole.h" />
+    <ClInclude Include="Source\Project\MossHole_0.h" />
     <ClInclude Include="Source\Project\Movie.h" />
     <ClInclude Include="Source\Project\NightMare.h" />
     <ClInclude Include="Source\Project\Plant.h" />
@@ -60,6 +62,7 @@
     <ClInclude Include="Source\Project\PuffManager.h" />
     <ClInclude Include="Source\Project\QuakeParticle.h" />
     <ClInclude Include="Source\Project\RedShade.h" />
+    <ClInclude Include="Source\Project\RichTextUI.h" />
     <ClInclude Include="Source\Project\RoarEffect.h" />
     <ClInclude Include="Source\Project\RuinHouseLevel.h" />
     <ClInclude Include="Source\Project\SceneTitleUI.h" />
@@ -145,6 +148,7 @@
     <ClCompile Include="Source\Project\BossLevel.cpp" />
     <ClCompile Include="Source\Project\BossNameUI.cpp" />
     <ClCompile Include="Source\Project\Brumm.cpp" />
+    <ClCompile Include="Source\Project\BubbleProducer.cpp" />
     <ClCompile Include="Source\Project\DamageResponseComponent.cpp" />
     <ClCompile Include="Source\Project\DamageSystem.cpp" />
     <ClCompile Include="Source\Project\DefaultDamageStrategy.cpp" />
@@ -170,6 +174,7 @@
     <ClCompile Include="Source\Project\MenuUI.cpp" />
     <ClCompile Include="Source\Project\MossFloor.cpp" />
     <ClCompile Include="Source\Project\MossHole.cpp" />
+    <ClCompile Include="Source\Project\MossHole_0.cpp" />
     <ClCompile Include="Source\Project\Movie.cpp" />
     <ClCompile Include="Source\Project\Needle.cpp" />
     <ClCompile Include="Source\Project\NewTheme.cpp" />
@@ -182,6 +187,7 @@
     <ClCompile Include="Source\Project\PuffManager.cpp" />
     <ClCompile Include="Source\Project\QuakeParticle.cpp" />
     <ClCompile Include="Source\Project\RedShade.cpp" />
+    <ClCompile Include="Source\Project\RichTextUI.cpp" />
     <ClCompile Include="Source\Project\RoarEffect.cpp" />
     <ClCompile Include="Source\Project\RockParticle.cpp" />
     <ClCompile Include="Source\Project\Chest.cpp" />

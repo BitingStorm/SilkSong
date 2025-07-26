@@ -6,6 +6,13 @@
 #include "VolumeUI.h"
 #include "GameModeHelper.h"
 
+std::string texts[5] = {
+	"START GAME",
+	"OPTIONS",
+	"ACHIEVEMENTS",
+	"CHANGE THEME",
+	"QUIT GAME"
+};
 
 MenuUI::MenuUI()
 {
@@ -30,7 +37,7 @@ MenuUI::MenuUI()
 	Edition->SetLayoutPattern(LayoutPattern::MiddleBottom);
 	Edition->SetRelativePosition(FVector2D(0, 20));
 	Edition->SetLayer(10);
-	Edition->SetText("$01.5.78.11833",2);
+	Edition->SetText("1.5.78.11833",2);
 
 	Icon = AddWidget<Image>();
 	Icon->AttachTo(rootCanvas);
@@ -45,7 +52,7 @@ MenuUI::MenuUI()
 	Black->SetLayoutPattern(LayoutPattern::Center);
 	Black->SetSize(FVector2D(WIN_WIDTH + 20, WIN_HEIGHT + 10));
 	Black->LoadSprite("black");
-	Black->SetLayer(12);
+	Black->SetLayer(50);
 	Black->SetTransparency(0);
 
 	float delta[5] = { 115,90,130,135,110 };
@@ -84,19 +91,11 @@ MenuUI::MenuUI()
 			GameModeHelper::PlayFXSound("sound_button_confirm");
 			});
 
-		Options[i] = AddWidget<Text>();
-		Options[i]->AttachTo(Buttons[i]);
-		Options[i]->SetLayoutPattern(LayoutPattern::Center);
-		Options[i]->SetLayer(10);
-		Options[i]->SetPattern(CharactersPattern::Middle);
-		Options[i]->SetRelativePosition(FVector2D(0, 2));
+		Options[i] = GameplayStatics::CreateUI<RichTextUI>();
+		Options[i]->AttachTo(this);
+		Options[i]->SetText(texts[i], 5);
+		Options[i]->SetPosition(FVector2D(0, 50 * i + 15.f));
 	}
-
-	Options[0]->SetText("$0START GAME", 5, "Trajan Pro");
-	Options[1]->SetText("$0OPTIONS", 5, "Trajan Pro");
-	Options[2]->SetText("$0ACHIEVEMENTS", 5, "Trajan Pro");
-	Options[3]->SetText("$0CHANGE THEME", 5, "Trajan Pro");
-	Options[4]->SetText("$0QUIT GAME", 5, "Trajan Pro");
 
 	volumeUI = GameplayStatics::CreateUI<VolumeUI>();
 	volumeUI->SetOwner(this);

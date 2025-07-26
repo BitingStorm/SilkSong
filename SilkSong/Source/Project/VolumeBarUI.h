@@ -1,10 +1,10 @@
 #pragma once
-#include "UI/UserInterface.h"
+#include "RichTextUI.h"
 
 
 class VolumeBarUI :public UserInterface
 {
-	Text* VolumeText;
+	RichTextUI* VolumeText;
 	Bar* VolumeBar;
 	Button* VolumeButton;
 	Text* VolumeNumber;

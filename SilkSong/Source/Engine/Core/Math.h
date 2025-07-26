@@ -117,6 +117,12 @@ struct FMath final
 		return Abs(value) <= AE_SMALL_NUMBER;
 	}
 
+	//向上取整
+	static FORCEINLINE float Ceil(float value)
+	{
+		return ceilf(value);
+	}
+
 	//计算开根
 	static FORCEINLINE float Sqrt(float value) 
 	{ 

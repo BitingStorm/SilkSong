@@ -1,16 +1,16 @@
 #pragma once
-#include "UI/UserInterface.h"
+#include "RichTextUI.h"
 #include "Components/Animator.h"
 
 
 class VolumeUI :public UserInterface
 {
-	Text* Title;
+	RichTextUI* Title;
 	Image* Warning;
 	Animation idle;
 
 	Button* Back;
-	Text* BackText;
+	RichTextUI* BackText;
 
 	class VolumeBarUI* volumeBarUI[2];
 
