@@ -77,7 +77,7 @@ public:
 	float GetWorldRotation()const;
 	FVector2D GetWorldScale()const;
 
-	/** 设置场景属性（相对父对象坐标系）**/
+	/** 设置场景属性（相对父对象坐标系，如若没有父对象则为世界绝对坐标系）**/
 	void SetLocalPosition(const FVector2D& pos);
 	void SetLocalRotation(float angle);
 	void SetLocalScale(const FVector2D& scale);

@@ -20,7 +20,7 @@ void Bg::Update(float deltaTime)
 	if (player)
 	{
 		if ((player->GetCameraPos() - InitPos).Size() < 0.5f)return;
-		SetLocalPosition(player->GetCameraPos() - (player->GetCameraPos() - InitPos) * pow(k, moveLayer));
+		SetLocalPosition(player->GetCameraPos() - (player->GetCameraPos() - InitPos) * FMath::Pow(k, moveLayer));
 	}
 	else
 	{

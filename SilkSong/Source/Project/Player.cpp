@@ -420,10 +420,10 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 			if (bRushing)ani->PlayMontage("rushjump");
 			else ani->PlayMontage("jump");
 			lastJumpTime = GameplayStatics::GetTimeSeconds();
-			int32 jumpNum = FMath::RandInt(0, 10);
+			int32 jumpNum = FMath::RandInt(0, 25);
 			if (jumpNum < 3)GameModeHelper::PlayFXSound("voice_jump_0");
-			else if (jumpNum < 5)GameModeHelper::PlayFXSound("voice_jump_1");
-			else if (jumpNum < 7)GameModeHelper::PlayFXSound("voice_jump_2");
+			else if (jumpNum < 6)GameModeHelper::PlayFXSound("voice_jump_1");
+			else if (jumpNum < 9)GameModeHelper::PlayFXSound("voice_jump_2");
 			GameModeHelper::PlayFXSound("sound_jump");
 			jumpFlag = 1;
 		}
@@ -433,10 +433,10 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 			rigid->AddImpulse(FVector2D(GetWorldScale().x * 500, -650)); 
 			ani->PlayMontage("jump");
 			lastJumpTime = GameplayStatics::GetTimeSeconds();
-			int32 jumpNum = FMath::RandInt(0, 15);
-			if (jumpNum < 2)GameModeHelper::PlayFXSound("voice_jump_0");
-			else if (jumpNum < 4)GameModeHelper::PlayFXSound("voice_jump_1");
-			else if (jumpNum < 6)GameModeHelper::PlayFXSound("voice_jump_2");
+			int32 jumpNum = FMath::RandInt(0, 25);
+			if (jumpNum < 3)GameModeHelper::PlayFXSound("voice_jump_0");
+			else if (jumpNum < 6)GameModeHelper::PlayFXSound("voice_jump_1");
+			else if (jumpNum < 9)GameModeHelper::PlayFXSound("voice_jump_2");
 			GameModeHelper::PlayFXSound("sound_walljump");
 			jumpFlag = 2;
 		}

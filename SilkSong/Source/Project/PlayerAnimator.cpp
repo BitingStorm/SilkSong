@@ -263,8 +263,8 @@ void PlayerAnimator::BeginPlay()
 		cure.AddNotification(5, cureEffect);
 		hurt.OnAnimEnter.Bind([=]() {player->EnableInput(false); });
 		hurt.OnAnimExit.Bind([=]() {player->EnableInput(true); });
-		hurtPause.Bind([]() {GameplayStatics::Pause(0.25f); GameplayStatics::PlayCameraShake(7, 5); });
-		hurt.AddNotification(1, hurtPause);
+		hurtPause.Bind([]() {GameplayStatics::Pause(0.3f); GameplayStatics::PlayCameraShake(7, 5); });
+		hurt.AddNotification(2, hurtPause);
 		walk.OnAnimEnter.Bind([=]() 
 			{
 				if (player->IsSwimming())
