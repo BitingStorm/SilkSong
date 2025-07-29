@@ -125,7 +125,7 @@ NightMare::NightMare()
 	airdash.OnAnimEnter.Bind([this]() {
 		rigid->AddImpulse(FVector2D(-GetWorldScale().x, 1) * 10000 * 2500);
 		box->SetSize({ 40,120 }); SetLocalRotation(-45.f);
-		GameplayStatics::CreateObject<Effect>(GetWorldPosition(), GetWorldScale().x < 0 ? -45.f : -135.f)->Init("effect_dash");
+		GameplayStatics::CreateObject<Effect>(GetWorldPosition(), GetWorldScale().x < 0 ? -45.f : -135.f)->Init("effect_airdash");
 		GameModeHelper::PlayFXSound("sound_nightmare_airdash");
 		});
 	airdash.OnAnimExit.Bind([this]() { SetLocalRotation(0); rigid->SetVelocity({}); });
@@ -139,7 +139,7 @@ NightMare::NightMare()
 
 	dash.OnAnimEnter.Bind([this]() {
 		rigid->AddImpulse(FVector2D(-GetWorldScale().x * 0.75f, 0) * 10000 * 2500);
-		GameplayStatics::CreateObject<Effect>(GetWorldPosition() - FVector2D(0, 25), 0, GetWorldScale())->Init("effect_dash_", -0.02f);
+		GameplayStatics::CreateObject<Effect>(GetWorldPosition() - FVector2D(0, 25), 0, GetWorldScale())->Init("effect_dash", -0.02f);
 		GameModeHelper::PlayFXSound("sound_nightmare_dash");
 		});
 	dash.OnAnimExit.Bind([this]() {rigid->SetVelocity({});});
@@ -389,7 +389,7 @@ void NightMare::OnHit(Collider* hitComp, Collider* otherComp, Actor* otherActor,
 		{
 			GameplayStatics::PlayCameraShake(8, 4);
 			ani->PlayMontage("startdash");
-			GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(0, 25), -90, FVector2D(1.75f, 0.5f))->Init("effect_dash", -0.02f);
+			GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(0, 25), -90, FVector2D(1.75f, 0.5f))->Init("effect_airdash", -0.02f);
 		}
 		else if (normalImpulse.y > 0 && ani->IsPlaying("uppercut"))
 		{

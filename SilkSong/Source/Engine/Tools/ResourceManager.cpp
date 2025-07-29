@@ -24,11 +24,11 @@ void ResourceManager::Initialize()
 	Load("player_jump", "Asset/Animations/Player/Jump/", { {124,160},{120,172},{116,172},{104,168},{108,168},{143,163} });
 	Load("player_rushjump", "Asset/Animations/Player/RushJump/", { {171,115},{204,144},{198,180},{186,183},{186,192},{195,195},
 		{198,183},{124,182},{140,171},{146,168},{198,180},{104,168},{108,168},{143,163} });
-	Load("player_fall", "Asset/Animations/Player/Fall/", 132, 168, 4);
+	Load("player_fall", "Asset/Animations/Player/Fall/", { {132,168},{147,157},{132,148},{140,146},{148,152} });
 	Load("player_softland", "Asset/Animations/Player/SoftLand/", { {152,166},{152,166},{152,166},{137,161},{147,160} });
 	Load("player_hardland", "Asset/Animations/Player/HardLand/", 164, 152, 4);
-	Load("player_attack_0", "Asset/Animations/Player/Attack_0/", { {122,162},{364,183},{321,178},{300,178},{174,144},{152,166} });
-	Load("player_attack_1", "Asset/Animations/Player/Attack_1/", { {122,162},{315,156},{321,159},{321,159},{174,144},{152,166} });
+	Load("player_attack_0", "Asset/Animations/Player/Attack_0/", { {122,162},{364,183},{321,178},{300,178},{174,144} });
+	Load("player_attack_1", "Asset/Animations/Player/Attack_1/", { {122,162},{315,156},{321,159},{321,159},{174,144} });
 	Load("player_attackup", "Asset/Animations/Player/AttackUp/", { {160,188},{184,389},{184,222},{184,269},{152,168} });
 	Load("player_attackdown", "Asset/Animations/Player/AttackDown/", { {111,193},{103,196},{250,263},{225,225},{192,143} });
 	Load("player_rushattack", "Asset/Animations/Player/RushAttack/", { {166,156},{155,176},{180,176},{300,164},{339,164},{400,120},{400,121},{109,121},{174,148} });
@@ -39,7 +39,7 @@ void ResourceManager::Initialize()
 	Load("player_cure", "Asset/Animations/Player/Cure/", { {343,252},{565,570},{580,490},{450,495},{451,495},{451,216},{155,250},{114,225},
 		{433,360},{444,368},{963,660},{1040,600},{1035,600},{1025,520} });
 	Load("player_hurt", "Asset/Animations/Player/Hurt/", 228, 172, 6);
-	Load("player_throw", "Asset/Animations/Player/Throw/", { {127,170}, {127,170}, {127,170}, {127,170}, {104,142}, {104,142}, {104,142}, {104,142}, {177,163},{177,163},{177,163},{177,163} });
+	Load("player_throw", "Asset/Animations/Player/Throw/", { {112,174}, {156,151}, {176,142}, {161,144}, {174,148} });
 	Load("player_grab", "Asset/Animations/Player/Grab/", { {140,180}, {141,198}, {142,194}, {138,196}, {170,134}, {160,110}, {170,120}, {184,132}, {174,166} });
 	Load("player__closeskill", "Asset/Animations/Player/_CloseDisSkill/", 179, 152, 3);
 	Load("player_closeskill", "Asset/Animations/Player/CloseDisSkill/", 179, 152, 7);
@@ -63,8 +63,8 @@ void ResourceManager::Initialize()
 	Load("player_scare", "Asset/Animations/Player/Scare.png", 164, 164, 1, 1, 1);
 
 	//Effect
-	Load("effect_dash", "Asset/Animations/Player/DashEffect/", 342, 433, 5);
-	Load("effect_dash_", "Asset/Animations/Player/DashEffect_.png", 1280, 856, 6, 3, 2);
+	Load("effect_dash", "Asset/Animations/Player/DashEffect.png", 1280, 856, 6, 3, 2);
+	Load("effect_airdash", "Asset/Animations/Player/AirDashEffect/", 342, 433, 5);
 	Load("effect_hurt", "Asset/Animations/Player/HurtEffect/", 1400, 470, 4);
 	Load("effect_hurt_", "Asset/Animations/Player/HurtEffect_/", 308, 270, 7);
 	Load("effect_wetland", "Asset/Animations/Player/WetLandEffect/", 115, 34, 5);

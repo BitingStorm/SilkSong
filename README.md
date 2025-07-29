@@ -21,13 +21,13 @@ Engine（仅适用于开发简易 2D 游戏） 部分有渲染系统、粒子系
 ```C++
 void Player::SetupInputComponent(InputComponent* inputComponent)
 {
-	inputComponent->SetMapping("WalkLeft", EKeyCode::VK_A);
+    inputComponent->SetMapping("WalkLeft", EKeyCode::VK_A);
     //......
 
 	inputComponent->BindAction("WalkLeft", EInputType::Holding, [this]() 
-         {
+    {
 		//......
-		});
+	});
     //......
 }
 ```

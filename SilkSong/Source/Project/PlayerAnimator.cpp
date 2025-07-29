@@ -11,19 +11,20 @@ PlayerAnimator::PlayerAnimator()
 	walk.Load("player_walk");
 	walk.SetInterval(0.085f);
 	walkstart.Load("player_walkstart");
-	walkstart.SetInterval(0.04f);
+	walkstart.SetInterval(0.03f);
 	walkend.Load("player_walkend");
-	walkend.SetInterval(0.06f);
+	walkend.SetInterval(0.05f);
 	rush.Load("player_rush", { 0,15 });
 	rush.SetInterval(0.075f);
 	turn.Load("player_turn");
 	turn.SetInterval(0.08f);
 	jump.Load("player_jump");
-	jump.SetInterval(0.07f);
+	jump.SetInterval(0.06f);
 	rushjump.Load("player_rushjump");
 	rushjump.SetInterval(0.04f);
 	fall.Load("player_fall");
-	fall.SetInterval(0.08f);
+	fall.SetInterval(0.06f);
+	fall.SetLooping(false);
 	hardland.Load("player_hardland");
 	hardland.SetInterval(0.09f);
 	softland.Load("player_softland");
@@ -192,6 +193,9 @@ void PlayerAnimator::BeginPlay()
 	dash_to_idle.Init(dash, idle);
 	airdash_to_fall.Init(airdash, fall);
 	throw_to_idle.Init(throw_, idle);
+	throw_to_softland.Init(throw_, softland);
+	throw_to_softland.AddCondition(AnimTransition::Bool{ "flying",false });
+	throw_to_softland.AddCondition(AnimTransition::Float{ "walkingSpeed",10.f,TransitionComparison::Less });
 	grab_to_idle.Init(grab, idle);
 	rapidskill_to_idle.Init(rapidskill, idle);
 	remoteskill_to_idle.Init(remoteskill, idle);
@@ -221,11 +225,11 @@ void PlayerAnimator::BeginPlay()
 	rush_to_fall.AddCondition(AnimTransition::Bool{ "flying",true });
 
 	fall_to_hardland.Init(fall, hardland);
-	fall_to_hardland.AddCondition(AnimTransition::Float{ "landingSpeed",1350.f,TransitionComparison::Greater });
+	fall_to_hardland.AddCondition(AnimTransition::Float{ "landingSpeed",1500.f,TransitionComparison::Greater });
 
 	fall_to_softland.Init(fall, softland);
-	fall_to_softland.AddCondition(AnimTransition::Float{ "landingSpeed",1350.f,TransitionComparison::LessEqual });
-	fall_to_softland.AddCondition(AnimTransition::Float{ "landingSpeed",700.f,TransitionComparison::Greater });
+	fall_to_softland.AddCondition(AnimTransition::Float{ "landingSpeed",1500.f,TransitionComparison::LessEqual });
+	fall_to_softland.AddCondition(AnimTransition::Float{ "landingSpeed",800.f,TransitionComparison::Greater });
 	fall_to_softland.AddCondition(AnimTransition::Float{ "walkingSpeed",100.f,TransitionComparison::Less });
 
 	fall_to_idle.Init(fall, idle);
@@ -291,7 +295,7 @@ void PlayerAnimator::BeginPlay()
 		rush.AddNotification(3, wetWalkEffect);
 		rush.AddNotification(7, wetWalkEffect);
 		closeskill.OnAnimExit.Bind([=]() {player->SetFloating(false); });
-		throw_.AddNotification(3, dartSpawn);
+		throw_.AddNotification(2, dartSpawn);
 		grab.AddNotification(3, grabStart);
 		grab.AddNotification(5, grabFinished);
 		grab.OnAnimExit.Bind([=]() {player->EnableInput(true); });

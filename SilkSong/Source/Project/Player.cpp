@@ -52,7 +52,7 @@ Player::Player()
 
 	rigid = GetComponentByClass<RigidBody>();
 	rigid->SetLinearDrag(0.07f);
-	rigid->SetGravity(2250);
+	rigid->SetGravity(2750);
 
 	camera = GetComponentByClass<Camera>();
 	camera->SetDistanceThreshold(100);
@@ -110,11 +110,11 @@ Player::Player()
 			Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() - FVector2D(GetWorldScale().x * 150, 0));
 			if (bGround)
 			{
-				effect->Init("effect_dash"); effect->SetLocalScale(GetWorldScale());
+				effect->Init("effect_dash", -0.03f); effect->SetLocalScale({ -GetWorldScale().x,1.f }); effect->AddPosition({ -GetWorldScale().x * 125,-50 });
 			}
 			else
 			{
-				effect->Init("effect_dash_", -0.03f); effect->SetLocalScale({ -GetWorldScale().x,1.f }); effect->AddPosition({ -GetWorldScale().x * 125,-50 });
+				effect->Init("effect_airdash", -0.02f); effect->SetLocalScale(GetWorldScale()); 
 			}
 			bDashing = true;
 		});
@@ -134,8 +134,8 @@ Player::Player()
 			Dart* dart = GameplayStatics::CreateObject<Dart>(GetWorldPosition());
 			if (dart)dart->Init(GetWorldScale().x < 0);
 			Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
-			effect->Init("effect_throw", -0.02f); effect->SetLocalScale(GetLocalScale());
-			effect->AddPosition({GetLocalScale().x * 50,0});
+			effect->Init("effect_throw", -0.02f); effect->SetLocalScale(GetLocalScale() * 0.9f);
+			effect->AddPosition({GetLocalScale().x * 75,0});
 			AddDart(-1);
 		});
 	ani->needleSpawn.Bind([this]()
@@ -416,11 +416,11 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		if (bGround)
 		{
 			bGround = false; SpawnWetLandEffect();
-			rigid->AddImpulse({ 0,-750 });
+			rigid->AddImpulse({ 0,-1250 });
 			if (bRushing)ani->PlayMontage("rushjump");
 			else ani->PlayMontage("jump");
 			lastJumpTime = GameplayStatics::GetTimeSeconds();
-			int32 jumpNum = FMath::RandInt(0, 25);
+			int32 jumpNum = FMath::RandInt(0, 35);
 			if (jumpNum < 3)GameModeHelper::PlayFXSound("voice_jump_0");
 			else if (jumpNum < 6)GameModeHelper::PlayFXSound("voice_jump_1");
 			else if (jumpNum < 9)GameModeHelper::PlayFXSound("voice_jump_2");
@@ -430,10 +430,10 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		else if (bWall)
 		{
 			AddPosition(FVector2D(GetWorldScale().x * 10.f, -10.f));
-			rigid->AddImpulse(FVector2D(GetWorldScale().x * 500, -650)); 
+			rigid->AddImpulse(FVector2D(GetWorldScale().x * 500, -750)); 
 			ani->PlayMontage("jump");
 			lastJumpTime = GameplayStatics::GetTimeSeconds();
-			int32 jumpNum = FMath::RandInt(0, 25);
+			int32 jumpNum = FMath::RandInt(0, 35);
 			if (jumpNum < 3)GameModeHelper::PlayFXSound("voice_jump_0");
 			else if (jumpNum < 6)GameModeHelper::PlayFXSound("voice_jump_1");
 			else if (jumpNum < 9)GameModeHelper::PlayFXSound("voice_jump_2");
@@ -447,14 +447,14 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		{
 			float delta = GameplayStatics::GetTimeSeconds() - lastJumpTime;
 			bGround = false; ani->SetBool("flying", true); 
-			rigid->AddImpulse(FVector2D(0, -(6.f - FMath::Log(1 + delta < 0.06f ? 0 : FMath::Abs(rigid->GetVelocity().y)) / FMath::Log(10)) / jumpFlag));
+			rigid->AddImpulse(FVector2D(0, -(3.5f - FMath::Log(1 + delta < 0.06f ? 0 : FMath::Abs(rigid->GetVelocity().y)) / FMath::Log(10)) / jumpFlag));
 		}
 		});
 	inputComponent->BindAction("JumpEnd", EInputType::Released, [this]() {
 		if (bSitting || bWall) return;
-		if (rigid->GetVelocity().y < 0 && GameplayStatics::GetTimeSeconds() - lastJumpTime < 0.3f)
+		if (rigid->GetVelocity().y < 0 && GameplayStatics::GetTimeSeconds() - lastJumpTime < 0.25f)
 		{
-			rigid->SetVelocity(FVector2D(rigid->GetVelocity().x, -rigid->GetVelocity().y * 0.05f));
+			rigid->SetVelocity(FVector2D(rigid->GetVelocity().x, FMath::Clamp(-rigid->GetVelocity().y * 0.2f, 0.f, 800.f)));
 		}
 		});
 	inputComponent->BindAction("Attack", EInputType::Pressed, [this]() {
@@ -552,7 +552,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		lastThrowTime = GameplayStatics::GetTimeSeconds();
 		ani->PlayMontage("throw"); 
 		GameModeHelper::PlayFXSound("sound_throw");
-		if (FMath::RandInt(0, 10) > 6)GameModeHelper::PlayFXSound("voice_throw");
+		if (FMath::RandInt(0, 11) > 8)GameModeHelper::PlayFXSound("voice_throw");
 		});
 	inputComponent->BindAction("Leave", EInputType::Pressed, [this]() {
 		if (bSitting || bWall) return;
@@ -613,8 +613,8 @@ void Player::OnEnter(Collider* hitComp, Collider* otherComp, Actor* otherActor, 
 		}
 		else
 		{
-			if (rigid->GetVelocity().y > 1350)GameModeHelper::PlayFXSound("sound_hardland");
-			else if (rigid->GetVelocity().y > 700)GameModeHelper::PlayFXSound("sound_softland");
+			if (rigid->GetVelocity().y > 1500)GameModeHelper::PlayFXSound("sound_hardland");
+			else if (rigid->GetVelocity().y > 800)GameModeHelper::PlayFXSound("sound_softland");
 			else GameModeHelper::PlayFXSound("sound_land");
 		}
 	}

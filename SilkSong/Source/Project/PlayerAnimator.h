@@ -102,6 +102,7 @@ private:
 	AnimEdge cure_to_idle;
 	AnimEdge hurt_to_idle;
 	AnimEdge throw_to_idle;
+	AnimEdge throw_to_softland;
 	AnimEdge grab_to_idle;
 	AnimEdge _closeskill_to_closeskill;
 	AnimEdge closeskill_to_idle;

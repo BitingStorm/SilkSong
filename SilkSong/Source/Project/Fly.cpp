@@ -60,7 +60,7 @@ void Fly::Update(float deltaTime)
 
 	if (IsDead() || !player)return;
 
-	if (FVector2D::Distance(player->GetWorldPosition(), GetWorldPosition()) < 400)
+	if (FVector2D::Distance(player->GetWorldPosition(), GetWorldPosition()) < 500)
 	{
 		if ((player->GetWorldPosition() - GetWorldPosition()).x * GetWorldScale().x < 0)
 		{
