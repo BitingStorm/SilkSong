@@ -264,10 +264,10 @@ void PlayerAnimator::BeginPlay()
 		airdash.AddNotification(1, dashEffect);
 		cure.OnAnimEnter.Bind([=]() {player->EnableInput(false); });
 		cure.OnAnimExit.Bind([=]() {player->SetFloating(false); });
-		cure.AddNotification(5, cureEffect);
+		cure.AddNotification(8, cureEffect);
 		hurt.OnAnimEnter.Bind([=]() {player->EnableInput(false); });
 		hurt.OnAnimExit.Bind([=]() {player->EnableInput(true); });
-		hurtPause.Bind([]() {GameplayStatics::Pause(0.3f); GameplayStatics::PlayCameraShake(7, 5); });
+		hurtPause.Bind([]() {GameplayStatics::Pause(0.35f); GameplayStatics::PlayCameraShake(7, 3); });
 		hurt.AddNotification(2, hurtPause);
 		walk.OnAnimEnter.Bind([=]() 
 			{
@@ -314,7 +314,7 @@ void PlayerAnimator::BeginPlay()
 		wall.OnAnimExit.Bind([=]() {player->LeaveWall(); });
 		defend.OnAnimEnter.Bind([=]() {player->Defend(true); });
 		defend.OnAnimExit.Bind([=]() {player->Defend(false); });
-		defendPause.Bind([=]() {GameplayStatics::Pause(0.3f); GameplayStatics::PlayCameraShake(7, 5); player->AddSilk(3); });
+		defendPause.Bind([=]() {GameplayStatics::Pause(0.35f); GameplayStatics::PlayCameraShake(7, 5); player->AddSilk(3); });
 		defendattack.AddNotification(1, defendPause);
 		defendattack.AddNotification(3, defendAttack);
 	}

@@ -41,6 +41,11 @@ FVector2D Controller::GetCursorPosition() const
 		* mainWorld.mainCamera->GetVirtualSpringArmLength() / 20.f + mainWorld.mainCamera->GetWorldPosition();
 }
 
+BYTE Controller::GetCurrentKeyCode() const
+{
+	return inputComponent->GetCurrentKeyCode();
+}
+
 bool Controller::IsMouseClicked() const
 {
 	return InputComponent::IsMouseButtonPressed();

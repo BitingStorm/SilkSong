@@ -33,13 +33,15 @@ MenuController::MenuController()
 void MenuController::BeginPlay()
 {
     Super::BeginPlay();
-    GameplayStatics::CreateUI<MenuUI>()->AddToViewport();
+	GameplayStatics::CreateUI<MenuUI>()->AddToViewport();
 	GameModeHelper::PlayBGMusic("menu_");
 }
 
 void MenuController::Update(float deltaTime)
 {
     Super::Update(deltaTime);
+
+
 }
 
 void MenuController::ChangeTheme()

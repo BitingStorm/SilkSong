@@ -1,17 +1,18 @@
-#include "VolumeUI.h"
+#include "KeyBoardUI.h"
 #include "Pointer.h"
 #include "GameplayStatics.h"
+#include "Objects/Controller.h"
 #include "GameModeHelper.h"
 #include "Effect.h"
 #include "MenuUI.h"
-#include "VolumeBarUI.h"
+#include "KeyBoardBarUI.h"
 
 
-VolumeUI::VolumeUI()
+KeyBoardUI::KeyBoardUI()
 {
 	Title = GameplayStatics::CreateUI<RichTextUI>();
 	Title->AttachTo(this);
-	Title->SetText("AUDIO", 7);
+	Title->SetText("KEYBOARD", 7);
 	Title->SetPosition(FVector2D(0, -300));
 
 	Warning = AddWidget<Image>();
@@ -21,10 +22,10 @@ VolumeUI::VolumeUI()
 	Warning->SetLayer(10);
 	Warning->EnableAnimControl();
 	idle.Load("menu_warning");
-    idle.SetInterval(0.05f);
+	idle.SetInterval(0.05f);
 	idle.SetLooping(false);
 	Animator* ani = Warning->GetAnimator();
-	if(ani)
+	if (ani)
 	{
 		ani->Insert("idle", idle);
 		ani->SetNode("idle");
@@ -43,11 +44,31 @@ VolumeUI::VolumeUI()
 	BackText->SetText("BACK", 5);
 	BackText->SetPosition(FVector2D(0, 300));
 
+	KeyBoardPanel = AddWidget<GridPanel>();
+	KeyBoardPanel->AttachTo(rootCanvas);
+	KeyBoardPanel->SetLayoutPattern(LayoutPattern::Center);
+	KeyBoardPanel->SetRelativePosition(FVector2D(0, 40));
+	KeyBoardPanel->SetRow(8);
+	KeyBoardPanel->SetColumn(2);
+	KeyBoardPanel->SetUnitSize(FVector2D(300,60));
+	KeyBoardPanel->SetSpacingX(100);
+	for (int32 i = 0; i < 15; ++i)
+	{
+		KeyBoardBarUI* bar = GameplayStatics::CreateUI<KeyBoardBarUI>();
+		KeyBoardPanel->AddMember(bar, i);
+		bar->Init(i);
+		bar->SetIcon(GameModeHelper::GetInstance()->GetKeyCode(i));
+		bar->HideFromViewport();
+	}
 
 	Back->OnMouseHoverBegin.AddLambda([this]() {
+		if (currentBar)
+		{
+			return;
+		}
 		FVector2D pos = GameplayStatics::ProjectScreenToWorld(Back->GetScreenPosition());
-		GameplayStatics::CreateObject<Pointer>(pos + FVector2D(75, 0))->SetLocalScale(FVector2D(-1, 1));
-		GameplayStatics::CreateObject<Pointer>(pos - FVector2D(75, 0));
+		GameplayStatics::CreateObject<Pointer>(pos + FVector2D(80, 0))->SetLocalScale(FVector2D(-1, 1));
+		GameplayStatics::CreateObject<Pointer>(pos - FVector2D(80, 0));
 		GameModeHelper::PlayFXSound("sound_change_selection");
 		});
 	Back->OnMouseHoverEnd.AddLambda([]() {
@@ -57,6 +78,10 @@ VolumeUI::VolumeUI()
 		}
 		});
 	Back->OnMousePressedBegin.AddLambda([this]() {
+		if (currentBar)
+		{
+			return;
+		}
 		FVector2D pos = GameplayStatics::ProjectScreenToWorld(Back->GetScreenPosition());
 		Effect* effect = GameplayStatics::CreateObject<Effect>(pos);
 		effect->SetLocalScale(FVector2D(0.75, 0.75));
@@ -69,16 +94,20 @@ VolumeUI::VolumeUI()
 			obj->FadeOut();
 		}
 		});
-
-	for (int i = 0; i < 2; i++)
-	{
-		volumeBarUI[i] = GameplayStatics::CreateUI<VolumeBarUI>();
-		volumeBarUI[i]->Init(i);
-		volumeBarUI[i]->AttachTo(this);
-	}
 }
 
-void VolumeUI::Update(float deltaTime)
+void KeyBoardUI::Update(float deltaTime)
 {
 	UserInterface::Update(deltaTime);
+
+	if (currentBar && GameplayStatics::GetController()->IsAnyKeyPressed())
+	{
+		uint8 keyCode = GameplayStatics::GetController()->GetCurrentKeyCode();
+		if (!currentBar->SetIcon(keyCode))
+		{
+			return;
+		}
+		GameModeHelper::GetInstance()->SetKeyCode(currentBar->GetIndex(), keyCode);
+		currentBar = nullptr;
+	}
 }

@@ -4,12 +4,13 @@
 #include "Effect.h"
 #include "MenuController.h"
 #include "VolumeUI.h"
+#include "KeyBoardUI.h"
 #include "GameModeHelper.h"
 
 std::string texts[5] = {
 	"START GAME",
-	"OPTIONS",
-	"ACHIEVEMENTS",
+	"AUDIO",
+	"KEYBOARD",
 	"CHANGE THEME",
 	"QUIT GAME"
 };
@@ -55,7 +56,7 @@ MenuUI::MenuUI()
 	Black->SetLayer(50);
 	Black->SetTransparency(0);
 
-	float delta[5] = { 115,90,130,135,110 };
+	float delta[5] = { 115,80,100,140,110 };
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -81,7 +82,7 @@ MenuUI::MenuUI()
 		Buttons[i]->OnMousePressedBegin.AddLambda([=]() {
 			Effect* effect = GameplayStatics::CreateObject<Effect>(pos);
 			effect->SetLocalScale(FVector2D(0.75, 0.75));
-			effect->Init("menuhit", -0.03f);
+			effect->Init("menuhit", -0.04f);
 			startFlag = i + 1;
 			for (auto& obj : GameplayStatics::FindObjectsOfClass<Pointer>())
 			{
@@ -98,7 +99,7 @@ MenuUI::MenuUI()
 	}
 
 	volumeUI = GameplayStatics::CreateUI<VolumeUI>();
-	volumeUI->SetOwner(this);
+	keyboardUI = GameplayStatics::CreateUI<KeyBoardUI>();
 }
 
 void MenuUI::Update(float deltaTime)
@@ -124,6 +125,9 @@ void MenuUI::Update(float deltaTime)
 			GameModeHelper::GetInstance()->GetAudioPlayer(0)->Stop("menu_");
 			break;
 		case 2:volumeUI->AddToViewport(); HideFromViewport();
+			startFlag = 0;
+			break;
+		case 3:keyboardUI->AddToViewport(); HideFromViewport();
 			startFlag = 0;
 			break;
 		case 4:Cast<MenuController>(GameplayStatics::GetController())->ChangeTheme();

@@ -94,11 +94,12 @@ class Widget :public Object, public LayerInterface
 	void BeginPlay()override {}
 	void EndPlay()override {}
 	FVector2D GetLayoutOffset()const;//布局偏移
+
 protected:
 	FTransform transform;
 	Widget* parent = nullptr;
 	std::unordered_set<Widget*>children;
-	Panel* attachedPanel = nullptr;
+	class UserInterface* attachedUI = nullptr;
 
 	FVector2D size;
 
@@ -117,6 +118,7 @@ public:
 	virtual void Render() {}
 	void ShowInfoBox();
 	void DrawDebugRect();
+	void SetOwner(UserInterface* owner);
 
 	void SetLayoutPattern(LayoutPattern pattern) { layoutPattern = pattern; }
 	void SetUIPattern(UIPattern pattern);
@@ -157,13 +159,11 @@ class Panel :public Widget
 	void SetSize(FVector2D size) { this->size = size; }//不允许手动设置Panel的大小
 protected:
 	std::vector<class Widget*>members;
-	std::vector<class UserInterface*>members_ui;
 
 	FVector2D unitSize;
 	virtual void AdjustMemberPosition(Widget* member, int32 index) = 0;
-public:
-	virtual ~Panel();
 
+public:
 	virtual void Update()override;
 
 	void SetUnitSize(FVector2D size);
@@ -280,7 +280,7 @@ public:
 	Animator* GetAnimator() { return ani; }
 
 private:
-	Animator* ani;
+	Animator* ani{};
 };
 
 

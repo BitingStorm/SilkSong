@@ -444,6 +444,15 @@
     <ClInclude Include="Source\Project\BubbleProducer.h">
       <Filter>Project\Game</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Project\KeyBoardUI.h">
+      <Filter>Project\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\KeyBoardBarUI.h">
+      <Filter>Project\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\ButtonIconUI.h">
+      <Filter>Project\Menu</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Components\ActorComponent.cpp">
@@ -766,6 +775,15 @@
     </ClCompile>
     <ClCompile Include="Source\Project\BubbleProducer.cpp">
       <Filter>Project\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\KeyBoardUI.cpp">
+      <Filter>Project\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\KeyBoardBarUI.cpp">
+      <Filter>Project\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\ButtonIconUI.cpp">
+      <Filter>Project\Menu</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

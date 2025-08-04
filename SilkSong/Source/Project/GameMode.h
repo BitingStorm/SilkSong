@@ -2,6 +2,7 @@
 #include "Objects/Actor.h"
 #include "DamageSystem.h"
 #include "Components/AudioPlayer.h"
+#include "WinUser.h"
 
 
 class GameMode :public Actor
@@ -31,29 +32,26 @@ public:
 
 	void SetVolume(int32 index, int32 vol)
 	{
-		volumes[index] = vol;
-		GetAudioPlayer(index)->SetVolume(vol);
+		volumes[index] = vol; GetAudioPlayer(index)->SetVolume(vol);
 	}
 
-	void MakeEarRinging()
-	{
-		bEarRinging = true;
-		music->SetVolume(volumes[0] / 2);
-		sound->SetVolume(volumes[1] / 2);
-		music_->SetVolume(volumes[2] / 2);
-	}
+	void MakeEarRinging();
 
-	void MakeEarRinging_()
-	{
-		bEarRinging = true;
-		music->SetVolume(volumes[0] / 2);
-		music_->SetVolume(volumes[2] / 2);
-	}
+	void MakeEarRinging_();
 
 	void RefreshVolume()
 	{
-		bEarRinging = false;
-		timer = 0.f;
+		bEarRinging = false; timer = 0.f;
+	}
+
+	uint8 GetKeyCode(int index) const
+	{
+		return keyCodes[index];
+	}
+
+	void SetKeyCode(int index, uint8 value)
+	{
+		keyCodes[index] = value;
 	}
 
 protected:
@@ -66,6 +64,8 @@ protected:
 	AudioPlayer* music_;
 
 	int32 volumes[3];
+
+	uint8 keyCodes[15] = { 'W','A','S','D','K','J','F','L','I','O','U','E','X','Q',0x20 };
 
 	bool bEarRinging;
 	float timer;

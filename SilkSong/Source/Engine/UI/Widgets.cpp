@@ -196,6 +196,11 @@ void Widget::DrawDebugRect()
 	rectangle(left, top, right, bottom);
 }
 
+void Widget::SetOwner(UserInterface* owner)
+{
+	attachedUI = owner;
+}
+
 void Widget::SetUIPattern(UIPattern pattern)
 {
 	if (uiPattern == pattern)
@@ -260,23 +265,16 @@ void Widget::DetachFrom(Widget* par)
 
 
 
-Panel::~Panel()
-{
-	if(members_ui.empty())return;
-	for (auto &ui:members_ui)
-	{
-		ui->RemoveFromViewport();
-	}
-}
 
 void Panel::Update()
 {
 	Widget::Update();
+
 	if (members.empty())return;
 	int32 index = 0;
 	for (auto& member : members)
 	{
-		AdjustMemberPosition(member,index++);
+		AdjustMemberPosition(member, index++);
 	}
 }
 
@@ -291,7 +289,6 @@ void Panel::AddMember(Widget* member, int32 index)
 	member->AttachTo(this);
 	if (index >= 0)members.emplace(members.begin() + index, member);
 	else members.push_back(member);
-	member->attachedPanel = this;
 	AdjustMemberSizeToUnit(member);
 	AdjustMemberPosition(member, index >= 0 ? index : int32(members.size()) - 1);
 }
@@ -299,25 +296,22 @@ void Panel::RemoveMember(Widget* member)
 {
 	member->DetachFrom(this);
 	members.erase(std::remove(members.begin(), members.end(), member), members.end());
-	member->attachedPanel = nullptr;
 }
 void Panel::AddMember(UserInterface* member, int32 index)
 {
 	member->rootCanvas->AttachTo(this);
-	index = FMath::Clamp(index,-1,int32(members.size()));
-	if (index >= 0)members.emplace(members.begin()+index, member->rootCanvas);
+	member->AttachTo(attachedUI);
+	index = FMath::Clamp(index, -1, int32(members.size()));
+	if (index >= 0)members.emplace(members.begin() + index, member->rootCanvas);
 	else members.push_back(member->rootCanvas);
-	members_ui.push_back(member);
-	member->rootCanvas->attachedPanel = this;
-	AdjustMemberSizeToUnit(member->rootCanvas);
+	member->rootCanvas->SetSize(unitSize);
 	AdjustMemberPosition(member->rootCanvas, index >= 0 ? index : int32(members.size()) - 1);
 }
 void Panel::RemoveMember(UserInterface* member)
 {
 	member->rootCanvas->DetachFrom(this);
+	member->DettachFrom(attachedUI);
 	members.erase(std::remove(members.begin(), members.end(), member->rootCanvas), members.end());
-	members_ui.erase(std::remove(members_ui.begin(), members_ui.end(), member), members_ui.end());
-	member->rootCanvas->attachedPanel = nullptr;
 }
 
 void Panel::AdjustMemberSizeToUnit(Widget* member)
@@ -328,7 +322,7 @@ void Panel::AdjustMemberSizeToUnit(Widget* member)
 void HorizontalPanel::AdjustMemberPosition(Widget* member, int32 index)
 {
 	if (index < 0)return;
-	FVector2D pos = FVector2D(index * (unitSize.x + spacing), 0) + FVector2D(unitSize.x, unitSize.y)*0.5f;
+	FVector2D pos = FVector2D(index * (unitSize.x + spacing), 0) + unitSize * 0.5f;
 	member->SetRelativePosition(pos);
 }
 
@@ -340,7 +334,7 @@ FVector2D HorizontalPanel::GetSize() const
 void VerticalPanel::AdjustMemberPosition(Widget* member, int32 index)
 {
 	if (index < 0)return;
-	FVector2D pos = FVector2D(0, index * (unitSize.y + spacing));
+	FVector2D pos = FVector2D(0, index * (unitSize.y + spacing)) + unitSize * 0.5f;
 	member->SetRelativePosition(pos);
 }
 
@@ -352,7 +346,7 @@ FVector2D VerticalPanel::GetSize() const
 void GridPanel::AdjustMemberPosition(Widget* member, int32 index)
 {
 	if (index < 0)return;
-	FVector2D pos = FVector2D((index % column) * (unitSize.x + spacingX), (index / column) * (unitSize.y + spacingY));
+	FVector2D pos = FVector2D((index % column) * (unitSize.x + spacingX), (index / column) * (unitSize.y + spacingY)) + unitSize * 0.5f;
 	member->SetRelativePosition(pos);
 }
 
@@ -500,7 +494,7 @@ void Button::Update()
 	else if (isHover && !IsMouseOn()) { OnMouseHoverEnd.BroadCast(); isHover = false; }
 
 	if (!isPressed && IsMousePressed()) {OnMousePressedBegin.BroadCast(); isPressed = true; }
-	else if (isPressed &&!IsMousePressed()) {OnMousePressedEnd.BroadCast(); isPressed = false; }
+	else if (isPressed && !IsMousePressed()) {OnMousePressedEnd.BroadCast(); isPressed = false; }
 
 
 	if (!hover && !pressed) {sprite = normal; return;}

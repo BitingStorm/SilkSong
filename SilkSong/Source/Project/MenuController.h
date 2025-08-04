@@ -12,8 +12,7 @@ class MenuController :public Controller
 
 	class ParticleSystem* whiteRadiant;
 	class OldTheme* oldTheme;
-	class NewTheme* newTheme;
-
+	class NewTheme* newTheme;	
 
 public:
 	MenuController();

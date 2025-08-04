@@ -29,6 +29,7 @@
     <ClInclude Include="Source\Project\BossNameUI.h" />
     <ClInclude Include="Source\Project\Brumm.h" />
     <ClInclude Include="Source\Project\BubbleProducer.h" />
+    <ClInclude Include="Source\Project\ButtonIconUI.h" />
     <ClInclude Include="Source\Project\DefaultDamageStrategy.h" />
     <ClInclude Include="Source\Engine\Math\Box2D.h" />
     <ClInclude Include="Source\Engine\Math\Transform.h" />
@@ -48,6 +49,8 @@
     <ClInclude Include="Source\Project\GrimmLevel.h" />
     <ClInclude Include="Source\Project\GrimmSmoke.h" />
     <ClInclude Include="Source\Project\Interactive.h" />
+    <ClInclude Include="Source\Project\KeyBoardBarUI.h" />
+    <ClInclude Include="Source\Project\KeyBoardUI.h" />
     <ClInclude Include="Source\Project\LeafParticle.h" />
     <ClInclude Include="Source\Project\LevelTransformer.h" />
     <ClInclude Include="Source\Project\MossFloor.h" />
@@ -149,6 +152,7 @@
     <ClCompile Include="Source\Project\BossNameUI.cpp" />
     <ClCompile Include="Source\Project\Brumm.cpp" />
     <ClCompile Include="Source\Project\BubbleProducer.cpp" />
+    <ClCompile Include="Source\Project\ButtonIconUI.cpp" />
     <ClCompile Include="Source\Project\DamageResponseComponent.cpp" />
     <ClCompile Include="Source\Project\DamageSystem.cpp" />
     <ClCompile Include="Source\Project\DefaultDamageStrategy.cpp" />
@@ -165,6 +169,8 @@
     <ClCompile Include="Source\Project\GrimmLevel.cpp" />
     <ClCompile Include="Source\Project\GrimmSmoke.cpp" />
     <ClCompile Include="Source\Project\Interactive.cpp" />
+    <ClCompile Include="Source\Project\KeyBoardBarUI.cpp" />
+    <ClCompile Include="Source\Project\KeyBoardUI.cpp" />
     <ClCompile Include="Source\Project\LeafParticle.cpp" />
     <ClCompile Include="Source\Project\LevelTransformer.cpp" />
     <ClCompile Include="Source\Project\MenuController.cpp" />

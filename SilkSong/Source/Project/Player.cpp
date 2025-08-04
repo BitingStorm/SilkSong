@@ -312,7 +312,7 @@ void Player::Update(float deltaTime)
 	if (bDashing)
 	{
 		SetMaxWalkingSpeed(15000);
-		AddInputX(GetWorldScale().x * (bGround ? 17500 : 17000) * deltaTime, false);
+		AddInputX(GetWorldScale().x * 17500 * deltaTime, false);
 		if (GameplayStatics::GetTimeSeconds() - lastDashTime > 0.2f)
 		{
 			bDashing = false; 
@@ -329,30 +329,31 @@ void Player::Update(float deltaTime)
 
 void Player::SetupInputComponent(InputComponent* inputComponent)
 {
-	inputComponent->SetMapping("WalkLeft", EKeyCode::VK_A);
-	inputComponent->SetMapping("WalkRight", EKeyCode::VK_D);
-	inputComponent->SetMapping("WalkLeftEnd", EKeyCode::VK_A);
-	inputComponent->SetMapping("WalkRightEnd", EKeyCode::VK_D);
-	inputComponent->SetMapping("Rush", EKeyCode::VK_Space);
-	inputComponent->SetMapping("RushEnd", EKeyCode::VK_Space);
-	inputComponent->SetMapping("LookUp", EKeyCode::VK_W);
-	inputComponent->SetMapping("Sit", EKeyCode::VK_W);
-	inputComponent->SetMapping("LookDownEnd", EKeyCode::VK_S);
-	inputComponent->SetMapping("LookUpEnd", EKeyCode::VK_W);
-	inputComponent->SetMapping("LookDown", EKeyCode::VK_S);
-	inputComponent->SetMapping("JumpStart", EKeyCode::VK_K);
-	inputComponent->SetMapping("Jumping", EKeyCode::VK_K);
-	inputComponent->SetMapping("JumpEnd", EKeyCode::VK_K);
-	inputComponent->SetMapping("Attack", EKeyCode::VK_J);
-	inputComponent->SetMapping("Evade", EKeyCode::VK_L);
-	inputComponent->SetMapping("Dash", EKeyCode::VK_F);
-	inputComponent->SetMapping("Cure", EKeyCode::VK_E);
-	inputComponent->SetMapping("Throw", EKeyCode::VK_Q);
-	inputComponent->SetMapping("Leave", EKeyCode::VK_O);
-	inputComponent->SetMapping("CloseSkill", EKeyCode::VK_I);
-	inputComponent->SetMapping("RemoteSkill", EKeyCode::VK_O);
-	inputComponent->SetMapping("RapidSkill", EKeyCode::VK_U);
-	inputComponent->SetMapping("DefendStart", EKeyCode::VK_X);
+	GameMode* inst = GameModeHelper::GetInstance();
+	inputComponent->SetMapping("LookUp", EKeyCode(inst->GetKeyCode(0)));
+	inputComponent->SetMapping("LookUpEnd", EKeyCode(inst->GetKeyCode(0)));
+	inputComponent->SetMapping("Sit", EKeyCode(inst->GetKeyCode(0)));
+	inputComponent->SetMapping("WalkLeft", EKeyCode(inst->GetKeyCode(1)));
+	inputComponent->SetMapping("WalkLeftEnd", EKeyCode(inst->GetKeyCode(1)));
+	inputComponent->SetMapping("LookDown", EKeyCode(inst->GetKeyCode(2)));
+	inputComponent->SetMapping("LookDownEnd", EKeyCode(inst->GetKeyCode(2)));
+	inputComponent->SetMapping("WalkRight", EKeyCode(inst->GetKeyCode(3)));
+	inputComponent->SetMapping("WalkRightEnd", EKeyCode(inst->GetKeyCode(3)));
+	inputComponent->SetMapping("JumpStart", EKeyCode(inst->GetKeyCode(4)));
+	inputComponent->SetMapping("Jumping", EKeyCode(inst->GetKeyCode(4)));
+	inputComponent->SetMapping("JumpEnd", EKeyCode(inst->GetKeyCode(4)));
+	inputComponent->SetMapping("Attack", EKeyCode(inst->GetKeyCode(5)));
+	inputComponent->SetMapping("Dash", EKeyCode(inst->GetKeyCode(6)));
+	inputComponent->SetMapping("Evade", EKeyCode(inst->GetKeyCode(7)));
+	inputComponent->SetMapping("CloseSkill", EKeyCode(inst->GetKeyCode(8)));
+	inputComponent->SetMapping("RemoteSkill", EKeyCode(inst->GetKeyCode(9)));
+	inputComponent->SetMapping("Leave", EKeyCode(inst->GetKeyCode(9)));
+	inputComponent->SetMapping("RapidSkill", EKeyCode(inst->GetKeyCode(10)));
+	inputComponent->SetMapping("Cure", EKeyCode(inst->GetKeyCode(11)));
+	inputComponent->SetMapping("DefendStart", EKeyCode(inst->GetKeyCode(12)));
+	inputComponent->SetMapping("Throw", EKeyCode(inst->GetKeyCode(13)));
+	inputComponent->SetMapping("Rush", EKeyCode(inst->GetKeyCode(14)));
+	inputComponent->SetMapping("RushEnd", EKeyCode(inst->GetKeyCode(14)));
 
 
 	inputComponent->BindAction("WalkLeft", EInputType::Holding, [this]() {

@@ -15,12 +15,30 @@ void InputComponent::BindAction(std::string actionName, EInputType type, std::fu
 		actionCallbacks.insert({ actionName, { func,type,false } });
 }
 
+BYTE InputComponent::GetCurrentKeyCode()
+{
+	for (int i = 0x01; i <= 0xFE; ++i)
+	{
+		if (GetAsyncKeyState(i) & 0x8000)
+		{
+			if (i == VK_CAPITAL || i == VK_NUMLOCK) continue;
+			return i;
+		}
+	}
+	return 0;
+}
+
 bool InputComponent::IsAnyKeyPressed()
 {
-	for (int i = 0; i < 256; ++i) 
+	for (int i = 0x01; i <= 0xFE; ++i)
 	{
-		if (GetAsyncKeyState(i) & 0x8000) return true;
+		if (GetAsyncKeyState(i) & 0x8000)
+		{
+			if (i == VK_CAPITAL || i == VK_NUMLOCK) continue;
+			return true;
+		}
 	}
+	return false;
 }
 
 bool InputComponent::IsKeyPressed(EKeyCode keycode)

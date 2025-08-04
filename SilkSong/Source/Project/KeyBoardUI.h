@@ -3,7 +3,7 @@
 #include "Components/Animator.h"
 
 
-class VolumeUI :public UserInterface
+class KeyBoardUI :public UserInterface
 {
 	RichTextUI* Title;
 	Image* Warning;
@@ -12,9 +12,12 @@ class VolumeUI :public UserInterface
 	Button* Back;
 	RichTextUI* BackText;
 
-	class VolumeBarUI* volumeBarUI[2];
+	GridPanel* KeyBoardPanel;
+	class KeyBoardBarUI* currentBar;
 public:
-	VolumeUI();
+	KeyBoardUI();
 
 	virtual void Update(float deltaTime)override;
+
+	void SetCurrentBar(KeyBoardBarUI* cur) { currentBar = cur; }
 };

@@ -36,7 +36,7 @@ void ResourceManager::Initialize()
 	Load("player_evade", "Asset/Animations/Player/Evade/", { {141,166},{140,165},{141,166},{148,160},{148,160},{148,160},{152,166} });
 	Load("player_dash", "Asset/Animations/Player/Dash/", { {210,147},{210,148},{192,131},{192,131},{182,131},{182,131},{184,131},{225,160},{225,160} });
 	Load("player_airdash", "Asset/Animations/Player/AirDash/", { {182,112},{148,140},{148,146},{178,113},{139,145},{176,138},{185,131},{172,113} });
-	Load("player_cure", "Asset/Animations/Player/Cure/", { {343,252},{565,570},{580,490},{450,495},{451,495},{451,216},{155,250},{114,225},
+	Load("player_cure", "Asset/Animations/Player/Cure/", { {343,352},{565,570},{580,490},{450,495},{451,495},{451,216},{155,250},{114,225},
 		{433,360},{444,368},{963,660},{1040,600},{1035,600},{1025,520} });
 	Load("player_hurt", "Asset/Animations/Player/Hurt/", 228, 172, 6);
 	Load("player_throw", "Asset/Animations/Player/Throw/", { {112,174}, {156,151}, {176,142}, {161,144}, {174,148} });
@@ -386,7 +386,15 @@ void ResourceManager::Initialize()
 	Load("menu_icon", "Asset/Images/Menu/team_cherry_logo_main_menu.png", 250, 203);
 	Load("menu_logo", "Asset/Images/Menu/Hidden_Dreams_Logo.png", 141, 38);
 	Load("menu_slider", "Asset/Images/Menu/MenuSliderHandle.png", 110, 50);
-
+	Load("button_skin_arrow_r", "Asset/Images/Menu/button_skin_0004_square_arrow_r.png", 50, 50);
+	Load("button_skin_arrow_l", "Asset/Images/Menu/button_skin_0004_square_arrow_l.png", 50, 50);
+	Load("button_skin_arrow_u", "Asset/Images/Menu/button_skin_0004_square_arrow_u.png", 50, 50);
+	Load("button_skin_arrow_d", "Asset/Images/Menu/button_skin_0004_square_arrow_d.png", 50, 50);
+	Load("button_skin_mouse_l", "Asset/Images/Menu/button_mouse_left_click.png", 60, 60);
+	Load("button_skin_mouse_r", "Asset/Images/Menu/button_mouse_right_click.png", 60, 60);
+	Load("button_skin_mouse_m", "Asset/Images/Menu/button_mouse_middle_click.png", 60, 60);
+	Load("button_skin_square", "Asset/Images/Menu/button_skin_0004_square_key.png", 50, 50);
+	Load("button_skin_rectangle", "Asset/Images/Menu/button_skin_0003_wide_square_key.png", 110, 50);
 
 	/*************
 	 * 媒体资源加载

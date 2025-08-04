@@ -17,6 +17,7 @@ class MenuUI :public UserInterface
 	int32 startFlag = 0;
 
 	class VolumeUI* volumeUI;
+	class KeyBoardUI* keyboardUI;
 public:
 	MenuUI();
 

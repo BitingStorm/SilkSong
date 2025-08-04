@@ -42,6 +42,10 @@ public:
 	//通过标签名查找游戏对象
 	static Actor* FindObjectOfName(std::string tagName);
 
+	//通过类查找UI
+	template<typename T>
+	static T* FindUIOfClass();
+
 	//创建UI对象
 	template<class T>
 	static T* CreateUI();
@@ -151,6 +155,20 @@ inline T* GameplayStatics::FindObjectOfClass()
 		if (T* pObj = Cast<T>(obj))return pObj;
 	}
 	for (auto& obj : mainWorld.OverallGameActors)
+	{
+		if (T* pObj = Cast<T>(obj))return pObj;
+	}
+	return nullptr;
+}
+
+template<typename T>
+inline T* GameplayStatics::FindUIOfClass()
+{
+	for (auto& obj : mainWorld.GameUIs)
+	{
+		if (T* pObj = Cast<T>(obj))return pObj;
+	}
+	for (auto& obj : mainWorld.OverallGameUIs)
 	{
 		if (T* pObj = Cast<T>(obj))return pObj;
 	}

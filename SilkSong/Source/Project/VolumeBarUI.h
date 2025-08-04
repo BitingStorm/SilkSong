@@ -9,7 +9,7 @@ class VolumeBarUI :public UserInterface
 	Button* VolumeButton;
 	Text* VolumeNumber;
 
-	int32 index;
+	int32 index = 0;
 public:
 	VolumeBarUI();
 

@@ -35,3 +35,18 @@ void GameMode::Update(float deltaTime)
 		}
 	}
 }
+
+void GameMode::MakeEarRinging()
+{
+	bEarRinging = true;
+	music->SetVolume(volumes[0] / 2);
+	sound->SetVolume(volumes[1] / 2);
+	music_->SetVolume(volumes[2] / 2);
+}
+
+void GameMode::MakeEarRinging_()
+{
+	bEarRinging = true;
+	music->SetVolume(volumes[0] / 2);
+	music_->SetVolume(volumes[2] / 2);
+}

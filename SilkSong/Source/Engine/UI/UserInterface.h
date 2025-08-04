@@ -45,9 +45,10 @@ public:
 	T* AddWidget()
 	{
 		T* gameWid = new T;
-		if (Widget* buf = static_cast<Widget*>(gameWid))
+		if (Widget* wid = static_cast<Widget*>(gameWid))
 		{
-			widgets.insert(buf);
+			wid->SetOwner(this);
+			widgets.insert(wid);
 			return gameWid;
 		}
 		delete gameWid;

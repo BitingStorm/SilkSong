@@ -21,14 +21,14 @@ Engine（仅适用于开发简易 2D 游戏） 部分有渲染系统、粒子系
 ```C++
 void Player::SetupInputComponent(InputComponent* inputComponent)
 {
-    inputComponent->SetMapping("WalkLeft", EKeyCode::VK_A);
-    //......
-
-	inputComponent->BindAction("WalkLeft", EInputType::Holding, [this]() 
-    {
+	inputComponent->SetMapping("WalkLeft", EKeyCode::VK_A);
+	//......
+    
+    inputComponent->BindAction("WalkLeft", EInputType::Holding, [this]() 
+	{
 		//......
 	});
-    //......
+	//......
 }
 ```
 
@@ -38,7 +38,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 MossGrottoLevel::MossGrottoLevel()
 {
 	SetDefaultController<Player>();
-    //......
+	//......
 }
 ```
 
@@ -49,8 +49,7 @@ MossGrottoLevel::MossGrottoLevel()
 ```C++
 void Player::Update(float deltaTime)
 {
-	Character::Update(deltaTime);
-     
+	Character::Update(deltaTime); 
     //开发者自定义逻辑......
 }
 ```
@@ -62,10 +61,10 @@ void Player::Update(float deltaTime)
 ```C++
 XXX::XXX()
 {
-    render = ConstructComponent<SpriteRenderer>();
-    render->AttachTo(root);
-    rigid = ConstructComponent<RigidBody>();
-    //......
+	render = ConstructComponent<SpriteRenderer>();
+	render->AttachTo(root);
+	rigid = ConstructComponent<RigidBody>();
+	//......
 }
 ```
 
@@ -141,8 +140,8 @@ FVector2D Actor::GetWorldPosition() const
 {
 	if (parent && transformRule.LocationRule == EAttachmentRule::KeepRelative)
 	{
-		return parent->GetWorldPosition() + FVector2D::RotateVector(
-            parent->GetWorldRotation(), GetLocalPosition() * parent->GetWorldScale());
+		return parent->GetWorldPosition() + FVector2D::RotateVector
+            (parent->GetWorldRotation(), GetLocalPosition() * parent->GetWorldScale());
 	}
 	else return GetLocalPosition();
 }
@@ -176,11 +175,11 @@ void Bind(double delay, std::function<void()>function, bool repeat = false, doub
 
 ```C++
 MyTimer.Bind(3.f, [this]() {
-    //......
+	//......
 }, true, 0.5f);
 ```
 
-Engine 部分一共 10031 行代码，几乎涵盖了大多数轻量级 2D 游戏开发所需实现的功能（图像渲染、相机处理、图像处理、帧动画、音视频播放、物理模拟与碰撞检测、UI 界面、粒子特效、键鼠控制、计时器、事件系统、文件读写、场景切换管理等等）。由于篇幅问题，以上仅介绍了游戏开发者可能最常用的几种函数或是接触的类。其余各具功能的组件、UI 部件等等的功能和使用方法请参照具体代码注释。
+Engine 部分一共 10106 行代码，几乎涵盖了大多数轻量级 2D 游戏开发所需实现的功能（图像渲染、相机处理、图像处理、帧动画、音视频播放、物理模拟与碰撞检测、UI 界面、粒子特效、键鼠控制、计时器、事件系统、文件读写、场景切换管理等等）。由于篇幅问题，以上仅介绍了游戏开发者可能最常用的几种函数或是接触的类。其余各具功能的组件、UI 部件等等的功能和使用方法请参照具体代码注释。
 
 ### 开发环境
 
@@ -201,6 +200,8 @@ VS2022 + EasyX_20240601 
 菜单“CHANGE THEME”可以在怀旧和最新场景间来回切换。怀旧场景会直接进入一代的“泪水之城”，而新版场景会进入二代“苔藓洞穴”。在“苔藓洞穴”死后会复活在“泪水之城”。
 
 游戏中 WASD 控制上下左右，按住 Space 空格疾跑，J 攻击，K 跳跃（按住时间越久跳得越高，跳跃到平台边沿会自动攀爬），F 冲刺（地面小冲刺，空中大冲刺），L 闪避，Q 飞镖（飞镖可互动，向下攻击用作垫脚石），E 治疗，I 近战技能，地面使用 O 为远程技能，空中使用 O 发射钩锁斜向上移动，U 快速突刺技能。特别的，长按 W/S 向上/下看，W+J 向上攻击，S+J 斜向下攻击，座位旁按 W 坐下，坐下以后按 S 起立，按下 X 消耗灵魂可触发一次短时间格挡，格挡成功会有回报和反击。
+
+当然，以上键位玩家均可根据自己偏好自定义。
 
 ### 游戏执行效果
 
