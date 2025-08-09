@@ -50,8 +50,9 @@ private:
 	Animation hurt;
 	Animation throw_;
 	Animation grab;
-	Animation _closeskill;
+	Animation closeskillstart;
 	Animation closeskill;
+	Animation closeskillend;
 	Animation remoteskill;
 	Animation rapidskill;
 	Animation die;
@@ -104,8 +105,9 @@ private:
 	AnimEdge throw_to_idle;
 	AnimEdge throw_to_softland;
 	AnimEdge grab_to_idle;
-	AnimEdge _closeskill_to_closeskill;
-	AnimEdge closeskill_to_idle;
+	AnimEdge closeskillstart_to_closeskill;
+	AnimEdge closeskill_to_closeskillend;
+	AnimEdge closeskillend_to_fall;
 	AnimEdge remoteskill_to_idle;
 	AnimEdge rapidskill_to_idle;
 	AnimEdge standup_to_idle;

@@ -17,6 +17,7 @@
 #include "DieParticle.h"
 #include "SitParticle.h"
 #include "GameUI.h"
+#include "EscUI.h"
 #include "CloseSkillBox.h"
 #include "Dart.h"
 #include "Needle.h"
@@ -104,6 +105,8 @@ Player::Player()
 
 	ui = GameplayStatics::CreateUI<GameUI>();
 	ui->AddToViewport();
+	ui_esc = GameplayStatics::CreateUI<EscUI>();
+	
 
 	ani->dashEffect.Bind([this]()
 		{
@@ -125,9 +128,12 @@ Player::Player()
 		});
 	ani->wetWalkEffect.Bind([this]()
 		{
-			Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(0, 60));
-			effect->Init("effect_wetwalk", -0.01f);
-			effect->SetLocalScale(GetWorldScale() * FMath::RandReal(0.8f, 1.1f));
+			if (GameplayStatics::GetCurrentLevelName() != "RuinHouse" && GameplayStatics::GetCurrentLevelName() != "GrimmTent") 
+			{
+				Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(0, 60));
+				effect->Init("effect_wetwalk", -0.01f);
+				effect->SetLocalScale(GetWorldScale() * FMath::RandReal(0.8f, 1.1f));
+			}
 		});
 	ani->dartSpawn.Bind([this]()
 		{
@@ -208,6 +214,7 @@ void Player::BeginPlay()
 	else
 	{
 		SetLocalPosition({ 250,250 });
+		ui->BlackInterval(false);
 	}
 
 	BlinkTimer.Bind(0.2f, [this]()
@@ -238,6 +245,7 @@ void Player::BeginPlay()
 
 	GameplayStatics::DontDestroyOnLoad(this);
 	GameplayStatics::DontDestroyOnLoad(ui);
+	GameplayStatics::DontDestroyOnLoad(ui_esc);
 }
 
 void Player::Update(float deltaTime)
@@ -287,6 +295,7 @@ void Player::Update(float deltaTime)
 	{
 		GameModeHelper::GetInstance()->GetAudioPlayer(1)->Stop("sound_swim");
 		GameModeHelper::GetInstance()->GetAudioPlayer(1)->Stop("sound_waterwalk");
+		GameModeHelper::GetInstance()->GetAudioPlayer(1)->Stop("sound_stonewalk");
 		GameModeHelper::GetInstance()->GetAudioPlayer(1)->Stop("sound_rush");
 	}
 
@@ -302,8 +311,8 @@ void Player::Update(float deltaTime)
 	if (bEvading)
 	{
 		SetMaxWalkingSpeed(3000);
-		AddInputX(-GetWorldScale().x * 4500 * deltaTime, false);
-		if (GameplayStatics::GetTimeSeconds() - lastEvadeTime > 0.25f)
+		AddInputX(-GetWorldScale().x * 6000 * deltaTime, false);
+		if (GameplayStatics::GetTimeSeconds() - lastEvadeTime > 0.2f)
 		{
 			bEvading = false; 
 		}
@@ -319,11 +328,6 @@ void Player::Update(float deltaTime)
 			rigid->SetGravityEnabled(true);
 			rigid->SetVelocity({ rigid->GetVelocity().x,0 });
 		}
-	}
-
-	if (bFloating && GameplayStatics::GetTimeSeconds() - lastFloatTime > 1.2f)
-	{
-		ani->SetTrigger("floatingEnd");
 	}
 }
 
@@ -354,6 +358,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 	inputComponent->SetMapping("Throw", EKeyCode(inst->GetKeyCode(13)));
 	inputComponent->SetMapping("Rush", EKeyCode(inst->GetKeyCode(14)));
 	inputComponent->SetMapping("RushEnd", EKeyCode(inst->GetKeyCode(14)));
+	inputComponent->SetMapping("Esc", EKeyCode::VK_Esc);
 
 
 	inputComponent->BindAction("WalkLeft", EInputType::Holding, [this]() {
@@ -448,7 +453,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		{
 			float delta = GameplayStatics::GetTimeSeconds() - lastJumpTime;
 			bGround = false; ani->SetBool("flying", true); 
-			rigid->AddImpulse(FVector2D(0, -(3.5f - FMath::Log(1 + delta < 0.06f ? 0 : FMath::Abs(rigid->GetVelocity().y)) / FMath::Log(10)) / jumpFlag));
+			rigid->AddImpulse(FVector2D(0, -((bRushing ? 2.5f : 3.5f) - FMath::Log(1 + delta < 0.06f ? 0 : FMath::Abs(rigid->GetVelocity().y)) / FMath::Log(10)) / jumpFlag));
 		}
 		});
 	inputComponent->BindAction("JumpEnd", EInputType::Released, [this]() {
@@ -567,8 +572,7 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 	inputComponent->BindAction("CloseSkill", EInputType::Pressed, [this]() {
 		if (bSitting || bWall) return;
 		if (playerProperty->GetSilk() < 3) return; AddSilk(-3);
-		ani->PlayMontage("_closeskill");
-		GameplayStatics::CreateObject<CloseSkillBox>(GetWorldPosition());
+		ani->PlayMontage("closeskillstart");
 		lastFloatTime = GameplayStatics::GetTimeSeconds(); SetFloating(true);
 		GameModeHelper::PlayFXSound("sound_closeskill");
 		if (FMath::RandInt(0, 10) > 5)GameModeHelper::PlayFXSound("voice_closeskill_0");
@@ -592,6 +596,9 @@ void Player::SetupInputComponent(InputComponent* inputComponent)
 		AddSilk(-2);
 		ani->PlayMontage("defendstart");
 		GameModeHelper::PlayFXSound("sound_defend");
+		});
+	inputComponent->BindAction("Esc", EInputType::Pressed, [this]() {
+		ui_esc->AddToViewport();
 		});
 }
 
@@ -956,7 +963,10 @@ bool Player::IsSwimming() const
 
 void Player::SpawnWetLandEffect() const
 {
-	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(0, 55));
-	effect->Init("effect_wetland");
-	effect->SetLocalScale(GetWorldScale());
+	if (GameplayStatics::GetCurrentLevelName() != "RuinHouse" && GameplayStatics::GetCurrentLevelName() != "GrimmTent")
+	{
+		Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(0, 55));
+		effect->Init("effect_wetland");
+		effect->SetLocalScale(GetWorldScale());
+	}
 }

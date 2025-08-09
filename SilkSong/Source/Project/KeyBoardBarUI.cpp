@@ -93,7 +93,6 @@ void KeyBoardBarUI::Init(int i)
 
 bool KeyBoardBarUI::SetIcon(uint8 keyCode)
 {
-	std::cout << int(keyCode);
 	if ((keyCode >= 0x25 && keyCode <= 0x28) || (keyCode <= 0x04) && (keyCode != 0x03))
 	{
 		Icon = GameplayStatics::CreateUI<ButtonIconImageUI>();

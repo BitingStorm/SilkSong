@@ -1,5 +1,6 @@
 #include "AttackBox.h"
 #include "Components/Collider.h"
+#include "Components/RigidBody.h"
 #include "Enemy.h"
 #include "GameplayStatics.h"
 #include "Effect.h"
@@ -53,11 +54,18 @@ void AttackBox::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherAc
 			return;
 		}
 		if (direction == ECharacterDirection::LookDown)Cast<Player>(GetOwner())->Bounce();
+		else if(direction != ECharacterDirection::LookUp)
+		{
+			normal.x > 0.f ? normal.x = 1.f : normal.x = -1.f;
+			normal.y = 0.f;
+			GetOwner()->GetComponentByClass<RigidBody>()->AddImpulse(-normal * 100.f);
+		}
+		
 		GameModeHelper::ApplyDamage(this, enemy, this->damage, EDamageType::Player);
 		if (FMath::RandInt(0, 10) > 5)GameModeHelper::PlayFXSound("sound_damage_0");
 		else GameModeHelper::PlayFXSound("sound_damage_1");
 	}
-	else if (Cast<Dart>(otherActor))
+	else if (otherComp->GetType() == CollisionType::Dart)
 	{
 		if (direction == ECharacterDirection::LookDown)Cast<Player>(GetOwner())->Bounce();
 		GameModeHelper::PlayFXSound("sound_swordhit");
@@ -69,7 +77,7 @@ void AttackBox::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherAc
 			effect->SetLocalRotation(FVector2D::VectorToDegree(normal) + 100);
 		}
 	}
-	else if (otherComp->GetType() == CollisionType::Chest)
+	else if (otherComp->GetType() == CollisionType::Chest || otherComp->GetType() == CollisionType::Plant)
 	{
 		GameModeHelper::ApplyDamage(this, Cast<IDamagable>(otherActor), 1, EDamageType::Player);
 	}

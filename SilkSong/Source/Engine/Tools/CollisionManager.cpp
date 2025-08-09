@@ -20,6 +20,10 @@ void CollisionManager::Initialize()
 	AddMapping(CollisionType::Dart, CollisionType::HurtBox);
 	AddMapping(CollisionType::Bullet, CollisionType::Player);
 	AddMapping(CollisionType::Bullet, CollisionType::Block);
+	AddMapping(CollisionType::Plant, CollisionType::Player);
+	AddMapping(CollisionType::Plant, CollisionType::Enemy);
+	AddMapping(CollisionType::Plant, CollisionType::HurtBox);
+	AddMapping(CollisionType::Plant, CollisionType::Dart);
 }
 
 bool CollisionManager::LayerMaskJudge(int layerMask1, CollisionType type2)

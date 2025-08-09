@@ -11,6 +11,32 @@ enum class ECharacterDirection : uint8
 	LookDown,
 };
 
+enum class EPlayerState : uint8
+{
+	Normal,
+	Defending,
+	Scared,
+};
+
+enum class EPlayerAction : uint8
+{
+	Idle,
+	Walk,
+	Run,
+	Jump,
+	Fall,
+	Land,
+	Attack,
+	Evade,
+	Dash,
+	Float,
+	Sit,
+	WallClimb,
+	Defend,
+	Scare,
+	Die,
+	Recover,
+};
 
 class Player :public Character, public IDamagable, public IPropertyCarrier
 {
@@ -93,6 +119,7 @@ private:
 	class DamageResponseComponent* damageResponse;
 	class PlayerPropertyComponent* playerProperty;
 	class GameUI* ui;
+	class EscUI* ui_esc;
 
 	Timer BlinkTimer;
 	Timer DieTimer;

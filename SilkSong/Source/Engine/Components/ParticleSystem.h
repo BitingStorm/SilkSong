@@ -22,7 +22,8 @@ enum class EParticlePattern :uint8
 enum class EParticleFadingType :uint8
 {
 	FadeInAndOut, //渐变
-	ExpandAndShrink //放缩
+	ExpandAndShrink, //放缩
+	Mixture //渐变与缩放混合
 };
 
 /* 单个粒子信息 */
@@ -33,7 +34,7 @@ namespace ArtyEngine
 		FVector2D position;//粒子坐标
 		int32 index = 0; //当前帧索引
 		FVector2D velocity; //速度
-		float angularSpeed; //角速度
+		float angularSpeed = 0.f; //角速度
 		time_point<steady_clock>lastTime;//粒子创建时间
 		float alpha = 255.f; //透明度
 		float size = 1.f;//大小

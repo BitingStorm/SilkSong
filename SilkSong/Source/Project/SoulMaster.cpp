@@ -262,6 +262,8 @@ void SoulMaster::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 		RecoverTimerHandle.Continue();
 		RecoverTimerHandle.Bind(4.f, [this]() {ani->SetTrigger("recover"); BehaviorTimerHandle.Continue(); });
 		moveSpeed = FVector2D::ZeroVector;
+		Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
+		effect->Init("effect_hurt_", -0.03f);
 	}
 
 	//½øÈë¶þ½×¶Î

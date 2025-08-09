@@ -20,7 +20,7 @@ Plant::Plant()
 	box = ConstructComponent<BoxCollider>();
 	box->AttachTo(root);
 	box->SetCollisonMode(CollisionMode::None);
-	box->SetType(CollisionType::Chest);
+	box->SetType(CollisionType::Plant);
 	box->OnComponentBeginOverlap.AddDynamic(this, &Plant::OnBeginOverlap);
 
 	damageResponse = ConstructComponent<DamageResponseComponent>();
@@ -67,11 +67,8 @@ void Plant::Init_(std::string deathPath, FVector2D boxSize)
 
 void Plant::OnBeginOverlap(Collider* hitComp, Collider* otherComp, Actor* otherActor)
 {
-	if (Cast<Player>(otherActor))
-	{
-		idle.SetInterval(delay * 0.25f);
-		ShakeTimerHandle.Bind(0.6f, [this]() {idle.SetInterval(delay); });
-	}
+	idle.SetInterval(delay * 0.2f);
+	ShakeTimerHandle.Bind(0.6f, [this]() {idle.SetInterval(delay); });
 }
 
 FDamageCauseInfo Plant::TakeDamage(IDamagable* damageCauser, float baseValue, EDamageType damageType)

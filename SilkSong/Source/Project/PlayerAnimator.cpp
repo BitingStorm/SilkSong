@@ -2,6 +2,8 @@
 #include "Player.h"
 #include "GameplayStatics.h"
 #include "GameModeHelper.h"
+#include "CloseSkillBox.h"
+#include "Effect.h"
 
 
 PlayerAnimator::PlayerAnimator()
@@ -55,10 +57,12 @@ PlayerAnimator::PlayerAnimator()
 	throw_.SetInterval(0.05f);
 	grab.Load("player_grab");
 	grab.SetInterval(0.06f);
-	_closeskill.Load("player__closeskill");
-	_closeskill.SetInterval(0.05f);
+	closeskillstart.Load("player_closeskillstart");
+	closeskillstart.SetInterval(0.04f);
 	closeskill.Load("player_closeskill");
 	closeskill.SetInterval(0.05f);
+	closeskillend.Load("player_closeskillend");
+	closeskillend.SetInterval(0.05f);
 	remoteskill.Load("player_remoteskill", { 0,5 });
 	remoteskill.SetInterval(0.06f);
 	rapidskill.Load("player_rapidskill", { 0,5 });
@@ -118,8 +122,9 @@ PlayerAnimator::PlayerAnimator()
 	Insert("hurt", hurt);
 	Insert("throw", throw_); 
 	Insert("grab", grab);
-	Insert("_closeskill", _closeskill);
+	Insert("closeskillstart", closeskillstart);
 	Insert("closeskill", closeskill);
+	Insert("closeskillend", closeskillend);
 	Insert("remoteskill", remoteskill);
 	Insert("rapidskill", rapidskill);
 	Insert("die", die);
@@ -144,7 +149,6 @@ PlayerAnimator::PlayerAnimator()
 	AddParamater("walkingSpeed", ParamType::Float);
 	AddParamater("landingSpeed", ParamType::Float);
 	AddParamater("fallingSpeed", ParamType::Float);
-	AddParamater("floatingEnd", ParamType::Trigger);
 	AddParamater("validDownAttack", ParamType::Bool);
 	AddParamater("leaveWall", ParamType::Trigger);
 	AddParamater("lookFlag", ParamType::Integer);
@@ -199,9 +203,9 @@ void PlayerAnimator::BeginPlay()
 	grab_to_idle.Init(grab, idle);
 	rapidskill_to_idle.Init(rapidskill, idle);
 	remoteskill_to_idle.Init(remoteskill, idle);
-	_closeskill_to_closeskill.Init(_closeskill, closeskill);
-	closeskill_to_idle.Init(closeskill, idle);
-	closeskill_to_idle.AddCondition(AnimTransition::Trigger{ "floatingEnd" });
+	closeskillstart_to_closeskill.Init(closeskillstart, closeskill);
+	closeskill_to_closeskillend.Init(closeskill, closeskillend);
+	closeskillend_to_fall.Init(closeskillend, fall);
 	standup_to_idle.Init(standup, idle);
 	lookdown_to_idle.Init(lookdown, idle);
 	lookdown_to_idle.AddCondition(AnimTransition::Integer{ "lookFlag",0,TransitionComparison::Equal });
@@ -275,7 +279,17 @@ void PlayerAnimator::BeginPlay()
 				{
 					GameModeHelper::GetInstance()->GetAudioPlayer(1)->Play("sound_swim", true);
 				}
-				else GameModeHelper::GetInstance()->GetAudioPlayer(1)->Play("sound_waterwalk", true);
+				else
+				{
+					if (GameplayStatics::GetCurrentLevelName() == "TearCity" || GameplayStatics::GetCurrentLevelName() == "BossHouse")
+					{
+						GameModeHelper::GetInstance()->GetAudioPlayer(1)->Play("sound_waterwalk", true);
+					}
+					else
+					{
+						GameModeHelper::GetInstance()->GetAudioPlayer(1)->Play("sound_stonewalk", true);
+					}
+				}
 			});
 		walk.AddNotification(2, wetWalkEffect);
 		walk.AddNotification(6, wetWalkEffect);
@@ -286,6 +300,7 @@ void PlayerAnimator::BeginPlay()
 					return;
 				}
 				GameModeHelper::GetInstance()->GetAudioPlayer(1)->Stop("sound_waterwalk");
+				GameModeHelper::GetInstance()->GetAudioPlayer(1)->Stop("sound_stonewalk");
 				GameModeHelper::GetInstance()->GetAudioPlayer(1)->Play("sound_rush", true);
 			});
 		rush.OnAnimExit.Bind([=]()
@@ -294,6 +309,12 @@ void PlayerAnimator::BeginPlay()
 			});
 		rush.AddNotification(3, wetWalkEffect);
 		rush.AddNotification(7, wetWalkEffect);
+		closeskillstart.OnAnimExit.Bind([=]() {player->SetFloating(false); });
+		closeskill.OnAnimEnter.Bind([=]() {
+			player->SetFloating(true); 
+			GameplayStatics::CreateObject<CloseSkillBox>(player->GetWorldPosition());
+			GameplayStatics::CreateObject<Effect>(player->GetWorldPosition())->Init("effect_hurt");
+			});
 		closeskill.OnAnimExit.Bind([=]() {player->SetFloating(false); });
 		throw_.AddNotification(2, dartSpawn);
 		grab.AddNotification(3, grabStart);

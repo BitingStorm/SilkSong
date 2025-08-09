@@ -19,7 +19,20 @@ void ParticleSystem::Produce()
 
 	if (fadingInTime > 0)
 	{
-		fadingType == EParticleFadingType::FadeInAndOut ? temp.alpha = 0 : temp.size = 0;
+		switch (fadingType)
+		{
+		case EParticleFadingType::FadeInAndOut:
+			temp.alpha = 0;
+			break;
+		case EParticleFadingType::ExpandAndShrink:
+			temp.size = 0;
+			break;
+		case EParticleFadingType::Mixture:
+			temp.alpha = 0;
+			temp.size = 0;
+			break;
+		default:break;
+		}
 	}
 	temp.index = FMath::RandInt(0, number - 1);
 	
@@ -104,6 +117,11 @@ void ParticleSystem::Update(float deltaTime)
 			{
 				each.size -= each.maxSize * deltaTime / fadingOutTime;
 			}
+			else
+			{
+				each.alpha -= alpha * deltaTime / fadingOutTime;
+				each.size -= each.maxSize * deltaTime / fadingOutTime;
+			}
 		}
 		if (fadingInTime > 0 && duration<float>(steady_clock::now() - each.lastTime).count()
 			<= fadingInTime)
@@ -114,6 +132,11 @@ void ParticleSystem::Update(float deltaTime)
 			}
 			else if (fadingType == EParticleFadingType::ExpandAndShrink)
 			{
+				each.size += each.maxSize * deltaTime / fadingInTime;
+			}
+			else
+			{
+				each.alpha += alpha * deltaTime / fadingInTime;
 				each.size += each.maxSize * deltaTime / fadingInTime;
 			}
 		}

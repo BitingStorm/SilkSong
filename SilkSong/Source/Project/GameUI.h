@@ -40,6 +40,7 @@ class GameUI :public UserInterface
 	int32 lowHealthDir = 1;
 
 	bool bRecover = false;
+	float blackAlpha = 255.f;
 
 public:
 	GameUI();

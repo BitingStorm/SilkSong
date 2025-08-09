@@ -119,6 +119,7 @@ void World::Update(float deltaTime)
 		}
 	}
 
+	
 	{
 		std::lock_guard<std::mutex> lock(updateMutex);
 		levelManager->RefreshLevel();//检查关卡更新

@@ -26,6 +26,7 @@ Geo::Geo()
 	box->AttachTo(root);
 
 	rigid = ConstructComponent<RigidBody>();
+	rigid->SetGravity(1500);
 
 	box->OnComponentBeginOverlap.AddDynamic(this, &Geo::OnOverlap);
 	box->OnComponentHit.AddDynamic(this, &Geo::OnHit);

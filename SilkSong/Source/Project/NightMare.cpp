@@ -378,6 +378,10 @@ void NightMare::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 		box->SetCollisonMode(CollisionMode::None);
 		circle->SetLocalPosition({ 0,0 });
 		render_death->Activate();
+
+		Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
+		effect->Init("effect_hurt_", -0.03f);
+		effect->AttachTo(this);
 	}
 }
 

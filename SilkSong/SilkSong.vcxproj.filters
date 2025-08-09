@@ -453,6 +453,12 @@
     <ClInclude Include="Source\Project\ButtonIconUI.h">
       <Filter>Project\Menu</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Project\EscUI.h">
+      <Filter>Project\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Project\Bone.h">
+      <Filter>Project\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Components\ActorComponent.cpp">
@@ -784,6 +790,12 @@
     </ClCompile>
     <ClCompile Include="Source\Project\ButtonIconUI.cpp">
       <Filter>Project\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\EscUI.cpp">
+      <Filter>Project\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\Bone.cpp">
+      <Filter>Project\Game</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 #include "GameUI.h"
 #include "Player.h"
 #include "GameplayStatics.h"
-#
+
 
 GameUI::GameUI()
 {
@@ -23,8 +23,8 @@ GameUI::GameUI()
 	Black->AttachTo(rootCanvas);
 	Black->SetLayoutPattern(LayoutPattern::Center);
 	Black->LoadSprite("black");
-	Black->SetLayer(30);
-	Black->SetTransparency(0);
+	Black->SetLayer(50);
+	Black->SetTransparency(255);
 
 	SoulContainer = AddWidget<Image>();
 	SoulContainer->AttachTo(rootCanvas);
@@ -189,11 +189,27 @@ void GameUI::Update(float deltaTime)
 
 	if (bRecover)
 	{
-		if (Black->GetTransparency() < 250)Black->SetTransparency(Black->GetTransparency() + 25);
+		if (blackAlpha < 255)
+		{
+			Black->SetTransparency(blackAlpha);
+			blackAlpha += deltaTime * 600.f;
+		}
+		else
+		{
+			Black->SetTransparency(255);
+		}
 	}
 	else
 	{
-		if (Black->GetTransparency() > 0)Black->SetTransparency(Black->GetTransparency() - 5);
+		if (blackAlpha > 0)
+		{
+			Black->SetTransparency(blackAlpha);
+			blackAlpha -= deltaTime * 300.f;
+		}
+		else
+		{
+			Black->SetTransparency(0);
+		}
 	}
 
 	CoinNum->SetText(std::to_string(player->GetGeo()), 5, "Trajan Pro");
