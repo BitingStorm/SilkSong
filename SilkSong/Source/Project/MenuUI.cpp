@@ -120,7 +120,7 @@ void MenuUI::Update(float deltaTime)
 
 		switch (startFlag)
 		{
-		case 1:GameplayStatics::OpenLevel(Cast<MenuController>(GameplayStatics::GetController())->oldTheme?"RuinHouse":"MossHole");
+		case 1:GameplayStatics::OpenLevel(Cast<MenuController>(GameplayStatics::GetController())->oldTheme?"RuinHouse":"Start");
 			GameModeHelper::GetInstance()->GetAudioPlayer(0)->Stop("menu");
 			GameModeHelper::GetInstance()->GetAudioPlayer(0)->Stop("menu_");
 			break;

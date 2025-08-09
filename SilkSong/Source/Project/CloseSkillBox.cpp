@@ -27,7 +27,7 @@ CloseSkillBox::CloseSkillBox()
 
 
 	DestroyTimerHandle.Bind(0.75f, [this]() {Destroy(); }, false);
-	AttackTimerHandle.Bind(0.15, [this]() {
+	AttackTimerHandle.Bind(0.13, [this]() {
 		std::vector<Actor*> enemies = circle->GetCollisions(CollisionType::Enemy);
 		for (auto& obj : enemies)
 		{
@@ -38,7 +38,7 @@ CloseSkillBox::CloseSkillBox()
 					continue;
 				}
 				GameModeHelper::ApplyDamage(this, enemy, 3, EDamageType::Player);
-				GameModeHelper::PlayFXSound("sound_damage_0");
+				GameModeHelper::PlayFXSound("sound_damage_1");
 			}
 		}
 		std::vector<Actor*> chests = circle->GetCollisions(CollisionType::Chest);
@@ -49,5 +49,5 @@ CloseSkillBox::CloseSkillBox()
 				GameModeHelper::ApplyDamage(this, chest, 1, EDamageType::Player);
 			}
 		}
-		}, true, 0.1f);
+		}, true, 0.02f);
 }

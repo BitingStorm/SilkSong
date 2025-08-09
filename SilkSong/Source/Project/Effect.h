@@ -8,7 +8,7 @@ class Effect :public Actor
 public:
 	Effect();
 
-	void Init(std::string path, float delta = 0, FVector2D vel = FVector2D::ZeroVector);
+	void Init(std::string path, float delta = 0, FVector2D vel = FVector2D::ZeroVector, int layer = 3);
 
 	virtual void Update(float deltaTime)override;
 

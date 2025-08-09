@@ -16,7 +16,7 @@ GameUI::GameUI()
 	LowHealth->AttachTo(rootCanvas);
 	LowHealth->SetLayoutPattern(LayoutPattern::Center);
 	LowHealth->LoadSprite("low_health");
-	LowHealth->SetLayer(19);
+	LowHealth->SetLayer(20);
 	LowHealth->SetTransparency(0);
 
 	Black = AddWidget<Image>();
@@ -192,11 +192,12 @@ void GameUI::Update(float deltaTime)
 		if (blackAlpha < 255)
 		{
 			Black->SetTransparency(blackAlpha);
-			blackAlpha += deltaTime * 600.f;
+			blackAlpha += deltaTime * 1500.f;
 		}
-		else
+		if (blackAlpha >= 255)
 		{
 			Black->SetTransparency(255);
+			blackAlpha = 255;
 		}
 	}
 	else
@@ -204,11 +205,12 @@ void GameUI::Update(float deltaTime)
 		if (blackAlpha > 0)
 		{
 			Black->SetTransparency(blackAlpha);
-			blackAlpha -= deltaTime * 300.f;
+			blackAlpha -= deltaTime * 150.f;
 		}
-		else
+		if (blackAlpha <= 0)
 		{
 			Black->SetTransparency(0);
+			blackAlpha = 0;
 		}
 	}
 

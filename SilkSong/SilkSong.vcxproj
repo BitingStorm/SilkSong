@@ -43,6 +43,7 @@
     <ClInclude Include="Source\Project\EscUI.h" />
     <ClInclude Include="Source\Project\FireBall.h" />
     <ClInclude Include="Source\Project\FireBat.h" />
+    <ClInclude Include="Source\Project\FireWorm.h" />
     <ClInclude Include="Source\Project\Fly.h" />
     <ClInclude Include="Source\Project\FragmentParticle.h" />
     <ClInclude Include="Source\Project\GameMode.h" />
@@ -162,6 +163,7 @@
     <ClCompile Include="Source\Project\EscUI.cpp" />
     <ClCompile Include="Source\Project\FireBall.cpp" />
     <ClCompile Include="Source\Project\FireBat.cpp" />
+    <ClCompile Include="Source\Project\FireWorm.cpp" />
     <ClCompile Include="Source\Project\Fly.cpp" />
     <ClCompile Include="Source\Project\FragmentParticle.cpp" />
     <ClCompile Include="Source\Project\GameMode.cpp" />

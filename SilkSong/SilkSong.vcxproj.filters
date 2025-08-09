@@ -459,6 +459,9 @@
     <ClInclude Include="Source\Project\Bone.h">
       <Filter>Project\Game</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Project\FireWorm.h">
+      <Filter>Project\Enemies</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Components\ActorComponent.cpp">
@@ -796,6 +799,9 @@
     </ClCompile>
     <ClCompile Include="Source\Project\Bone.cpp">
       <Filter>Project\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Project\FireWorm.cpp">
+      <Filter>Project\Enemies</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

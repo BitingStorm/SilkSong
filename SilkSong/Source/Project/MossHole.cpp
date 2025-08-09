@@ -30,28 +30,31 @@ MossHoleLevel::MossHoleLevel()
 	GameplayStatics::CreateObject<Bg>({ -980,845 })->Init("mosshole_environment_3", -3, -2, true, 1.04f);
 
 	GameplayStatics::CreateObject<Bg>({ -100,1060 })->Init("mosshole_floor_0", -4, -2, true);
-	GameplayStatics::CreateObject<Bg>({ -575,950 })->Init("mosshole_moss_0", -5, -2, true);
-	GameplayStatics::CreateObject<Bg>({ -500,1025 })->Init("mosshole_moss_1", -4, -2, true);
-	GameplayStatics::CreateObject<Bg>({ -375,1010 })->Init("mosshole_moss_0", -4, -2, true);
-	GameplayStatics::CreateObject<Bg>({ -775,1025 })->Init("mosshole_floor_1", -2, -1, true);
-	GameplayStatics::CreateObject<Bg>({ -1050,865 })->Init("mosshole_floor_1", -2, 0, true);
-	GameplayStatics::CreateObject<Bg>({ -425,1033 })->Init("mosshole_floor_1", -3, -1, true);
-	GameplayStatics::CreateObject<Bg>({ -350,1030 })->Init("mosshole_floor_1", -3, -1, true);
-	GameplayStatics::CreateObject<Bg>({ -250,1035 })->Init("mosshole_floor_1", -3, -1, true);
-	GameplayStatics::CreateObject<Bg>({ 25,1025 })->Init("mosshole_floor_1", -3, -1, true);
-	GameplayStatics::CreateObject<Bg>({ 150,1025 })->Init("mosshole_floor_0", -3, -1, true);
-	GameplayStatics::CreateObject<Bg>({ 350,1030 })->Init("mosshole_floor_0", -3, -1, true);
+	GameplayStatics::CreateObject<Bg>({ -540,955 })->Init("mosshole_moss_0", -5, -3, true);
+	GameplayStatics::CreateObject<Bg>({ -375,1010 })->Init("mosshole_moss_1", -4, -3, true);
+	
+	
 	GameplayStatics::CreateObject<Bg>({ 550,1020 })->Init("mosshole_floor_1", -3, -1, true);
+	GameplayStatics::CreateObject<Bg>({ 350,1030 })->Init("mosshole_floor_2", -3, -1, true);
+	GameplayStatics::CreateObject<Bg>({ 150,1025 })->Init("mosshole_floor_0", -3, -1, true);
+	GameplayStatics::CreateObject<Bg>({ 25,1025 })->Init("mosshole_floor_1", -3, -1, true);
+	GameplayStatics::CreateObject<Bg>({ -250,1035 })->Init("mosshole_floor_1", -3, -1, true);
+	GameplayStatics::CreateObject<Bg>({ -425,1033 })->Init("mosshole_floor_2", -3, -1, true);
+	GameplayStatics::CreateObject<Bg>({ -775,1025 })->Init("mosshole_floor_1", -2, -1, true);
+	GameplayStatics::CreateObject<Bg>({ -1050,865 })->Init("mosshole_floor_0", -2, 0, true);
 	GameplayStatics::CreateObject<Bg>({ -1375,720 })->Init("mosshole_floor_1", -3, -1, true);
 	GameplayStatics::CreateObject<Bg>({ -1625,730 })->Init("mosshole_floor_0", -2, -1, true);
 	GameplayStatics::CreateObject<Bg>({ -1700,550 })->Init("mosshole_vine_0", -3, -1, true);
 	GameplayStatics::CreateObject<Bg>({ -1500,575 })->Init("mosshole_vine_1", -2, -1, true);
 	GameplayStatics::CreateObject<Bg>({ -1150,620 })->Init("mosshole_vine_2", -2, -1, true);
-	GameplayStatics::CreateObject<Bg>({ -250,400 })->Init("mosshole_vine_3", -5, -2, true);
-	GameplayStatics::CreateObject<Bg>({ -340,450 })->Init("mosshole_vine_3", -6, -4, true);
-	GameplayStatics::CreateObject<Bg>({ 550,385 })->Init("mosshole_vine_3", -6, -4, true);
-	GameplayStatics::CreateObject<Bg>({ 660,475 })->Init("mosshole_vine_3", -6, -4, true);
-	GameplayStatics::CreateObject<Bg>({ 630,500 })->Init("mosshole_vine_3", 2);
+	GameplayStatics::CreateObject<Bg>({ -250,400 })->Init("mosshole_vine_3", -2, -2, true);
+	GameplayStatics::CreateObject<Bg>({ -340,450 })->Init("mosshole_vine_3", -3, -3, true);
+	GameplayStatics::CreateObject<Bg>({ 550,350 })->Init("mosshole_vine_3", -4, -4, true);
+	GameplayStatics::CreateObject<Bg>({ 660,450 })->Init("mosshole_vine_3", -4, -4, true);
+	GameplayStatics::CreateObject<Bg>({ 610,500 })->Init("mosshole_vine_3", 2);
+	GameplayStatics::CreateObject<Bg>({ -225,960 })->Init("mosshole_leaf_0", -5, -5, true);
+	GameplayStatics::CreateObject<Bg>({ 200,1000 }, 0.f, { -1.f,1.f })->Init("mosshole_leaf_0", -8, -6, true);
+	GameplayStatics::CreateObject<Bg>({ -150,930 })->Init("mosshole_leaf_1", -8, -6, true);
 
 
 	Animated* waterfall = GameplayStatics::CreateObject<Animated>({ -625,700 }); waterfall->Init("water_stream", 0.05f, -1, 100);
@@ -168,6 +171,11 @@ MossHoleLevel::MossHoleLevel()
 	GameplayStatics::CreateObject<Bg>({ -500.f, 1000.f })->Init("mosshole_fung_new_0105_Layer-254-copy-2", 13, 6);
 	GameplayStatics::CreateObject<Bg>({ 0.f, 1000.f })->Init("mosshole_fung_new_0104_Layer-254-copy-3", 13, 6);
 	GameplayStatics::CreateObject<Bg>({ 525.f, 1000.f }, 0, { -1.f, 1.f })->Init("mosshole_fung_new_0106_Layer-254-copy", 13, 6);
+
+	GameplayStatics::CreateObject<Bg>({ 400.f, 940.f })->Init("mosshole_leaf_3", 13, 5);
+	GameplayStatics::CreateObject<Bg>({ -125.f, 990.f })->Init("mosshole_leaf_2", 13, 5);
+	GameplayStatics::CreateObject<Bg>({ -200.f, 930.f }, 0.f, { -1.1f,1.1f })->Init("mosshole_leaf_3", 13, 6);
+
 	GameplayStatics::CreateObject<Bg>({ -920.f, 1025.f })->Init("mosshole_moss_4", 12, 4);
 	GameplayStatics::CreateObject<Bg>({ -1000.f, 980.f })->Init("mosshole_moss_4", 12, 4);
 	GameplayStatics::CreateObject<Bg>({ -1025.f, 1035.f })->Init("mosshole_moss_4", 12, 4);

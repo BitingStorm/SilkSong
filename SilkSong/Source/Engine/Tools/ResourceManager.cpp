@@ -42,7 +42,7 @@ void ResourceManager::Initialize()
 	Load("player_throw", "Asset/Animations/Player/Throw/", { {112,174}, {156,151}, {176,142}, {161,144}, {174,148} });
 	Load("player_grab", "Asset/Animations/Player/Grab/", { {140,180}, {141,198}, {142,194}, {138,196}, {170,134}, {160,110}, {170,120}, {184,132}, {174,166} });
 	Load("player_closeskillstart", "Asset/Animations/Player/CloseDisSkillStart/", { {179,152}, {179,152}, {160,198}, {160,198}, {166,198}, {173,198}, {173,198} });
-	Load("player_closeskill", "Asset/Animations/Player/CloseDisSkill/", 156, 198, 14);
+	Load("player_closeskill", "Asset/Animations/Player/CloseDisSkill/", 168, 210, 14);
 	Load("player_closeskillend", "Asset/Animations/Player/CloseDisSkillEnd/", { {188,144}, {167,164} });
 	Load("player_remoteskill", "Asset/Animations/Player/RemoteDisSkill/", { {215,162},{215,162},{215,162},{215,162},{215,162},{215,162},{215,162},{215,162},
 		{118,141},{118,141},{118,141},{118,141},{118,141},{118,141},{185,142},{185,142},{185,142},{185,142},{185,142},{185,142} });
@@ -108,6 +108,7 @@ void ResourceManager::Initialize()
 
 	//NPC
 	Load("brumm", "Asset/Animations/Brumm - atlas0 #392009.png", 1352, 472, 11, 2, 6);
+	Load("fireworm", "Asset/Animations/FireWorm.png", 172, 150, 4, 2, 2);
 
 	//Enemy
 	Load("fly_idle", "Asset/Animations/Enemy/Fly/Idle/", 120, 135, 5);
@@ -308,8 +309,12 @@ void ResourceManager::Initialize()
 	Load("mosshole_vine_0", "Asset/Images/Environment/MossHole/fung_new_0094_Layer-263.png", 120, 450);
 	Load("mosshole_vine_1", "Asset/Images/Environment/MossHole/fung_new_0095_Layer-262.png", 90, 450);
 	Load("mosshole_vine_2", "Asset/Images/Environment/MossHole/fung_new_0096_Layer-261.png", 94, 500);
-	Load("mosshole_vine_3", "Asset/Images/Environment/MossHole/fung_new_0116_Layer-266.png", 80, 400);
-	Load("mosshole_vine_4", "Asset/Images/Environment/MossHole/fung_new_0112_Layer-270.png", 70, 400);
+	Load("mosshole_vine_3", "Asset/Images/Environment/MossHole/fung_new_0116_Layer-266.png", 120, 490);
+	Load("mosshole_vine_4", "Asset/Images/Environment/MossHole/fung_new_0112_Layer-270.png", 134, 506);
+	Load("mosshole_leaf_0", "Asset/Images/Environment/MossHole/mosshole_leaf_0.png", 90, 204);
+	Load("mosshole_leaf_1", "Asset/Images/Environment/MossHole/mosshole_leaf_1.png", 155, 281);
+	Load("mosshole_leaf_2", "Asset/Images/Environment/MossHole/mosshole_leaf_2.png", 112, 255);
+	Load("mosshole_leaf_3", "Asset/Images/Environment/MossHole/mosshole_leaf_3.png", 193, 351);
 	Load("mosshole_deep_mask", "Asset/Images/Environment/MossHole/deep_msk.png", 600, 200);
 	Load("mosshole_fung_mask_01", "Asset/Images/Environment/MossHole/fung_mask_01.png", 860, 400);
 	Load("mosshole_fung_mask_02", "Asset/Images/Environment/MossHole/fung_mask_02.png", 675, 300);
@@ -380,7 +385,7 @@ void ResourceManager::Initialize()
 	Load("inventory_item_", "Asset/Images/UI/ins_item_bk.png", 60, 60);
 	Load("inventory_coin", "Asset/Images/UI/InventoryCoin.png", 47, 48);
 	Load("black", "Asset/Images/UI/mask_black.png", WIN_WIDTH + 20, WIN_HEIGHT + 10);
-	Load("white", "Asset/Images/UI/mask_white.png", WIN_WIDTH, WIN_HEIGHT);
+	Load("white", "Asset/Images/UI/mask_white.png", WIN_WIDTH + 20, WIN_HEIGHT + 10);
 	Load("red", "Asset/Images/UI/mask_red.png", WIN_WIDTH, WIN_HEIGHT);
 	Load("bar_white", "Asset/Images/UI/bar_white.png", 198, 3);
 	Load("low_health", "Asset/Images/UI/vignette_low_health.png", WIN_WIDTH, WIN_HEIGHT);

@@ -73,7 +73,7 @@ void AttackBox::OnOverlap(Collider* hitComp, Collider* otherComp, Actor* otherAc
 		Effect* effect = GameplayStatics::CreateObject<Effect>(otherActor->GetWorldPosition());
 		if (effect)
 		{
-			effect->Init("effect_darthit", -0.03f);
+			effect->Init("effect_darthit", -0.03f, FVector2D::ZeroVector, 15);
 			effect->SetLocalRotation(FVector2D::VectorToDegree(normal) + 100);
 		}
 	}

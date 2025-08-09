@@ -131,7 +131,7 @@ Player::Player()
 			if (GameplayStatics::GetCurrentLevelName() != "RuinHouse" && GameplayStatics::GetCurrentLevelName() != "GrimmTent") 
 			{
 				Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + FVector2D(0, 60));
-				effect->Init("effect_wetwalk", -0.01f);
+				effect->Init("effect_wetwalk", -0.03f);
 				effect->SetLocalScale(GetWorldScale() * FMath::RandReal(0.8f, 1.1f));
 			}
 		});

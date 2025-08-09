@@ -122,7 +122,7 @@ void Enemy::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 	FVector2D normal = (GetWorldPosition() - causer->GetWorldPosition()).GetSafeNormal();
 	float delta_x = causer->GetWorldPosition().x - GetWorldPosition().x;
 
-	GameplayStatics::PlayCameraShake(4);
+	GameplayStatics::PlayCameraShake(5);
 	render->Blink(0.3f, RGB(255, 110, 40));
 
 	if (property->GetHealth() <= 0 && !IsDead())
@@ -134,7 +134,7 @@ void Enemy::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 		Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition() + normal * 250);
 		if (effect)
 		{
-			effect->Init("effect_attack_", 0.01f);
+			effect->Init("effect_attack_", 0.01f, FVector2D::ZeroVector, 15);
 			effect->SetLocalScale(FVector2D::UnitVector * FMath::RandReal(0.9, 1.3));
 			effect->SetLocalRotation(FVector2D::VectorToDegree(normal));
 		}
@@ -148,7 +148,7 @@ void Enemy::ExecuteDamageTakenEvent(FDamageCauseInfo extraInfo)
 	if (effect)
 	{
 		effect->SetLocalRotation(FMath::RandInt(-15, 15) + FVector2D::VectorToDegree(normal));
-		effect->Init("effect_attack", -0.03f);
+		effect->Init("effect_attack", -0.03f, FVector2D::ZeroVector, 15);
 		effect->SetLocalScale(FVector2D{ delta_x < 0 ? 1.f : -1.f ,1.f } * FMath::RandReal(1, 1.5));
 	}
 }
@@ -172,7 +172,7 @@ void Enemy::Die()
 
 	bIsDead = true;
 	render->SetLayer(-1);
-	GameplayStatics::PlayCameraShake(8, 15);
+	GameplayStatics::PlayCameraShake(8);
 
 	render_death->Activate();
 	render_death->SetLocalPosition(GetWorldPosition());
@@ -184,6 +184,5 @@ void Enemy::Die()
 	circle->SetCollisionResponseToType(CollisionType::Dart, false);
 	rigid->SetGravity(1960.f);
 
-	Effect* effect = GameplayStatics::CreateObject<Effect>(GetWorldPosition());
-	if (effect)effect->Init("effect_death");
+	GameplayStatics::CreateObject<Effect>(GetWorldPosition())->Init("effect_death", -0.01f, FVector2D::ZeroVector, 15);
 }
