@@ -16,4 +16,6 @@ public:
 	static void PlayFXSound(std::string path);
 
 	static void PlayBGMusic_(std::string path);
+
+	static void StopAllMusic();
 };

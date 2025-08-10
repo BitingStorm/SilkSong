@@ -108,6 +108,11 @@ void Collider::RegisterDontDestroy()
     mainWorld.OverallColliders.insert(this);
 }
 
+void Collider::UnregisterDontDestroy()
+{
+    mainWorld.OverallColliders.erase(this);
+}
+
 void Collider::ColliderZoneTick()
 {
     if (mode == CollisionMode::None || !bIsEnabled)return;

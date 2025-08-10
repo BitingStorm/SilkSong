@@ -1,6 +1,6 @@
 #include "UserInterface.h"
 #include "Core/World.h"
-
+#include "GameplayStatics.h"
 
 
 UserInterface::UserInterface()
@@ -59,6 +59,12 @@ void UserInterface::RemoveFromViewport()
 	{
 		return;
 	}
+
+	if (bIsOverall)
+	{
+		GameplayStatics::DoDestroyOnLoad(this);
+	}
+
 	OnRemovedFromViewport.BroadCast();
 	mainWorld.GameUIs_to_delete.insert(this);
 	for (auto& ui : userInterfaces)
@@ -87,5 +93,17 @@ void UserInterface::RegisterDontDestroy()
 	for (auto& ui : userInterfaces)
 	{
 		ui->RegisterDontDestroy();
+	}
+}
+
+void UserInterface::UnregisterDontDestroy()
+{
+	for (auto& widget : widgets)
+	{
+		mainWorld.OverallRenders.erase(widget);
+	}
+	for (auto& ui : userInterfaces)
+	{
+		ui->UnregisterDontDestroy();
 	}
 }

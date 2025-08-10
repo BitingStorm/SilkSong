@@ -68,8 +68,8 @@ EscUI::EscUI()
 	Buttons[0]->OnMousePressedBegin.AddLambda([this]() {
 		HideFromViewport();
 		});
-	Buttons[1]->OnMousePressedBegin.AddLambda([this]() {
-		GameplayStatics::GetController()->Destroy();
+	Buttons[1]->OnMousePressedEnd.AddLambda([this]() {
+		GameplayStatics::DoDestroyOnLoad(GameplayStatics::GetController());
 		GameplayStatics::OpenLevel("Menu");
 		});
 

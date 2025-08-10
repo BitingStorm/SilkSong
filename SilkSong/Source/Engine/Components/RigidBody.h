@@ -60,6 +60,8 @@ public:
 
 	virtual void RegisterDontDestroy()override;
 
+	virtual void UnregisterDontDestroy()override;
+
 private:
 	FVector2D velocity{};
 	float maxSpeed = 5000.0f;

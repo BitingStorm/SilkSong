@@ -23,6 +23,7 @@ class UserInterface : public Object, public TimerHandler
 	std::unordered_set<UserInterface*>userInterfaces;
 
 	bool bRemoveFlag = false;
+	bool bIsOverall = false;
 
 	void BeginPlay()override {}
 	void EndPlay()override {}
@@ -77,4 +78,7 @@ public:
 
 	//全局对象注册
 	void RegisterDontDestroy();
+
+	//全局对象注销
+	void UnregisterDontDestroy();
 };

@@ -43,4 +43,5 @@ void DamageResponseComponent::EndPlay()
 	Super::EndPlay();
 
 	delete strategy;
+	strategy = nullptr;
 }

@@ -73,6 +73,13 @@ void World::Update(float deltaTime)
 		}
 		OverallGameActors_to_add.clear();
 
+		for (auto& obj : OverallGameActors_to_erase)
+		{
+			OverallGameActors.erase(obj);
+			GameActors.insert(obj);
+		}
+		OverallGameActors_to_erase.clear();
+
 		for (auto& obj : GameActors_to_delete)
 		{
 			obj->EndPlay();
@@ -102,6 +109,13 @@ void World::Update(float deltaTime)
 		}
 		OverallGameUIs_to_add.clear();
 
+		for (auto& obj : OverallGameUIs_to_erase)
+		{
+			OverallGameUIs.erase(obj);
+			GameUIs.insert(obj);
+		}
+		OverallGameUIs_to_erase.clear();
+
 		for (auto& obj : GameUIs_to_delete)
 		{
 			GameUIs.erase(obj);
@@ -119,7 +133,8 @@ void World::Update(float deltaTime)
 		}
 	}
 
-	
+
+	if (OverallGameActors_to_erase.empty() && OverallGameUIs_to_erase.empty())
 	{
 		std::lock_guard<std::mutex> lock(updateMutex);
 		levelManager->RefreshLevel();//检查关卡更新
@@ -252,6 +267,7 @@ void World::Debug()
 
 void World::WipeData()
 {
+	for (auto& obj : GameActors)obj->EndPlay();
 	for (auto& obj : GameActors)delete obj;
 	for (auto& obj : GameUIs)delete obj;
 	for (auto& obj : GameActors_to_add)delete obj;

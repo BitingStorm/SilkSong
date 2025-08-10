@@ -331,6 +331,15 @@ void Player::Update(float deltaTime)
 	}
 }
 
+void Player::EndPlay()
+{
+	Super::EndPlay();
+
+	GameplayStatics::DoDestroyOnLoad(ui);
+	GameplayStatics::DoDestroyOnLoad(ui_esc);
+	GameModeHelper::StopAllMusic();
+}
+
 void Player::SetupInputComponent(InputComponent* inputComponent)
 {
 	GameMode* inst = GameModeHelper::GetInstance();

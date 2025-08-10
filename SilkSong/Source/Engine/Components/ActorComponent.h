@@ -45,6 +45,9 @@ public:
 	//组件所属全局对象注册
 	virtual void RegisterDontDestroy() {}
 
+	//组件所属全局对象注销
+	virtual void UnregisterDontDestroy() {}
+
 protected:
 	Actor* pOwner = nullptr;//处理控制逻辑
 

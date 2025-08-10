@@ -163,4 +163,6 @@ public:
 	void SetLine(float length, float angle, float offset = 0.f, bool twoWay = false);
 
 	virtual void RegisterDontDestroy()override;
+
+	virtual void UnregisterDontDestroy()override;
 };

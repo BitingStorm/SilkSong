@@ -43,3 +43,12 @@ void GameModeHelper::PlayBGMusic_(std::string path)
 		pGameMode->GetAudioPlayer(2)->Play(path, true);
 	}
 }
+
+void GameModeHelper::StopAllMusic()
+{
+	if (GameMode* pGameMode = GetInstance())
+	{
+		pGameMode->GetAudioPlayer(2)->StopAll();
+		pGameMode->GetAudioPlayer(0)->StopAll();
+	}
+}

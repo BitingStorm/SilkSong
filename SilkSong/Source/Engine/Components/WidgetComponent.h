@@ -35,6 +35,8 @@ public:
 
 	virtual void RegisterDontDestroy()override;
 
+	virtual void UnregisterDontDestroy()override;
+
 private:
 	UserInterface* userInterface;
 };

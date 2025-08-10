@@ -128,3 +128,8 @@ void SpriteRenderer::RegisterDontDestroy()
 {
 	mainWorld.OverallRenders.insert(this);
 }
+
+void SpriteRenderer::UnregisterDontDestroy()
+{
+	mainWorld.OverallRenders.erase(this);
+}

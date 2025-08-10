@@ -87,6 +87,13 @@ public:
 	//全局化对象，该对象场景切换后不会被删除
 	static void DontDestroyOnLoad(class UserInterface* obj);
 
+	//关卡化对象，该对象场景切换后正常被删除
+	static void DoDestroyOnLoad(class Actor* obj);
+
+	//关卡化对象，该对象场景切换后正常被删除
+	static void DoDestroyOnLoad(class UserInterface* obj);
+
+
 	//将屏幕坐标投射到世界
 	static FVector2D ProjectScreenToWorld(FVector2D pos);
 

@@ -78,6 +78,11 @@ void RigidBody::RegisterDontDestroy()
 	mainWorld.OverallRigids.insert(this);
 }
 
+void RigidBody::UnregisterDontDestroy()
+{
+	mainWorld.OverallRigids.erase(this);
+}
+
 void RigidBody::RestrictVelocity(FVector2D impactNormal, const FPhysicsMaterial& material, RigidBody* another, bool isStay)
 {
 	FVector2D tangentVector = { impactNormal.y, -impactNormal.x };

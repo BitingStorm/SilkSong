@@ -106,6 +106,11 @@ GameUI::GameUI()
 
 	IdleBlink.Bind(2.5f, [this]() {
 		Player* player = Cast<Player>(GameplayStatics::GetController());
+		if (!player)
+		{
+			return;
+		}
+
 		for (int i = 0; i < player->GetHealth(); i++)
 		{
 			Health[i]->GetAnimator()->SetNode("idle");
@@ -167,6 +172,11 @@ void GameUI::Update(float deltaTime)
 	
 	Player* player = Cast<Player>(GameplayStatics::GetController());
 	
+	if (!player)
+	{
+		return;
+	}
+
 	if (player->GetHealth() == 1)
 	{
 		lowHealthFlag += deltaTime * lowHealthDir * 100;

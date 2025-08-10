@@ -195,3 +195,8 @@ void ParticleSystem::RegisterDontDestroy()
 {
 	mainWorld.OverallRenders.insert(this);
 }
+
+void ParticleSystem::UnregisterDontDestroy()
+{
+	mainWorld.OverallRenders.erase(this);
+}

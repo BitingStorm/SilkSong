@@ -49,10 +49,10 @@ public:
 	//播放音乐
 	void Play(std::string name, bool repeat = false);
 
-	//回收音乐资源（节省内存，但再次播放会消耗较大性能）
+	//停止音乐
 	void Stop(std::string name);
 
-	//停止音乐
+	//回收音乐资源（节省内存，但再次播放会消耗较大性能）
 	void Close(std::string name);
 
 	//暂停音乐
@@ -64,6 +64,8 @@ public:
 	//检测音乐是否在播放
 	bool IsPlaying(std::string name);
 
+	//停止所有音乐
+	void StopAll();
 private:
 	int32 Reflect(int32 x);
 };

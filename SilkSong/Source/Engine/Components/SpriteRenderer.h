@@ -38,6 +38,8 @@ public:
 
 	virtual void RegisterDontDestroy()override;
 
+	virtual void UnregisterDontDestroy()override;
+
 private:
 	bool isBlinking = false;
 	bool blinkFlag = false;

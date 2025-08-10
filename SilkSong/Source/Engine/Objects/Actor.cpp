@@ -1,5 +1,6 @@
 #include "Actor.h"
 #include "Core/World.h"
+#include "GameplayStatics.h"
 #include "Components/SceneComponent.h"
 #include "Components/Camera.h"
 #include "Components/WidgetComponent.h"
@@ -86,7 +87,15 @@ void Actor::Destroy()
 		return;
 	}
 
-	if (parent)parent->children.erase(this);
+	if (parent)
+	{
+		parent->children.erase(this);
+	}
+	
+	if (bIsOverall)
+	{
+		GameplayStatics::DoDestroyOnLoad(this);
+	}
 
 	std::stack<Actor*>objects_to_delete;
 	objects_to_delete.push(this);
@@ -213,8 +222,18 @@ ActorComponent* Actor::GetComponentByName(std::string tagName)
 
 void Actor::RegisterDontDestroy()
 {
+	bIsOverall = true;
 	for (auto& obj : components)
 	{
 		obj->RegisterDontDestroy();
+	}
+}
+
+void Actor::UnregisterDontDestroy()
+{
+	bIsOverall = false;
+	for (auto& obj : components)
+	{
+		obj->UnregisterDontDestroy();
 	}
 }

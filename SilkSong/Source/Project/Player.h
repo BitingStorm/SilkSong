@@ -49,6 +49,8 @@ public:
 
 	virtual void Update(float deltaTime)override;
 
+	virtual void EndPlay()override;
+
 	virtual FDamageCauseInfo TakeDamage(IDamagable* damageCauser, float baseValue, EDamageType damageType)override;
 
 	virtual void ExecuteDamageDealtEvent(FDamageCauseInfo extraInfo)override;

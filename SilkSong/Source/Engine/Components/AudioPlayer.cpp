@@ -9,10 +9,7 @@ using std::string;
 
 AudioPlayer::~AudioPlayer()
 {
-	for (auto& obj : paths)
-	{
-		mciSendString((string("stop ") + obj).c_str(), 0, 0, 0);
-	}
+	StopAll();
 }
 
 void AudioPlayer::Update(float deltaTime)
@@ -86,6 +83,14 @@ bool AudioPlayer::IsPlaying(std::string name)
 	char statusString[128];
 	mciSendString((string("status ") + name + " mode").c_str(), statusString, sizeof(statusString), NULL);
 	return strcmp(statusString, "playing") == 0;
+}
+
+void AudioPlayer::StopAll()
+{
+	for (auto& obj : paths)
+	{
+		mciSendString((string("stop ") + obj).c_str(), 0, 0, 0);
+	}
 }
 
 int32 AudioPlayer::Reflect(int32 x)

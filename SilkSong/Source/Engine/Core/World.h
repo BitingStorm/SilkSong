@@ -82,6 +82,7 @@ class World final
 	friend Controller;
 	friend void UserInterface::RemoveFromViewport();
 	friend void UserInterface::RegisterDontDestroy();
+	friend void UserInterface::UnregisterDontDestroy();
 	friend Widget;
 	friend Button;
 	friend Bar;
@@ -117,15 +118,17 @@ class World final
 	std::list<Actor*>GameActors_to_add;
 	std::unordered_set<Actor*>GameActors_to_delete;
 	std::unordered_set<UserInterface*>GameUIs;
-	std::deque<UserInterface*>GameUIs_to_add;
+	std::list<UserInterface*>GameUIs_to_add;
 	std::unordered_set<UserInterface*>GameUIs_to_delete;
 
 	/** 场景对象、UI、计时器容器（全局） **/
 
 	std::unordered_set<Actor*>OverallGameActors;
 	std::list<Actor*>OverallGameActors_to_add;
+	std::list<Actor*>OverallGameActors_to_erase;
 	std::unordered_set<UserInterface*>OverallGameUIs;
-	std::deque<UserInterface*>OverallGameUIs_to_add;
+	std::list<UserInterface*>OverallGameUIs_to_add;
+	std::list<UserInterface*>OverallGameUIs_to_erase;
 
 	std::unordered_set<LayerInterface*>OverallRenders;
 	std::unordered_set<Collider*>OverallColliders;

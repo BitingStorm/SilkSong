@@ -55,3 +55,8 @@ void WidgetComponent::RegisterDontDestroy()
 {
 	userInterface->RegisterDontDestroy();
 }
+
+void WidgetComponent::UnregisterDontDestroy()
+{
+	userInterface->UnregisterDontDestroy();
+}

@@ -2,7 +2,7 @@
 #include "Components/Camera.h"
 #include "Components/Collider.h"
 #include "Core/World.h"
-
+#include "Level.h"
 
 
 Controller::Controller()
@@ -18,6 +18,12 @@ void Controller::BeginPlay()
 {
 	Super::BeginPlay();
 	SetupInputComponent(inputComponent);
+}
+
+void Controller::EndPlay()
+{
+	Super::EndPlay();
+	mainWorld.currentLevel->mainController = nullptr;
 }
 
 void Controller::PeekInfo()

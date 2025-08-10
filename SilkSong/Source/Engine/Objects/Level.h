@@ -20,8 +20,9 @@ class Level :public Object, public TimerHandler
 {
 	friend GameplayStatics;
 	friend class LevelManager;
+	friend class Controller;
 
-	class Controller* mainController = nullptr;
+	Controller* mainController = nullptr;
 
 	std::function<void()> callback;
 

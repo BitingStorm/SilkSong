@@ -29,7 +29,7 @@ class Actor :public Object, public TimerHandler
 	std::unordered_set<ActorComponent*>::iterator components_iter;//管理组件的遍历以及增删
 
 	bool bDestroyFlag = false;
-
+	bool bIsOverall = false;
 protected:
 	SceneComponent* const root = nullptr;//场景根组件，赋予场景属性
 
@@ -135,4 +135,7 @@ public:
 
 	//全局对象注册
 	void RegisterDontDestroy();
+
+	//全局对象注销
+	void UnregisterDontDestroy();
 };

@@ -103,6 +103,18 @@ void GameplayStatics::DontDestroyOnLoad(UserInterface* obj)
     obj->RegisterDontDestroy();
 }
 
+void GameplayStatics::DoDestroyOnLoad(Actor* obj)
+{
+    mainWorld.OverallGameActors_to_erase.push_back(obj);
+    obj->UnregisterDontDestroy();
+}
+
+void GameplayStatics::DoDestroyOnLoad(UserInterface* obj)
+{
+    mainWorld.OverallGameUIs_to_erase.push_back(obj);
+    obj->UnregisterDontDestroy();
+}
+
 FVector2D GameplayStatics::ProjectScreenToWorld(FVector2D pos)
 {
     FVector2D position = (pos - FVector2D(WIN_WIDTH, WIN_HEIGHT) * 0.5f) * 0.05f

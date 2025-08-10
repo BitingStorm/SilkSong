@@ -32,6 +32,8 @@ public:
 
 	virtual void BeginPlay() override;
 
+	virtual void EndPlay() override;
+
 	//更新点输入信息
 	void PeekInfo();
 

@@ -410,12 +410,12 @@ void ResourceManager::Initialize()
 	 * 媒体资源加载
 	 *************/
 	//Music
+	Load("menu", "Asset/Sounds/menu.mp3");
+	Load("menu_", "Asset/Sounds/menu_.mp3");
 	Load("tearcity_i", "Asset/Sounds/tearcity_i.mp3");
 	Load("tearcity_o", "Asset/Sounds/tearcity_o.mp3");
 	Load("tearcity_boss", "Asset/Sounds/tearcity_boss.mp3");
 	Load("tearcity_boss_", "Asset/Sounds/tearcity_boss_.mp3");
-	Load("menu", "Asset/Sounds/menu.mp3");
-	Load("menu_", "Asset/Sounds/menu_.mp3");
 	Load("grimmtent", "Asset/Sounds/grimmtent.mp3");
 	Load("nightmare", "Asset/Sounds/nightmare.mp3");
 	Load("nightmare_", "Asset/Sounds/nightmare_.mp3");
